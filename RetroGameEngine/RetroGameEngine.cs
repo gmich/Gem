@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
+using RetroGameEngine.Diagnostics.Console;
 #endregion
 
 namespace RetroGameEngine
@@ -14,12 +15,12 @@ namespace RetroGameEngine
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Game
+    public class RetroGameEngine : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public Game1()
+        public RetroGameEngine()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -35,7 +36,10 @@ namespace RetroGameEngine
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            DebugSystem.Initialize(this, "Font");
+            DebugSystem.Instance.FpsCounter.Visible = true;
+            DebugSystem.Instance.TimeRuler.Visible = true;
+            DebugSystem.Instance.TimeRuler.ShowLog = true;
             base.Initialize();
         }
 
@@ -70,7 +74,14 @@ namespace RetroGameEngine
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            DebugSystem.Instance.TimeRuler.StartFrame();
+
+
+            DebugSystem.Instance.TimeRuler.BeginMark("Update", Color.Blue);
+            
+
+            // End measuring the Update method
+            DebugSystem.Instance.TimeRuler.EndMark("Update");
 
             base.Update(gameTime);
         }
@@ -81,9 +92,13 @@ namespace RetroGameEngine
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            DebugSystem.Instance.TimeRuler.BeginMark("Draw", Color.CornflowerBlue);
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            //Add methods to measure here
+
+            DebugSystem.Instance.TimeRuler.EndMark("Draw");
 
             base.Draw(gameTime);
         }
