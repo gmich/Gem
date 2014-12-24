@@ -18,7 +18,7 @@ namespace RetroGameEngine.Diagnostics.Console
     /// <param name="host">Host who will execute the command.</param>
     /// <param name="command">command name</param>
     /// <param name="arguments">command arguments</param>
-    public delegate void DebugCommandExecute(IDebugCommandHost host, string command,
+    public delegate string DebugCommandExecute(IDebugCommandHost host, string command,
                                                             IList<string> arguments);
 
     /// <summary>

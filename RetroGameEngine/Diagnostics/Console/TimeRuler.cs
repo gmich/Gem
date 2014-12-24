@@ -264,7 +264,7 @@ namespace RetroGameEngine.Diagnostics.Console
         /// <summary>
         /// 'tr' command execution.
         /// </summary>
-        void CommandExecute(IDebugCommandHost host, string command,
+        string CommandExecute(IDebugCommandHost host, string command,
                                                                 IList<string> arguments)
         {
             bool previousVisible = Visible;
@@ -328,6 +328,7 @@ namespace RetroGameEngine.Diagnostics.Console
             {
                 Interlocked.Exchange(ref updateCount, 0);
             }
+            return String.Format("TimeRuler is {0} with SampleFrames {1}", Visible, TargetSampleFrames);
         }
 #endif
 

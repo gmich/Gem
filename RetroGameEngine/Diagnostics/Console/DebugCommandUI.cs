@@ -181,6 +181,7 @@ namespace RetroGameEngine.Diagnostics.Console
                 {
                     Echo(String.Format(fmt, cmd.command, cmd.description));
                 }
+                return null;
             });
 
             // Clear screen command
@@ -188,13 +189,15 @@ namespace RetroGameEngine.Diagnostics.Console
             delegate(IDebugCommandHost host, string command, IList<string> args)
             {
                 lines.Clear();
+                return null;
             });
 
             // Echo command
             RegisterCommand("echo", "Display Messages",
             delegate(IDebugCommandHost host, string command, IList<string> args)
             {
-                Echo(command.Substring(5));
+                    Echo(command.Substring(4));
+                    return null;
             });
                                     
         }
@@ -608,8 +611,8 @@ namespace RetroGameEngine.Diagnostics.Console
         private List<string> SplitStringToRender(string lineToSplit)
         {
             int actualLines =
-         lineToSplit.Length > 0 ?
-         (int)Math.Ceiling((double)(lineToSplit.Length / MaxCharacterInlineCount)) : 0;
+                 lineToSplit.Length > 0 ?
+                 (int)Math.Ceiling((double)(lineToSplit.Length / MaxCharacterInlineCount)) : 0;
 
             var commandsToRender = new List<string>();
 

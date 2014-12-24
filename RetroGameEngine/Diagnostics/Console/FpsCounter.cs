@@ -88,7 +88,7 @@ namespace RetroGameEngine.Diagnostics.Console
         /// <summary>
         /// FPS command implementation.
         /// </summary>
-        private void CommandExecute(IDebugCommandHost host,
+        private string CommandExecute(IDebugCommandHost host,
                                     string command, IList<string> arguments)
         {
             if (arguments.Count == 0)
@@ -106,6 +106,7 @@ namespace RetroGameEngine.Diagnostics.Console
                         break;
                 }
             }
+            return String.Format("FPS is {0}", Visible);
         }
 
         #region Update and Draw
