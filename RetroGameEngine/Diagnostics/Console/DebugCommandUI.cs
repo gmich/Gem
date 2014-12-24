@@ -42,7 +42,7 @@ namespace RetroGameEngine.Diagnostics.Console
         /// <summary>
         /// The maximum characters in a line
         /// </summary>
-        private readonly int MaxCharacterCount = 10;
+        private int MaxCharacterInlineCount;
 
         #endregion
 
@@ -156,6 +156,7 @@ namespace RetroGameEngine.Diagnostics.Console
         public DebugCommandUI(Game game)
             : base(game)
         {
+
             Prompt = DefaultPrompt;
 
             // Add this instance as a service.
@@ -208,6 +209,12 @@ namespace RetroGameEngine.Diagnostics.Console
 
             if (debugManager == null)
                 throw new InvalidOperationException("Coudn't find DebugManager.");
+
+            //Calculate max character per line
+            float gWidth = GraphicsDevice.Viewport.Width;
+            float cmdWidth = gWidth * 0.8f;
+
+            MaxCharacterInlineCount = (int)(cmdWidth / debugManager.DebugFont.MeasureString("a").X);
 
             base.Initialize();
         }
@@ -306,7 +313,11 @@ namespace RetroGameEngine.Diagnostics.Console
 
         public void Echo(DebugCommandMessage messageType, string text)
         {
-            lines.Enqueue(text);
+            var linesToRender = SplitStringToRender(text);
+
+            foreach (string line in linesToRender)
+                lines.Enqueue(line);
+
             CheckLineCount();
 
             // Call registered listeners.
@@ -314,10 +325,23 @@ namespace RetroGameEngine.Diagnostics.Console
                 listner.Echo(messageType, text);
         }
 
-        private void CheckLineCount(int offSet = 0)
+        /// <summary>
+        /// Checks if the that are being rendered are adjusted in the command prompt
+        /// </summary>
+        /// <param name="offSet">The lines that are not in the history queue but are being typed</param>
+        /// <returns>Returns true if a line gets dequeued</returns>
+        private bool CheckLineCount(int offSet = 0)
         {
-            while (lines.Count>= MaxLineCount)
-                lines.Dequeue();
+            bool hasDequeued = false;
+            while (lines.Count+offSet>= MaxLineCount)
+            {
+                if (lines.Count > 0)
+                {
+                    lines.Dequeue();
+                    hasDequeued = true ;
+                }
+            }
+            return hasDequeued;
         }
 
         public void Echo(string text)
@@ -550,58 +574,32 @@ namespace RetroGameEngine.Diagnostics.Console
 
             spriteBatch.Draw(whiteTexture, rect, new Color(0, 0, 0, 200));
 
-            // Draw each lines.
+            // Draw each line.
             Vector2 pos = new Vector2(leftMargin, topMargin);
 
             foreach (string line in lines)
             {
-                var historylineToRender = SplitStringToRender(line);
-                for (int i = 0; i < historylineToRender.Count; i++)
-                {
-                    spriteBatch.DrawString(font, historylineToRender[i], pos, Color.White);
-                    pos.Y += font.LineSpacing;
-                }
+                spriteBatch.DrawString(font, line, pos, Color.White);
+                pos.Y += font.LineSpacing;
             }
 
 
-
-            //The line that's being rendered in the cmd
+            //The line that we want to render in the cmd
             var lineToRender = String.Format("{0}{1}", Prompt, commandLine);
-
-            int actualLines =
-           lineToRender.Length > 0 ?
-           (int)Math.Ceiling((double)(lineToRender.Length / MaxCharacterCount)) : 0;
-
-            //Cursor related
-            string leftPart = Prompt + commandLine.Substring(0, cursorIndex);
-            Vector2 cursorPos;
-
-
-            List<string> commandsToRender = new List<string>();
-
-            //Readjust cmd's lines
-            // CheckLineCount(actualLines);
-
-            for (int i = 0; i < actualLines; i++)
-            {
-                //break the string to render 
-                commandsToRender.Add(lineToRender.Substring(MaxCharacterCount * i,
-                                                (int)MathHelper.Min(lineToRender.Length - 1, MaxCharacterCount)));
-            }
-
-            //The remainder string and also the string the prompt is active at
-            leftPart = lineToRender.Substring(MaxCharacterCount * actualLines, lineToRender.Length - MaxCharacterCount * actualLines);
-            commandsToRender.Add(leftPart);
+            
+            var commandsToRender = SplitStringToRender(lineToRender);
 
             for (int i = 0; i < commandsToRender.Count; i++)
             {
+                CheckLineCount(i);
                 spriteBatch.DrawString(font,
                 commandsToRender[i], pos + new Vector2(0, i * font.LineSpacing), Color.White);
             }
-            Vector2 fontXOffSet = new Vector2(font.MeasureString(leftPart).X, 0);
-            cursorPos = pos + fontXOffSet + new Vector2(0, (commandsToRender.Count - 1) * font.LineSpacing);
 
-
+            //The offset is where the command stop. This is needed to render the cursor
+            Vector2 fontXOffSet = new Vector2(font.MeasureString(commandsToRender[commandsToRender.Count-1]).X, 0);
+            Vector2 cursorPos = pos + fontXOffSet + new Vector2(0, (commandsToRender.Count - 1) * font.LineSpacing);
+            
             spriteBatch.DrawString(font, Cursor, cursorPos, Color.White);
 
             spriteBatch.End();
@@ -611,19 +609,19 @@ namespace RetroGameEngine.Diagnostics.Console
         {
             int actualLines =
          lineToSplit.Length > 0 ?
-         (int)Math.Ceiling((double)(lineToSplit.Length / MaxCharacterCount)) : 0;
+         (int)Math.Ceiling((double)(lineToSplit.Length / MaxCharacterInlineCount)) : 0;
 
             var commandsToRender = new List<string>();
 
             for (int i = 0; i < actualLines; i++)
             {
                 //break the string to render 
-                commandsToRender.Add(lineToSplit.Substring(MaxCharacterCount * i,
-                                                (int)MathHelper.Min(lineToSplit.Length - 1, MaxCharacterCount)));
+                commandsToRender.Add(lineToSplit.Substring(MaxCharacterInlineCount * i,
+                                                (int)MathHelper.Min(lineToSplit.Length, MaxCharacterInlineCount)));
             }
 
             //The remainder string and also the string the prompt is active at
-            string leftPart = lineToSplit.Substring(MaxCharacterCount * actualLines, lineToSplit.Length - MaxCharacterCount * actualLines);
+            string leftPart = lineToSplit.Substring(MaxCharacterInlineCount * actualLines, lineToSplit.Length - MaxCharacterInlineCount * actualLines);
             commandsToRender.Add(leftPart);
 
             return commandsToRender;
