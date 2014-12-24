@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using RetroGameEngine.Input;
+using System.Linq;
 
 namespace RetroGameEngine.Diagnostics.Console
 {
@@ -37,6 +38,11 @@ namespace RetroGameEngine.Diagnostics.Console
         /// Default Prompt string.
         /// </summary>
         public const string DefaultPrompt = "cmd>";
+
+        /// <summary>
+        /// The maximum characters in a line
+        /// </summary>
+        private readonly int MaxCharacterCount = 10;
 
         #endregion
 
@@ -189,6 +195,7 @@ namespace RetroGameEngine.Diagnostics.Console
             {
                 Echo(command.Substring(5));
             });
+                                    
         }
 
         /// <summary>
@@ -279,6 +286,7 @@ namespace RetroGameEngine.Diagnostics.Console
             }
 
             // Add to command history.
+            //TODO: add it as a list of substrings
             commandHistory.Add(command);
             while (commandHistory.Count > MaxCommandHistory)
                 commandHistory.RemoveAt(0);
@@ -299,12 +307,17 @@ namespace RetroGameEngine.Diagnostics.Console
         public void Echo(DebugCommandMessage messageType, string text)
         {
             lines.Enqueue(text);
-            while (lines.Count >= MaxLineCount)
-                lines.Dequeue();
+            CheckLineCount();
 
             // Call registered listeners.
             foreach (IDebugEchoListner listner in listenrs)
                 listner.Echo(messageType, text);
+        }
+
+        private void CheckLineCount(int offSet = 0)
+        {
+            while (lines.Count>= MaxLineCount)
+                lines.Dequeue();
         }
 
         public void Echo(string text)
@@ -539,23 +552,84 @@ namespace RetroGameEngine.Diagnostics.Console
 
             // Draw each lines.
             Vector2 pos = new Vector2(leftMargin, topMargin);
+
             foreach (string line in lines)
             {
-                spriteBatch.DrawString(font, line, pos, Color.White);
-                pos.Y += font.LineSpacing;
+                var historylineToRender = SplitStringToRender(line);
+                for (int i = 0; i < historylineToRender.Count; i++)
+                {
+                    spriteBatch.DrawString(font, historylineToRender[i], pos, Color.White);
+                    pos.Y += font.LineSpacing;
+                }
             }
 
-            // Draw prompt string.
-            string leftPart = Prompt + commandLine.Substring(0, cursorIndex);
-            Vector2 cursorPos = pos + font.MeasureString(leftPart);
-            cursorPos.Y = pos.Y;
 
-            spriteBatch.DrawString(font,
-                String.Format("{0}{1}", Prompt, commandLine), pos, Color.White);
+
+            //The line that's being rendered in the cmd
+            var lineToRender = String.Format("{0}{1}", Prompt, commandLine);
+
+            int actualLines =
+           lineToRender.Length > 0 ?
+           (int)Math.Ceiling((double)(lineToRender.Length / MaxCharacterCount)) : 0;
+
+            //Cursor related
+            string leftPart = Prompt + commandLine.Substring(0, cursorIndex);
+            Vector2 cursorPos;
+
+
+            List<string> commandsToRender = new List<string>();
+
+            //Readjust cmd's lines
+            // CheckLineCount(actualLines);
+
+            for (int i = 0; i < actualLines; i++)
+            {
+                //break the string to render 
+                commandsToRender.Add(lineToRender.Substring(MaxCharacterCount * i,
+                                                (int)MathHelper.Min(lineToRender.Length - 1, MaxCharacterCount)));
+            }
+
+            //The remainder string and also the string the prompt is active at
+            leftPart = lineToRender.Substring(MaxCharacterCount * actualLines, lineToRender.Length - MaxCharacterCount * actualLines);
+            commandsToRender.Add(leftPart);
+
+            for (int i = 0; i < commandsToRender.Count; i++)
+            {
+                spriteBatch.DrawString(font,
+                commandsToRender[i], pos + new Vector2(0, i * font.LineSpacing), Color.White);
+            }
+            Vector2 fontXOffSet = new Vector2(font.MeasureString(leftPart).X, 0);
+            cursorPos = pos + fontXOffSet + new Vector2(0, (commandsToRender.Count - 1) * font.LineSpacing);
+
+
             spriteBatch.DrawString(font, Cursor, cursorPos, Color.White);
 
             spriteBatch.End();
         }
+
+        private List<string> SplitStringToRender(string lineToSplit)
+        {
+            int actualLines =
+         lineToSplit.Length > 0 ?
+         (int)Math.Ceiling((double)(lineToSplit.Length / MaxCharacterCount)) : 0;
+
+            var commandsToRender = new List<string>();
+
+            for (int i = 0; i < actualLines; i++)
+            {
+                //break the string to render 
+                commandsToRender.Add(lineToSplit.Substring(MaxCharacterCount * i,
+                                                (int)MathHelper.Min(lineToSplit.Length - 1, MaxCharacterCount)));
+            }
+
+            //The remainder string and also the string the prompt is active at
+            string leftPart = lineToSplit.Substring(MaxCharacterCount * actualLines, lineToSplit.Length - MaxCharacterCount * actualLines);
+            commandsToRender.Add(leftPart);
+
+            return commandsToRender;
+        }
+
+
 
         #endregion
 
