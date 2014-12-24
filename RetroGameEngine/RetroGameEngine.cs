@@ -40,6 +40,10 @@ namespace RetroGameEngine
             DebugSystem.Instance.FpsCounter.Visible = true;
             DebugSystem.Instance.TimeRuler.Visible = true;
             DebugSystem.Instance.TimeRuler.ShowLog = true;
+
+            //Register an echo log4net listener
+            DebugSystem.Instance.DebugCommandUI.RegisterEchoListner(new Diagnostics.Logger.LogEchoListener());
+
             base.Initialize();
         }
 

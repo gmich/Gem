@@ -441,7 +441,7 @@ namespace RetroGameEngine.Diagnostics.Console
         }
 
         /// <summary>
-        /// Hand keyboard input.
+        /// Handle keyboard input.
         /// </summary>
         /// <param name="dt"></param>
         public void ProcessKeyInputs(float dt)

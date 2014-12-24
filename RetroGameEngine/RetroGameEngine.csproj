@@ -43,6 +43,7 @@
     <Compile Include="Diagnostics\Console\DebugSystem.cs" />
     <Compile Include="Diagnostics\Console\FpsCounter.cs" />
     <Compile Include="Diagnostics\Console\IDebugCommandHost.cs" />
+    <Compile Include="Diagnostics\Logger\LogEchoListener.cs" />
     <Compile Include="Input\KeyboardUtils.cs" />
     <Compile Include="Components\Layout.cs" />
     <Compile Include="Utilities\StringBuilderExtensions.cs" />
@@ -78,13 +79,14 @@
       <Link>SDL.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Icon.ico" />
+    <Content Include="Icon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Actors\" />
     <Folder Include="Camera\" />
     <Folder Include="Database\" />
-    <Folder Include="Diagnostics\Logger\" />
     <Folder Include="Map\" />
     <Folder Include="Resolution\" />
     <Folder Include="Scenes\" />
@@ -97,6 +99,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
