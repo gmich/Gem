@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RetroGameEngine.Animations.Events
+namespace GameEngine2D.Animations.Events
 {
 
     /// <summary>

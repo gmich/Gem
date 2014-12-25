@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 
-namespace RetroGameEngine.Diagnostics.Console
+namespace GameEngine2D.Diagnostics.Console
 {
     /// <summary>
     /// DebugManager class that holds graphics resources for debug

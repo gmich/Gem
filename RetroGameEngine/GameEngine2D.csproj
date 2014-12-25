@@ -8,8 +8,8 @@
     <ProjectGuid>{2784D0E3-736D-4BCA-8536-EEA8834E6ED9}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RetroGameEngine</RootNamespace>
-    <AssemblyName>RetroGameEngine</AssemblyName>
+    <RootNamespace>GameEngine2D</RootNamespace>
+    <AssemblyName>GameEngine2D</AssemblyName>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -43,6 +43,8 @@
     <Compile Include="Diagnostics\Console\DebugSystem.cs" />
     <Compile Include="Diagnostics\Console\FpsCounter.cs" />
     <Compile Include="Diagnostics\Console\IDebugCommandHost.cs" />
+    <Compile Include="Diagnostics\DebugViewFarseer\DebugViewFarseer.cs" />
+    <Compile Include="Diagnostics\DebugViewFarseer\PrimitiveBatch.cs" />
     <Compile Include="Diagnostics\Logger\LogEchoListener.cs" />
     <Compile Include="Input\KeyboardUtils.cs" />
     <Compile Include="Components\Layout.cs" />
@@ -56,6 +58,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="FarseerPhysics MonoGame, Version=3.5.0.3585, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\FarseerPhysics MonoGame.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
@@ -78,6 +84,9 @@
     <Content Include="..\..\..\..\..\..\..\Program Files %28x86%29\MonoGame\v3.0\Assemblies\WindowsGL\SDL.dll">
       <Link>SDL.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FarseerPhysics MonoGame.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

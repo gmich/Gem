@@ -1,7 +1,7 @@
-﻿using RetroGameEngine.Diagnostics;
+﻿using GameEngine2D.Diagnostics;
 using System;
 
-namespace RetroGameEngine.Animations.Events
+namespace GameEngine2D.Animations.Events
 {
 
     public interface IAnimationEvent<Tsender, Targs> : IEventProvider<Targs>

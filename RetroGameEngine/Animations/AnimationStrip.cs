@@ -1,10 +1,10 @@
-﻿using RetroGameEngine.Animations.Events;
+﻿using GameEngine2D.Animations.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RetroGameEngine.Animations
+namespace GameEngine2D.Animations
 {
     public class AnimationStrip : IAnimation
     {

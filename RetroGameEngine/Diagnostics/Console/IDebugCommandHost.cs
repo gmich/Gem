@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RetroGameEngine.Diagnostics.Console
+namespace GameEngine2D.Diagnostics.Console
 {
     /// <summary>
     /// Message types for debug command.

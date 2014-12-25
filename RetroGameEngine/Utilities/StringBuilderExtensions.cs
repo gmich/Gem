@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text;
 
-namespace RetroGameEngine.Utilities
+namespace GameEngine2D.Utilities
 {
     /// <summary>
     /// Options for StringBuilder extension methods.

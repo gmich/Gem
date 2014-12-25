@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 #endregion
 
-namespace RetroGameEngine
+namespace GameEngine2D
 {
 #if WINDOWS || LINUX
     /// <summary>

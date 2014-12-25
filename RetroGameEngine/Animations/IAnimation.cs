@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
-using RetroGameEngine.Animations.Events;
+using GameEngine2D.Animations.Events;
 using System;
 
-namespace RetroGameEngine.Animations
+namespace GameEngine2D.Animations
 {
     public interface IAnimation : IUpdateable,IDrawable
     {

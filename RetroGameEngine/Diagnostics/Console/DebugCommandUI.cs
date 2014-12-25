@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
-using RetroGameEngine.Input;
+using GameEngine2D.Input;
 using System.Linq;
 
-namespace RetroGameEngine.Diagnostics.Console
+namespace GameEngine2D.Diagnostics.Console
 {
     /// <summary>
     /// Command Window class for Debuggin.

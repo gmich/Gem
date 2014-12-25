@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace RetroGameEngineTests
+namespace GameEngine2DTests
 {
     [TestClass]
     public class UnitTest1

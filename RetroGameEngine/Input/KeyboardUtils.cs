@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
 
 
-namespace RetroGameEngine.Input
+namespace GameEngine2D.Input
 {
     /// <summary>
     /// Helper class for keyboard input.

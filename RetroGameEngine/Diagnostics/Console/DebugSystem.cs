@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace RetroGameEngine.Diagnostics.Console
+namespace GameEngine2D.Diagnostics.Console
 {
     /// <summary>
     /// DebugSystem is a helper class that streamlines the creation of the various GameDebug

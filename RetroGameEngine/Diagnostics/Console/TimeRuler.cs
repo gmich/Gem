@@ -5,10 +5,10 @@ using System.Threading;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RetroGameEngine.Components;
-using RetroGameEngine.Utilities;
+using GameEngine2D.Components;
+using GameEngine2D.Utilities;
 
-namespace RetroGameEngine.Diagnostics.Console
+namespace GameEngine2D.Diagnostics.Console
 {
 
     public class TimeRuler : DrawableGameComponent

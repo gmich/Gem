@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RetroGameEngine.Animations
+namespace GameEngine2D.Animations
 {
 
     public interface IRotation : IAnimation

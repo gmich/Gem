@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RetroGameEngine.Diagnostics.Logger
+namespace GameEngine2D.Diagnostics.Logger
 {
     using Console;
 

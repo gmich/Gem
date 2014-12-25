@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RetroGameEngine.Diagnostics
+namespace GameEngine2D.Diagnostics
 {
 
     public interface IEventProvider<Targs>

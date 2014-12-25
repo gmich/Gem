@@ -7,10 +7,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
-using RetroGameEngine.Diagnostics.Console;
+using GameEngine2D.Diagnostics.Console;
 #endregion
 
-namespace RetroGameEngine
+namespace GameEngine2D
 {
     /// <summary>
     /// This is the main type for your game

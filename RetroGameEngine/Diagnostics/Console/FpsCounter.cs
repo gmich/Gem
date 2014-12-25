@@ -5,10 +5,10 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RetroGameEngine.Utilities;
-using RetroGameEngine.Components;
+using GameEngine2D.Utilities;
+using GameEngine2D.Components;
 
-namespace RetroGameEngine.Diagnostics.Console
+namespace GameEngine2D.Diagnostics.Console
 {
     /// <summary>
     /// Component for FPS measure and draw.

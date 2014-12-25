@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 
-namespace RetroGameEngine.Components
+namespace GameEngine2D.Components
 {
     /// <summary>
     /// Alignment for layout.
