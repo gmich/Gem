@@ -1,4 +1,4 @@
-RetroGames
+Game Engine 2D
 ==========
 
-Reviving good old games using monogame
+A game engine for developing 2D games using Monogame and Farseer physics
