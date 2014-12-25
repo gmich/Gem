@@ -18,7 +18,7 @@ namespace GameEngine2D
         [STAThread]
         static void Main()
         {
-            using (var game = new RetroGameEngine())
+            using (var game = new Engine())
                 game.Run();
         }
     }

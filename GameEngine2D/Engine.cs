@@ -15,12 +15,12 @@ namespace GameEngine2D
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class RetroGameEngine : Game
+    public class Engine : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public RetroGameEngine()
+        public Engine()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -36,7 +36,7 @@ namespace GameEngine2D
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            DebugSystem.Initialize(this, "Font");
+            DebugSystem.Initialize(this, "Fonts/consoleFont");
             DebugSystem.Instance.FpsCounter.Visible = true;
             DebugSystem.Instance.TimeRuler.Visible = true;
             DebugSystem.Instance.TimeRuler.ShowLog = true;
