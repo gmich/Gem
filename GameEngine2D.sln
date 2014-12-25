@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameEngine2D", "RetroGameEngine\GameEngine2D.csproj", "{2784D0E3-736D-4BCA-8536-EEA8834E6ED9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameEngine2D", "GameEngine2D\GameEngine2D.csproj", "{2784D0E3-736D-4BCA-8536-EEA8834E6ED9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameEngine2DTests", "RetroGameEngineTests\GameEngine2DTests.csproj", "{635A820A-4471-4BA8-B1A1-03621AF9AEC3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameEngine2DTests", "GameEngine2DTests\GameEngine2DTests.csproj", "{635A820A-4471-4BA8-B1A1-03621AF9AEC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
