@@ -148,6 +148,7 @@ namespace GameEngine2D.Diagnostics.Console
 
         #endregion
 
+
         #region Initialization
 
         /// <summary>
@@ -223,6 +224,7 @@ namespace GameEngine2D.Diagnostics.Console
         }
 
         #endregion
+
 
         #region IDebugCommandHostinterface implemenration
 
@@ -373,6 +375,7 @@ namespace GameEngine2D.Diagnostics.Console
         }
 
         #endregion
+
 
         #region Update and Draw
 
@@ -598,21 +601,59 @@ namespace GameEngine2D.Diagnostics.Console
                 spriteBatch.DrawString(font,
                 commandsToRender[i], pos + new Vector2(0, i * font.LineSpacing), Color.White);
             }
-
-            //The offset is where the command stop. This is needed to render the cursor
-            Vector2 fontXOffSet = new Vector2(font.MeasureString(commandsToRender[commandsToRender.Count-1]).X, 0);
-            Vector2 cursorPos = pos + fontXOffSet + new Vector2(0, (commandsToRender.Count - 1) * font.LineSpacing);
             
-            spriteBatch.DrawString(font, Cursor, cursorPos, Color.White);
+            //Find the cursor's exact line. That's the Y offSet.
+            int cursorsLine =GetNoOfLinesInBuffer(cursorIndex+Prompt.Length);
+
+            //Find the cursor's exact position in line. Thats the X offset.
+            int cursorsInLinePosition = (cursorIndex+Prompt.Length) - (cursorsLine*MaxCharacterInlineCount);
+
+            //Calculate them.
+            Vector2 aCharacterSize =  font.MeasureString("a");
+            Vector2 cursorOffSet =new Vector2(aCharacterSize.X*cursorsInLinePosition, font.LineSpacing*cursorsLine);
+                        
+            spriteBatch.DrawString(font, Cursor, pos+cursorOffSet, Color.White);
 
             spriteBatch.End();
         }
 
-        private List<string> SplitStringToRender(string lineToSplit)
+
+        #region Character Buffer Helpers
+
+        /// <summary>
+        /// Returns how many lines the text is represented in the console's command buffer
+        /// </summary>
+        /// <param name="text">The text to check</param>
+        /// <returns>The number of lines the text is equal to</returns>
+        private int GetNoOfLinesInBuffer(string text)
         {
             int actualLines =
-                 lineToSplit.Length > 0 ?
-                 (int)Math.Ceiling((double)(lineToSplit.Length / MaxCharacterInlineCount)) : 0;
+             text.Length > 0 ?
+             (int)Math.Ceiling((double)(text.Length / MaxCharacterInlineCount)) : 0;
+
+            return actualLines;
+        }
+
+
+        /// <summary>
+        /// Returns the line of the index in the current character command buffer
+        /// </summary>
+        /// <param name="text">The index to check</param>
+        /// <returns>The line of the index</returns>
+        private int GetNoOfLinesInBuffer(int index)
+        {
+            int line =
+             index > 0 ?
+             (int)Math.Ceiling((double)(index / MaxCharacterInlineCount)) : 0;
+
+            return line;
+        }
+
+        //Splits the string to substrings to be rendered in the console
+        private List<string> SplitStringToRender(string lineToSplit)
+        {
+            int actualLines = GetNoOfLinesInBuffer(lineToSplit);
+                
 
             var commandsToRender = new List<string>();
 
@@ -630,7 +671,7 @@ namespace GameEngine2D.Diagnostics.Console
             return commandsToRender;
         }
 
-
+        #endregion
 
         #endregion
 
