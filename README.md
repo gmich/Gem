@@ -1,7 +1,7 @@
 <img src="https://raw.githubusercontent.com/gmich/Gem/master/Gem/Content/gem.jpg" width="52" height="50" alt="Gem logo" title="Gem" align="left">    Gem  
 ===================================
 
-[![Build Status](https://travis-ci.org/gmich/GameEngine2D.svg)](https://travis-ci.org/gmich/GameEngine2D)
+[![Build Status](https://travis-ci.org/gmich/Gem.svg)](https://travis-ci.org/gmich/Gem)
 
 
  
