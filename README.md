@@ -1,4 +1,4 @@
-Game Engine 2D
+Gem
 ==========
 
 [![Build Status](https://travis-ci.org/gmich/GameEngine2D.svg)](https://travis-ci.org/gmich/GameEngine2D)
