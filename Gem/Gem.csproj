@@ -8,8 +8,8 @@
     <ProjectGuid>{2784D0E3-736D-4BCA-8536-EEA8834E6ED9}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GameEngine2D</RootNamespace>
-    <AssemblyName>GameEngine2D</AssemblyName>
+    <RootNamespace>Gem</RootNamespace>
+    <AssemblyName>Gem</AssemblyName>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <ApplicationIcon>gem.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Animations\AnimationStrip.cs" />
@@ -49,6 +49,7 @@
     <Compile Include="Diagnostics\DebugViewFarseer\DebugViewFarseer.cs" />
     <Compile Include="Diagnostics\DebugViewFarseer\PrimitiveBatch.cs" />
     <Compile Include="Diagnostics\Logger\LogEchoListener.cs" />
+    <Compile Include="Diagnostics\Logger\LogHelper.cs" />
     <Compile Include="DrawingSystem\AssetCreator.cs" />
     <Compile Include="DrawingSystem\LineBatch.cs" />
     <Compile Include="DrawingSystem\Sprite.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Input\InputHandler.cs" />
     <Compile Include="Input\InputHelper.cs" />
     <Compile Include="ScreenSystem\ScreenManagerComponent.cs" />
+    <Compile Include="Sound\SoundManager.cs" />
     <Compile Include="Utilities\StringBuilderExtensions.cs" />
     <Compile Include="Diagnostics\Console\TimeRuler.cs" />
     <Compile Include="Diagnostics\IEventProvider.cs" />
@@ -103,9 +105,7 @@
     <Content Include="Content\Materials\pavement.png" />
     <Content Include="Content\Materials\squares.png" />
     <Content Include="Content\Materials\waves.png" />
-    <Content Include="Icon.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="gem.ico" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Actors\" />
@@ -114,7 +114,6 @@
     <Folder Include="Database\" />
     <Folder Include="DrawingSystem\SpriteSheets\" />
     <Folder Include="Map\" />
-    <Folder Include="Sound\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Fonts\consoleFont.xnb">
@@ -131,7 +130,6 @@
     <None Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
