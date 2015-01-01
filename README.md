@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/gmich/Gem/master/Gem/Content/gem.png" width="52" height="50" alt="Gem logo" title="Gem" align="left">    Gem  
+<img src="https://raw.githubusercontent.com/gmich/Gem/master/Gem/Content/gem.png" width="52" height="50" alt="Gem logo" title="Gem" hspace="10" align="left">    Gem  
 ===================================
 
 [![Build Status](https://travis-ci.org/gmich/Gem.svg)](https://travis-ci.org/gmich/Gem)
