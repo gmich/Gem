@@ -99,7 +99,9 @@
     <Content Include="Content\Common\cursor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\gem.jpg" />
+    <Content Include="Content\Common\gem.jpg" />
+    <Content Include="Content\Common\logo.svg" />
+    <Content Include="Content\gem.png" />
     <Content Include="Content\Materials\blank.png" />
     <Content Include="Content\Materials\dots.png" />
     <Content Include="Content\Materials\pavement.png" />

@@ -132,12 +132,12 @@ namespace Gem.Input
             cursorSprite = new Sprite(manager.Content.Load<Texture2D>("Common/cursor"));
 #if WINDOWS_PHONE
             // virtual stick content
-            _phoneStick = new VirtualStick(_manager.Content.Load<Texture2D>("Common/socket"),
-                                           _manager.Content.Load<Texture2D>("Common/stick"), new Vector2(80f, 400f));
+            phoneStick = new VirtualStick(manager.Content.Load<Texture2D>("Common/socket"),
+                                           manager.Content.Load<Texture2D>("Common/stick"), new Vector2(80f, 400f));
 
-            Texture2D temp = _manager.Content.Load<Texture2D>("Common/buttons");
-            _phoneA = new VirtualButton(temp, new Vector2(695f, 380f), new Rectangle(0, 0, 40, 40), new Rectangle(0, 40, 40, 40));
-            _phoneB = new VirtualButton(temp, new Vector2(745f, 360f), new Rectangle(40, 0, 40, 40), new Rectangle(40, 40, 40, 40));
+            Texture2D temp = manager.Content.Load<Texture2D>("Common/buttons");
+            phoneA = new VirtualButton(temp, new Vector2(695f, 380f), new Rectangle(0, 0, 40, 40), new Rectangle(0, 40, 40, 40));
+            phoneB = new VirtualButton(temp, new Vector2(745f, 360f), new Rectangle(40, 0, 40, 40), new Rectangle(40, 40, 40, 40));
 #endif
             viewport = manager.GraphicsDevice.Viewport;
         }
@@ -213,11 +213,11 @@ namespace Gem.Input
 #if WINDOWS_PHONE
             if (_handleVirtualStick)
             {
-                _manager.SpriteBatch.Begin();
-                _phoneA.Draw(_manager.SpriteBatch);
-                _phoneB.Draw(_manager.SpriteBatch);
-                _phoneStick.Draw(_manager.SpriteBatch);
-                _manager.SpriteBatch.End();
+                manager.SpriteBatch.Begin();
+                phoneA.Draw(manager.SpriteBatch);
+                phoneB.Draw(manager.SpriteBatch);
+                phoneStick.Draw(manager.SpriteBatch);
+                manager.SpriteBatch.End();
             }
 #endif
         }

@@ -145,7 +145,7 @@ namespace Gem.ScreenSystem
         /// </summary>
         public virtual void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            otherScreenHasFocus = otherScreenHasFocus;
+            this.otherScreenHasFocus = otherScreenHasFocus;
 
             if (IsExiting)
             {
