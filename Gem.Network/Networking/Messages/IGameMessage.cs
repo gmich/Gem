@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IGameMessage.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The i game message.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace  Gem.Network.Messages
+﻿namespace  Gem.Network.Messages
 {
     using Lidgren.Network;
 

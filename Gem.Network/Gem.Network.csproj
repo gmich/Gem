@@ -49,7 +49,6 @@
     <Compile Include="Networking\Avatar\Avatar.cs" />
     <Compile Include="Networking\Avatar\LoadAvatarThread.cs" />
     <Compile Include="Networking\Avatar\SteamApi.cs" />
-    <Compile Include="Networking\ClientNetworkManager.cs" />
     <Compile Include="Networking\DNSConverter.cs" />
     <Compile Include="Networking\EventArgs\TitleArgs.cs" />
     <Compile Include="Networking\INetworkManager.cs" />
@@ -57,7 +56,7 @@
     <Compile Include="Networking\Messages\IGameMessage.cs" />
     <Compile Include="Networking\Messages\RemoveEntityMessage.cs" />
     <Compile Include="Networking\ServerNetworkManager.cs" />
-    <Compile Include="ServerManager.cs" />
+    <Compile Include="Server.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

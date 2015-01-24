@@ -10,7 +10,6 @@ namespace Gem.Network
     {
         static void Main(string[] args)
         {
-            ServerManager.StartSession();
         }
     }
 }

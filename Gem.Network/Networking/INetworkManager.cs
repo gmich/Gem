@@ -2,19 +2,36 @@
 {
     using System;
     using Lidgren.Network;
-    using  Gem.Network.Messages;
+    using Gem.Network.Messages;
+
+
+    enum PacketTypes
+    {
+        LOGIN
+    }
 
     /// <summary>
-    /// The i network manager.
+    /// The network manager.
     /// </summary>
     public interface INetworkManager : IDisposable
     {
         #region Public Methods and Operators
 
         /// <summary>
+        /// Registers an ip to the server
+        /// </summary>
+        /// <param name="connection">The incoming connection</param>
+        bool RegisterConnection(string identifier, NetConnection connection);
+
+        /// <summary>
+        /// Deregisters a peer from the server
+        /// </summary>
+        bool DeRegisterConnection(string identifier);
+
+        /// <summary>
         /// The connect.
         /// </summary>
-        void Connect(string serverName, string IP);
+        void Start(string serverName, int port);
 
         /// <summary>
         /// The create message.
