@@ -38,6 +38,10 @@
     <Compile Include="Animations\AnimationStrip.cs" />
     <Compile Include="Animations\Events\AnimationEventAggregator.cs" />
     <Compile Include="Animations\Events\IAnimationEvent.cs" />
+    <Compile Include="Cache\ACachingProvider.cs" />
+    <Compile Include="Cache\CacheProvider.cs" />
+    <Compile Include="Cache\IGlobalCachingProvider.cs" />
+    <Compile Include="Cache\SystemSpecs.cs" />
     <Compile Include="CameraSystem\Camera.cs" />
     <Compile Include="CameraSystem\CameraFarseer.cs" />
     <Compile Include="CameraSystem\ICamera.cs" />
@@ -93,6 +97,7 @@
       <HintPath>Third Party\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>

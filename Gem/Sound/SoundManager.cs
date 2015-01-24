@@ -50,7 +50,7 @@ namespace Gem.Sound
             }
             catch (Exception ex)
             {
-                LogHelper.LogError("Failed to load sfx {0} : {1}", soundfx.Name, ex.Message);
+                LogHelper.Error("Failed to load sfx {0} : {1}", soundfx.Name, ex.Message);
             }
         }
 
@@ -83,7 +83,7 @@ namespace Gem.Sound
             }
             catch (Exception ex)
             {
-                LogHelper.LogError("Failed to load song {0} : {1}", song.Name, ex.Message);
+                LogHelper.Error("Failed to load song {0} : {1}", song.Name, ex.Message);
 
             }
         }
@@ -123,7 +123,7 @@ namespace Gem.Sound
             }
             catch (Exception ex)
             {
-                LogHelper.LogError("Failed to play sfx with tag {0} : {1}", sfxTag, ex.Message);
+                LogHelper.Error("Failed to play sfx with tag {0} : {1}", sfxTag, ex.Message);
             }
         }
 
@@ -144,7 +144,7 @@ namespace Gem.Sound
             }
             catch (Exception ex)
             {
-                LogHelper.LogError("Failed to play song with tag {0} : {1}", songTag, ex.Message);
+                LogHelper.Error("Failed to play song with tag {0} : {1}", songTag, ex.Message);
             }
         }
 

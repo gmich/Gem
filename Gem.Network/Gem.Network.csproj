@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientNetworkManager.cs" />
     <Compile Include="IDataProvider.cs" />
     <Compile Include="Networking\Avatar\Avatar.cs" />
     <Compile Include="Networking\Avatar\LoadAvatarThread.cs" />
@@ -55,8 +56,9 @@
     <Compile Include="Networking\Messages\GameMessageTypes.cs" />
     <Compile Include="Networking\Messages\IGameMessage.cs" />
     <Compile Include="Networking\Messages\RemoveEntityMessage.cs" />
+    <Compile Include="Networking\ClientEvent.cs" />
     <Compile Include="Networking\ServerNetworkManager.cs" />
-    <Compile Include="Server.cs" />
+    <Compile Include="ServerHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -119,11 +119,10 @@ namespace Gem.Network
                             //Append to a listener
                             Console.WriteLine("Incoming LOGIN");
                             im.SenderConnection.Approve();
-                            networkManager.RegisterConnection("replace this",im.SenderConnection);
+                            bool connectionSuccess;
+                            networkManager.RegisterConnection(im.SenderConnection,out connectionSuccess);
 
-                            //Send a message to notify the others
-                            NetOutgoingMessage outmsg = networkManager.CreateMessage();    
-                            //networkManager.SendMessage(outmsg, im.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0);
+                           // networkManager.SendMessage(IGameMessage, im.SenderConnection);
                             Console.WriteLine("Approved new connection");
                         }
                         break;
@@ -166,6 +165,9 @@ namespace Gem.Network
                     case NetIncomingMessageType.ErrorMessage:
                         //Append to listener
                         Console.WriteLine(im.ReadString());
+                        break;
+                    case NetIncomingMessageType.DiscoveryRequest:
+                        //notify the client 
                         break;
                 }
                 this.networkManager.Recycle(im);

@@ -20,7 +20,7 @@ namespace Gem.Diagnostics.Logger
 
         #region Append
 
-        public static void LogError(string error,params object[] args)
+        public static void Error(string error,params object[] args)
         {
             log.Error(string.Format(error, args));
         }

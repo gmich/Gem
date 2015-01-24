@@ -21,13 +21,8 @@
         /// Registers an ip to the server
         /// </summary>
         /// <param name="connection">The incoming connection</param>
-        bool RegisterConnection(string identifier, NetConnection connection);
-
-        /// <summary>
-        /// Deregisters a peer from the server
-        /// </summary>
-        bool DeRegisterConnection(string identifier);
-
+        IDisposable RegisterConnection(NetConnection connection,out bool success);
+        
         /// <summary>
         /// The connect.
         /// </summary>
@@ -66,7 +61,7 @@
         /// <param name="gameMessage">
         /// The game message.
         /// </param>
-        void SendMessage(IGameMessage gameMessage);
+        void SendMessage(IGameMessage gameMessage, NetConnection im);
 
         #endregion
     }

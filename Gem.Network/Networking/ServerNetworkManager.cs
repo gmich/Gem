@@ -21,7 +21,7 @@
             disconnectMessage = "bye";
             SendToAll = false;
             sequenceChannel = 1;
-            registeredConnections = new Dictionary<string, NetConnection>();
+            registeredConnections = new List<NetConnection>();
         }
 
         #endregion
@@ -38,7 +38,7 @@
             }
         }
 
-        private Action<NetOutgoingMessage> MessageHandler;
+        private Action<NetOutgoingMessage,NetConnection> MessageHandler;
 
         /// <summary>
         /// The message delivery sequence channel
@@ -63,7 +63,7 @@
         /// <summary>
         /// The connected users.
         /// </summary>
-        private Dictionary<string,NetConnection> registeredConnections;
+        private List<NetConnection> registeredConnections;
 
         /// <summary>
         /// True if the outgoing message is sent to all
@@ -74,11 +74,11 @@
             {
                 if (value)
                 {
-                    MessageHandler = SendMessageToAll;
+                    MessageHandler = SendToAllExceptSender;
                 }
                 else
                 {
-                    MessageHandler = SendMessageToRegistered;
+                    MessageHandler = SendToRegistered;
                 }
             }
         }
@@ -108,6 +108,7 @@
             config.EnableMessageType(NetIncomingMessageType.Error);
             config.EnableMessageType(NetIncomingMessageType.DebugMessage);
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+            config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
 
             this.netServer = new NetServer(config);
             this.netServer.Start();
@@ -120,28 +121,17 @@
         /// <param name="identifier">The peer's identifier</param>
         /// <param name="connection">The peer's connection details</param>
         /// <returns>Registration success</returns>
-        public bool RegisterConnection(string identifier, NetConnection connection)
+        public IDisposable RegisterConnection(NetConnection connection,out bool success)
         {
             if (AllowConnections)
             {
-                if (registeredConnections.ContainsKey(identifier))
-                {
-                    registeredConnections.Add(identifier, connection);
-                    return true;
-                }
+                registeredConnections.Add(connection);
+                success = true;
+                return new Deregister(registeredConnections, connection);
             }
-            return false;
+            success = false;
+            return null;
         }       
-
-        /// <summary>
-        /// Removes a connection
-        /// </summary>
-        /// <param name="identifier">The connection's identifier</param>
-        /// <returns>The removal success</returns>
-        public bool DeRegisterConnection(string identifier)
-        {
-            return registeredConnections.Remove(identifier);
-        }
 
         /// <summary>
         /// The create message.
@@ -196,23 +186,23 @@
         /// <param name="gameMessage">
         /// The game message.
         /// </param>
-        public void SendMessage(IGameMessage gameMessage)
+        public void SendMessage(IGameMessage gameMessage, NetConnection connection)
         {
             NetOutgoingMessage om = this.netServer.CreateMessage();
             om.Write((byte)gameMessage.MessageType);
             gameMessage.Encode(om);
 
-            MessageHandler(om);          
+            MessageHandler(om,connection);
         }
 
-        private void SendMessageToAll(NetOutgoingMessage om)
+        private void SendToAllExceptSender(NetOutgoingMessage om, NetConnection connection)
         {
-            this.netServer.SendToAll(om, deliveryMethod);
+            this.netServer.SendToAll(om, connection, deliveryMethod, sequenceChannel);
         }
 
-        private void SendMessageToRegistered(NetOutgoingMessage om)
+        private void SendToRegistered(NetOutgoingMessage om, NetConnection connection)
         {
-            this.netServer.SendMessage(om, registeredConnections.Values.ToList(), deliveryMethod, sequenceChannel);
+            this.netServer.SendMessage(om, registeredConnections, deliveryMethod, sequenceChannel);
         }
 
         #endregion
@@ -235,6 +225,28 @@
                     this.Disconnect();
                 }
                 this.isDisposed = true;
+            }
+        }
+
+        #endregion
+
+        #region NetConnection Deregister
+
+        internal class Deregister : IDisposable
+        {
+            private List<NetConnection> registeredConnections;
+            private NetConnection connection;
+
+            internal Deregister(List<NetConnection> registeredConnections, NetConnection connection)
+            {
+                this.registeredConnections = registeredConnections;
+                this.connection = connection;
+            }
+
+            public void Dispose()
+            {
+                if (registeredConnections.Contains(connection))
+                    registeredConnections.Remove(connection);
             }
         }
 
