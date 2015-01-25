@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Gem.Network.Networking
 {
-    public class PeerEvent<T> where T : IGameMessage
+    public class PeerEvent<T> where T : IServerMessage
     {
         public event EventHandler<T> Event;
 

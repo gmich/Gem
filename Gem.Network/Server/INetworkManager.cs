@@ -61,7 +61,7 @@
         /// <param name="gameMessage">
         /// The game message.
         /// </param>
-        void SendMessage(IGameMessage gameMessage, NetConnection im);
+        void SendMessage(IServerMessage gameMessage, NetConnection im);
 
         #endregion
     }

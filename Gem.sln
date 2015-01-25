@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem", "Gem\Gem.csproj", "{2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network", "Gem.Network\Gem.Network.csproj", "{3DAC3EA3-2910-4453-B0C6-3F5011251FA3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Test", "Gem.Network.Test\Gem.Network.Test.csproj", "{02BCD6A3-23C5-4C32-BB1D-3071D8F55E1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,16 @@ Global
 		{3DAC3EA3-2910-4453-B0C6-3F5011251FA3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{3DAC3EA3-2910-4453-B0C6-3F5011251FA3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{3DAC3EA3-2910-4453-B0C6-3F5011251FA3}.Release|x86.ActiveCfg = Release|Any CPU
+		{02BCD6A3-23C5-4C32-BB1D-3071D8F55E1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02BCD6A3-23C5-4C32-BB1D-3071D8F55E1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02BCD6A3-23C5-4C32-BB1D-3071D8F55E1C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{02BCD6A3-23C5-4C32-BB1D-3071D8F55E1C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{02BCD6A3-23C5-4C32-BB1D-3071D8F55E1C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{02BCD6A3-23C5-4C32-BB1D-3071D8F55E1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02BCD6A3-23C5-4C32-BB1D-3071D8F55E1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02BCD6A3-23C5-4C32-BB1D-3071D8F55E1C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{02BCD6A3-23C5-4C32-BB1D-3071D8F55E1C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{02BCD6A3-23C5-4C32-BB1D-3071D8F55E1C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

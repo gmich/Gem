@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3DAC3EA3-2910-4453-B0C6-3F5011251FA3}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{02BCD6A3-23C5-4C32-BB1D-3071D8F55E1C}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Gem.Network</RootNamespace>
-    <AssemblyName>Gem.Network</AssemblyName>
+    <RootNamespace>Gem.Network.Test</RootNamespace>
+    <AssemblyName>Gem.Network.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,13 +31,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Lidgren.Network, Version=2011.3.12.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Third Party\Lidgren.Network.dll</HintPath>
+      <HintPath>..\Gem.Network\Third Party\Lidgren.Network.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -48,22 +45,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client\ClientNetworkManager.cs" />
-    <Compile Include="IDataProvider.cs" />
-    <Compile Include="Avatar\Avatar.cs" />
-    <Compile Include="Avatar\LoadAvatarThread.cs" />
-    <Compile Include="Avatar\SteamApi.cs" />
-    <Compile Include="Avatar\DNSConverter.cs" />
-    <Compile Include="Messages\EventArgs\TitleArgs.cs" />
-    <Compile Include="Server\INetworkManager.cs" />
-    <Compile Include="Messages\IncommingMessageTypes.cs" />
-    <Compile Include="Messages\IServerMessage.cs" />
-    <Compile Include="Client\ClientEvent.cs" />
-    <Compile Include="Server\ServerNetworkManager.cs" />
-    <Compile Include="Server\ServerHandler.cs" />
+    <Compile Include="Messages\ChatMessage.cs" />
+    <Compile Include="Messages\DataMessageTypes.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gem.Network\Gem.Network.csproj">
+      <Project>{3dac3ea3-2910-4453-b0c6-3f5011251fa3}</Project>
+      <Name>Gem.Network</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

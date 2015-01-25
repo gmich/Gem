@@ -186,7 +186,7 @@
         /// <param name="gameMessage">
         /// The game message.
         /// </param>
-        public void SendMessage(IGameMessage gameMessage, NetConnection connection)
+        public void SendMessage(IServerMessage gameMessage, NetConnection connection)
         {
             NetOutgoingMessage om = this.netServer.CreateMessage();
             om.Write((byte)gameMessage.MessageType);

@@ -5,12 +5,12 @@
     /// <summary>
     /// The game message
     /// </summary>
-    public interface IGameMessage
+    public interface IServerMessage
     {
 
         #region Public Properties
 
-        GameMessageTypes MessageType { get; }
+        IncomingMessageTypes MessageType { get; }
 
         #endregion
 

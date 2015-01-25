@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Lidgren.Network;
+using Gem.Network.Messages;
 
 namespace Gem.Network
 {
     public class ClientNetworkManager
     {
-        // Client Object
         NetClient Client;
         bool IsRunning = false;
+        Dictionary<IncomingMessageTypes, Action<NetIncomingMessage>> ServerEventHandler;
+        NetConnection ServerConnection;
 
         void Connect(string hostName, string hostIP, int port)
         {
@@ -60,44 +62,28 @@ namespace Gem.Network
                 }
             }
         }
-
-
-
+        
         private void CheckServerMessages()
         {
-            NetIncomingMessage inc;
+            NetIncomingMessage im;
 
-            while ((inc = Client.ReadMessage()) != null)
+            while ((im = Client.ReadMessage()) != null)
             {
-                if (inc.MessageType == NetIncomingMessageType.Data)
+                if (im.MessageType == NetIncomingMessageType.Data)
                 {
-
+                    var messageType = (IncomingMessageTypes)im.ReadByte();
+                    if (ServerEventHandler.ContainsKey(messageType))
+                    {
+                    ServerEventHandler[messageType](im);
+                    }
+                    else
+                    {
+                        //append bad incoming message
+                    }
                 }
             }
         }
 
-
-
-        private void GetInputAndSendItToServer()
-        {
-            
-            if (false)
-            {
-
-                Client.Disconnect("bye bye");
-            }
-
-            // Create new message
-            NetOutgoingMessage outmsg = Client.CreateMessage();
-
-            // Write byte = move direction
-            outmsg.Write("something");
-
-            // Send it to server
-            Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
-
-
-        }
 
     }
 
