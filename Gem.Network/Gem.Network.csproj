@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\ClientHandler.cs" />
     <Compile Include="Client\ClientNetworkManager.cs" />
     <Compile Include="IDataProvider.cs" />
     <Compile Include="Avatar\Avatar.cs" />
