@@ -1,46 +1,55 @@
 ﻿﻿using System;
 using Lidgren.Network;
 using Gem.Network.Messages;
+using System.Collections.Generic;
 
-namespace Gem.Network
+namespace Gem.Network.Server
 {
     public class ServerHandler : IDisposable
     {
+        #region Events
 
-        #region Declarations
-
-        private readonly INetworkManager networkManager;
-
-        public string Name { get; private set; }
-
-        public bool IsRunning { get; private set; }
-
-        private readonly int maxConnections;
+        public event Action<string> WriteMessage;
 
         #endregion
 
 
+        #region Declarations
+
+        private readonly IServer networkManager;
+
+        public string Name { get; private set; }
+
+        public int Port { get; private set; }
+        
+        public bool IsRunning { get; private set; }
+
+        //private Dictionary<string, Registerer<NetConnection>> Groups;
+
+        private Registerer<NetConnection> Clients;
+
+        #endregion
+        
         #region Constructor
 
-        public ServerHandler(INetworkManager networkManager, string name, int port,int maxConnections)
+        public ServerHandler(IServer networkManager, string name, int port,int maxConnections)
         {
-            this.maxConnections = maxConnections;
             this.Name = name;
+            this.Port = port;
             this.networkManager = networkManager;
+            Clients = new Registerer<NetConnection>(maxConnections);
 
             try
             {
                 networkManager.Connect(name, port);
                 IsRunning = true;
+                WriteMessage("Server session started");
             }
             catch (Exception ex)
             {
-                //TODO: log this
+                WriteMessage("Server failed to connect : " + ex);
                 IsRunning = false;
             }
-
-            InitializeEvents();
-
         }
 
         #endregion
@@ -63,46 +72,6 @@ namespace Gem.Network
         #endregion
 
 
-        #region Initialize Events
-
-        public void InitializeEvents()
-        {
-            // bannerManager.RequestBanner += (sender, e) => networkManager.SendMessage(new RequestBannerMessage(e.Name, e.Color, e.IsUsingAvatar, e.Pos));
-        }
-
-        #endregion
-
-
-        #region Event Calls
-
-        //public void OnPlayerDisconnect(string name,int color,int pos)
-        //{
-        //    EventHandler<BannerArgs> playerDisconnected = PlayerDisconnected;
-
-        //    if (playerDisconnected != null)
-        //        playerDisconnected(PlayerDisconnected, new BannerArgs(name, color, false,pos));
-        //}
-
-
-        #endregion
-
-
-        #region Event Handling
-
-        //private void HandleAddPointingAnimationMessage(NetIncomingMessage im)
-        //{
-        //    var message = new AddPointingAnimationMessage(im);
-
-        //    if (message.Color != TileGrid.ColorComparer(TileGrid.activeColor))
-        //        animationManager.AddPointingAnimation(message.Location * (Camera.Scale / message.Scale), TileGrid.ColorComparer(message.Color));
-
-        //    if (this.IsHost)
-        //        animationManager.OnAddPointingAnimation(message.Location, message.Color, message.Scale);
-        //}
-
-        #endregion
-
-
         #region Messages
 
         private void ProcessNetworkMessages()
@@ -116,25 +85,31 @@ namespace Gem.Network
                     case NetIncomingMessageType.ConnectionApproval:
                         if (im.ReadByte() == (byte)IncomingMessageTypes.ConnectionApproval)
                         {
-                            //Append to a listener
-                            Console.WriteLine("Incoming LOGIN");
-                            im.SenderConnection.Approve();
-                            bool connectionSuccess;
-                         //   networkManager.RegisterConnection(im.SenderConnection,out connectionSuccess);
+                            var message = new ConnectionApprovalMessage(im);
+                            WriteMessage("Incoming Connection");
 
-                           // networkManager.SendMessage(IGameMessage, im.SenderConnection);
-                            Console.WriteLine("Approved new connection");
+                            if (Clients.Register(message.Sender,im.SenderConnection))
+                            {
+                                im.SenderConnection.Approve();     
+                                //Send a message to notify the others
+                                //networkManager.SendMessage(IGameMessage, im.SenderConnection);
+                                WriteMessage("Approved new connection " + im.SenderConnection);
+                            }
+                            else
+                            {
+                                im.SenderConnection.Deny();
+                                WriteMessage("Denied new connection" + im.SenderConnection);
+                            }                   
                         }
                         break;
                     case NetIncomingMessageType.StatusChanged:
                         switch ((NetConnectionStatus)im.ReadByte())
                         {
                             case NetConnectionStatus.Connected:
-                                //Append to listener
-                                Console.WriteLine("Connected to {0}");
+                                WriteMessage("Connected to {0}");
                                 break;
                             case NetConnectionStatus.Disconnected:
-                                     Console.WriteLine(im.SenderConnection.ToString() + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
+                                WriteMessage(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
                             if (im.SenderConnection.Status == NetConnectionStatus.Disconnected
                                 || im.SenderConnection.Status == NetConnectionStatus.Disconnecting)
                             {
@@ -144,27 +119,26 @@ namespace Gem.Network
                                 break;
 
                             case NetConnectionStatus.RespondedConnect:
-                                //NetOutgoingMessage hailMessage = this.networkManager.CreateMessage();
-                                //im.SenderConnection.Approve(hailMessage);
+                                //Configure approval
+                                NetOutgoingMessage hailMessage = this.networkManager.CreateMessage();
+                                im.SenderConnection.Approve(hailMessage);
                                 break;
                         }
 
                         break;
                     case NetIncomingMessageType.Data:
-                        //var gameMessageType = (GameMessageTypes)im.ReadByte();
-                        //switch (gameMessageType)
-                        //{
-                        //    case GameMessageTypes.RequestBannerState:
-                        //        this.HandleRequestBannerMessage(im);
-                        //        break;
-                        //}
+                        if (im.ReadByte() == (byte)IncomingMessageTypes.Data)
+                        {
+                            //Broadcast to all except sender
+                            networkManager.SendMessage(im as IServerMessage, im.SenderConnection);
+                        }
                         break;
                     case NetIncomingMessageType.VerboseDebugMessage:
                     case NetIncomingMessageType.DebugMessage:
                     case NetIncomingMessageType.WarningMessage:
                     case NetIncomingMessageType.ErrorMessage:
                         //Append to listener
-                        Console.WriteLine(im.ReadString());
+                        WriteMessage(im.ReadString());
                         break;
                     case NetIncomingMessageType.DiscoveryRequest:
                         //notify the client 

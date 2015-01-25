@@ -22,7 +22,7 @@ namespace Gem.Network
 
         private readonly int maxConnections;
 
-        Dictionary<IncomingMessageTypes, Action<NetIncomingMessage>> ServerEventHandler;
+        private Dictionary<IncomingMessageTypes, Action<NetIncomingMessage>> ServerEventHandler;
 
         #endregion
 
@@ -31,6 +31,7 @@ namespace Gem.Network
 
         public ClientHandler(IPEndPoint server, INetworkManager client, string name, int port, int maxConnections)
         {
+            this.ServerEventHandler = new Dictionary<IncomingMessageTypes, Action<NetIncomingMessage>>();
             this.maxConnections = maxConnections;
             this.Name = name;
             this.client = client;
@@ -66,6 +67,7 @@ namespace Gem.Network
         
 
         #endregion
+
 
         #region Close Connection
 

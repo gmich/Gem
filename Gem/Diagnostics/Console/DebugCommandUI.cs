@@ -106,7 +106,7 @@ namespace Gem.Diagnostics.Console
         private float stateTransition;
 
         // Registered echo listeners.
-        List<IDebugEchoListner> listenrs = new List<IDebugEchoListner>();
+        List<IDebugEchoListener> listenrs = new List<IDebugEchoListener>();
 
         // Registered command executioner.
         Stack<IDebugCommandExecutioner> executioners = new Stack<IDebugCommandExecutioner>();
@@ -306,12 +306,12 @@ namespace Gem.Diagnostics.Console
             commandHistoryIndex = commandHistory.Count;
         }
 
-        public void RegisterEchoListner(IDebugEchoListner listner)
+        public void RegisterEchoListner(IDebugEchoListener listner)
         {
             listenrs.Add(listner);
         }
 
-        public void UnregisterEchoListner(IDebugEchoListner listner)
+        public void UnregisterEchoListner(IDebugEchoListener listner)
         {
             listenrs.Remove(listner);
         }
@@ -326,7 +326,7 @@ namespace Gem.Diagnostics.Console
             CheckLineCount();
 
             // Call registered listeners.
-            foreach (IDebugEchoListner listner in listenrs)
+            foreach (IDebugEchoListener listner in listenrs)
                 listner.Echo(messageType, text);
         }
 

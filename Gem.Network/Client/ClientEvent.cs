@@ -1,10 +1,7 @@
 ﻿using Gem.Network.Messages;
+using Gem.Network.Server;
 using Lidgren.Network;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gem.Network.Networking
 {
@@ -12,9 +9,9 @@ namespace Gem.Network.Networking
     {
         public event EventHandler<T> Event;
 
-        public PeerEvent(INetworkManager networkManager,NetConnection connection)
+        public PeerEvent(IServer server,NetConnection connection)
         {
-            Event += (sender, e) => networkManager.SendMessage(e, connection);
+            Event += (sender, e) => server.SendMessage(e, connection);
         }
 
         public void OnEvent(T e)

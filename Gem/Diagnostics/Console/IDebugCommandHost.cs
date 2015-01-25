@@ -35,7 +35,7 @@ namespace Gem.Diagnostics.Console
     /// <summary>
     /// Interface for debug command message listener.
     /// </summary>
-    public interface IDebugEchoListner
+    public interface IDebugEchoListener
     {
         /// <summary>
         /// Output message.
@@ -48,7 +48,7 @@ namespace Gem.Diagnostics.Console
     /// <summary>
     /// Interface for debug command host.
     /// </summary>
-    public interface IDebugCommandHost : IDebugEchoListner, IDebugCommandExecutioner
+    public interface IDebugCommandHost : IDebugEchoListener, IDebugCommandExecutioner
     {
         /// <summary>
         /// Register new command.
@@ -87,13 +87,13 @@ namespace Gem.Diagnostics.Console
         /// Register message listener.
         /// </summary>
         /// <param name="listner"></param>
-        void RegisterEchoListner(IDebugEchoListner listner);
+        void RegisterEchoListner(IDebugEchoListener listner);
 
         /// <summary>
         /// Unregister message listener.
         /// </summary>
         /// <param name="listner"></param>
-        void UnregisterEchoListner(IDebugEchoListner listner);
+        void UnregisterEchoListner(IDebugEchoListener listner);
 
         /// <summary>
         /// Add Command executioner.

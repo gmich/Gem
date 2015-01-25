@@ -48,21 +48,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client\ClientManager.cs" />
+    <Compile Include="Client\Client.cs" />
     <Compile Include="Client\ClientHandler.cs" />
+    <Compile Include="Client\IClient.cs" />
+    <Compile Include="ConnectionDetails.cs" />
     <Compile Include="Deregister.cs" />
     <Compile Include="IDataProvider.cs" />
     <Compile Include="Avatar\Avatar.cs" />
     <Compile Include="Avatar\LoadAvatarThread.cs" />
     <Compile Include="Avatar\SteamApi.cs" />
     <Compile Include="Avatar\DNSConverter.cs" />
+    <Compile Include="IDebugListener.cs" />
+    <Compile Include="Messages\ConnectionApprovalMessage.cs" />
     <Compile Include="Messages\EventArgs\TitleArgs.cs" />
-    <Compile Include="Server\INetworkManager.cs" />
+    <Compile Include="INetworkManager.cs" />
     <Compile Include="Messages\IncomingMessageTypes.cs" />
     <Compile Include="Messages\IServerMessage.cs" />
     <Compile Include="Client\ClientEvent.cs" />
-    <Compile Include="Server\IServerManager.cs" />
-    <Compile Include="Server\ServerManager.cs" />
+    <Compile Include="Server\Registerer.cs" />
+    <Compile Include="Server\IServer.cs" />
+    <Compile Include="Server\Server.cs" />
     <Compile Include="Server\ServerHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

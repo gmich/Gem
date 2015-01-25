@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gem.Network.Server
+namespace Gem.Network
 {
-    public interface IServerManager : INetworkManager
+    public interface IDebugListener
     {
-        bool SendToAll { set; }
+        event Action<string> WriteMessage;
     }
 }

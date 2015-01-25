@@ -7,7 +7,7 @@ namespace Gem.Diagnostics.Logger
 {
     using Console;
 
-    public class LogEchoListener : IDebugEchoListner
+    public class LogEchoListener : IDebugEchoListener
     {
         #region Fields
 
