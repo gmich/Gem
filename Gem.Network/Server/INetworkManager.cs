@@ -21,12 +21,12 @@
         /// Registers an ip to the server
         /// </summary>
         /// <param name="connection">The incoming connection</param>
-        IDisposable RegisterConnection(NetConnection connection,out bool success);
+        IDisposable RegisterConnection(NetConnection connection);
         
         /// <summary>
         /// The connect.
         /// </summary>
-        void Start(string serverName, int port);
+        void Connect(string serverName, int port);
 
         /// <summary>
         /// The create message.

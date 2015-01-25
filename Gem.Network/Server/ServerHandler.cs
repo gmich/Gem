@@ -1,5 +1,6 @@
 ﻿﻿using System;
 using Lidgren.Network;
+using Gem.Network.Messages;
 
 namespace Gem.Network
 {
@@ -29,7 +30,7 @@ namespace Gem.Network
 
             try
             {
-                networkManager.Start(name, port);
+                networkManager.Connect(name, port);
                 IsRunning = true;
             }
             catch (Exception ex)
@@ -99,7 +100,6 @@ namespace Gem.Network
         //        animationManager.OnAddPointingAnimation(message.Location, message.Color, message.Scale);
         //}
 
-
         #endregion
 
 
@@ -114,13 +114,13 @@ namespace Gem.Network
                 switch (im.MessageType)
                 {
                     case NetIncomingMessageType.ConnectionApproval:
-                        if (im.ReadByte() == (byte)PacketTypes.LOGIN)
+                        if (im.ReadByte() == (byte)IncomingMessageTypes.ConnectionApproval)
                         {
                             //Append to a listener
                             Console.WriteLine("Incoming LOGIN");
                             im.SenderConnection.Approve();
                             bool connectionSuccess;
-                            networkManager.RegisterConnection(im.SenderConnection,out connectionSuccess);
+                         //   networkManager.RegisterConnection(im.SenderConnection,out connectionSuccess);
 
                            // networkManager.SendMessage(IGameMessage, im.SenderConnection);
                             Console.WriteLine("Approved new connection");

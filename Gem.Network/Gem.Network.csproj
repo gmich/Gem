@@ -48,8 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\ClientManager.cs" />
     <Compile Include="Client\ClientHandler.cs" />
-    <Compile Include="Client\ClientNetworkManager.cs" />
+    <Compile Include="Deregister.cs" />
     <Compile Include="IDataProvider.cs" />
     <Compile Include="Avatar\Avatar.cs" />
     <Compile Include="Avatar\LoadAvatarThread.cs" />
@@ -57,10 +58,11 @@
     <Compile Include="Avatar\DNSConverter.cs" />
     <Compile Include="Messages\EventArgs\TitleArgs.cs" />
     <Compile Include="Server\INetworkManager.cs" />
-    <Compile Include="Messages\IncommingMessageTypes.cs" />
+    <Compile Include="Messages\IncomingMessageTypes.cs" />
     <Compile Include="Messages\IServerMessage.cs" />
     <Compile Include="Client\ClientEvent.cs" />
-    <Compile Include="Server\ServerNetworkManager.cs" />
+    <Compile Include="Server\IServerManager.cs" />
+    <Compile Include="Server\ServerManager.cs" />
     <Compile Include="Server\ServerHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

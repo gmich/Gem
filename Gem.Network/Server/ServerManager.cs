@@ -9,22 +9,25 @@
     /// <summary>
     /// The server class
     /// </summary>
-    public class ServerNetworkManager : INetworkManager
+    public class ServerManager : INetworkManager
     {
 
         #region Constructor 
 
-        public ServerNetworkManager(int maxConnections)
+        public ServerManager(string serverName, int port, int maxConnections)
         {
             deliveryMethod = NetDeliveryMethod.ReliableUnordered;
-            maxConnections = 4;
+            this.maxConnections = maxConnections;
             disconnectMessage = "bye";
             SendToAll = false;
             sequenceChannel = 1;
             registeredConnections = new List<NetConnection>();
+
+            Start(serverName, port);
         }
 
         #endregion
+
 
         #region Constants and Fields
 
@@ -96,7 +99,7 @@
         /// <summary>
         /// Initialize a new connection
         /// </summary>
-        public void Start(string serverName, int port)
+        private void Start(string serverName, int port)
         {
             var config = new NetPeerConfiguration(serverName)
                 {
@@ -121,15 +124,13 @@
         /// <param name="identifier">The peer's identifier</param>
         /// <param name="connection">The peer's connection details</param>
         /// <returns>Registration success</returns>
-        public IDisposable RegisterConnection(NetConnection connection,out bool success)
+        public IDisposable Connect(NetConnection connection)
         {
             if (AllowConnections)
             {
                 registeredConnections.Add(connection);
-                success = true;
                 return new Deregister(registeredConnections, connection);
             }
-            success = false;
             return null;
         }       
 
@@ -230,6 +231,7 @@
 
         #endregion
 
+
         #region NetConnection Deregister
 
         internal class Deregister : IDisposable
@@ -251,5 +253,15 @@
         }
 
         #endregion
+
+        public IDisposable RegisterConnection(NetConnection connection)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Connect(string serverName, int port)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

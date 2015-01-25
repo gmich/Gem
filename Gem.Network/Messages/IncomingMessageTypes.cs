@@ -12,6 +12,8 @@ namespace Gem.Network.Messages
     public enum IncomingMessageTypes
     {
         ConnectionApproval,
+
+        NewClient,
                 
         Disconnect,
 
