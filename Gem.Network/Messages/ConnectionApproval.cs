@@ -4,10 +4,10 @@ using Lidgren.Network;
 
 namespace Gem.Network.Messages
 {
-    public class ConnectionApprovalMessage : IServerMessage
+    public class ConnectionApproval : IServerMessage
     {
 
-        public ConnectionApprovalMessage(NetIncomingMessage im)
+        public ConnectionApproval(NetIncomingMessage im)
         {
             this.Decode(im);
         }

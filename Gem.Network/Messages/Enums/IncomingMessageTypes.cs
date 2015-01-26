@@ -11,6 +11,9 @@ namespace Gem.Network.Messages
     /// </summary>
     public enum IncomingMessageTypes
     {
+
+        Hail,
+    
         ConnectionApproval,
 
         NewClient,

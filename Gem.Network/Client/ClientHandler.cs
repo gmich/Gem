@@ -10,6 +10,12 @@ namespace Gem.Network
     public class ClientHandler : IDisposable
     {
 
+        #region Events
+
+        public event Action<string> WriteMessage;
+
+        #endregion
+
         #region Declarations
 
         private readonly INetworkManager client;
@@ -96,11 +102,11 @@ namespace Gem.Network
             {
                 switch (im.MessageType)
                 {
+                    case NetIncomingMessageType.ConnectionApproval:
+                        //handle 
+                        WriteMessage("Approved new client");
+                        break;
                     case NetIncomingMessageType.Data:
-                        //if (im.ReadByte() == (byte)IncomingMessageTypes.NewClient)
-                        //{
-                        //    Console.WriteLine("Approved new client");
-                        //}
                         var messageType = (IncomingMessageTypes)im.ReadByte();
                         if (ServerEventHandler.ContainsKey(messageType))
                         {
@@ -111,8 +117,7 @@ namespace Gem.Network
                     case NetIncomingMessageType.DebugMessage:
                     case NetIncomingMessageType.WarningMessage:
                     case NetIncomingMessageType.ErrorMessage:
-                        //Append to listener
-                        Console.WriteLine(im.ReadString());
+                        WriteMessage(im.ReadString());
                         break;
                     case NetIncomingMessageType.DiscoveryResponse:
                         //show the response 

@@ -81,8 +81,7 @@
             this.netServer = new NetServer(config);
             this.netServer.Start();
         }
-
-
+        
         public NetOutgoingMessage CreateMessage()
         {
             return this.netServer.CreateMessage();

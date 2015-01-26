@@ -76,7 +76,7 @@
             config.EnableMessageType(NetIncomingMessageType.Error);
             config.EnableMessageType(NetIncomingMessageType.DebugMessage);
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
-            config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
+            config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
 
             client = new NetClient(config);
             client.Start();

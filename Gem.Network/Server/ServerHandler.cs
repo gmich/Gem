@@ -7,6 +7,7 @@ namespace Gem.Network.Server
 {
     public class ServerHandler : IDisposable
     {
+
         #region Events
 
         public event Action<string> WriteMessage;
@@ -30,6 +31,7 @@ namespace Gem.Network.Server
 
         #endregion
         
+
         #region Constructor
 
         public ServerHandler(IServer networkManager, string name, int port,int maxConnections)
@@ -60,6 +62,7 @@ namespace Gem.Network.Server
         public void Disconnect()
         {
             networkManager.Disconnect();
+            Clients.Dispose();
             IsRunning = false;
 
         }
@@ -85,7 +88,7 @@ namespace Gem.Network.Server
                     case NetIncomingMessageType.ConnectionApproval:
                         if (im.ReadByte() == (byte)IncomingMessageTypes.ConnectionApproval)
                         {
-                            var message = new ConnectionApprovalMessage(im);
+                            var message = new ConnectionApproval(im);
                             WriteMessage("Incoming Connection");
 
                             if (Clients.Register(message.Sender,im.SenderConnection))
@@ -114,6 +117,7 @@ namespace Gem.Network.Server
                                 || im.SenderConnection.Status == NetConnectionStatus.Disconnecting)
                             {
                                 //Deregister peer
+                                //Clients.Deregister(im.Name);
                                 //this.networkManager.DeRegisterConnection(im.Name);
                             }
                                 break;
