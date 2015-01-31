@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem", "Gem\Gem.csproj", "{2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network", "Gem.Network\Gem.Network.csproj", "{3DAC3EA3-2910-4453-B0C6-3F5011251FA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Example", "Gem.Network.Test\Gem.Network.Example.csproj", "{02BCD6A3-23C5-4C32-BB1D-3071D8F55E1C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Example", "Gem.Network.Example\Gem.Network.Example.csproj", "{02BCD6A3-23C5-4C32-BB1D-3071D8F55E1C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Tests", "Gem.Network.Tests\Gem.Network.Tests.csproj", "{E83893E0-5BC0-4C8A-876A-E1F1E526432A}"
 EndProject
