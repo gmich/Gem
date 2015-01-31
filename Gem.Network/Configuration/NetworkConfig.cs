@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gem.Network
+namespace Gem.Network.Configuration
 {
-    public interface IDebugListener
+    class NetworkConfig
     {
-        event Action<string> WriteMessage;
     }
 }

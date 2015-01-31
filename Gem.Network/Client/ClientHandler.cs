@@ -7,14 +7,27 @@ using Gem.Network.Utilities;
 
 namespace Gem.Network
 {
-    public class ClientHandler : IDisposable
+    public class ClientHandler : IDebugListener, IDisposable
     {
 
-        #region Events
-
-        public event Action<string> WriteMessage;
+        #region Message Listeners
+        
+        public IDisposable AddListener(Action<string> listener)
+        {
+            this.WriteMessage += listener;
+            throw new NotImplementedException();
+        }
+        
+        private event Action<string> WriteMessage;
 
         #endregion
+
+        #region Configurations
+
+        //INetworkConfiguration<IServerMessage> connectionApproval;
+
+        #endregion
+
 
         #region Declarations
 
@@ -29,6 +42,8 @@ namespace Gem.Network
         private readonly int maxConnections;
 
         private Dictionary<IncomingMessageTypes, Action<NetIncomingMessage>> ServerEventHandler;
+
+        public Action<NetIncomingMessage> OnConnected;
 
         #endregion
 
@@ -128,6 +143,7 @@ namespace Gem.Network
         }
 
         #endregion
+
 
     }
 }

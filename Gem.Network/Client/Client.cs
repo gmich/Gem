@@ -12,7 +12,7 @@
 
         #region Construct / Dispose
 
-        public Client(IPEndPoint serverIP, NetDeliveryMethod deliveryMethod, int sequenceChannel, string disconnectMessage = "Bye")
+        public Client(IPEndPoint serverIP,ConnectionDetails connectionDetails)
         {
             this.serverIP = serverIP;
             this.disconnectMessage = disconnectMessage;

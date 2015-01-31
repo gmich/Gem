@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chatter.cs" />
     <Compile Include="Messages\ChatMessage.cs" />
     <Compile Include="Messages\DataMessageTypes.cs" />
     <Compile Include="Program.cs" />
