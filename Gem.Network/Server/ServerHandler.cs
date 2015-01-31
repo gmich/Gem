@@ -3,7 +3,7 @@ using Lidgren.Network;
 using Gem.Network.Messages;
 using System.Collections.Generic;
 
-namespace Gem.Network.Server
+namespace Gem.Network
 {
     public class ServerHandler : IDisposable
     {

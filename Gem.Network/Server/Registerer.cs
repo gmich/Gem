@@ -3,7 +3,7 @@ using Lidgren.Network;
 using System;
 using System.Collections.Generic;
 
-namespace Gem.Network.Server
+namespace Gem.Network
 {
     /// <summary>
     /// Registers / Deregisters objects

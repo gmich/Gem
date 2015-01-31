@@ -1,4 +1,4 @@
-﻿namespace Gem.Network.Server
+﻿namespace Gem.Network
 {
     using System;
     using Lidgren.Network;

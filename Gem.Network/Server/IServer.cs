@@ -2,7 +2,7 @@
 using Lidgren.Network;
 using System.Collections.Generic;
 
-namespace Gem.Network.Server
+namespace Gem.Network
 {
     public interface IServer : INetworkManager
     {
