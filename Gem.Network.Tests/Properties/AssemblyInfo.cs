@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Gem.Network.Example")]
+[assembly: AssemblyTitle("Gem.Network.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Gem.Network.Example")]
+[assembly: AssemblyProduct("Gem.Network.Tests")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("28183ff1-4150-4992-80d2-ab3c6c3c20ec")]
+[assembly: Guid("a567da7c-5cc1-48fb-98fd-04ac7a0b1b85")]
 
 // Version information for an assembly consists of the following four values:
 //

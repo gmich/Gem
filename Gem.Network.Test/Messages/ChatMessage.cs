@@ -1,7 +1,7 @@
-﻿namespace  Gem.Network.Tests.Messages
+﻿namespace  Gem.Network.Example.Messages
 {
     using Gem.Network.Messages;
-    using Gem.Network.Test.Messages;
+    using Gem.Network.Example.Messages;
     using Lidgren.Network;
     
     public class ChatMessage : IServerMessage

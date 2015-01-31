@@ -5,37 +5,36 @@ using System.Reflection.Emit;
 
 namespace Gem.Network
 {
-    public class PropertyFields
+    public class PropertyInfo
     {
-        public Type FieldType { get; set; }
-        public string FieldName { get; set; }
+        public Type PropertyType { get; set; }
+        public string PropertyName { get; set; }
     }
 
     public static class ClassBuilder
     {
 
-        public static void CreateNewObject(List<PropertyFields> propertyFields)
+        public static Type CreateNewObject(string className, List<PropertyInfo> propertyFields)
         {
-            var myType = CompileResultType(propertyFields);
-            var myObject = Activator.CreateInstance(myType);
+            return CompileResultType(className, propertyFields);
         }
 
-        public static Type CompileResultType(List<PropertyFields> propertyFields)
+        public static Type CompileResultType(string className, List<PropertyInfo> propertyFields)
         {
-            TypeBuilder tb = GetTypeBuilder();
+            TypeBuilder tb = GetTypeBuilder(className);
             ConstructorBuilder constructor = tb.DefineDefaultConstructor(MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName);
 
             // NOTE: assuming your list contains Field objects with fields FieldName(string) and FieldType(Type)
             foreach (var field in propertyFields)
-                CreateProperty(tb, field.FieldName, field.FieldType);
+                CreateProperty(tb, field.PropertyName, field.PropertyType);
 
             Type objectType = tb.CreateType();
             return objectType;
         }
 
-        private static TypeBuilder GetTypeBuilder()
+        private static TypeBuilder GetTypeBuilder(string className)
         {
-            var typeSignature = "MyDynamicType";
+            var typeSignature = className;
             var an = new AssemblyName(typeSignature);
             AssemblyBuilder assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(an, AssemblyBuilderAccess.Run);
             ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("MainModule");

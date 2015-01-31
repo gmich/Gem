@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gem.Network.Test.Messages
+namespace Gem.Network.Example.Messages
 {
     public enum DataMessageTypes
     {
