@@ -51,7 +51,6 @@
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\ClientHandler.cs" />
     <Compile Include="Client\IClient.cs" />
-    <Compile Include="Configuration\ActionCache.cs" />
     <Compile Include="Configuration\ConfigurationProvider.cs" />
     <Compile Include="Configuration\ClassBuilder.cs" />
     <Compile Include="Configuration\NetworkConfig.cs" />
