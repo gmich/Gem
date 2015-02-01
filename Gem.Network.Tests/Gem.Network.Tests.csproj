@@ -55,8 +55,9 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="ClassBuilderTests.cs" />
-    <Compile Include="MessageEncodingTests.cs" />
+    <Compile Include="Messages\ClassBuilderTests.cs" />
+    <Compile Include="Messages\DynamicTypeEncodingTests.cs" />
+    <Compile Include="Messages\MessageEncodingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

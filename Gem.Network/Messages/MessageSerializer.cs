@@ -17,6 +17,14 @@ namespace Gem.Network.Messages
             return obj;
         }
 
+        public object Decode(NetIncomingMessage im,Type messageType)
+        {
+            var obj = Activator.CreateInstance(messageType);
+            im.ReadAllProperties(obj);
+
+            return obj;
+        }
+        
         public void Encode<T>(T objectToEncode,ref NetOutgoingMessage om)
         {
             om.WriteAllProperties(objectToEncode);
