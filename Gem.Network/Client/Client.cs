@@ -12,12 +12,26 @@
 
         #region Construct / Dispose
 
-        public Client(IPEndPoint serverIP,ConnectionDetails connectionDetails = null)
+        public Client(IPEndPoint serverIP,string serverName,ConnectionDetails connectionDetails = null)
         {
             this.serverIP = serverIP;
             //this.disconnectMessage = disconnectMessage;
            // this.deliveryMethod = deliveryMethod;
            // this.sequenceChannel = sequenceChannel;
+            var config = new NetPeerConfiguration(serverName)
+            {
+                //Port = serverIP.Port
+            };
+            config.EnableMessageType(NetIncomingMessageType.WarningMessage);
+            config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
+            config.EnableMessageType(NetIncomingMessageType.ErrorMessage);
+            config.EnableMessageType(NetIncomingMessageType.Error);
+            config.EnableMessageType(NetIncomingMessageType.DebugMessage);
+            config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+            config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
+
+            client = new NetClient(config);
+            client.Start();
         }
 
         private void Dispose(bool disposing)
@@ -65,21 +79,7 @@
         /// Connect to the server
         /// </summary>
         public void Connect(string serverName, int port)
-        {
-            var config = new NetPeerConfiguration(serverName)
-            {
-                Port = port
-            };
-            config.EnableMessageType(NetIncomingMessageType.WarningMessage);
-            config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
-            config.EnableMessageType(NetIncomingMessageType.ErrorMessage);
-            config.EnableMessageType(NetIncomingMessageType.Error);
-            config.EnableMessageType(NetIncomingMessageType.DebugMessage);
-            config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
-            config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
-
-            client = new NetClient(config);
-            client.Start();
+        {        
 
             //Configure a connection message
             //NetOutgoingMessage om = this.client.CreateMessage();
@@ -109,7 +109,12 @@
         {
             client.Recycle(im);
         }
-        
+
+        public void SendMessage(NetOutgoingMessage msg)
+        {
+            client.SendMessage(msg, NetDeliveryMethod.ReliableUnordered);
+        }
+
         public void SendMessage(IServerMessage gameMessage)
         {
             NetOutgoingMessage om = this.client.CreateMessage();

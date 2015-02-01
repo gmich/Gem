@@ -48,7 +48,7 @@
     <Compile Include="Chatter.cs" />
     <Compile Include="Messages\ChatMessage.cs" />
     <Compile Include="Messages\DataMessageTypes.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="TestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

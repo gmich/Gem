@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gem.Network.Messages;
 using Lidgren.Network;
 using System.Net;
+using System.Diagnostics;
 
 namespace Gem.Network.Tests
 {
@@ -17,26 +18,19 @@ namespace Gem.Network.Tests
 
         #region Initialization
 
-        private Server server;
-        private Client client;
         private MessageSerializer serializer;
 
         [TestInitialize()]
         public void MyTestInitialize()
         {
             serializer = new MessageSerializer();
-            server = new Server(NetDeliveryMethod.ReliableUnordered, 0);
-            server.Connect("localhost", 14242);
-
-            //client = new Client(new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14242));
-            //client.Connect("localhost", 14242);
+         
         }
 
         [TestCleanup()]
         public void MyTestCleanup()
         {
-            server.Dispose();
-            //client.Dispose();
+            serializer = null;
         }
 
         #endregion
@@ -47,15 +41,75 @@ namespace Gem.Network.Tests
         }
 
         [TestMethod]
-        public void SuccessfulSerializationTest()
-        {
+        public void SuccessfulEncodeTest()
+        {          
+            var server = new Server(NetDeliveryMethod.ReliableUnordered, 0);
+            server.Connect("local", 14242);
+
             var outgoingmessage = server.CreateMessage();
             var obj = new ClassToSerialize();
 
             obj.StringProperty = "SomeString";
+
+
+            Assert.IsTrue(outgoingmessage.LengthBits == 0);
+
             serializer.Encode(obj, ref outgoingmessage);
 
+            Assert.IsTrue(outgoingmessage.LengthBits > 0);
+            server.Dispose();
         }
 
+        /// <summary>
+        /// This test requires to run the the Gem.Network.Example.MessageEncodingTestHelper() to send the message
+        /// </summary>
+        [TestMethod]
+        public void SuccessfulDecodeTest()
+        {
+            Process server = new Process();
+            try
+            {
+                server.StartInfo.FileName = @"C:\Users\George\Documents\GitHub\Gem\Gem.Network.Example\bin\Debug\Gem.Network.Example.exe";
+                server.StartInfo.Arguments = "SuccessfulDecodeTest";
+                server.Start();
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail("Failed to launch the server. Reason:" + ex.Message);
+            }
+
+            var client = new Client(new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14242), "local");
+
+            client.Connect("local", 14242);
+
+            NetIncomingMessage msg;
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            //wait 7 sec
+            while (stopwatch.ElapsedMilliseconds < 7000)
+            {
+                if ((msg = client.ReadMessage()) != null)
+                {
+                    switch (msg.MessageType)
+                    {
+                        case NetIncomingMessageType.StatusChanged:
+                            var om = client.CreateMessage();
+                            client.SendMessage(om);
+                            break;
+                        default:
+                            var readableMessage = serializer.Decode<ClassToSerialize>(msg);
+                            Assert.AreEqual(readableMessage.StringProperty, "SomeString");
+
+                            server.CloseMainWindow();
+                            server.Close();
+                            return;
+                    }
+                }
+            }
+            Assert.Fail("Failed to get the incoming message");
+            server.CloseMainWindow();
+            server.Close();
+        }
     }
 }
