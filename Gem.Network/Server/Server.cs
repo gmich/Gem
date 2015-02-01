@@ -5,6 +5,7 @@
     using Gem.Network.Messages;
     using System.Collections.Generic;
     using Gem.Network.Utilities;
+    using System.Net;
 
     /// <summary>
     /// The server class. Sends and recieves messages
@@ -14,11 +15,12 @@
 
         #region Construct / Dispose
 
-        public Server(NetDeliveryMethod deliveryMethod, int sequenceChannel, string disconnectMessage = "Bye")
+        public Server(NetDeliveryMethod deliveryMethod, int sequenceChannel, int maxConnections = 4 , string disconnectMessage = "Bye")
         {
             this.disconnectMessage = disconnectMessage;
             this.deliveryMethod = deliveryMethod;
             this.sequenceChannel = sequenceChannel;
+        
         }
 
         private void Dispose(bool disposing)
@@ -30,6 +32,24 @@
                     this.Disconnect();
                 }
                 this.isDisposed = true;
+            }
+        }
+
+        //TODO: refactor
+        public IPAddress IP
+        {
+            get
+            {
+                return this.netServer.Configuration.LocalAddress;
+            }
+        }
+
+        //TODO: refactor
+        public int Port
+        {
+            get
+            {
+                return this.netServer.Configuration.Port;
             }
         }
 
@@ -69,6 +89,7 @@
             var config = new NetPeerConfiguration(serverName)
                 {
                     Port = port
+                    //MaximumConnections = maxConnections
                 };
             config.EnableMessageType(NetIncomingMessageType.WarningMessage);
             config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
@@ -100,6 +121,15 @@
         public void Recycle(NetIncomingMessage im)
         {
             this.netServer.Recycle(im);
+        }
+
+        /// <summary>
+        /// Sends the message to all 
+        /// </summary>
+        /// <param name="message">The message to send</param>
+        public void SendMessage(NetOutgoingMessage message)
+        {
+            this.netServer.SendToAll(message, deliveryMethod);
         }
 
         /// <summary>

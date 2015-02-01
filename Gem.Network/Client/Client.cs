@@ -1,4 +1,4 @@
-﻿namespace Gem.Network.Client
+﻿namespace Gem.Network
 {
     using System;
     using Lidgren.Network;
@@ -12,12 +12,12 @@
 
         #region Construct / Dispose
 
-        public Client(IPEndPoint serverIP,ConnectionDetails connectionDetails)
+        public Client(IPEndPoint serverIP,ConnectionDetails connectionDetails = null)
         {
             this.serverIP = serverIP;
-            this.disconnectMessage = disconnectMessage;
-            this.deliveryMethod = deliveryMethod;
-            this.sequenceChannel = sequenceChannel;
+            //this.disconnectMessage = disconnectMessage;
+           // this.deliveryMethod = deliveryMethod;
+           // this.sequenceChannel = sequenceChannel;
         }
 
         private void Dispose(bool disposing)
@@ -68,7 +68,7 @@
         {
             var config = new NetPeerConfiguration(serverName)
             {
-                Port = Convert.ToInt32(port)
+                Port = port
             };
             config.EnableMessageType(NetIncomingMessageType.WarningMessage);
             config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
@@ -82,10 +82,10 @@
             client.Start();
 
             //Configure a connection message
-            NetOutgoingMessage om = this.client.CreateMessage();
+            //NetOutgoingMessage om = this.client.CreateMessage();
             //om.Write((byte)gameMessage.MessageType);
             //gameMessage.Encode(om);
-            client.Connect(serverIP, om);
+            client.Connect(serverIP);
             //TODO: configure wait for approval
             //configure server discovery response
         }

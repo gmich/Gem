@@ -1,6 +1,6 @@
 ﻿using Gem.Network.Messages;
 
-namespace Gem.Network.Client
+namespace Gem.Network
 {
     interface IClient : INetworkManager
     {
