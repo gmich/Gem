@@ -90,24 +90,25 @@ namespace Gem.Network.Tests.Messages
                             client.SendMessage(om);
                             break;
                         default:
-                            dynamic readableMessageWithType = serializer.Decode(msg,myNewType);
+                            dynamic readableMessageWithType = serializer.Decode(msg, myNewType);
                             Assert.AreEqual(readableMessageWithType.Name, "DynamicType");
 
                             //Decoding dynamic types with generics doesn't work
                             //dynamic readableMessageWithGeneric = serializer.Decode<dynamic>(msg);       
                             //Assert.AreEqual(readableMessageWithGeneric.Name, "DynamicType");
-                            
+
                             server.CloseMainWindow();
                             server.Close();
                             return;
                     }
                 }
             }
+
             Assert.Fail("Failed to get the incoming message");
             server.CloseMainWindow();
             server.Close();
         }
-    }
 
+    }
 }
 

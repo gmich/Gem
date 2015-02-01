@@ -12,6 +12,10 @@
 
         #region Construct / Dispose
 
+        //This is for mocking purposes only
+        public Client() { }
+
+
         public Client(IPEndPoint serverIP,string serverName,ConnectionDetails connectionDetails = null)
         {
             this.serverIP = serverIP;
@@ -110,7 +114,8 @@
             client.Recycle(im);
         }
 
-        public void SendMessage(NetOutgoingMessage msg)
+        //virtual is set for mocking purposes
+        public virtual void SendMessage(NetOutgoingMessage msg)
         {
             client.SendMessage(msg, NetDeliveryMethod.ReliableUnordered);
         }
@@ -125,6 +130,6 @@
         }
 
         #endregion
-        
+
     }
 }

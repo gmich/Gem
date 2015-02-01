@@ -39,6 +39,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Third Party\Lidgren.Network.dll</HintPath>
     </Reference>
+    <Reference Include="Seterlund.CodeGuard, Version=2.3.4.1324, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Third Party\Seterlund.CodeGuard.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -53,6 +57,7 @@
     <Compile Include="Client\IClient.cs" />
     <Compile Include="Configuration\ConfigurationProvider.cs" />
     <Compile Include="Configuration\ClassBuilder.cs" />
+    <Compile Include="Configuration\EventBuilder.cs" />
     <Compile Include="Configuration\NetworkConfig.cs" />
     <Compile Include="Messages\MessageSerializer.cs" />
     <Compile Include="Other\AttributeContainer.cs" />
@@ -64,6 +69,7 @@
     <Compile Include="Avatar\LoadAvatarThread.cs" />
     <Compile Include="Avatar\SteamApi.cs" />
     <Compile Include="Avatar\DNSConverter.cs" />
+    <Compile Include="Other\RandomGenerator.cs" />
     <Compile Include="Prefedined\ConfigurationCreator.cs" />
     <Compile Include="Prefedined\ConnectionApprovalHandler.cs" />
     <Compile Include="Utilities\IDebugListener.cs" />
@@ -79,7 +85,6 @@
     <Compile Include="Server\ServerHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

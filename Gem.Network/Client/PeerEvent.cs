@@ -4,22 +4,24 @@ using System;
 
 namespace Gem.Network.Networking
 {
-    public class PeerEvent
+    //TODO: create a wrapper interface for NetOutgoingMessages
+    //Perform message encoding
+    public class PeerEvent<T>
     {
-        public event EventHandler<IServerMessage> Event;
+        public event EventHandler<NetOutgoingMessage> Event;
 
-        public void SubscribeEvent(IServer server,NetConnection connection)
+        public void SubscribeEvent(IClient client)
         {
-            Event += (sender, e) => server.SendMessage(e, connection);
+            Event += (sender, e) => client.SendMessage(e);
         }
 
-        public void OnEvent(Func<IServerMessage> serverMessage)
+        public void OnEvent(NetOutgoingMessage arg)
         {
-            EventHandler<IServerMessage> newPeerEvent = Event;
+            EventHandler<NetOutgoingMessage> newPeerEvent = Event;
             if (newPeerEvent != null)
             {
-                newPeerEvent(this, serverMessage());
+                newPeerEvent(this, arg);
             }
-        }       
+        }
     }
 }

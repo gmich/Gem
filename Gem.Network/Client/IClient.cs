@@ -1,9 +1,12 @@
 ﻿using Gem.Network.Messages;
+using Lidgren.Network;
 
 namespace Gem.Network
 {
-    interface IClient : INetworkManager
+    public interface IClient : INetworkManager
     {
         void SendMessage(IServerMessage gameMessage);
+
+        void SendMessage(NetOutgoingMessage gameMessage);
     }
 }

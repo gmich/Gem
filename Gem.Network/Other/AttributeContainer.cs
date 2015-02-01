@@ -19,6 +19,7 @@ namespace Gem.Network.Other
 
 
         public string Configuration { get; set; }
+        public string HandleWith { get; set;}
 
         public NetIncomingMessageType MessageType { get; set; }
 
@@ -27,14 +28,15 @@ namespace Gem.Network.Other
 
     public class Person
     {
-        [Client(MessageType = NetIncomingMessageType.ConnectionApproval,
-            Configuration = "Default")]
+        [Client(Configuration = "Default",
+                MessageType = NetIncomingMessageType.Data,
+                HandleWith = "Say")]                
         public void Say(string message)
         {
+            Console.WriteLine(message);
 
+            //NetworkConfig.Send(message);
         }
-
-
     }
 
     public class Message : IServerMessage

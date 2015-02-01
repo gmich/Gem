@@ -5,6 +5,9 @@ using System;
 
 namespace Gem.Network.Messages
 {
+    /// <summary>
+    /// TODO: make static
+    /// </summary>
     public class MessageSerializer
     {
 

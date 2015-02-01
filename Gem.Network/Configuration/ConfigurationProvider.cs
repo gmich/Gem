@@ -18,5 +18,4 @@ namespace Gem.Network.Configuration
             MessageHandlers.Add(type,action);
         }
     }
-
 }

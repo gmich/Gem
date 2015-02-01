@@ -4,9 +4,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gem.Network.Tests
 {
+
     [TestClass]
     public class ClassBuilderTests
     {
+
         [TestMethod]
         public void CreateNewPOCOClassTest()
         {
@@ -64,8 +66,7 @@ namespace Gem.Network.Tests
             var floatProperty = myObject.GetType().GetProperty("FloatProperty");
 
             Assert.IsNull(stringProperty.GetValue(myObject));
-
-
+            
             myObject.StringProperty = "String";
             myObject.IntProperty = 0;
             myObject.DoubleProperty = 2;
