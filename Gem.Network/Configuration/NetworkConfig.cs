@@ -12,10 +12,18 @@ namespace Gem.Network.Configuration
         {
             return this;
         }
-    }
 
-    public class Sender
-    {
+        public static List<Type> Send(params object[] args)
+        {
+            var types = new List<Type>();
+
+            foreach (var arg in args)
+            {
+                types.Add(arg.GetType());
+            }
+            return types;
+        }
+
         void Send<T1>(T1 t)
         {
 
@@ -37,7 +45,7 @@ namespace Gem.Network.Configuration
         {
 
         }
-          
+
         void Send<T1, T2, T3, T4, T5, T6>()
         {
 

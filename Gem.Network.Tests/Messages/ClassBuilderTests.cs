@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Gem.Network.Configuration;
 
 namespace Gem.Network.Tests
 {
@@ -66,7 +67,7 @@ namespace Gem.Network.Tests
             var floatProperty = myObject.GetType().GetProperty("FloatProperty");
 
             Assert.IsNull(stringProperty.GetValue(myObject));
-            
+
             myObject.StringProperty = "String";
             myObject.IntProperty = 0;
             myObject.DoubleProperty = 2;
@@ -76,6 +77,41 @@ namespace Gem.Network.Tests
             Assert.AreEqual(intProperty.GetValue(myObject), 0);
             Assert.AreEqual(doubleProperty.GetValue(myObject), 2);
             Assert.AreEqual(floatProperty.GetValue(myObject), 1.0f);
+        }
+
+        [TestMethod]
+        public void CreatePOCOByNetConfigArgumentsTest()
+        {
+            var types = NetworkConfig.Send("string", 1);
+
+            var propertyList = new List<PropertyInfo>();
+            int counter=0;
+            foreach (var type in types)
+            {
+                propertyList.Add(new PropertyInfo
+                {
+                    PropertyName = "A" + counter,
+                    PropertyType = type
+                });
+                counter++;
+            }
+                    
+            Type myNewType = ClassBuilder.CreateNewObject("POCO", propertyList);
+
+            dynamic myObject = Activator.CreateInstance(myNewType);
+            Assert.IsTrue(myObject.GetType().Name == "POCO");
+
+            var stringProperty = myObject.GetType().GetProperty("A0");
+            var intProperty = myObject.GetType().GetProperty("A1");
+
+            Assert.IsNull(stringProperty.GetValue(myObject));
+
+            myObject.A0 = "String";
+            myObject.A1 = 1;
+
+
+            Assert.AreEqual(stringProperty.GetValue(myObject), "String");
+            Assert.AreEqual(intProperty.GetValue(myObject), 1);   
         }
     }
 }
