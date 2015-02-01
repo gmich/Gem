@@ -64,6 +64,7 @@
     <Compile Include="Messages\ClassBuilderTests.cs" />
     <Compile Include="Messages\DynamicTypeEncodingTests.cs" />
     <Compile Include="Messages\MessageEncodingTests.cs" />
+    <Compile Include="ObjectExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

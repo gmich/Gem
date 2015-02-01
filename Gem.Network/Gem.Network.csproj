@@ -72,6 +72,7 @@
     <Compile Include="Other\RandomGenerator.cs" />
     <Compile Include="Prefedined\ConfigurationCreator.cs" />
     <Compile Include="Prefedined\ConnectionApprovalHandler.cs" />
+    <Compile Include="Utilities\DynamicPOCORepository.cs" />
     <Compile Include="Utilities\IDebugListener.cs" />
     <Compile Include="Configuration\IMessageConfiguration.cs" />
     <Compile Include="Messages\ConnectionApproval.cs" />
