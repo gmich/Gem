@@ -5,21 +5,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gem.Network.Other
 {
 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class ClientAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
+    public sealed class IsPrimitiveAttribute : ValidationAttribute
     {
-        public ClientAttribute()
+
+        public override bool IsValid(object type)
         {
-            this.Configuration = "Default";
+            return (!(type.GetType().IsPrimitive || type.GetType() == typeof(String)));
         }
 
 
+        public override string FormatErrorMessage(string message)
+        {
+            return String.Format(message);
+        }
+
+    }
+
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    public class ClientAttribute : Attribute
+    {
+        public ClientAttribute(params Type[] types)
+        {
+            this.Types = types;
+            this.Configuration = "Default";
+        }
+
+        [IsPrimitive]
+        public Type[] Types { get; set; }
+
         public string Configuration { get; set; }
-        public string HandleWith { get; set;}
+        public string HandleWith { get; set; }
 
         public NetIncomingMessageType MessageType { get; set; }
 
@@ -28,9 +49,10 @@ namespace Gem.Network.Other
 
     public class Person
     {
-        [Client(Configuration = "Default",
+        [Client(typeof(string), typeof(int),
+                Configuration = "Default",
                 MessageType = NetIncomingMessageType.Data,
-                HandleWith = "Say")]                
+                HandleWith = "Say")]
         public void Say(string message)
         {
             Console.WriteLine(message);
@@ -58,6 +80,4 @@ namespace Gem.Network.Other
             throw new NotImplementedException();
         }
     }
-
-
 }
