@@ -15,6 +15,7 @@ namespace Gem.Network.Tests
     [TestClass]
     public class ClientEventTests
     {
+
         [TestMethod]
         public void SendMessageThroughDynamicPeerEventTest()
         {
@@ -45,9 +46,7 @@ namespace Gem.Network.Tests
 
             //verify that the message was sent
             mockClient.Verify(c => c.SendMessage(msg), Times.Once);
-        }
-
-      
+        }     
              
     }
 }

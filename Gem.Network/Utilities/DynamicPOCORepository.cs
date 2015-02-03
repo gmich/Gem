@@ -14,7 +14,7 @@ namespace Gem.Network.Utilities
         /// <param name="propName">The property's name</param>
         /// <param name="obj">The object</param>
         /// <returns>The property's value</returns>
-        public static object GetValue(this object obj,string propName)
+        public static object GetValue(this object obj, string propName)
         {
             return obj.GetType().GetProperty(propName).GetValue(obj, null);
         }
@@ -25,9 +25,15 @@ namespace Gem.Network.Utilities
         /// <param name="propName">The property's name</param>
         /// <param name="obj">The object</param>
         /// <returns>The property's value</returns>
-        public static void SetValue(this object obj, string propName,object propValue)
+        public static void SetValue(this object obj, string propName, object propValue)
         {
             obj.GetType().GetProperty(propName).SetValue(obj, propValue);
+        }
+
+
+        public static object DynamicInvoke(this object obj, string name, object[] args)
+        {
+            return obj.GetType().GetMethod(name).Invoke(obj, args);
         }
     }
 }
