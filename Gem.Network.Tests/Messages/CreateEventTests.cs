@@ -17,9 +17,10 @@ namespace Gem.Network.Tests
         public void DynamicEventInvocationTest()
         {
             var tester = new Mock<EventTester>();
-            var messageHandler = NetworkConfig.ForTag("tag").
-                CreateEvent(typeof(string)).
-                HandleWith(tester.Object, "AppendSomething");
+
+            var messageHandler = NetworkConfig.ForTag("tag")
+                .CreateEvent(typeof(string))
+                .HandleWith(tester.Object, "AppendSomething");
 
             messageHandler.HandleMessage("say");
 
@@ -27,7 +28,7 @@ namespace Gem.Network.Tests
 
             messageHandler.HandleMessage("say twice");
             messageHandler.HandleMessage("say twice");
-
+   
             tester.Verify(x => x.AppendSomething("say twice"), Times.Exactly(2));
         }
 
@@ -35,8 +36,8 @@ namespace Gem.Network.Tests
         public void ComplexDynamicEventInvocationTest()
         {
             var tester = new Mock<EventTester>();
-            var messageHandler = NetworkConfig.ForTag("tag").
-                CreateEvent(typeof(string), typeof(int), typeof(int), typeof(string))
+            var messageHandler = NetworkConfig.ForTag("tag")
+                .CreateEvent(typeof(string), typeof(int), typeof(int), typeof(string))
                 .HandleWith(tester.Object, "DoSomethingComplicated");
 
             messageHandler.HandleMessage("say", 1, 2, "error");

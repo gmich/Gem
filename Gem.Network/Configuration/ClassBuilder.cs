@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Linq;
 
 namespace Gem.Network
 {
@@ -22,11 +23,26 @@ namespace Gem.Network
         public static Type CompileResultType(string className, List<PropertyInfo> propertyFields)
         {
             TypeBuilder tb = GetTypeBuilder(className);
-            ConstructorBuilder constructor = tb.DefineDefaultConstructor(MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName);
+            ConstructorBuilder constructorDefault = tb.DefineDefaultConstructor(MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName);
+            ConstructorBuilder constructorParameters = tb.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, propertyFields.Select(x=>x.PropertyType).ToArray() );
 
-            // NOTE: assuming your list contains Field objects with fields FieldName(string) and FieldType(Type)
+            ILGenerator ctorIL = constructorParameters.GetILGenerator();
+            Type objType = Type.GetType("System.Object");
+            ConstructorInfo objCtor = objType.GetConstructor(new Type[0]);
+            ctorIL.Emit(OpCodes.Ldarg_0);
+            ctorIL.Emit(OpCodes.Call, objCtor);
+
+            int constructorIndexCount = 0;
             foreach (var field in propertyFields)
-                CreateProperty(tb, field.PropertyName, field.PropertyType);
+            {
+                var dynamicField = CreateProperty(tb, field.PropertyName, field.PropertyType);
+                ctorIL.Emit(OpCodes.Ldarg_0);
+                ctorIL.Emit(OpCodes.Ldarg_S, ++constructorIndexCount);
+                ctorIL.Emit(OpCodes.Stfld, dynamicField);
+               // constructorIndexCount++;
+            }
+
+            ctorIL.Emit(OpCodes.Ret);
 
             Type objectType = tb.CreateType();
             return objectType;
@@ -49,7 +65,7 @@ namespace Gem.Network
             return tb;
         }
 
-        private static void CreateProperty(TypeBuilder tb, string propertyName, Type propertyType)
+        private static FieldBuilder CreateProperty(TypeBuilder tb, string propertyName, Type propertyType)
         {
             FieldBuilder fieldBuilder = tb.DefineField("_" + propertyName, propertyType, FieldAttributes.Private);
 
@@ -83,6 +99,8 @@ namespace Gem.Network
 
             propertyBuilder.SetGetMethod(getPropMthdBldr);
             propertyBuilder.SetSetMethod(setPropMthdBldr);
+
+            return fieldBuilder;
         }
     }
 }

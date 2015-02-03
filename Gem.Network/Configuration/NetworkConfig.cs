@@ -55,8 +55,8 @@ namespace Gem.Network.Configuration
         public IncomingMessageHandler CreateEvent(params Type[] args)
         {
             //Guard.That(typeof(T) == typeof(IncomingMessageTypes),"Invalid message type");
-
-            Guard.That(args.Any(x => x.IsPrimitive || x == typeof(string)),"All types should be primitive");
+ 
+            Guard.That(args.All(x => x.IsPrimitive || x == typeof(string)),"All types should be primitive");
 
             foreach (var arg in args)
             {
@@ -78,7 +78,7 @@ namespace Gem.Network.Configuration
         object ObjectsDelegate { get; set; }
         private List<PropertyInfo> propertyInfo;
 
-        public IncomingMessageHandler(string Tag, List<PropertyInfo> propertyInfo)
+        internal IncomingMessageHandler(string Tag, List<PropertyInfo> propertyInfo)
         {
             this.Tag = Tag;
             this.propertyInfo = propertyInfo;
