@@ -60,8 +60,6 @@ namespace Gem.Network.Example
         public static void MessageDecodingTestHelper()
         {
             Server server;
-            MessageSerializer serializer;
-            serializer = new MessageSerializer();
             server = new Server(NetDeliveryMethod.ReliableUnordered, 0);
             server.Connect("local", 14242);
             
@@ -83,7 +81,7 @@ namespace Gem.Network.Example
                             var outgoingmessage = server.CreateMessage();
                             var obj = new ClassToSerialize();
                             obj.StringProperty = "SomeString";
-                            serializer.Encode(obj, ref outgoingmessage);
+                            MessageSerializer.Encode(obj, ref outgoingmessage);
                             server.SendMessage(outgoingmessage);
 
                             Console.WriteLine("Sended a package with some string");
@@ -112,8 +110,6 @@ namespace Gem.Network.Example
             #endregion
 
             Server server;
-            MessageSerializer serializer;
-            serializer = new MessageSerializer();
             server = new Server(NetDeliveryMethod.ReliableUnordered, 0);
             server.Connect("local", 14241);
 
@@ -133,7 +129,7 @@ namespace Gem.Network.Example
 
                         case NetIncomingMessageType.Data:
                             var outgoingmessage = server.CreateMessage();
-                            serializer.Encode(myObject, ref outgoingmessage);
+                            MessageSerializer.Encode(myObject, ref outgoingmessage);
                             server.SendMessage(outgoingmessage);
 
                             Console.WriteLine("Sended a package with some string");

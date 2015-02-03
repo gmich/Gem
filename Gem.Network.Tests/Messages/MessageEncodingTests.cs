@@ -15,26 +15,7 @@ namespace Gem.Network.Tests
     [TestClass]
     public class MessageEncodingTests
     {
-
-        #region Initialization
-
-        private MessageSerializer serializer;
-
-        [TestInitialize()]
-        public void MyTestInitialize()
-        {
-            serializer = new MessageSerializer();
-         
-        }
-
-        [TestCleanup()]
-        public void MyTestCleanup()
-        {
-            serializer = null;
-        }
-
-        #endregion
-
+          
         internal class ClassToSerialize
         {
             public string StringProperty { get; set; }
@@ -54,7 +35,7 @@ namespace Gem.Network.Tests
 
             Assert.IsTrue(outgoingmessage.LengthBits == 0);
 
-            serializer.Encode(obj, ref outgoingmessage);
+            MessageSerializer.Encode(obj, ref outgoingmessage);
 
             Assert.IsTrue(outgoingmessage.LengthBits > 0);
             server.Dispose();
@@ -98,7 +79,7 @@ namespace Gem.Network.Tests
                             client.SendMessage(om);
                             break;
                         default:
-                            var readableMessage = serializer.Decode<ClassToSerialize>(msg);
+                            var readableMessage = MessageSerializer.Decode<ClassToSerialize>(msg);
                             Assert.AreEqual(readableMessage.StringProperty, "SomeString");
 
                             server.CloseMainWindow();

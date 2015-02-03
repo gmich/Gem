@@ -62,6 +62,7 @@
     <Compile Include="Client\ClientEventTests.cs" />
     <Compile Include="Messages\ByteGeneratorTest.cs" />
     <Compile Include="Messages\ClassBuilderTests.cs" />
+    <Compile Include="Messages\CreateEventTests.cs" />
     <Compile Include="Messages\DynamicTypeEncodingTests.cs" />
     <Compile Include="Messages\MessageEncodingTests.cs" />
     <Compile Include="ObjectExtensionsTests.cs" />

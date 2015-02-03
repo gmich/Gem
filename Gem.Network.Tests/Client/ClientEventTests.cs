@@ -37,9 +37,8 @@ namespace Gem.Network.Tests
             //create a dynamic event raising class
             dynamic eventRaisingclass = EventBuilder.BuildEventRaisingClass(myNewType);
 
-            var serializer = new MessageSerializer();
             var msg = client.CreateMessage();
-            serializer.Encode(myNewObject, ref msg);
+            MessageSerializer.Encode(myNewObject, ref msg);
             // eventRaisingclass.Event += peerEvent;
             eventRaisingclass.SubscribeEvent(mockClient.Object);
             eventRaisingclass.OnEvent(msg);

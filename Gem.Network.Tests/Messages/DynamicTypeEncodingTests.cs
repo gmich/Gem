@@ -36,8 +36,7 @@ namespace Gem.Network.Tests.Messages
 
             Assert.IsTrue(outgoingmessage.LengthBits == 0);
 
-            var serializer = new MessageSerializer();
-            serializer.Encode(myObject, ref outgoingmessage);
+            MessageSerializer.Encode(myObject, ref outgoingmessage);
 
             Assert.IsTrue(outgoingmessage.LengthBits > 0);
 
@@ -69,7 +68,6 @@ namespace Gem.Network.Tests.Messages
             };
             Type myNewType = ClassBuilder.CreateNewObject("POCO", propertyList);
 
-            var serializer = new MessageSerializer();
             var client = new Client(new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241), "local");
 
             client.Connect("local", 14241);
@@ -90,7 +88,7 @@ namespace Gem.Network.Tests.Messages
                             client.SendMessage(om);
                             break;
                         default:
-                            dynamic readableMessageWithType = serializer.Decode(msg, myNewType);
+                            dynamic readableMessageWithType = MessageSerializer.Decode(msg, myNewType);
                             Assert.AreEqual(readableMessageWithType.Name, "DynamicType");
 
                             //Decoding dynamic types with generics doesn't work

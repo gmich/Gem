@@ -11,7 +11,7 @@ namespace Gem.Network.Messages
     public class MessageSerializer
     {
 
-        public T Decode<T>(NetIncomingMessage im)
+        public static T Decode<T>(NetIncomingMessage im)
             where T: new()
         {
             T obj = (T)Activator.CreateInstance(typeof(T));
@@ -20,7 +20,7 @@ namespace Gem.Network.Messages
             return obj;
         }
 
-        public object Decode(NetIncomingMessage im,Type messageType)
+        public static object Decode(NetIncomingMessage im,Type messageType)
         {
             var obj = Activator.CreateInstance(messageType);
             im.ReadAllProperties(obj);
@@ -28,7 +28,7 @@ namespace Gem.Network.Messages
             return obj;
         }
         
-        public void Encode<T>(T objectToEncode,ref NetOutgoingMessage om)
+        public static void Encode<T>(T objectToEncode,ref NetOutgoingMessage om)
         {
             om.WriteAllProperties(objectToEncode);
         }

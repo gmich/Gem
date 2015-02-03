@@ -35,9 +35,16 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CSScriptLibrary, Version=3.9.2.0, Culture=neutral, PublicKeyToken=70fcc3d18c749033, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Third Party\CSScriptLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="Lidgren.Network, Version=2011.3.12.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Third Party\Lidgren.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.CSharp">
+      <HintPath>..\packages\CS-Script.3.9.2.0\lib\net45\Mono.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Seterlund.CodeGuard, Version=2.3.4.1324, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -61,6 +68,7 @@
     <Compile Include="Configuration\DelegateBuilder.cs" />
     <Compile Include="Configuration\EventBuilder.cs" />
     <Compile Include="Configuration\NetworkConfig.cs" />
+    <Compile Include="Configuration\Script.cs" />
     <Compile Include="Messages\MessageSerializer.cs" />
     <Compile Include="Other\AttributeContainer.cs" />
     <Compile Include="Other\AttributeResolver.cs" />
@@ -74,8 +82,10 @@
     <Compile Include="Other\RandomGenerator.cs" />
     <Compile Include="Prefedined\ConfigurationCreator.cs" />
     <Compile Include="Prefedined\ConnectionApprovalHandler.cs" />
+    <Compile Include="Scripting.cs" />
+    <Compile Include="Utilities\ParamsResolver.cs" />
     <Compile Include="Utilities\RuntimeCompiler.cs" />
-    <Compile Include="Utilities\DynamicPOCORepository.cs" />
+    <Compile Include="Utilities\ObjectExtensions.cs" />
     <Compile Include="Utilities\IDebugListener.cs" />
     <Compile Include="Configuration\IMessageConfiguration.cs" />
     <Compile Include="Messages\ConnectionApproval.cs" />
