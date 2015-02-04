@@ -7,13 +7,28 @@ using Gem.Network.Messages;
 using Seterlund.CodeGuard;
 using CSScriptLibrary;
 using System.Text.RegularExpressions;
+using System.Net;
+using Lidgren.Network;
 
 namespace Gem.Network.Configuration
 {
+    //TODO: refactor
     public static class NetworkConfig
     {
+        //initialize differently
+        public static Client client;
+
         public static DynamicMessage ForTag(string tag)
         {
+            client = new Client();
+            client = new Client(new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241), "local");
+            return new DynamicMessage(tag);
+        }
+
+        //temporary for testing
+        public static DynamicMessage ForTag(string tag,Client client)
+        {
+            NetworkConfig.client = client;
             return new DynamicMessage(tag);
         }
 
@@ -33,11 +48,9 @@ namespace Gem.Network.Configuration
     public sealed class DynamicMessage
     {
         private readonly string Tag;
-
         private List<PropertyInfo> propertyInfo;
         private int PropertyCount { get; set; }
 
-        public Type PocoType{ get; set;}
         public IncomingMessageTypes MessageType { get; private set; }
 
         public string this[int param]
@@ -55,7 +68,7 @@ namespace Gem.Network.Configuration
         public IncomingMessageHandler CreateEvent(params Type[] args)
         {
             //Guard.That(typeof(T) == typeof(IncomingMessageTypes),"Invalid message type");
- 
+
             Guard.That(args.All(x => x.IsPrimitive || x == typeof(string)),"All types should be primitive");
 
             foreach (var arg in args)
@@ -66,6 +79,8 @@ namespace Gem.Network.Configuration
                     PropertyType = arg
                 });
             }
+      
+
             return new IncomingMessageHandler(this.Tag,this.propertyInfo);
         }
     }
@@ -77,12 +92,15 @@ namespace Gem.Network.Configuration
         string DelegateName { get; set;}
         object ObjectsDelegate { get; set; }
         private List<PropertyInfo> propertyInfo;
+        public Type PocoType { get; set; }
+        private static int pocoCount = 0;
 
         internal IncomingMessageHandler(string Tag, List<PropertyInfo> propertyInfo)
         {
             this.Tag = Tag;
             this.propertyInfo = propertyInfo;
             this.argsCount = propertyInfo.Count;
+            this.PocoType = ClassBuilder.CreateNewObject("GemPOCO" + pocoCount++, propertyInfo);
         }
 
         public MessageHandler HandleWith(object obj, string DelegateName)
@@ -90,9 +108,9 @@ namespace Gem.Network.Configuration
             ObjectsDelegate = obj;
             this.DelegateName = DelegateName;
 
-            return new MessageHandler(CreateMessageHandler());
+            return new MessageHandler(PocoType,CreateMessageHandler());
         }
-
+        
         private string GetArgumentsCallForDynamicInvoker()
         {
             StringBuilder sb = new StringBuilder();
@@ -142,10 +160,15 @@ namespace Gem.Network.Configuration
     public class MessageHandler
     {
         private readonly dynamic objectThatHandlesMessages;
-
-        public MessageHandler(dynamic obj)
+        private readonly dynamic eventRaisingclass;
+        private readonly Type pocoType;
+        public MessageHandler(Type pocoType,dynamic obj)
         {
+            eventRaisingclass = EventBuilder.BuildEventRaisingClass(pocoType);
+            this.pocoType = pocoType;
             this.objectThatHandlesMessages = obj;
+            eventRaisingclass.SubscribeEvent(NetworkConfig.client);
+                    
         }
 
         public void HandleMessage(params object[] args)
@@ -153,6 +176,25 @@ namespace Gem.Network.Configuration
             objectThatHandlesMessages.Handle(args);
         }
         
+        public void Send(params object[] args)
+        {
+            var myNewObject = Activator.CreateInstance(pocoType,args);
+            var msg = NetworkConfig.client.CreateMessage();
+
+            MessageSerializer.Encode(myNewObject, ref msg);   
+        
+            eventRaisingclass.OnEvent(msg);
+        }
+
+        //Temporary for mocking purposes
+        public void Send(NetOutgoingMessage msg,params object[] args)
+        {
+            var myNewObject = Activator.CreateInstance(pocoType, args);
+       
+            MessageSerializer.Encode(myNewObject, ref msg);
+
+            eventRaisingclass.OnEvent(msg);
+        }
     }
 
 }

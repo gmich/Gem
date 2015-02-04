@@ -6,11 +6,13 @@ using Gem.Network.Other;
 using Gem.Network.Configuration;
 using Gem.Network.Messages;
 using Moq;
+using System.Net;
+using Lidgren.Network;
 
 namespace Gem.Network.Tests
 {
     [TestClass]
-    public class CreateEventTests
+    public class DynamicEventTests
     {
 
         [TestMethod]
@@ -30,6 +32,24 @@ namespace Gem.Network.Tests
             messageHandler.HandleMessage("say twice");
    
             tester.Verify(x => x.AppendSomething("say twice"), Times.Exactly(2));
+        }
+
+        [TestMethod]
+        public void DynamicSendMesssageInvocationTest()
+        {
+            var client = new Client(new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241), "local");
+            client.Connect("local", 14241);
+            var tester = new Mock<EventTester>();
+            var mockClient = new Mock<Client>();
+            var msg = client.CreateMessage();
+
+            var messageHandler = NetworkConfig.ForTag("tag", mockClient.Object)
+                .CreateEvent(typeof(string))
+                .HandleWith(tester.Object, "AppendSomething");
+
+            messageHandler.Send(msg,"say");
+
+            mockClient.Verify(x => x.SendMessage(msg), Times.Once);
         }
 
         [TestMethod]
