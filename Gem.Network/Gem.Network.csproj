@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\NetPocoRepository.cs" />
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\ClientHandler.cs" />
     <Compile Include="Client\IClient.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Configuration\ClassBuilder.cs" />
     <Compile Include="Configuration\DelegateBuilder.cs" />
     <Compile Include="Configuration\EventBuilder.cs" />
+    <Compile Include="Cache\IDynamicTypeRepository.cs" />
     <Compile Include="Configuration\NetworkConfig.cs" />
     <Compile Include="Configuration\Script.cs" />
     <Compile Include="Messages\MessageSerializer.cs" />

@@ -20,7 +20,7 @@ namespace Gem.Network.Tests
         {
             var tester = new Mock<EventTester>();
 
-            var messageHandler = NetworkConfig.ForTag("tag")
+            var messageHandler = NetworkConfig.ForInterface("tag")
                 .CreateEvent(typeof(string))
                 .HandleWith(tester.Object, "AppendSomething");
 
@@ -38,12 +38,11 @@ namespace Gem.Network.Tests
         public void DynamicSendMesssageInvocationTest()
         {
             var client = new Client(new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241), "local");
-            client.Connect("local", 14241);
             var tester = new Mock<EventTester>();
             var mockClient = new Mock<Client>();
             var msg = client.CreateMessage();
 
-            var messageHandler = NetworkConfig.ForTag("tag", mockClient.Object)
+            var messageHandler = NetworkConfig.ForInterface("tag", mockClient.Object)
                 .CreateEvent(typeof(string))
                 .HandleWith(tester.Object, "AppendSomething");
 
@@ -56,7 +55,7 @@ namespace Gem.Network.Tests
         public void ComplexDynamicEventInvocationTest()
         {
             var tester = new Mock<EventTester>();
-            var messageHandler = NetworkConfig.ForTag("tag")
+            var messageHandler = NetworkConfig.ForInterface("tag")
                 .CreateEvent(typeof(string), typeof(int), typeof(int), typeof(string))
                 .HandleWith(tester.Object, "DoSomethingComplicated");
 

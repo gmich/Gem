@@ -18,7 +18,7 @@ namespace Gem.Network.Configuration
         //initialize differently
         public static Client client;
 
-        public static DynamicMessage ForTag(string tag)
+        public static DynamicMessage ForInterface(string tag)
         {
             client = new Client();
             client = new Client(new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241), "local");
@@ -26,7 +26,7 @@ namespace Gem.Network.Configuration
         }
 
         //temporary for testing
-        public static DynamicMessage ForTag(string tag,Client client)
+        public static DynamicMessage ForInterface(string tag,Client client)
         {
             NetworkConfig.client = client;
             return new DynamicMessage(tag);
