@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Gem.Network.Cache
 {
-    public class NetPocoRepository : IDynamicTypeRepository
+    public class TypeRepository : IDynamicTypeRepository
     {
         private Dictionary<string, Type> typeCache;
 
-        public NetPocoRepository()
+        public TypeRepository()
         {
             typeCache = new Dictionary<string, Type>();
         }

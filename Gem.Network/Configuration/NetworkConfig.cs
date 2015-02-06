@@ -9,6 +9,7 @@ using CSScriptLibrary;
 using System.Text.RegularExpressions;
 using System.Net;
 using Lidgren.Network;
+using Gem.Network.DynamicBuilders;
 
 namespace Gem.Network.Configuration
 {
@@ -48,7 +49,7 @@ namespace Gem.Network.Configuration
     public sealed class DynamicMessage
     {
         private readonly string Tag;
-        private List<PropertyInfo> propertyInfo;
+        private List<DynamicPropertyInfo> propertyInfo;
         private int PropertyCount { get; set; }
 
         public IncomingMessageTypes MessageType { get; private set; }
@@ -60,7 +61,7 @@ namespace Gem.Network.Configuration
 
         public DynamicMessage(string tag)
         {
-            propertyInfo = new List<PropertyInfo>();
+            propertyInfo = new List<DynamicPropertyInfo>();
             this.Tag=tag;
             this.PropertyCount = 0;
         }
@@ -73,7 +74,7 @@ namespace Gem.Network.Configuration
 
             foreach (var arg in args)
             {
-                propertyInfo.Add(new PropertyInfo
+                propertyInfo.Add(new DynamicPropertyInfo
                 {
                     PropertyName = (Tag + (++PropertyCount)),
                     PropertyType = arg
@@ -91,16 +92,16 @@ namespace Gem.Network.Configuration
         int argsCount { get; set; }
         string DelegateName { get; set;}
         object ObjectsDelegate { get; set; }
-        private List<PropertyInfo> propertyInfo;
+        private List<DynamicPropertyInfo> propertyInfo;
         public Type PocoType { get; set; }
         private static int pocoCount = 0;
 
-        internal IncomingMessageHandler(string Tag, List<PropertyInfo> propertyInfo)
+        internal IncomingMessageHandler(string Tag, List<DynamicPropertyInfo> propertyInfo)
         {
             this.Tag = Tag;
             this.propertyInfo = propertyInfo;
             this.argsCount = propertyInfo.Count;
-            this.PocoType = ClassBuilder.CreateNewObject("GemPOCO" + pocoCount++, propertyInfo);
+            this.PocoType = PocoBuilder.Create("GemPOCO" + pocoCount++, propertyInfo);
         }
 
         public MessageHandler HandleWith(object obj, string DelegateName)
@@ -126,7 +127,7 @@ namespace Gem.Network.Configuration
         {
             var str = String.Format(@"public class {0} 
                                              {{ 
-                                                 private readonly dynamic element;
+                                              private readonly dynamic element;
                                               public {0}()
                                                  {{
                                                     
@@ -161,12 +162,16 @@ namespace Gem.Network.Configuration
     {
         private readonly dynamic objectThatHandlesMessages;
         private readonly dynamic eventRaisingclass;
-        private readonly Type pocoType;
+
+        //This is public for testing purposes
+        public readonly Type pocoType;
+
         public MessageHandler(Type pocoType,dynamic obj)
         {
-            eventRaisingclass = EventBuilder.BuildEventRaisingClass(pocoType);
+            var eventRaisingType = EventBuilder.Create(pocoType);
             this.pocoType = pocoType;
             this.objectThatHandlesMessages = obj;
+            eventRaisingclass = Activator.CreateInstance(eventRaisingType);
             eventRaisingclass.SubscribeEvent(NetworkConfig.client);
                     
         }
@@ -179,11 +184,8 @@ namespace Gem.Network.Configuration
         public void Send(params object[] args)
         {
             var myNewObject = Activator.CreateInstance(pocoType,args);
-            var msg = NetworkConfig.client.CreateMessage();
 
-            MessageSerializer.Encode(myNewObject, ref msg);   
-        
-            eventRaisingclass.OnEvent(msg);
+            eventRaisingclass.OnEvent(myNewObject);
         }
 
         //Temporary for mocking purposes

@@ -1,4 +1,10 @@
-  public class Singleton<T> : Singleton
+using System;
+using System.Collections.Generic;
+
+namespace Gem.Network
+{
+
+    public class Singleton<T> : Singleton
     {
         static T instance;
 
@@ -69,3 +75,4 @@
             get { return allSingletons; }
         }
     }
+}

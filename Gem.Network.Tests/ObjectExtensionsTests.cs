@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gem.Network.Utilities;
+using Gem.Network.DynamicBuilders;
 
 namespace Gem.Network.Tests
 {
@@ -14,15 +15,15 @@ namespace Gem.Network.Tests
         [TestMethod]
         public void SetDynamicObjectValueTest()
         {
-            var propertyList = new List<PropertyInfo>
+            var propertyList = new List<DynamicPropertyInfo>
             {
-                new PropertyInfo{
+                new DynamicPropertyInfo{
                         PropertyName = "Name",
                         PropertyType = typeof(string)
                 }
             };
 
-            Type myNewType = ClassBuilder.CreateNewObject("POCO", propertyList);
+            Type myNewType = PocoBuilder.Create("POCO", propertyList);
 
             object myObject = Activator.CreateInstance(myNewType);
             var value = myObject.GetValue("Name");
@@ -32,15 +33,15 @@ namespace Gem.Network.Tests
         [TestMethod]
         public void GetSetDynamicObjectValueTest()
         {
-            var propertyList = new List<PropertyInfo>
+            var propertyList = new List<DynamicPropertyInfo>
             {
-                new PropertyInfo{
+                new DynamicPropertyInfo{
                         PropertyName = "Name",
                         PropertyType = typeof(string)
                 }
             };
 
-            Type myNewType = ClassBuilder.CreateNewObject("POCO", propertyList);
+            Type myNewType = PocoBuilder.Create("POCO", propertyList);
             object myObject = Activator.CreateInstance(myNewType);
 
             myObject.SetValue("Name", "Value");

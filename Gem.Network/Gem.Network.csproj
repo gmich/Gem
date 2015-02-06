@@ -60,17 +60,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cache\NetPocoRepository.cs" />
+    <Compile Include="Cache\TypeRepository.cs" />
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\ClientHandler.cs" />
     <Compile Include="Client\IClient.cs" />
     <Compile Include="Configuration\ConfigurationProvider.cs" />
-    <Compile Include="Configuration\ClassBuilder.cs" />
-    <Compile Include="Configuration\DelegateBuilder.cs" />
-    <Compile Include="Configuration\EventBuilder.cs" />
+    <Compile Include="TypeBuilders\PocoBuilder.cs" />
+    <Compile Include="TypeBuilders\DelegateBuilder.cs" />
+    <Compile Include="TypeBuilders\EventBuilder.cs" />
     <Compile Include="Cache\IDynamicTypeRepository.cs" />
     <Compile Include="Configuration\NetworkConfig.cs" />
     <Compile Include="Configuration\Script.cs" />
+    <Compile Include="TypeBuilders\DynamicPropertyInfo.cs" />
+    <Compile Include="TypeBuilders\MessageHandlerBuilder.cs" />
+    <Compile Include="Handlers\IMessageHandler.cs" />
     <Compile Include="Messages\MessageSerializer.cs" />
     <Compile Include="Other\AttributeContainer.cs" />
     <Compile Include="Other\AttributeResolver.cs" />
@@ -85,6 +88,7 @@
     <Compile Include="Prefedined\ConfigurationCreator.cs" />
     <Compile Include="Prefedined\ConnectionApprovalHandler.cs" />
     <Compile Include="Scripting.cs" />
+    <Compile Include="Singleton.cs" />
     <Compile Include="Utilities\ParamsResolver.cs" />
     <Compile Include="Utilities\RuntimeCompiler.cs" />
     <Compile Include="Utilities\ObjectExtensions.cs" />
@@ -100,6 +104,9 @@
     <Compile Include="Server\Server.cs" />
     <Compile Include="Server\ServerHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Managers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -8,19 +8,19 @@ namespace Gem.Network.Networking
     //Perform message encoding
     public class PeerEvent<T>
     {
-        public event EventHandler<NetOutgoingMessage> Event;
+        private event EventHandler<T> Event;
 
         public void SubscribeEvent(IClient client)
         {
-            Event += (sender, e) => client.SendMessage(e);
+            Event += (sender, e) => client.SendMessage<T>(e);
         }
 
-        public void OnEvent(NetOutgoingMessage arg)
+        public void OnEvent(object message)
         {
-            EventHandler<NetOutgoingMessage> newPeerEvent = Event;
+            EventHandler<T> newPeerEvent = Event;
             if (newPeerEvent != null)
             {
-                newPeerEvent(this, arg);
+                newPeerEvent(this, (T)message);
             }
         }
     }

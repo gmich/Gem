@@ -130,6 +130,12 @@
         }
 
         #endregion
-
+        
+        public virtual void SendMessage<T>(T message)
+        {
+            var msg = client.CreateMessage();
+            MessageSerializer.Encode(message, ref msg);
+            client.SendMessage(msg, NetDeliveryMethod.ReliableUnordered);
+        }
     }
 }

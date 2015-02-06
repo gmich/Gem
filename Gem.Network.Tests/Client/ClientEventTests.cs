@@ -9,6 +9,7 @@ using Gem.Network.Configuration;
 using System.Net;
 using Gem.Network.Messages;
 using Moq;
+using Gem.Network.DynamicBuilders;
 
 namespace Gem.Network.Tests
 {
@@ -24,27 +25,26 @@ namespace Gem.Network.Tests
             client.Connect("local", 14241);
 
             //create a new dynamic type
-            var propertyList = new List<PropertyInfo>
+            var propertyList = new List<DynamicPropertyInfo>
             {
-                new PropertyInfo{
+                new DynamicPropertyInfo{
                         PropertyName = "Name",
                         PropertyType = typeof(string)
                 }
             };
-            Type myNewType = ClassBuilder.CreateNewObject("POCO", propertyList);
+            Type myNewType = PocoBuilder.Create("POCO", propertyList);
             var myNewObject = Activator.CreateInstance(myNewType);
 
             //create a dynamic event raising class
-            dynamic eventRaisingclass = EventBuilder.BuildEventRaisingClass(myNewType);
+            var eventRaisingType = EventBuilder.Create(myNewType);
+            dynamic eventRaisingclass = Activator.CreateInstance(eventRaisingType);
 
-            var msg = client.CreateMessage();
-            MessageSerializer.Encode(myNewObject, ref msg);
             // eventRaisingclass.Event += peerEvent;
             eventRaisingclass.SubscribeEvent(mockClient.Object);
-            eventRaisingclass.OnEvent(msg);
+            eventRaisingclass.OnEvent(myNewObject);
 
             //verify that the message was sent
-            mockClient.Verify(c => c.SendMessage(msg), Times.Once);
+             mockClient.Verify(c => c.SendMessage(myNewObject), Times.Once);
         }     
              
     }

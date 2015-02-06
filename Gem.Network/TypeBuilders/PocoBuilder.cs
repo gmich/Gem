@@ -3,24 +3,30 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Linq;
+using Gem.Network.DynamicBuilders;
 
 namespace Gem.Network
 {
-    public class PropertyInfo
+    /// <summary>
+    /// Creates POCO types
+    /// </summary>
+    public static class PocoBuilder
     {
-        public Type PropertyType { get; set; }
-        public string PropertyName { get; set; }
-    }
-
-    public static class ClassBuilder
-    {
-
-        public static Type CreateNewObject(string className, List<PropertyInfo> propertyFields)
+        /// <summary>
+        /// Creates a new POCO type
+        /// </summary>
+        /// <param name="className">The POCO's name</param>
+        /// <param name="propertyFields">The property names and types <see cref="PropertyInfo"/></param>
+        /// <returns>The new type</returns>
+        public static Type Create(string className, List<DynamicPropertyInfo> propertyFields)
         {
             return CompileResultType(className, propertyFields);
         }
 
-        public static Type CompileResultType(string className, List<PropertyInfo> propertyFields)
+
+        #region Private Helper Methods
+
+        private static Type CompileResultType(string className, List<DynamicPropertyInfo> propertyFields)
         {
             TypeBuilder tb = GetTypeBuilder(className);
             ConstructorBuilder constructorDefault = tb.DefineDefaultConstructor(MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName);
@@ -102,5 +108,7 @@ namespace Gem.Network
 
             return fieldBuilder;
         }
+
+        #endregion
     }
 }

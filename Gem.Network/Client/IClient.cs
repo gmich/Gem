@@ -5,7 +5,7 @@ namespace Gem.Network
 {
     public interface IClient : INetworkManager
     {
-        void SendMessage(IServerMessage gameMessage);
+        void SendMessage<T>(T message);
 
         void SendMessage(NetOutgoingMessage gameMessage);
     }

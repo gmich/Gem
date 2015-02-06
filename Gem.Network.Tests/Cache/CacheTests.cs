@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gem.Network.Configuration;
 using Gem.Network.Cache;
+using Gem.Network.DynamicBuilders;
 
 namespace Gem.Network.Tests.Cache
 {
@@ -16,25 +17,25 @@ namespace Gem.Network.Tests.Cache
         {
             #region Types Definitions
 
-            var typeInfo1 = new List<PropertyInfo>
+            var typeInfo1 = new List<DynamicPropertyInfo>
             {
-                new PropertyInfo{
+                new DynamicPropertyInfo{
                         PropertyName = "Type1",
                         PropertyType = typeof(string)
                 }
             };
 
-            var typeInfo2 = new List<PropertyInfo>
+            var typeInfo2 = new List<DynamicPropertyInfo>
             {
-                new PropertyInfo{
+                new DynamicPropertyInfo{
                         PropertyName = "Type2",
                         PropertyType = typeof(string)
                 }
             };
 
-            var typeInfo3 = new List<PropertyInfo>
+            var typeInfo3 = new List<DynamicPropertyInfo>
             {
-                new PropertyInfo{
+                new DynamicPropertyInfo{
                         PropertyName = "Type3",
                         PropertyType = typeof(string)
                 }
@@ -42,11 +43,11 @@ namespace Gem.Network.Tests.Cache
 
             #endregion
 
-            Type type1 = ClassBuilder.CreateNewObject("Type1", typeInfo1);
-            Type type2 = ClassBuilder.CreateNewObject("Type2", typeInfo2);
-            Type type3 = ClassBuilder.CreateNewObject("Type3", typeInfo3);
+            Type type1 = PocoBuilder.Create("Type1", typeInfo1);
+            Type type2 = PocoBuilder.Create("Type2", typeInfo2);
+            Type type3 = PocoBuilder.Create("Type3", typeInfo3);
 
-            var typeRepository = new NetPocoRepository();
+            var typeRepository = new TypeRepository();
             typeRepository.RegisterType("Type1", type1);
             typeRepository.RegisterType("Type2", type2);
             typeRepository.RegisterType("Type3", type3);
@@ -62,17 +63,17 @@ namespace Gem.Network.Tests.Cache
         "Raise exception when resolving a type that's not registered")]
         public void RegisterRegisteredTypeThrowsExceptionTest()
         {
-            var typeInfo1 = new List<PropertyInfo>
+            var typeInfo1 = new List<DynamicPropertyInfo>
             {
-                new PropertyInfo{
+                new DynamicPropertyInfo{
                         PropertyName = "Type1",
                         PropertyType = typeof(string)
                 }
             };
                   
-            Type type1 = ClassBuilder.CreateNewObject("Type1", typeInfo1);
+            Type type1 = PocoBuilder.Create("Type1", typeInfo1);
             
-            var typeRepository = new NetPocoRepository();
+            var typeRepository = new TypeRepository();
 
             typeRepository.RegisterType("Type1", type1);
             typeRepository.RegisterType("Type1", type1);

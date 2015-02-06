@@ -2,26 +2,27 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gem.Network.Configuration;
+using Gem.Network.DynamicBuilders;
 
 namespace Gem.Network.Tests
 {
 
     [TestClass]
-    public class ClassBuilderTests
+    public class PocoBuilderTests
     {
 
         [TestMethod]
         public void CreateNewPOCOClassTest()
         {
-            var propertyList = new List<PropertyInfo>
+            var propertyList = new List<DynamicPropertyInfo>
             {
-                new PropertyInfo{
+                new DynamicPropertyInfo{
                         PropertyName = "Name",
                         PropertyType = typeof(string)
                 }
             };
 
-            Type myNewType = ClassBuilder.CreateNewObject("POCO", propertyList);
+            Type myNewType = PocoBuilder.Create("POCO", propertyList);
 
             dynamic myObject = Activator.CreateInstance(myNewType);
             Assert.IsTrue(myObject.GetType().Name == "POCO");
@@ -37,15 +38,15 @@ namespace Gem.Network.Tests
         [TestMethod]
         public void CreateNewPOCOClassConstructorTest()
         {
-            var propertyList = new List<PropertyInfo>
+            var propertyList = new List<DynamicPropertyInfo>
             {
-                new PropertyInfo{
+                new DynamicPropertyInfo{
                         PropertyName = "Name",
                         PropertyType = typeof(string)
                 }
             };
 
-            Type myNewType = ClassBuilder.CreateNewObject("POCO", propertyList);
+            Type myNewType = PocoBuilder.Create("POCO", propertyList);
 
             dynamic myObject = Activator.CreateInstance(myNewType,"Test");
             Assert.IsTrue(myObject.GetType().Name == "POCO");
@@ -59,27 +60,27 @@ namespace Gem.Network.Tests
         [TestMethod]
         public void CreateComplexPOCOClassTest()
         {
-            var propertyList = new List<PropertyInfo>
+            var propertyList = new List<DynamicPropertyInfo>
             {
-                new PropertyInfo{
+                new DynamicPropertyInfo{
                         PropertyName = "StringProperty",
                         PropertyType = typeof(string)
                 },
-                                new PropertyInfo{
+                                new DynamicPropertyInfo{
                         PropertyName = "IntProperty",
                         PropertyType = typeof(int)
                 },
-                                new PropertyInfo{
+                                new DynamicPropertyInfo{
                         PropertyName = "DoubleProperty",
                         PropertyType = typeof(double)
                 },
-                                new PropertyInfo{
+                                new DynamicPropertyInfo{
                         PropertyName = "FloatProperty",
                         PropertyType = typeof(float)
                 }                                
             };
 
-            Type myNewType = ClassBuilder.CreateNewObject("POCO", propertyList);
+            Type myNewType = PocoBuilder.Create("POCO", propertyList);
 
             dynamic myObject = Activator.CreateInstance(myNewType);
             Assert.IsTrue(myObject.GetType().Name == "POCO");
@@ -105,27 +106,27 @@ namespace Gem.Network.Tests
         [TestMethod]
         public void CreateComplexPOCOClassConstructorTest()
         {
-            var propertyList = new List<PropertyInfo>
+            var propertyList = new List<DynamicPropertyInfo>
             {
-                new PropertyInfo{
+                new DynamicPropertyInfo{
                         PropertyName = "StringProperty",
                         PropertyType = typeof(string)
                 },
-                                new PropertyInfo{
+                                new DynamicPropertyInfo{
                         PropertyName = "IntProperty",
                         PropertyType = typeof(int)
                 },
-                                new PropertyInfo{
+                                new DynamicPropertyInfo{
                         PropertyName = "DoubleProperty",
                         PropertyType = typeof(double)
                 },
-                                new PropertyInfo{
+                                new DynamicPropertyInfo{
                         PropertyName = "FloatProperty",
                         PropertyType = typeof(float)
                 }                                
             };
 
-            Type myNewType = ClassBuilder.CreateNewObject("POCO", propertyList);
+            Type myNewType = PocoBuilder.Create("POCO", propertyList);
 
             dynamic myObject = Activator.CreateInstance(myNewType, "String", 0, 2, 1.0f);
 
@@ -140,11 +141,11 @@ namespace Gem.Network.Tests
         {
             var types = NetworkConfig.Send("string", 1);
 
-            var propertyList = new List<PropertyInfo>();
+            var propertyList = new List<DynamicPropertyInfo>();
             int counter=0;
             foreach (var type in types)
             {
-                propertyList.Add(new PropertyInfo
+                propertyList.Add(new DynamicPropertyInfo
                 {
                     PropertyName = "A" + counter,
                     PropertyType = type
@@ -152,7 +153,7 @@ namespace Gem.Network.Tests
                 counter++;
             }
                     
-            Type myNewType = ClassBuilder.CreateNewObject("POCO", propertyList);
+            Type myNewType = PocoBuilder.Create("POCO", propertyList);
 
             dynamic myObject = Activator.CreateInstance(myNewType);
             Assert.IsTrue(myObject.GetType().Name == "POCO");

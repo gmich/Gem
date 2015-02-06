@@ -5,6 +5,7 @@ using Lidgren.Network;
 using Gem.Network.Messages;
 using System.Diagnostics;
 using System.Net;
+using Gem.Network.DynamicBuilders;
 
 namespace Gem.Network.Tests.Messages
 {
@@ -15,15 +16,15 @@ namespace Gem.Network.Tests.Messages
         [TestMethod]
         public void EncodeDynamicMessageTest()
         {
-            var propertyList = new List<PropertyInfo>
+            var propertyList = new List<DynamicPropertyInfo>
             {
-                new PropertyInfo{
+                new DynamicPropertyInfo{
                         PropertyName = "Name",
                         PropertyType = typeof(string)
                 }
             };
 
-            Type myNewType = ClassBuilder.CreateNewObject("POCO", propertyList);
+            Type myNewType = PocoBuilder.Create("POCO", propertyList);
 
             dynamic myObject = Activator.CreateInstance(myNewType);
 
@@ -59,14 +60,14 @@ namespace Gem.Network.Tests.Messages
             }
 
             //the dynamic type
-            var propertyList = new List<PropertyInfo>
+            var propertyList = new List<DynamicPropertyInfo>
             {
-                new PropertyInfo{
+                new DynamicPropertyInfo{
                         PropertyName = "Name",
                         PropertyType = typeof(string)
                 }
             };
-            Type myNewType = ClassBuilder.CreateNewObject("POCO", propertyList);
+            Type myNewType = PocoBuilder.Create("POCO", propertyList);
 
             var client = new Client(new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241), "local");
 

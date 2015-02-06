@@ -1,4 +1,5 @@
-﻿using Gem.Network.Messages;
+﻿using Gem.Network.DynamicBuilders;
+using Gem.Network.Messages;
 using Lidgren.Network;
 using System;
 using System.Collections.Generic;
@@ -96,14 +97,14 @@ namespace Gem.Network.Example
         {
             #region Dynamic Type
 
-            var propertyList = new List<PropertyInfo>
+            var propertyList = new List<DynamicPropertyInfo>
             {
-                new PropertyInfo{
+                new DynamicPropertyInfo{
                         PropertyName = "Name",
                         PropertyType = typeof(string)
                 }
             };
-            Type myNewType = ClassBuilder.CreateNewObject("POCO", propertyList);
+            Type myNewType = PocoBuilder.Create("POCO", propertyList);
             dynamic myObject = Activator.CreateInstance(myNewType);
             myObject.Name = "DynamicType";
 
