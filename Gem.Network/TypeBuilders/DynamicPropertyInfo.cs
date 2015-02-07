@@ -9,8 +9,15 @@ namespace Gem.Network.DynamicBuilders
     public class DynamicPropertyInfo
     {
         public Type PropertyType { get; set; }
+
         public string PropertyName { get; set; }
 
+        /// <summary>
+        /// Sets up a generic list of <see cref="DynamicPropertyInfo"/>
+        /// </summary>
+        /// <param name="types">The types of property info</param>
+        /// <param name="propertyPrefix">The prefix of the type's names</param>
+        /// <returns>A list of <see cref="DynamicPropertyInfo"/></returns>
         public static List<DynamicPropertyInfo> GetPropertyInfo(Type[] types, string propertyPrefix = "pprefix")
         {
             var propertyInfo = new List<DynamicPropertyInfo>();

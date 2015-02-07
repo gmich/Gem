@@ -36,8 +36,7 @@ namespace Gem.Network.Tests
             var myNewObject = Activator.CreateInstance(myNewType);
 
             //create a dynamic event raising class
-            var eventRaisingType = EventBuilder.Create(myNewType);
-            dynamic eventRaisingclass = Activator.CreateInstance(eventRaisingType);
+            dynamic eventRaisingclass = EventFactory.Create(myNewType);
 
             // eventRaisingclass.Event += peerEvent;
             eventRaisingclass.SubscribeEvent(mockClient.Object);

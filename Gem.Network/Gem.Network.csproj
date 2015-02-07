@@ -60,9 +60,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Managers\EventManager.cs" />
-    <Compile Include="Managers\MessageManager.cs" />
-    <Compile Include="Managers\POCOManager.cs" />
+    <Compile Include="Cache\ICache.cs" />
+    <Compile Include="Cache\TypeCache.cs" />
+    <Compile Include="Managers\IManager.cs" />
+    <Compile Include="Managers\ClientInfoManager.cs" />
+    <Compile Include="Factories\PocoTypeFactory.cs" />
     <Compile Include="Client\ClientInfo.cs" />
     <Compile Include="Repositories\TypeRepository.cs" />
     <Compile Include="Client\Client.cs" />
@@ -70,11 +72,11 @@
     <Compile Include="Client\IClient.cs" />
     <Compile Include="TypeBuilders\PocoBuilder.cs" />
     <Compile Include="TypeBuilders\DelegateBuilder.cs" />
-    <Compile Include="TypeBuilders\EventBuilder.cs" />
+    <Compile Include="Factories\EventFactory.cs" />
     <Compile Include="Repositories\IDynamicTypeRepository.cs" />
     <Compile Include="Configuration\NetworkConfig.cs" />
     <Compile Include="TypeBuilders\DynamicPropertyInfo.cs" />
-    <Compile Include="TypeBuilders\MessageHandlerBuilder.cs" />
+    <Compile Include="Factories\MessageHandlerFactory.cs" />
     <Compile Include="Handlers\IMessageHandler.cs" />
     <Compile Include="Messages\MessageSerializer.cs" />
     <Compile Include="Attributes\AttributeContainer.cs" />
@@ -89,7 +91,7 @@
     <Compile Include="Utilities\IDebugListener.cs" />
     <Compile Include="Configuration\IMessageConfiguration.cs" />
     <Compile Include="Messages\ConnectionApproval.cs" />
-    <Compile Include="INetworkManager.cs" />
+    <Compile Include="Managers\INetworkManager.cs" />
     <Compile Include="Messages\IncomingMessageTypes.cs" />
     <Compile Include="Messages\IServerMessage.cs" />
     <Compile Include="Client\ClientEvent.cs" />

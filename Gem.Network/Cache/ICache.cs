@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gem.Network.Managers
+namespace Gem.Network.Cache
 {
-    class MessageManager
+    public interface ICache<T> : IDisposable
     {
+
     }
 }

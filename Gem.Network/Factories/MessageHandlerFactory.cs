@@ -33,13 +33,13 @@ namespace Gem.Network.Handlers
         /// Build a type that handles incoming messages <see cref="IMessageHandler"/>
         /// </summary>
         /// <param name="properties">The properties that are being handled</param>
-        /// <param name="typeName">The type's name</param>
+        /// <param name="classname">The type's name</param>
         /// <param name="functionName">The function to invoke. 
         /// The function must be a public member of the class that is being passed in the constructor</param>
         /// <returns>The type of the message handler</returns>
-        public static Type BuildMessageHandler(List<DynamicPropertyInfo> properties, string typeName, string functionName)
+        public static IMessageHandler Create(List<string> propertyNames, string classname, string functionName)
         {
-            var str = String.Format(@"public class {0} : IHandler
+            var str = String.Format(@"public class {0} : IMessageHandler
                                              {{ private readonly dynamic element;
                                               public {0}() {{}}                                                                                               
                                                  public {0}(dynamic element)
@@ -50,14 +50,14 @@ namespace Gem.Network.Handlers
                                                  {{
                                                      element.{1}({2});
                                                  }}                                                                                             
-                                             }}", typeName,
+                                             }}", classname,
                                                 functionName,
-                                                GetArgumentsCallForDynamicInvoker(properties.Select(x => x.PropertyType.Name).ToList()));
+                                                GetArgumentsCallForDynamicInvoker(propertyNames));
+                                                //properties.Select(x => x.PropertyType.Name).ToList()));
 
             return CSScript.LoadCode(str)
                            .CreateObject("*")
-                           .AlignToInterface<IMessageHandler>()
-                           .GetType();
+                           .AlignToInterface<IMessageHandler>();
         }
     }
 }

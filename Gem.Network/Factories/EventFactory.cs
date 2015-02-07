@@ -1,20 +1,18 @@
 ﻿using Gem.Network.Networking;
 using System;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Gem.Network.Configuration
 {
     /// <summary>
     /// Creates a class of type PeerEvent that registers events to the NetworkProvider.Send method
     /// </summary>
-    public class EventBuilder
+    public sealed class EventFactory
     {
-        public static Type Create(Type type)
+        public static object Create(Type type)
         {
             var dynamicType = typeof(ClientEvent<>);
-
-            return dynamicType.MakeGenericType(type);
+            return Activator.CreateInstance(dynamicType.MakeGenericType(type));
         }
     }
 }

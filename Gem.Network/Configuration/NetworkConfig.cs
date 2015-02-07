@@ -168,10 +168,10 @@ namespace Gem.Network.Configuration
 
         public MessageHandler(Type pocoType,dynamic obj)
         {
-            var eventRaisingType = EventBuilder.Create(pocoType);
+            this.eventRaisingclass = EventFactory.Create(pocoType);
             this.pocoType = pocoType;
             this.objectThatHandlesMessages = obj;
-            eventRaisingclass = Activator.CreateInstance(eventRaisingType);
+            
             eventRaisingclass.SubscribeEvent(NetworkConfig.client);
                     
         }
