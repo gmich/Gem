@@ -34,5 +34,19 @@ namespace Gem.Network.Other
             }
             return bytes;
         }
+
+        /// <summary>
+        /// Returns a random byte
+        /// </summary>
+        /// <returns>A byte</returns>
+        public static Byte GetRandomByte()
+        {
+            Random rand = new Random();
+            Byte[] bytes = new Byte[1];
+
+            rand.NextBytes(bytes);
+
+            return bytes[0];
+        }
     }
 }

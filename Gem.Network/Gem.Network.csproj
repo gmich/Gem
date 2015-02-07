@@ -60,7 +60,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cache\TypeRepository.cs" />
+    <Compile Include="Managers\POCOManager.cs" />
+    <Compile Include="Repositories\TypeRepository.cs" />
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\ClientHandler.cs" />
     <Compile Include="Client\IClient.cs" />
@@ -68,7 +69,7 @@
     <Compile Include="TypeBuilders\PocoBuilder.cs" />
     <Compile Include="TypeBuilders\DelegateBuilder.cs" />
     <Compile Include="TypeBuilders\EventBuilder.cs" />
-    <Compile Include="Cache\IDynamicTypeRepository.cs" />
+    <Compile Include="Repositories\IDynamicTypeRepository.cs" />
     <Compile Include="Configuration\NetworkConfig.cs" />
     <Compile Include="Configuration\Script.cs" />
     <Compile Include="TypeBuilders\DynamicPropertyInfo.cs" />
@@ -105,9 +106,7 @@
     <Compile Include="Server\ServerHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Managers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
