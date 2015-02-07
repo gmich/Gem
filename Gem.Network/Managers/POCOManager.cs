@@ -18,7 +18,7 @@ namespace Gem.Network.Managers
             pocoLookup = new Dictionary<byte, Type>();
         }
 
-        public IDisposable RegisterPoco(string classname, params Type[] types)
+        public IDisposable RegisterPoco(string classname, Type[] types)
         {
             Guard.That(types.All(x => x.IsPrimitive || x == typeof(string) || x!=typeof(byte)), 
               "All types should be primitive and not typeof byte. Bytes are reserved to be the message's unique id");
@@ -26,6 +26,7 @@ namespace Gem.Network.Managers
             Guard.That(pocoLookup).IsTrue(x => x.Count < (int)byte.MaxValue,
                 "You have reached the maximum capacity of Pocos. Consider deregistering");
 
+            //add a new type /byte as the unique id
            var propInfo = DynamicPropertyInfo.GetPropertyInfo(types);
 
             //get random byte

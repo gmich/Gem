@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gem.Network.Prefedined
+namespace Gem.Network.Managers
 {
-    class ConfigurationCreator
+    class MessageManager
     {
     }
 }

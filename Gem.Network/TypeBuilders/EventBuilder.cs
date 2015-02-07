@@ -12,7 +12,7 @@ namespace Gem.Network.Configuration
     {
         public static Type Create(Type type)
         {
-            var dynamicType = typeof(PeerEvent<>);
+            var dynamicType = typeof(ClientEvent<>);
 
             return dynamicType.MakeGenericType(type);
         }

@@ -6,7 +6,7 @@ namespace Gem.Network.Networking
 {
     //TODO: create a wrapper interface for NetOutgoingMessages
     //Perform message encoding
-    public class PeerEvent<T>
+    public class ClientEvent<T>
     {
         private event EventHandler<T> Event;
 
