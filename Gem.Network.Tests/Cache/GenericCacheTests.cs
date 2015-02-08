@@ -56,28 +56,44 @@ namespace Gem.Network.Tests.Cache
         }
 
         [TestMethod]
+        public void CacheDeallocatesLeastIteratedEntryTest()
+        {
+            long byteCapacity = 2000;
+            var typeCache = new GCache<Type[], Type>(byteCapacity, new ArrayTypeEquality());
+            typeCache.Events.OnUsedMemoryEvent += ((sender, args) => Trace.WriteLine(args.ByteSize));
+
+            var typeKey = new Type[] { typeof(string), typeof(int) };
+            var typeValue = typeof(int);
+
+            typeCache.Add(typeKey, typeValue);
+            typeCache.Add(new Type[] { typeof(int) }, typeof(string));
+            typeCache.Add(new Type[] { typeof(string), typeof(float) }, typeof(string));
+
+            var lookupResult = typeCache.Lookup(typeKey);
+
+            typeCache.Add(new Type[] { typeof(object), typeof(int) }, typeof(string));
+
+            Assert.AreEqual(typeValue, lookupResult);
+        }
+
+        [TestMethod]
         public void CacheMemoryManagementTest()
         {
             // Trace.Listeners.Add(new TextWriterTraceListener("CacheMemoryManagementTest.log", "cache"));
             long byteCapacity = 2000;
             int twosec = 1000;
-            long memoryUsed = 0;
-            var typeCache = new GCache<Type[], Type>(byteCapacity, new ArrayTypeEquality(), twosec);
-            typeCache.Events.OnUsedMemoryEvent += ((sender, args) =>
-                memoryUsed= args.ByteSize);
+            var typeCache = new ManagedCache<Type[], Type>(byteCapacity, new ArrayTypeEquality(), twosec);
+            typeCache.Events.OnUsedMemoryEvent += ((sender, args) =>  Trace.WriteLine(args.ByteSize));
 
-            var typeKey = new Type[] { typeof(string), typeof(int) };
             var typeValue = typeof(int);
 
             //Fill the buffer
-
-            typeCache.Add(typeKey, typeValue);
+            typeCache.Add(new Type[] { typeof(string), typeof(int) }, typeValue);
             typeCache.Add(new Type[] { typeof(string), typeof(int), typeof(string) }, typeValue);
             typeCache.Add(new Type[] { typeof(int), typeof(string) }, typeValue);
 
             System.Threading.Thread.Sleep(2000);
-
-
+            
             //Add successfully when the background thread frees the cache's resources
             typeCache.Add(new Type[] { typeof(string) }, typeValue);
             // Trace.Flush();

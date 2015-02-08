@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\ACachingProvider.cs" />
+    <Compile Include="Cache\ManagedCache.cs" />
     <Compile Include="Cache\GCache.cs" />
     <Compile Include="Cache\CacheProvider.cs" />
     <Compile Include="Cache\ICache.cs" />
