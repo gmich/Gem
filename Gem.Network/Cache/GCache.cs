@@ -1,5 +1,6 @@
 ﻿#region Usings
 
+using Gem.Network.Events;
 using Seterlund.CodeGuard;
 using System;
 using System.Collections.Concurrent;
@@ -17,7 +18,7 @@ using System.Threading.Tasks;
 namespace Gem.Network.Cache
 {
 
-    public sealed class Cache<TKey, TCached> : IDisposable
+    public sealed class GCache<TKey, TCached> : IDisposable
         where TCached : class
     {
 
@@ -25,54 +26,68 @@ namespace Gem.Network.Cache
 
         private readonly TCached NotFound = default(TCached);
 
-        private readonly long capacity;
+        private readonly long buffer;
 
         private readonly MemoryCalculator memoryCalculator;
 
         private Timer stateTimer;
 
-        private long memoryUsed;
+        private long _memoryUsed;
+
+        private long MemoryUsed
+        {
+            get
+            {
+                return _memoryUsed;
+            }
+            set
+            {
+                _memoryUsed = value;
+                Events.RaiseUsedMemoryChangedEvent(this, new CacheEventArgs<TKey, TCached>
+                {
+                    ByteSize = _memoryUsed
+                });
+            }
+        }
+        
 
         private ConcurrentDictionary<TKey, CacheEntry> _cache;
 
         private bool isDisposed;
-
+           
         #endregion
 
+        #region Public Events
 
-        #region Properties
-
-        private bool IsBufferFull
+        public EventAggregator<TKey, TCached> Events
         {
-            get
-            {
-                return memoryUsed >= capacity;
-            }
+            get;
+            set;
         }
 
         #endregion
 
-
         #region Construct / Dispose
 
-        public Cache(long capacity, IEqualityComparer<TKey> keyEquality)
+        public GCache(long capacity, IEqualityComparer<TKey> keyEquality , int memoryManagementTime = 300000)
         {
             _cache = new ConcurrentDictionary<TKey, CacheEntry>(keyEquality);
             memoryCalculator = new MemoryCalculator();
             this.isDisposed = false;
-            this.capacity = capacity;
+            this.buffer = capacity;
+            Events = new EventAggregator<TKey, TCached>();
 
-            InitializeMemoryManagementThread();
+            InitializeMemoryManagementThread(memoryManagementTime);
         }
 
-        private void InitializeMemoryManagementThread()
+        private void InitializeMemoryManagementThread(int memoryManagementTime)
         {
             //Process.GetCurrentProcess().PrivateMemorySize64;
             AutoResetEvent autoEvent = new AutoResetEvent(false);
             TimerCallback tcb = this.ManageSize;
 
-            //invoke every 5 minutes
-            stateTimer = new Timer(tcb, autoEvent, 300000, 300000);
+            //default invocation every 5 minutes
+            stateTimer = new Timer(tcb, autoEvent, memoryManagementTime, memoryManagementTime);
         }
 
         public void Dispose()
@@ -98,10 +113,22 @@ namespace Gem.Network.Cache
 
         public void Add(TKey tkey, TCached tcache)
         {
-            Guard.That(_cache).IsTrue(x => (x.Count == capacity), "Cache is full");
+            long additionalSize = (memoryCalculator.GetSizeInBytes(tkey) + memoryCalculator.GetSizeInBytes(tcache));
+            Guard.That(MemoryUsed + additionalSize, "Object is too big to store in the cache. Consider deallocating")
+                 .IsLessThan(buffer);
 
-            memoryUsed += (memoryCalculator.GetSizeInBytes(tkey) + memoryCalculator.GetSizeInBytes(tcache));
-            _cache.TryAdd(tkey, new CacheEntry(tcache, memoryUsed));
+            if (_cache.ContainsKey(tkey)) return;
+
+            if (_cache.TryAdd(tkey, new CacheEntry(tcache, additionalSize)))
+            {
+                MemoryUsed += additionalSize;
+                Events.RaiseAddEvent(this, new CacheEventArgs<TKey, TCached>
+                {
+                    Key = tkey,
+                    CachedItem = tcache,
+                    ByteSize = additionalSize
+                });
+            }
         }
 
         public TCached Lookup(Func<TKey, TKey, bool> sequenceEqual, TKey keyLookup)
@@ -122,6 +149,21 @@ namespace Gem.Network.Cache
             return NotFound;
         }
 
+        public TCached Lookup(TKey keyLookup)
+        {
+            if (_cache.ContainsKey(keyLookup))
+            {
+                //put the most looked up entries at the end by removing and adding
+                CacheEntry entry;
+                if (_cache.TryRemove(keyLookup, out entry))
+                {
+                    _cache.TryAdd(keyLookup, entry);
+                }
+                return _cache[keyLookup].CachedEntry;
+            }
+            return NotFound;
+        }
+
         #endregion
 
 
@@ -131,10 +173,10 @@ namespace Gem.Network.Cache
         {
             AutoResetEvent autoEvent = (AutoResetEvent)stateInfo;
 
-            if (IsBufferFull)
+            if (MemoryUsed > (buffer * (2 / 3)))
             {
-                if (TryDistinct())
-                    FreeResources(memoryUsed / 4);
+                //if (TryDistinct())
+                FreeResources(MemoryUsed / 4);
             }
         }
 
@@ -146,9 +188,9 @@ namespace Gem.Network.Cache
             long currentMemoryUsed = 0;
             cachedMemory.ForEach(x => currentMemoryUsed += x);
 
-            if (currentMemoryUsed < memoryUsed)
+            if (currentMemoryUsed < MemoryUsed)
             {
-                memoryUsed = currentMemoryUsed;
+                MemoryUsed = currentMemoryUsed;
                 return true;
             }
             return false;
@@ -156,27 +198,39 @@ namespace Gem.Network.Cache
 
         private void FreeResources(long memoryToFree)
         {
-            Guard.That(memoryToFree < memoryUsed,
+            Guard.That(memoryToFree < MemoryUsed,
              "Invalid Operation. The specified memory to free is more than the available memory");
 
             long currentMemoryUsed = 0;
-            int entriesToRemove = 0;
+
+            while (currentMemoryUsed < memoryToFree )
+            {
+                if (_cache.IsEmpty) return;
+                var firstKey = _cache.Select(x => x.Key).First();
+                CacheEntry entry;
+                if (_cache.TryRemove(firstKey, out entry))
+                {
+                    currentMemoryUsed += entry.ByteSize;
+                    MemoryUsed -= entry.ByteSize;
+                }
+            }
 
             //TODO: find another way to deallocate, without changing types
-            _cache.ToList().ForEach(x =>
-            {
-                if (currentMemoryUsed >= memoryToFree) return;
-                currentMemoryUsed += x.Value.ByteSize;
-                entriesToRemove++;
-            });
-            _cache.ToList().RemoveRange(0, entriesToRemove);
-            _cache.ToDictionary(x => x.Key, x => x.Value);
+            //int entriesToRemove = 0;
+            //_cache.ToList().ForEach(x =>
+            //{
+            //    if (currentMemoryUsed >= memoryToFree) return;
+            //    currentMemoryUsed += x.Value.ByteSize;
+            //    entriesToRemove++;
+            //});
+            //_cache.ToList().RemoveRange(0, entriesToRemove);
+            //_cache.ToDictionary(x => x.Key, x => x.Value);
         }
 
         internal class MemoryCalculator
         {
-            private readonly Stream ms;
-            private readonly BinaryFormatter formatter;
+            private Stream ms;
+            private BinaryFormatter formatter;
 
             public MemoryCalculator()
             {
@@ -186,6 +240,8 @@ namespace Gem.Network.Cache
 
             public long GetSizeInBytes(object obj)
             {
+                ms = new MemoryStream();
+                formatter = new BinaryFormatter();
                 formatter.Serialize(ms, obj);
                 return ms.Length;
             }

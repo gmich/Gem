@@ -5,11 +5,11 @@ using Gem.Network.Configuration;
 using Gem.Network.Cache;
 using Gem.Network.DynamicBuilders;
 
-namespace Gem.Network.Tests.Cache
+namespace Gem.Network.Tests.Repository
 {
 
     [TestClass]
-    public class CacheTests
+    public class RepositoryTests
     {
 
         [TestMethod]

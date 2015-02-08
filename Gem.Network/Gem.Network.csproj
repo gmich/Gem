@@ -62,10 +62,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\ACachingProvider.cs" />
-    <Compile Include="Cache\Cache.cs" />
+    <Compile Include="Cache\GCache.cs" />
     <Compile Include="Cache\CacheProvider.cs" />
     <Compile Include="Cache\ICache.cs" />
     <Compile Include="Cache\IGlobalCachingProvider.cs" />
+    <Compile Include="Cache\Events\EventAggregator.cs" />
+    <Compile Include="Cache\Events\ICacheEvent.cs" />
+    <Compile Include="Cache\Events\IEventProvider.cs" />
     <Compile Include="Managers\IManager.cs" />
     <Compile Include="Managers\ClientInfoManager.cs" />
     <Compile Include="Factories\PocoTypeFactory.cs" />

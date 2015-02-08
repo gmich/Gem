@@ -59,7 +59,8 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Cache\CacheTests.cs" />
+    <Compile Include="Cache\GenericCacheTests.cs" />
+    <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="Client\ClientEventTests.cs" />
     <Compile Include="Messages\ByteGeneratorTest.cs" />
     <Compile Include="Messages\ClassBuilderTests.cs" />
