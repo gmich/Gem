@@ -48,7 +48,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ThirdParty\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="TechTalk.SpecFlow">
+      <HintPath>..\packages\SpecFlow.1.9.0\lib\net35\TechTalk.SpecFlow.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -62,6 +68,12 @@
     <Compile Include="Cache\GenericCacheTests.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="Client\ClientEventTests.cs" />
+    <Compile Include="Flow\ClientCases.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClientCases.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Flow\ClientCasesSteps.cs" />
     <Compile Include="Messages\ByteGeneratorTest.cs" />
     <Compile Include="Messages\ClassBuilderTests.cs" />
     <Compile Include="NetworkConfig\DynamicEventTests.cs" />
@@ -77,8 +89,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Flow\ClientCases.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ClientCases.feature.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

@@ -35,7 +35,7 @@ namespace Gem.Network.Cache
             : base(capacity, keyEquality)
         {
             AutoResetEvent autoEvent = new AutoResetEvent(false);
-            TimerCallback tcb = this.ManageSize;
+            TimerCallback tcb = this.ManageSizeAsync;
 
             //default invocation every 5 minutes
             stateTimer = new Timer(tcb, autoEvent, memoryManagementTime, memoryManagementTime);
@@ -58,7 +58,7 @@ namespace Gem.Network.Cache
 
         protected override void ManageSize() { return; }
 
-        private void ManageSize(Object stateInfo)
+        private void ManageSizeAsync(Object stateInfo)
         {
             AutoResetEvent autoEvent = (AutoResetEvent)stateInfo;
 

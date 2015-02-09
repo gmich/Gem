@@ -52,7 +52,7 @@ namespace Gem.Network.Cache
         protected ConcurrentDictionary<TKey, CacheEntry> _cache;
 
         protected bool isDisposed;
-           
+
         #endregion
 
 
@@ -77,8 +77,6 @@ namespace Gem.Network.Cache
             this.buffer = capacity;
             Events = new EventAggregator<TKey, TCached>();
         }
-
-  
 
         public void Dispose()
         {
@@ -161,7 +159,7 @@ namespace Gem.Network.Cache
 
         protected virtual void ManageSize()
         {
-            if (MemoryUsed > ( (buffer * 2) / 3))
+            if (MemoryUsed > ((buffer * 2) / 3))
             {
                 FreeResources(MemoryUsed / 4);
             }
@@ -190,7 +188,7 @@ namespace Gem.Network.Cache
 
             long currentMemoryUsed = 0;
 
-            while (currentMemoryUsed < memoryToFree )
+            while (currentMemoryUsed < memoryToFree)
             {
                 if (_cache.IsEmpty) return;
                 var firstKey = _cache.Select(x => x.Key).First();

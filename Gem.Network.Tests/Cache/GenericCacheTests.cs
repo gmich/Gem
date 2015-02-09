@@ -32,7 +32,7 @@ namespace Gem.Network.Tests.Cache
             long byteCapacity = 10;
             var typeCache = new GCache<Type[], Type>(byteCapacity, new ArrayTypeEquality());
 
-            //this will full up the buffer
+            //this will fill up the buffer
             typeCache.Add(new Type[] { typeof(string) }, typeof(int));
         }
 
@@ -97,7 +97,6 @@ namespace Gem.Network.Tests.Cache
             //Add successfully when the background thread frees the cache's resources
             typeCache.Add(new Type[] { typeof(string) }, typeValue);
             // Trace.Flush();
-
         }
     }
 }
