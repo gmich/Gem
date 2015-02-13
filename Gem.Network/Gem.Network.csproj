@@ -65,7 +65,6 @@
     <Compile Include="Cache\ManagedCache.cs" />
     <Compile Include="Cache\GCache.cs" />
     <Compile Include="Cache\CacheProvider.cs" />
-    <Compile Include="Cache\ICache.cs" />
     <Compile Include="Cache\IGlobalCachingProvider.cs" />
     <Compile Include="Cache\Events\EventAggregator.cs" />
     <Compile Include="Cache\Events\ICacheEvent.cs" />

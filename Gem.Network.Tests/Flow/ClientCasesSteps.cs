@@ -63,8 +63,8 @@ namespace Gem.Network.Tests.Flow
 
         }
 
-        [Then(@"I should get a response message and conneciton approval")]
-        public void ThenIShouldGetAResponseMessageAndConnecitonApproval()
+        [Then(@"I should get a response message and connection approval")]
+        public void ThenIShouldGetAResponseMessageAndConnectionApproval()
         {
             //wait for the server to respond
             System.Threading.Thread.Sleep(100);

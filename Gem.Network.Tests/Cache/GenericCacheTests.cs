@@ -58,7 +58,7 @@ namespace Gem.Network.Tests.Cache
         [TestMethod]
         public void CacheDeallocatesLeastIteratedEntryTest()
         {
-            long byteCapacity = 2000;
+            long byteCapacity = 2200;
             var typeCache = new GCache<Type[], Type>(byteCapacity, new ArrayTypeEquality());
             typeCache.Events.OnUsedMemoryEvent += ((sender, args) => Trace.WriteLine(args.ByteSize));
 

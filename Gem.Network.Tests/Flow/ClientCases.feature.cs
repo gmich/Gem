@@ -85,7 +85,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 8
  testRunner.When("I send a greeding message", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 9
- testRunner.Then("I should get a response message and conneciton approval", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("I should get a response message and connection approval", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

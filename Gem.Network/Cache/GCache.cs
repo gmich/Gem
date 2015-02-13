@@ -137,6 +137,11 @@ namespace Gem.Network.Cache
             return NotFound;
         }
 
+        /// <summary>
+        /// Performs a cache lookup by key.
+        /// </summary>
+        /// <param name="keyLookup">The key </param>
+        /// <returns>The value or the default(value) if the key is not found</returns>
         public TCached Lookup(TKey keyLookup)
         {
             if (_cache.ContainsKey(keyLookup))
