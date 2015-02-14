@@ -17,7 +17,7 @@ namespace Gem.Network.Factories
         #region Private Properties
 
         private readonly IPocoBuilder pocoBuilder;
-        private GCache<Type[], Type> typeCache;
+        private readonly GCache<Type[], Type> cache;
            
         #endregion
 
@@ -26,7 +26,7 @@ namespace Gem.Network.Factories
         public PocoTypeFactory(IPocoBuilder pocoBuilder)
         {
             this.pocoBuilder = pocoBuilder;   
-            typeCache = new GCache<Type[], Type>(GC.GetTotalMemory(true) / 10, new ArrayTypeEquality());
+            cache = new GCache<Type[], Type>(GC.GetTotalMemory(true) / 10, new ArrayTypeEquality());
         }
 
         #endregion
@@ -42,14 +42,14 @@ namespace Gem.Network.Factories
 
             Type[] typeArray = propertyInfo.Select(x => x.PropertyType).ToArray();
 
-            Type lookupType = typeCache.Lookup(typeArray);
+            Type lookupType = cache.Lookup(typeArray);
             if (lookupType != null)
             {
                 return lookupType;
             }
 
             Type newType = pocoBuilder.Build(classname, propertyInfo);
-            typeCache.Add(typeArray, newType);
+            cache.Add(typeArray, newType);
 
             return newType;
         }

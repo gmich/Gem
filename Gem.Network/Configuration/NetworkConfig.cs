@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Net;
 using Lidgren.Network;
 using Gem.Network.Builders;
+using Gem.Network.Factories;
 
 namespace Gem.Network.Configuration
 {
@@ -169,7 +170,7 @@ namespace Gem.Network.Configuration
 
         public MessageHandler(Type pocoType,dynamic obj)
         {
-            var eventFactory = new EventFactory();
+            var eventFactory = new ClientEventFactory();
             this.eventRaisingclass = eventFactory.Create(pocoType);
             this.pocoType = pocoType;
             this.objectThatHandlesMessages = obj;

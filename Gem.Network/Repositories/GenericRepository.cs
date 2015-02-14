@@ -1,6 +1,7 @@
 ﻿using Seterlund.CodeGuard;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace Gem.Network.Repositories
@@ -16,6 +17,19 @@ namespace Gem.Network.Repositories
         {
             this.idProperty = idProperty;
             items = new List<Titem>();
+        }
+
+        public int TotalElements
+        {
+            get
+            {
+                return items.Count;
+            }
+        }
+
+        public bool HasKey(Tid key)
+        {
+            return items.Any(x => idProperty(x).Equals(key));
         }
 
         public Titem GetById(Tid id)
@@ -54,7 +68,7 @@ namespace Gem.Network.Repositories
         }
 
         public bool Add(Titem item)
-        {
+        {          
             Guard.That(item).IsNotDefault();
 
             if (!items.Contains(item))

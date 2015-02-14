@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gem.Network.Factories.API
+namespace Gem.Network.Factories
 {
     interface IMessageHandlerFactory
     {

@@ -32,7 +32,7 @@ namespace Gem.Network.Managers
 
         }
 
-        internal static ClientInfo cachedInfo { get; set; }
+        internal static ClientNetworkInfo cachedInfo { get; set; }
         internal static Byte randomByte { get; set; }
         private static List<string> configurations;
 
@@ -46,7 +46,7 @@ namespace Gem.Network.Managers
     class ClientInfoManager
     {
 
-        private Dictionary<byte, ClientInfo> clientInfo;
+        private Dictionary<byte, ClientNetworkInfo> clientInfo;
         
         private byte GetUniqueByte()
         {

@@ -1,17 +1,21 @@
 ﻿using Gem.Network.Configuration;
 using Gem.Network.Handlers;
+using Gem.Network.Messages;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gem.Network.Repositories
 {
-    public class ClientInfo
+    public class ClientNetworkInfo
     {
         [Key]
         public byte ID { get; set; }
 
         [Required]
-        public Type MessagePoco { get; set; }
+        public IncomingMessageTypes MessageType { get; set; }
+
+        [Required]
+        public Type MessagePoco { get; set; }      
 
         [Required]
         public object EventRaisingclass { get; private set; }

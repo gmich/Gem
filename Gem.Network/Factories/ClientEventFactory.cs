@@ -2,12 +2,12 @@
 using System;
 using System.Reflection;
 
-namespace Gem.Network.Configuration
+namespace Gem.Network.Factories
 {
     /// <summary>
     /// Creates a class of type PeerEvent that registers events to the NetworkProvider.Send method
     /// </summary>
-    public sealed class EventFactory
+    public sealed class ClientEventFactory : IEventFactory
     {
         public object Create(Type type)
         {

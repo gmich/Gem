@@ -10,6 +10,7 @@ using System.Net;
 using Gem.Network.Messages;
 using Moq;
 using Gem.Network.Builders;
+using Gem.Network.Factories;
 
 namespace Gem.Network.Tests
 {
@@ -37,7 +38,7 @@ namespace Gem.Network.Tests
             var myNewObject = Activator.CreateInstance(myNewType);
 
             //create a dynamic event raising class
-            var EventFactory = new EventFactory();
+            var EventFactory = new ClientEventFactory();
             dynamic eventRaisingclass = EventFactory.Create(myNewType);
 
             // eventRaisingclass.Event += peerEvent;

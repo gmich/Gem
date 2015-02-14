@@ -11,6 +11,8 @@ namespace Gem.Network
         where TItem: class 
         where TId : struct
     {
+        bool HasKey(TId id);
+
         TItem GetById(TId id);
 
         TItem Get(Func<TItem, bool> expression);
