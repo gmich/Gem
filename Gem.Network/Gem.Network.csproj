@@ -68,6 +68,7 @@
     <Compile Include="Cache\Events\EventAggregator.cs" />
     <Compile Include="Cache\Events\ICacheEvent.cs" />
     <Compile Include="Cache\Events\IEventProvider.cs" />
+    <Compile Include="Client\INetworkEvent.cs" />
     <Compile Include="Configuration\ClientConfig.cs" />
     <Compile Include="Configuration\FluentAPI.cs" />
     <Compile Include="Configuration\NetworkProfile.cs" />

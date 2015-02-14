@@ -17,6 +17,8 @@ namespace Gem.Network
 
         TItem Get(Func<TItem, bool> expression);
 
+        List<TItem> GetAll();
+
         bool Update(TItem entity);
  
         bool Delete(TId id);

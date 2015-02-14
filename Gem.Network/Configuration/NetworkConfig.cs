@@ -106,12 +106,12 @@ namespace Gem.Network.Configuration
             this.PocoType = pocoBuilder.Build("GemPOCO" + pocoCount++, propertyInfo);
         }
 
-        public MessageHandler HandleWith(object obj, string DelegateName)
+        public MessageHandlerBuild HandleWith(object obj, string DelegateName)
         {
             ObjectsDelegate = obj;
             this.DelegateName = DelegateName;
 
-            return new MessageHandler(PocoType,CreateMessageHandler());
+            return new MessageHandlerBuild(PocoType,CreateMessageHandler());
         }
         
         private string GetArgumentsCallForDynamicInvoker()
@@ -160,7 +160,7 @@ namespace Gem.Network.Configuration
         //}
     }
 
-    public class MessageHandler
+    public class MessageHandlerBuild
     {
         private readonly dynamic objectThatHandlesMessages;
         private readonly dynamic eventRaisingclass;
@@ -168,7 +168,7 @@ namespace Gem.Network.Configuration
         //This is public for testing purposes
         public readonly Type pocoType;
 
-        public MessageHandler(Type pocoType,dynamic obj)
+        public MessageHandlerBuild(Type pocoType,dynamic obj)
         {
             var eventFactory = new ClientEventFactory();
             this.eventRaisingclass = eventFactory.Create(pocoType);

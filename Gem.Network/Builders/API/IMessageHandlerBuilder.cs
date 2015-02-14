@@ -6,6 +6,6 @@ namespace Gem.Network.Builders
 {
     public interface IMessageHandlerBuilder
     {
-        IMessageHandler Build(List<string> propertyNames, string classname, string functionName);
+        Type Build(List<string> propertyNames, string classname, string functionName);
     }
 }

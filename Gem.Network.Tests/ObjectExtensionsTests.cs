@@ -8,6 +8,7 @@ using Gem.Network.Builders;
 
 namespace Gem.Network.Tests
 {
+    using Extensions;
 
     [TestClass]
     public class ObjectExtensionsTests

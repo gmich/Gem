@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gem.Network.Utilities
+namespace Gem.Network.Extensions
 {
     public static class ObjectExtensions
     {
@@ -29,11 +29,10 @@ namespace Gem.Network.Utilities
         {
             obj.GetType().GetProperty(propName).SetValue(obj, propValue);
         }
-
-
-        public static object DynamicInvoke(this object obj, string name, object[] args)
+        
+        public static void DynamicInvoke(this object obj, string name, object[] args)
         {
-            return obj.GetType().GetMethod(name).Invoke(obj, args);
+            obj.GetType().GetMethod(name).Invoke(obj, args);
         }
     }
 }

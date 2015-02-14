@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gem.Network.Other;
 using Lidgren.Network;
-using Gem.Network.Networking;
 using System.Diagnostics;
 using Gem.Network.Configuration;
 using System.Net;

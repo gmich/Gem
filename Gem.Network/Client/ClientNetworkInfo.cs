@@ -1,4 +1,5 @@
-﻿using Gem.Network.Configuration;
+﻿using Gem.Network.ClientEvents;
+using Gem.Network.Configuration;
 using Gem.Network.Handlers;
 using Gem.Network.Messages;
 using System;
@@ -18,9 +19,9 @@ namespace Gem.Network.Repositories
         public Type MessagePoco { get; set; }      
 
         [Required]
-        public object EventRaisingclass { get; private set; }
+        public INetworkEvent EventRaisingclass { get; set; }
 
         [Required]
-        public IMessageHandler MessageHandler { get; private set; }
+        public IMessageHandler MessageHandler { get; set; }
     }
 }

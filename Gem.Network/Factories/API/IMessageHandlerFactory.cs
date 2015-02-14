@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Gem.Network.Factories
 {
-    interface IMessageHandlerFactory
+   public  interface IMessageHandlerFactory
     {
-        IMessageHandler Create(List<string> propertyNames, string classname, string functionName);
+        Type Create(List<string> propertyNames, string classname, string functionName);
     }
 }

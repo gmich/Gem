@@ -32,6 +32,11 @@ namespace Gem.Network.Repositories
             return items.Any(x => idProperty(x).Equals(key));
         }
 
+        public List<Titem> GetAll()
+        {
+            return items;
+        }
+
         public Titem GetById(Tid id)
         {
             return items.Where(x => idProperty(x).Equals(id)).FirstOrDefault();

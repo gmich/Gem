@@ -37,7 +37,7 @@ namespace Gem.Network.Builders
         /// <param name="functionName">The function to invoke. 
         /// The function must be a public member of the class that is being passed in the constructor</param>
         /// <returns>The type of the message handler</returns>
-        public IMessageHandler Build(List<string> propertyNames, string classname, string functionName)
+        public Type Build(List<string> propertyNames, string classname, string functionName)
         {
             var str = String.Format(@"public class {0} : IMessageHandler
                                              {{ private readonly dynamic element;
@@ -52,12 +52,12 @@ namespace Gem.Network.Builders
                                                  }}                                                                                             
                                              }}", classname,
                                                 functionName,
-                                                GetArgumentsCallForDynamicInvoker(propertyNames));
-                                                //properties.Select(x => x.PropertyType.Name).ToList()));
+                                                GetArgumentsCallForDynamicInvoker(propertyNames));                                        
 
             return CSScript.LoadCode(str)
-                           .CreateObject("*")
-                           .AlignToInterface<IMessageHandler>();
+                           //.CreateObject("*")
+                           .AlignToInterface<IMessageHandler>()
+                           .GetType();;
         }
     }
 }
