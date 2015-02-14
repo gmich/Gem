@@ -1,4 +1,4 @@
-﻿using Gem.Network.DynamicBuilders;
+﻿using Gem.Network.Builders;
 using Gem.Network.Messages;
 using Lidgren.Network;
 using System;
@@ -104,7 +104,8 @@ namespace Gem.Network.Example
                         PropertyType = typeof(string)
                 }
             };
-            Type myNewType = PocoBuilder.Create("POCO", propertyList);
+            IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
+            Type myNewType = PocoBuilder.Build("POCO", propertyList);
             dynamic myObject = Activator.CreateInstance(myNewType);
             myObject.Name = "DynamicType";
 

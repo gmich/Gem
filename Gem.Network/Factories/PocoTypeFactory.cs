@@ -1,5 +1,5 @@
-﻿using Gem.Network.Cache;
-using Gem.Network.DynamicBuilders;
+﻿using Gem.Network.Builders;
+using Gem.Network.Cache;
 using Gem.Network.Repositories;
 using Seterlund.CodeGuard;
 using System;
@@ -9,31 +9,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gem.Network.Managers
+namespace Gem.Network.Factories
 {
-    public sealed class PocoTypeFactory
+    public sealed class PocoTypeFactory : IPocoFactory
     {
-        private static GCache<Type[], Type> typeCache;
 
-        internal class ArrayTypeEquality : EqualityComparer<Type[]>
+        #region Private Properties
+
+        private readonly IPocoBuilder pocoBuilder;
+        private GCache<Type[], Type> typeCache;
+           
+        #endregion
+
+        #region Constructor
+
+        public PocoTypeFactory(IPocoBuilder pocoBuilder)
         {
-            public override int GetHashCode(Type[] type)
-            {
-                return type.GetHashCode();
-            }
-
-            public override bool Equals(Type[] type1, Type[] type2)
-            {
-                return type1.SequenceEqual(type2);
-            }
-        }
-
-        static PocoTypeFactory()
-        {
+            this.pocoBuilder = pocoBuilder;   
             typeCache = new GCache<Type[], Type>(GC.GetTotalMemory(true) / 10, new ArrayTypeEquality());
         }
 
-        public static Type Create(List<DynamicPropertyInfo> propertyInfo, string classname)
+        #endregion
+
+        #region IPocoFactory Implementation
+
+        public Type Create(List<DynamicPropertyInfo> propertyInfo, string classname)
         {
             Guard.That(propertyInfo.All(x => x.PropertyType.IsPrimitive
                 || x.PropertyType == typeof(string)
@@ -48,10 +48,36 @@ namespace Gem.Network.Managers
                 return lookupType;
             }
 
-            Type newType = PocoBuilder.Create(classname, propertyInfo);
+            Type newType = pocoBuilder.Build(classname, propertyInfo);
             typeCache.Add(typeArray, newType);
 
             return newType;
         }
+
+        #endregion
+
+        #region Equality Comparer for Type[]
+
+        internal class ArrayTypeEquality : EqualityComparer<Type[]>
+        {
+            public override int GetHashCode(Type[] types)
+            {
+                int hash = 17;
+                foreach (var type in types)
+                {
+                    hash = hash * 31 + type.GetHashCode();
+                }
+                return hash;
+            }
+
+            public override bool Equals(Type[] type1, Type[] type2)
+            {
+                return type1.SequenceEqual(type2);
+            }
+        }
+
+        #endregion
+
+
     }
 }

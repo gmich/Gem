@@ -9,7 +9,7 @@ namespace Gem.Network.Configuration
     /// </summary>
     public sealed class EventFactory
     {
-        public static object Create(Type type)
+        public object Create(Type type)
         {
             var dynamicType = typeof(ClientEvent<>);
             return Activator.CreateInstance(dynamicType.MakeGenericType(type));

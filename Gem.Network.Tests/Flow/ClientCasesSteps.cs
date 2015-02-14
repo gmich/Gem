@@ -1,4 +1,4 @@
-﻿using Gem.Network.DynamicBuilders;
+﻿using Gem.Network.Builders;
 using Gem.Network.Messages;
 using Lidgren.Network;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -24,7 +24,7 @@ namespace Gem.Network.Tests.Flow
                 }
             };
         private Type myNewType;
-
+        private IPocoBuilder pocoBuilder = new ReflectionEmitBuilder();
         [Given(@"A server is running")]
         public void GivenAServerIsRunning()
         {
@@ -44,7 +44,7 @@ namespace Gem.Network.Tests.Flow
         [Given(@"I connect to the server")]
         public void GivenIConnectToTheServer()
         {
-            myNewType = PocoBuilder.Create("POCO", propertyList);
+            myNewType = pocoBuilder.Build("POCO", propertyList);
             client = new Client(new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241), "local");
 
             client.Connect("local", 14241);

@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Linq;
-using Gem.Network.DynamicBuilders;
 
-namespace Gem.Network
+namespace Gem.Network.Builders
 {
     /// <summary>
     /// Creates POCO types
     /// </summary>
-    public static class PocoBuilder
+    public sealed class ReflectionEmitBuilder : IPocoBuilder
     {
         /// <summary>
         /// Creates a new POCO type
@@ -18,7 +17,7 @@ namespace Gem.Network
         /// <param name="className">The POCO's name</param>
         /// <param name="propertyFields">The property names and types <see cref="PropertyInfo"/></param>
         /// <returns>The new type</returns>
-        public static Type Create(string className, List<DynamicPropertyInfo> propertyFields)
+        public Type Build(string className, List<DynamicPropertyInfo> propertyFields)
         {
             return CompileResultType(className, propertyFields);
         }
@@ -26,7 +25,7 @@ namespace Gem.Network
 
         #region Private Helper Methods
 
-        private static Type CompileResultType(string className, List<DynamicPropertyInfo> propertyFields)
+        private Type CompileResultType(string className, List<DynamicPropertyInfo> propertyFields)
         {
             TypeBuilder tb = GetTypeBuilder(className);
             ConstructorBuilder constructorDefault = tb.DefineDefaultConstructor(MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName);
@@ -45,7 +44,6 @@ namespace Gem.Network
                 ctorIL.Emit(OpCodes.Ldarg_0);
                 ctorIL.Emit(OpCodes.Ldarg_S, ++constructorIndexCount);
                 ctorIL.Emit(OpCodes.Stfld, dynamicField);
-               // constructorIndexCount++;
             }
 
             ctorIL.Emit(OpCodes.Ret);
@@ -54,7 +52,7 @@ namespace Gem.Network
             return objectType;
         }
 
-        private static TypeBuilder GetTypeBuilder(string className)
+        private TypeBuilder GetTypeBuilder(string className)
         {
             var typeSignature = className;
             var an = new AssemblyName(typeSignature);
@@ -71,7 +69,7 @@ namespace Gem.Network
             return tb;
         }
 
-        private static FieldBuilder CreateProperty(TypeBuilder tb, string propertyName, Type propertyType)
+        private FieldBuilder CreateProperty(TypeBuilder tb, string propertyName, Type propertyType)
         {
             FieldBuilder fieldBuilder = tb.DefineField("_" + propertyName, propertyType, FieldAttributes.Private);
 

@@ -12,8 +12,7 @@ namespace Gem.Network.Other
         public void Resolver(Type type)
         {
             ClientAttribute HelpAttr;
-
-
+            
             //Querying Class Attributes
             foreach (Attribute attr in type.GetCustomAttributes(true))
             {

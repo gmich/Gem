@@ -1,24 +1,24 @@
-﻿using Gem.Network.DynamicBuilders;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System;
 using System.Text;
 using System.Collections.Generic;
 using CSScriptLibrary;
 using System.Linq;
+using Gem.Network.Handlers;
 
-namespace Gem.Network.Handlers
+namespace Gem.Network.Builders
 {
     /// <summary>
-    /// Creates a type that handles the server incoming message's
+    /// Creates a type that handles the server incoming messages
     /// </summary>
-    public class IncomingMessageHandlerBuilder
+    public class CsScriptBuilder : IMessageHandlerBuilder
     {
         /// <summary>
         /// Creates a string that casts objects to the correct type e.g. (string)arg[0],(int)arg[1] etc
         /// </summary>
         /// <param name="properties">The properties that are being handled</param>
         /// <returns>A string to concat to the messagehandler class</returns>
-        private static string GetArgumentsCallForDynamicInvoker(List<string> propertyNames)
+        private string GetArgumentsCallForDynamicInvoker(List<string> propertyNames)
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < propertyNames.Count; i++)
@@ -37,7 +37,7 @@ namespace Gem.Network.Handlers
         /// <param name="functionName">The function to invoke. 
         /// The function must be a public member of the class that is being passed in the constructor</param>
         /// <returns>The type of the message handler</returns>
-        public static IMessageHandler Create(List<string> propertyNames, string classname, string functionName)
+        public IMessageHandler Build(List<string> propertyNames, string classname, string functionName)
         {
             var str = String.Format(@"public class {0} : IMessageHandler
                                              {{ private readonly dynamic element;

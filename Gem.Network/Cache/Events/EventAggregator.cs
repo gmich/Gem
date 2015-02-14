@@ -1,10 +1,9 @@
-﻿using Gem.Network.Cache;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Gem.Network.Events
+namespace Gem.Network.Cache.Events
 {
 
     public class CacheEventArgs<TKey, TCached> : EventArgs

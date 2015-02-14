@@ -1,6 +1,6 @@
 ﻿#region Usings
 
-using Gem.Network.Events;
+using Gem.Network.Cache.Events;
 using Seterlund.CodeGuard;
 using System;
 using System.Collections.Concurrent;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gem.Network.Configuration;
 using Gem.Network.Cache;
-using Gem.Network.DynamicBuilders;
+using Gem.Network.Builders;
 
 namespace Gem.Network.Tests.Repository
 {
@@ -43,9 +43,10 @@ namespace Gem.Network.Tests.Repository
 
             #endregion
 
-            Type type1 = PocoBuilder.Create("Type1", typeInfo1);
-            Type type2 = PocoBuilder.Create("Type2", typeInfo2);
-            Type type3 = PocoBuilder.Create("Type3", typeInfo3);
+            IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
+            Type type1 = PocoBuilder.Build("Type1", typeInfo1);
+            Type type2 = PocoBuilder.Build("Type2", typeInfo2);
+            Type type3 = PocoBuilder.Build("Type3", typeInfo3);
 
             var typeRepository = new TypeRepository();
             typeRepository.RegisterType("Type1", type1);
@@ -70,8 +71,8 @@ namespace Gem.Network.Tests.Repository
                         PropertyType = typeof(string)
                 }
             };
-                  
-            Type type1 = PocoBuilder.Create("Type1", typeInfo1);
+            IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
+            Type type1 = PocoBuilder.Build("Type1", typeInfo1);
             
             var typeRepository = new TypeRepository();
 

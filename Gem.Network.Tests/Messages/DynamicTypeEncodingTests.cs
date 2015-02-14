@@ -5,7 +5,7 @@ using Lidgren.Network;
 using Gem.Network.Messages;
 using System.Diagnostics;
 using System.Net;
-using Gem.Network.DynamicBuilders;
+using Gem.Network.Builders;
 
 namespace Gem.Network.Tests.Messages
 {
@@ -23,8 +23,8 @@ namespace Gem.Network.Tests.Messages
                         PropertyType = typeof(string)
                 }
             };
-
-            Type myNewType = PocoBuilder.Create("POCO", propertyList);
+            IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
+            Type myNewType = PocoBuilder.Build("POCO", propertyList);
 
             dynamic myObject = Activator.CreateInstance(myNewType);
 
@@ -67,7 +67,8 @@ namespace Gem.Network.Tests.Messages
                         PropertyType = typeof(string)
                 }
             };
-            Type myNewType = PocoBuilder.Create("POCO", propertyList);
+            IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
+            Type myNewType = PocoBuilder.Build("POCO", propertyList);
 
             var client = new Client(new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241), "local");
 

@@ -3,7 +3,8 @@ using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gem.Network.Utilities;
-using Gem.Network.DynamicBuilders;
+using Gem.Network;
+using Gem.Network.Builders;
 
 namespace Gem.Network.Tests
 {
@@ -22,8 +23,8 @@ namespace Gem.Network.Tests
                         PropertyType = typeof(string)
                 }
             };
-
-            Type myNewType = PocoBuilder.Create("POCO", propertyList);
+            IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
+            Type myNewType = PocoBuilder.Build("POCO", propertyList);
 
             object myObject = Activator.CreateInstance(myNewType);
             var value = myObject.GetValue("Name");
@@ -40,8 +41,8 @@ namespace Gem.Network.Tests
                         PropertyType = typeof(string)
                 }
             };
-
-            Type myNewType = PocoBuilder.Create("POCO", propertyList);
+            IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
+            Type myNewType = PocoBuilder.Build("POCO", propertyList);
             object myObject = Activator.CreateInstance(myNewType);
 
             myObject.SetValue("Name", "Value");

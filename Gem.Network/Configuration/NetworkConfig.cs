@@ -9,7 +9,7 @@ using CSScriptLibrary;
 using System.Text.RegularExpressions;
 using System.Net;
 using Lidgren.Network;
-using Gem.Network.DynamicBuilders;
+using Gem.Network.Builders;
 
 namespace Gem.Network.Configuration
 {
@@ -101,7 +101,8 @@ namespace Gem.Network.Configuration
             this.Tag = Tag;
             this.propertyInfo = propertyInfo;
             this.argsCount = propertyInfo.Count;
-            this.PocoType = PocoBuilder.Create("GemPOCO" + pocoCount++, propertyInfo);
+            var pocoBuilder = new ReflectionEmitBuilder();
+            this.PocoType = pocoBuilder.Build("GemPOCO" + pocoCount++, propertyInfo);
         }
 
         public MessageHandler HandleWith(object obj, string DelegateName)
@@ -168,7 +169,8 @@ namespace Gem.Network.Configuration
 
         public MessageHandler(Type pocoType,dynamic obj)
         {
-            this.eventRaisingclass = EventFactory.Create(pocoType);
+            var eventFactory = new EventFactory();
+            this.eventRaisingclass = eventFactory.Create(pocoType);
             this.pocoType = pocoType;
             this.objectThatHandlesMessages = obj;
             

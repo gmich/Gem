@@ -9,7 +9,7 @@ using Gem.Network.Configuration;
 using System.Net;
 using Gem.Network.Messages;
 using Moq;
-using Gem.Network.DynamicBuilders;
+using Gem.Network.Builders;
 
 namespace Gem.Network.Tests
 {
@@ -32,10 +32,12 @@ namespace Gem.Network.Tests
                         PropertyType = typeof(string)
                 }
             };
-            Type myNewType = PocoBuilder.Create("POCO", propertyList);
+            IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
+            Type myNewType = PocoBuilder.Build("POCO", propertyList);
             var myNewObject = Activator.CreateInstance(myNewType);
 
             //create a dynamic event raising class
+            var EventFactory = new EventFactory();
             dynamic eventRaisingclass = EventFactory.Create(myNewType);
 
             // eventRaisingclass.Event += peerEvent;

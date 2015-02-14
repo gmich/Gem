@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Gem.Network.Configuration
+namespace Gem.Network.Builders
 {
     public class DelegateBuilder
     {

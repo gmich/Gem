@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gem.Network.Configuration;
-using Gem.Network.DynamicBuilders;
+using Gem.Network.Builders;
 
 namespace Gem.Network.Tests
 {
@@ -21,8 +21,8 @@ namespace Gem.Network.Tests
                         PropertyType = typeof(string)
                 }
             };
-
-            Type myNewType = PocoBuilder.Create("POCO", propertyList);
+            IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
+            Type myNewType = PocoBuilder.Build("POCO", propertyList);
 
             dynamic myObject = Activator.CreateInstance(myNewType);
             Assert.IsTrue(myObject.GetType().Name == "POCO");
@@ -45,8 +45,8 @@ namespace Gem.Network.Tests
                         PropertyType = typeof(string)
                 }
             };
-
-            Type myNewType = PocoBuilder.Create("POCO", propertyList);
+            IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
+            Type myNewType = PocoBuilder.Build("POCO", propertyList);
 
             dynamic myObject = Activator.CreateInstance(myNewType,"Test");
             Assert.IsTrue(myObject.GetType().Name == "POCO");
@@ -79,8 +79,8 @@ namespace Gem.Network.Tests
                         PropertyType = typeof(float)
                 }                                
             };
-
-            Type myNewType = PocoBuilder.Create("POCO", propertyList);
+            IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
+            Type myNewType = PocoBuilder.Build("POCO", propertyList);
 
             dynamic myObject = Activator.CreateInstance(myNewType);
             Assert.IsTrue(myObject.GetType().Name == "POCO");
@@ -125,8 +125,8 @@ namespace Gem.Network.Tests
                         PropertyType = typeof(float)
                 }                                
             };
-
-            Type myNewType = PocoBuilder.Create("POCO", propertyList);
+            IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
+            Type myNewType = PocoBuilder.Build("POCO", propertyList);
 
             dynamic myObject = Activator.CreateInstance(myNewType, "String", 0, 2, 1.0f);
 
@@ -152,8 +152,8 @@ namespace Gem.Network.Tests
                 });
                 counter++;
             }
-                    
-            Type myNewType = PocoBuilder.Create("POCO", propertyList);
+            IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
+            Type myNewType = PocoBuilder.Build("POCO", propertyList);
 
             dynamic myObject = Activator.CreateInstance(myNewType);
             Assert.IsTrue(myObject.GetType().Name == "POCO");

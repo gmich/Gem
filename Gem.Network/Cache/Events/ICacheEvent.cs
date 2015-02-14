@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gem.Network.Events
+namespace Gem.Network.Cache.Events
 {
 
     public interface ICacheEvent<Tsender, Targs> : IEventProvider<Targs>

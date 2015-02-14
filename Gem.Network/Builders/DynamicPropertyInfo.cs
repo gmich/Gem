@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gem.Network.DynamicBuilders
+namespace Gem.Network.Builders
 {
     public class DynamicPropertyInfo
     {
