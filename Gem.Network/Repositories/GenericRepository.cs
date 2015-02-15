@@ -8,7 +8,6 @@ namespace Gem.Network.Repositories
 {
     public class GenericRepository<Titem, Tid> : IDataProvider<Titem, Tid>
         where Titem : class
-        where Tid : struct
     {
         private List<Titem> items;
         private Func<Titem, Tid> idProperty;

@@ -14,12 +14,10 @@ namespace Gem.Network.Configuration
 
     public class NetworkFacade
     {
-        NetworkProfileRepository Profiles;
-        ClientConfig activeConfig;
-        Client client;
-        private readonly ClientConfig clientConfig;
-        static ClientNetworkInfoBuilder builder;
-
+        private NetworkProfileRepository Profiles;
+        private ClientConfig activeConfig;
+        private IClient client;
+        private ClientNetworkInfoBuilder builder;
     }
 
     public class ClientConfig
@@ -65,20 +63,20 @@ namespace Gem.Network.Configuration
 
     public class ClientNetworkInfoBuilder
     {
-        public readonly ClientNetworkInfo networkInfo;
-        private readonly ClientConfig clientConfig;
+        private readonly NetworkProfileRepository profiles;
 
-        public string ProfileName { get; set; }
+        public ClientNetworkInfo clientInfo { get; set; }
+        public string ProfileId { get; set; }
 
-        public ClientNetworkInfoBuilder(ClientConfig clientConfig)
+        public ClientNetworkInfoBuilder(NetworkProfileRepository profiles)
         {
-            networkInfo = new ClientNetworkInfo();
-            this.clientConfig = clientConfig;
+            clientInfo = new ClientNetworkInfo();
+            this.profiles = profiles;
         }
 
         public void End()
         {
-            clientConfig.AddConfig(networkInfo);
+            profiles.Get(ProfileId).AddConfig(clientInfo);
         }
     }
 }

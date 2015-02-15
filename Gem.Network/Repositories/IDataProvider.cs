@@ -9,7 +9,6 @@ namespace Gem.Network
 
     public interface IDataProvider<TItem,TId>
         where TItem: class 
-        where TId : struct
     {
         bool HasKey(TId id);
 

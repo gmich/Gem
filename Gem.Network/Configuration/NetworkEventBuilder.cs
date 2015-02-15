@@ -31,7 +31,7 @@ namespace Gem.Network.Configuration
         public MessageType ForProfile(string profileName)
         {
             profilesCalled++;
-            builder.ProfileName = profileName;
+            builder.ProfileId = profileName;
             return new MessageType(this.builder);
         }
     }
@@ -42,7 +42,7 @@ namespace Gem.Network.Configuration
 
         public MessageType ForProfile(IncomingMessageTypes messageType)
         {
-            builder.networkInfo.MessageType = messageType;
+            builder.clientInfo.MessageType = messageType;
             return new MessageType(this.builder);
         }
     }
@@ -67,8 +67,8 @@ namespace Gem.Network.Configuration
             var newType = Dependencies.Container.Resolve<IPocoFactory>().Create(properties, "poco" + profilesCalled);
             //var newType = builder.pocoFactory.Create(properties, "poco" + profilesCalled);
 
-            builder.networkInfo.MessagePoco = newType;
-            builder.networkInfo.EventRaisingclass = Dependencies.Container.Resolve<IEventFactory>().Create(newType);
+            builder.clientInfo.MessagePoco = newType;
+            builder.clientInfo.EventRaisingclass = Dependencies.Container.Resolve<IEventFactory>().Create(newType);
 
             return new MessageHandler(builder, properties.Select(x => x.PropertyName).ToList());
         }
@@ -89,11 +89,11 @@ namespace Gem.Network.Configuration
             var handlerType = Dependencies.Container.Resolve<IMessageHandlerFactory>()
                                           .Create(propertyNames, "handler" + profilesCalled, functionName);
 
-            builder.networkInfo.MessageHandler = Activator.CreateInstance(handlerType, invoker) as IMessageHandler;
+            builder.clientInfo.MessageHandler = Activator.CreateInstance(handlerType, invoker) as IMessageHandler;
 
             builder.End();
 
-            return builder.networkInfo.MessageHandler;
+            return builder.clientInfo.MessageHandler;
         }
     }
 }

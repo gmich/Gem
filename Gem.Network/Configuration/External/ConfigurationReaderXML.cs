@@ -18,7 +18,7 @@ namespace Gem.Network.Configuration
             try
             {
                 this.dependArgs =
-                XDocument.Load(@path)
+                XDocument.Load(path)
                          .Element("Gem")
                          .Descendants("Network")
                          .Select(x => new DependencyArgs
@@ -29,7 +29,6 @@ namespace Gem.Network.Configuration
                          .Single();
 
                 Debugger.Append.Info("Network configuration loaded successfully");
-
             }
             catch (Exception ex)
             {
