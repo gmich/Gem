@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Gem.Network.Configuration
 {
-    public interface IDependencyReader
+    public interface IConfigurationReader
     {
-        void Read();
-        string Factory { get; }
-        string RuntimeBuilder { get; }
+        void Load(string path);
+
+        DependencyArgs Dependencies { get; }
     }
 }

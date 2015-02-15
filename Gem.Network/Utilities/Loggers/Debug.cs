@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gem.Network
+namespace Gem.Network.Utilities.Loggers
 {
-    public interface IDebugListener
+    public static class Debugger
     {
-        IDisposable AddListener(Action<string> listener);
+        public static IDebugListener Append { get; set; }
     }
 }

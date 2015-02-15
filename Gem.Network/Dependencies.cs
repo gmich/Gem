@@ -1,23 +1,17 @@
 ﻿using Autofac;
 using Gem.Network.Builders;
+using Gem.Network.Configuration;
 using Gem.Network.Factories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Gem.Network.Configuration
+namespace Gem.Network
 {
-    public class Dependencies
+    public sealed class Dependencies
     {
         public static IContainer Container { get; private set; }
 
-        static Dependencies()
+        public static void Setup(DependencyArgs dependencies)
         {
-            var dependencies = new DependencyReader();
-            dependencies.Read();
-
             var builder = new ContainerBuilder();
 
             RegisterFactories(builder, dependencies.Factory);

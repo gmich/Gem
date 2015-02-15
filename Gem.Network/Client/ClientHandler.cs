@@ -7,7 +7,7 @@ using Gem.Network.Utilities;
 
 namespace Gem.Network
 {
-    public class ClientHandler : IDebugListener, IDisposable
+    public class ClientHandler : IDisposable
     {
 
         #region Message Listeners

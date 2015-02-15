@@ -47,6 +47,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Third Party\Lidgren.Network.dll</HintPath>
     </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\Tool\Third Party\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.CSharp">
       <HintPath>..\packages\CS-Script.3.9.2.0\lib\net45\Mono.CSharp.dll</HintPath>
     </Reference>
@@ -74,8 +77,9 @@
     <Compile Include="Cache\Events\IEventProvider.cs" />
     <Compile Include="Client\INetworkEvent.cs" />
     <Compile Include="Configuration\ClientConfig.cs" />
-    <Compile Include="Configuration\DependencyReader.cs" />
-    <Compile Include="Configuration\IDependencyReader.cs" />
+    <Compile Include="Configuration\External\ConfigurationReaderXML.cs" />
+    <Compile Include="Configuration\External\DependencyArgs.cs" />
+    <Compile Include="Configuration\External\IConfigurationReader.cs" />
     <Compile Include="Dependencies.cs" />
     <Compile Include="Configuration\FluentAPI.cs" />
     <Compile Include="Configuration\NetworkProfile.cs" />
@@ -106,12 +110,17 @@
     <Compile Include="Attributes\AttributeContainer.cs" />
     <Compile Include="Attributes\AttributeResolver.cs" />
     <Compile Include="ConnectionDetails.cs" />
+    <Compile Include="Startup.cs" />
     <Compile Include="Utilities\Deregister.cs" />
     <Compile Include="Repositories\IDataProvider.cs" />
+    <Compile Include="Utilities\Loggers\Debug.cs" />
+    <Compile Include="Utilities\Loggers\DebugListener.cs" />
+    <Compile Include="Utilities\Loggers\IAppender.cs" />
+    <Compile Include="Utilities\Loggers\IDebugListener.cs" />
+    <Compile Include="Utilities\Loggers\Log4NetWrapper.cs" />
     <Compile Include="Utilities\RandomGenerator.cs" />
     <Compile Include="Utilities\RuntimeCompiler.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
-    <Compile Include="Utilities\IDebugListener.cs" />
     <Compile Include="Configuration\IMessageConfiguration.cs" />
     <Compile Include="Messages\ConnectionApproval.cs" />
     <Compile Include="Managers\INetworkManager.cs" />
@@ -126,6 +135,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Managers\ClientManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
