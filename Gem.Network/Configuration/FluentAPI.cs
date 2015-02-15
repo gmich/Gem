@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Autofac;
+using Gem.Network.Factories;
 
 namespace Gem.Network.Configuration
 {
@@ -61,10 +63,12 @@ namespace Gem.Network.Configuration
             Guard.That(args.All(x => x.IsPrimitive || x == typeof(string)), "All types should be primitive");
 
             var properties = DynamicPropertyInfo.GetPropertyInfo(args);
-            var newType = builder.pocoFactory.Create(properties, "poco" + profilesCalled);
+
+            var newType = Dependencies.Container.Resolve<IPocoFactory>().Create(properties, "poco" + profilesCalled);
+            //var newType = builder.pocoFactory.Create(properties, "poco" + profilesCalled);
 
             builder.networkInfo.MessagePoco = newType;
-            builder.networkInfo.EventRaisingclass = builder.eventFactory.Create(newType);
+            builder.networkInfo.EventRaisingclass = Dependencies.Container.Resolve<IEventFactory>().Create(newType);
 
             return new MessageHandler(builder, properties.Select(x => x.PropertyName).ToList());
         }
@@ -82,7 +86,8 @@ namespace Gem.Network.Configuration
 
         public IMessageHandler HandleWidth(object invoker, string functionName)
         {
-            var handlerType = builder.handlerFactory.Create(propertyNames, "handler" + profilesCalled, functionName);
+            var handlerType = Dependencies.Container.Resolve<IMessageHandlerFactory>()
+                                          .Create(propertyNames, "handler" + profilesCalled, functionName);
 
             builder.networkInfo.MessageHandler = Activator.CreateInstance(handlerType, invoker) as IMessageHandler;
 

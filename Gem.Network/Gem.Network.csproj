@@ -35,6 +35,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Third Party\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="CSScriptLibrary, Version=3.9.2.0, Culture=neutral, PublicKeyToken=70fcc3d18c749033, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Third Party\CSScriptLibrary.dll</HintPath>
@@ -70,6 +74,9 @@
     <Compile Include="Cache\Events\IEventProvider.cs" />
     <Compile Include="Client\INetworkEvent.cs" />
     <Compile Include="Configuration\ClientConfig.cs" />
+    <Compile Include="Configuration\DependencyReader.cs" />
+    <Compile Include="Configuration\IDependencyReader.cs" />
+    <Compile Include="Dependencies.cs" />
     <Compile Include="Configuration\FluentAPI.cs" />
     <Compile Include="Configuration\NetworkProfile.cs" />
     <Compile Include="Factories\API\IMessageHandlerFactory.cs" />
@@ -102,7 +109,6 @@
     <Compile Include="Utilities\Deregister.cs" />
     <Compile Include="Repositories\IDataProvider.cs" />
     <Compile Include="Utilities\RandomGenerator.cs" />
-    <Compile Include="Singleton.cs" />
     <Compile Include="Utilities\RuntimeCompiler.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Utilities\IDebugListener.cs" />

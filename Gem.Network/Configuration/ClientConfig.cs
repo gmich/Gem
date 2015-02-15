@@ -15,7 +15,10 @@ namespace Gem.Network.Configuration
     public class NetworkFacade
     {
         NetworkProfileRepository Profiles;
-        ClientConfig clientConfig;
+        ClientConfig activeConfig;
+        Client client;
+        private readonly ClientConfig clientConfig;
+        static ClientNetworkInfoBuilder builder;
 
     }
 
@@ -47,7 +50,7 @@ namespace Gem.Network.Configuration
         {
             clientInfoRepository.GetById(id);
         }
-        
+
         private byte GetUniqueByte()
         {
             byte randomByte;
@@ -63,22 +66,13 @@ namespace Gem.Network.Configuration
     public class ClientNetworkInfoBuilder
     {
         public readonly ClientNetworkInfo networkInfo;
-        public readonly IEventFactory eventFactory;
-        public readonly IMessageHandlerFactory handlerFactory;
-        public readonly IPocoFactory pocoFactory;
         private readonly ClientConfig clientConfig;
 
         public string ProfileName { get; set; }
 
-        public ClientNetworkInfoBuilder(ClientConfig clientConfig,
-                                        IEventFactory eventFactory,
-                                        IMessageHandlerFactory handlerFactory,
-                                        IPocoFactory pocoFactory)
+        public ClientNetworkInfoBuilder(ClientConfig clientConfig)
         {
             networkInfo = new ClientNetworkInfo();
-            this.eventFactory = eventFactory;
-            this.handlerFactory = handlerFactory;
-            this.pocoFactory = pocoFactory;
             this.clientConfig = clientConfig;
         }
 
@@ -87,5 +81,4 @@ namespace Gem.Network.Configuration
             clientConfig.AddConfig(networkInfo);
         }
     }
-
 }
