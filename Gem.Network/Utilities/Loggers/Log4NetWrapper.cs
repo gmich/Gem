@@ -1,14 +1,15 @@
-﻿using System;
+﻿using log4net;
+using System;
 
 namespace Gem.Network.Utilities.Loggers
 {
     public class Log4NetWrapper : IAppender
     {
-        private readonly log4net.ILog log;
+        private readonly ILog log;
 
         public Log4NetWrapper(string logger) 
         {
-            log = log4net.LogManager.GetLogger(logger);
+            log = LogManager.GetLogger(logger);
         }
 
         #region Logging

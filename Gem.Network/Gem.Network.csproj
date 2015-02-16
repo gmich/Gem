@@ -47,9 +47,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Third Party\Lidgren.Network.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Tool\Third Party\log4net.dll</HintPath>
+      <HintPath>Third Party\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Mono.CSharp">
       <HintPath>..\packages\CS-Script.3.9.2.0\lib\net45\Mono.CSharp.dll</HintPath>
@@ -88,8 +88,7 @@
     <Compile Include="Factories\API\IEventFactory.cs" />
     <Compile Include="Factories\API\IPocoFactory.cs" />
     <Compile Include="Factories\MessageHandlerFactory.cs" />
-    <Compile Include="Handlers\ProfileHandler.cs" />
-    <Compile Include="Managers\IManager.cs" />
+    <Compile Include="Handlers\IMessageHandler.cs" />
     <Compile Include="Managers\ClientInfoManager.cs" />
     <Compile Include="Factories\PocoTypeFactory.cs" />
     <Compile Include="Client\ClientNetworkInfo.cs" />
@@ -106,7 +105,6 @@
     <Compile Include="Configuration\NetworkConfig.cs" />
     <Compile Include="Builders\DynamicPropertyInfo.cs" />
     <Compile Include="Builders\CsScriptBuilder.cs" />
-    <Compile Include="Handlers\IMessageHandler.cs" />
     <Compile Include="Messages\MessageSerializer.cs" />
     <Compile Include="Attributes\AttributeContainer.cs" />
     <Compile Include="Attributes\AttributeResolver.cs" />
@@ -135,13 +133,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Managers\ClientManager.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

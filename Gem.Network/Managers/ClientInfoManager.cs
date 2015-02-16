@@ -19,7 +19,6 @@ namespace Gem.Network.Managers
 
         }
 
-        private Dictionary<IncomingMessageTypes,IManager> networkManagers;
 
         public static void Setup(string config)
         {
