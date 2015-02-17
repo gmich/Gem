@@ -14,6 +14,11 @@ namespace Gem.Network.Utilities.Loggers
 
         #region Logging
 
+        public void Write(string message)
+        {
+            log.Info(message);
+        }
+
         public void Info(string message, params object[] args)
         {
             log.InfoFormat(message,args);

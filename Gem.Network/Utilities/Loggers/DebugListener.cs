@@ -22,6 +22,11 @@ namespace Gem.Network.Utilities.Loggers
         {
             appenders.Remove(appender);
         }
+        
+        public void Write(string message)
+        {
+            AppendAll(x => x.Write(message));
+        }
 
         public void Debug(string message, params object[] args)
         {
@@ -52,5 +57,6 @@ namespace Gem.Network.Utilities.Loggers
         {
             appenders.ForEach(x => appendAction(x));
         }
+
     }
 }

@@ -112,6 +112,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\Deregister.cs" />
     <Compile Include="Repositories\IDataProvider.cs" />
+    <Compile Include="Utilities\Loggers\ActionAppender.cs" />
     <Compile Include="Utilities\Loggers\Debug.cs" />
     <Compile Include="Utilities\Loggers\DebugListener.cs" />
     <Compile Include="Utilities\Loggers\IAppender.cs" />
