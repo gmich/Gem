@@ -23,6 +23,11 @@ namespace Gem.Network.Configuration
             profiles.Add(new ClientConfiguration { Config = config, Tag = profileId });
         }
 
+        public void Update(string profileId, ClientConfig config)
+        {
+            profiles.Update(new ClientConfiguration { Config = config, Tag = profileId });
+        }
+
         /// <summary>
         /// Returns the client configuration by tag.
         /// If none is found, a new config is created and added to the repository

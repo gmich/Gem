@@ -9,9 +9,26 @@ using System.Text;
 using System.Threading.Tasks;
 using Autofac;
 using Gem.Network.Factories;
+using System.Reflection;
+using System.Linq.Expressions;
 
 namespace Gem.Network.Configuration
 {
+
+    public class NetworkEventBuilder
+    {
+        private NetworkProfileRepository profileRepository;
+
+        public MessageType this[string index]
+        {
+            get
+            {
+                profileRepository.Add(index,null);
+                return new MessageType(new ClientNetworkInfoBuilder(profileRepository));
+            }
+        }
+    }
+
     public abstract class ABuilder
     {
         protected static int profilesCalled = 0;
@@ -23,69 +40,46 @@ namespace Gem.Network.Configuration
         }
     }
 
-    public class Profile : ABuilder
-    {
-
-        public Profile(ClientNetworkInfoBuilder builder) : base(builder) { }
-
-        public MessageType ForProfile(string profileName)
-        {
-            profilesCalled++;
-            builder.ProfileId = profileName;
-            return new MessageType(this.builder);
-        }
-    }
-
     public class MessageType : ABuilder
     {
         public MessageType(ClientNetworkInfoBuilder builder) : base(builder) { }
 
-        public MessageType ForProfile(IncomingMessageTypes messageType)
+        public MessageType Send(IncomingMessageTypes messageType)
         {
+            profilesCalled++;
             builder.clientInfo.MessageType = messageType;
             return new MessageType(this.builder);
         }
     }
 
-    public class EventCreator : ABuilder
-    {
-        private readonly List<DynamicPropertyInfo> propertyInfo;
-
-        public EventCreator(ClientNetworkInfoBuilder builder)
-            : base(builder)
-        {
-            this.propertyInfo = new List<DynamicPropertyInfo>();
-        }
-
-
-        public MessageHandler CreateEvent(params Type[] args)
-        {
-            Guard.That(args.All(x => x.IsPrimitive || x == typeof(string)), "All types should be primitive");
-
-            var properties = DynamicPropertyInfo.GetPropertyInfo(args);
-
-            var newType = Dependencies.Container.Resolve<IPocoFactory>().Create(properties, "poco" + profilesCalled);
-            //var newType = builder.pocoFactory.Create(properties, "poco" + profilesCalled);
-
-            builder.clientInfo.MessagePoco = newType;
-            builder.clientInfo.EventRaisingclass = Dependencies.Container.Resolve<IEventFactory>().Create(newType);
-
-            return new MessageHandler(builder, properties.Select(x => x.PropertyName).ToList());
-        }
-    }
-
     public class MessageHandler : ABuilder
     {
-        private readonly List<string> propertyNames;
 
-        public MessageHandler(ClientNetworkInfoBuilder builder, List<string> propertyNames)
+        public MessageHandler(ClientNetworkInfoBuilder builder)
             : base(builder)
+        { }
+
+        public IMessageHandler HandleWith<T>(T objectToHandle, Expression<Func<T, Delegate>> methodToHandle)
         {
-            this.propertyNames = propertyNames;
+            var unaryExpression = (UnaryExpression)methodToHandle.Body;
+            var methodCallExpression = (MethodCallExpression)unaryExpression.Operand;
+            var methodInfoExpression = (ConstantExpression)methodCallExpression.Arguments.Last();
+            var methodInfo = (MemberInfo)methodInfoExpression.Value;
+
+            var types = methodCallExpression.Arguments.ToList().Select(x => x.GetType()).ToArray();
+            Guard.That(types.All(x => x.IsPrimitive || x == typeof(string)), "All types should be primitive");
+
+            var properties = DynamicPropertyInfo.GetPropertyInfo(types);
+            CreatePoco(properties);
+            CreateEvent(builder.clientInfo.MessagePoco);
+
+            return GetMessageHandler(properties.Select(x => x.PropertyName).ToList(), objectToHandle, methodInfo.Name);
         }
 
-        public IMessageHandler HandleWidth(object invoker, string functionName)
+        private IMessageHandler GetMessageHandler(List<string> propertyNames, object invoker, string functionName)
         {
+            MessageHandler a = null;
+
             var handlerType = Dependencies.Container.Resolve<IMessageHandlerFactory>()
                                           .Create(propertyNames, "handler" + profilesCalled, functionName);
 
@@ -95,8 +89,22 @@ namespace Gem.Network.Configuration
 
             return builder.clientInfo.MessageHandler;
         }
+
+        private void CreatePoco(List<DynamicPropertyInfo> properties)
+        {
+            var newType = Dependencies.Container.Resolve<IPocoFactory>().Create(properties, "poco" + profilesCalled);
+
+            builder.clientInfo.MessagePoco = newType;
+        }
+
+        private void CreateEvent(Type newType)
+        {
+            builder.clientInfo.EventRaisingclass = Dependencies.Container.Resolve<IEventFactory>().Create(newType);
+
+        }
     }
 }
+
 
 
 
