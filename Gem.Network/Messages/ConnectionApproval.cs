@@ -19,11 +19,11 @@ namespace Gem.Network.Messages
 
         public string Sender { get; private set; }
 
-        public IncomingMessageTypes MessageType
+        public MessageType MessageType
         {
             get
             {
-                return IncomingMessageTypes.Data;
+                return MessageType.Data;
             }
         }
         

@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace Gem.Network.Messages
 {
-    /// <summary>
-    /// The game message types.
-    /// </summary>
-    public enum IncomingMessageTypes
+    public enum MessageType
     {
 
         Hail,
@@ -17,10 +14,12 @@ namespace Gem.Network.Messages
         ConnectionApproval,
 
         NewClient,
+
+        Command,
                 
         Disconnect,
 
-        Discovery,
+        DiscoveryResponse,
 
         Data
 

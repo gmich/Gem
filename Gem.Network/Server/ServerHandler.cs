@@ -86,7 +86,7 @@ namespace Gem.Network
                 switch (im.MessageType)
                 {
                     case NetIncomingMessageType.ConnectionApproval:
-                        if (im.ReadByte() == (byte)IncomingMessageTypes.ConnectionApproval)
+                        if (im.ReadByte() == (byte)MessageType.ConnectionApproval)
                         {
                             var message = new ConnectionApproval(im);
                             WriteMessage("Incoming Connection");
@@ -131,7 +131,7 @@ namespace Gem.Network
 
                         break;
                     case NetIncomingMessageType.Data:
-                        if (im.ReadByte() == (byte)IncomingMessageTypes.Data)
+                        if (im.ReadByte() == (byte)MessageType.Data)
                         {
                             //Broadcast to all except sender
                             networkManager.SendMessage(im as IServerMessage, im.SenderConnection);

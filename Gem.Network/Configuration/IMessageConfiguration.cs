@@ -15,7 +15,7 @@ namespace Gem.Network.Utilities
         /// <summary>
         /// The type that gets handled
         /// </summary>
-        IncomingMessageTypes ServerIncomingMesssageType { get; set; }
+        MessageType ServerIncomingMesssageType { get; set; }
 
         /// <summary>
         /// The function that takes a NetIncomingMessage and converts it to a type to get handled

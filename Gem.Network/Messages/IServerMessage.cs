@@ -10,7 +10,7 @@
 
         #region Public Properties
 
-        IncomingMessageTypes MessageType { get; }
+        MessageType MessageType { get; }
 
         #endregion
 

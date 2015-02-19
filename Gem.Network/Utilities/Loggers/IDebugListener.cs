@@ -2,9 +2,9 @@
 
 namespace Gem.Network.Utilities.Loggers
 {
-    public interface IDebugListener : IAppender
+    public interface IDebugListener
     {
-        void Subscribe(IAppender appender);
-        void UnSubscribe(IAppender appender);
+        void RegisterAppender(IAppender appender);
+        void DeregisterAppender(IAppender appender);
     }
 }

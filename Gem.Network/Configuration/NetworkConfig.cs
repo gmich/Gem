@@ -53,7 +53,7 @@ namespace Gem.Network.Configuration
         private List<DynamicPropertyInfo> propertyInfo;
         private int PropertyCount { get; set; }
 
-        public IncomingMessageTypes MessageType { get; private set; }
+        public MessageRouter MessageType { get; private set; }
 
         public string this[int param]
         {

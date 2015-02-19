@@ -26,7 +26,7 @@ namespace Gem.Network.Managers
         
         }
 
-        public static void MessageType(IncomingMessageTypes messageTypes)
+        public static void MessageType(MessageType messageTypes)
         {
 
         }

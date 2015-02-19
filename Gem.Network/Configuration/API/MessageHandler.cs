@@ -1,57 +1,17 @@
-﻿using Gem.Network.Builders;
-using Gem.Network.Handlers;
-using Gem.Network.Messages;
-using Seterlund.CodeGuard;
+﻿using Gem.Network.Handlers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac;
-using Gem.Network.Factories;
-using System.Reflection;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Linq;
+using Seterlund.CodeGuard;
+using Gem.Network.Builders;
+using Autofac;
+using System.Collections.Generic;
+using Gem.Network.Factories;
 
 namespace Gem.Network.Configuration
 {
-
-    public class NetworkEventBuilder
-    {
-        private NetworkProfileRepository profileRepository;
-
-        public MessageType this[string index]
-        {
-            get
-            {
-                profileRepository.Add(index,null);
-                return new MessageType(new ClientNetworkInfoBuilder(profileRepository));
-            }
-        }
-    }
-
-    public abstract class ABuilder
-    {
-        protected static int profilesCalled = 0;
-        protected readonly ClientNetworkInfoBuilder builder;
-
-        public ABuilder(ClientNetworkInfoBuilder builder)
-        {
-            this.builder = builder;
-        }
-    }
-
-    public class MessageType : ABuilder
-    {
-        public MessageType(ClientNetworkInfoBuilder builder) : base(builder) { }
-
-        public MessageType Send(IncomingMessageTypes messageType)
-        {
-            profilesCalled++;
-            builder.clientInfo.MessageType = messageType;
-            return new MessageType(this.builder);
-        }
-    }
-
+     
     public class MessageHandler : ABuilder
     {
 
@@ -78,10 +38,8 @@ namespace Gem.Network.Configuration
 
         private IMessageHandler GetMessageHandler(List<string> propertyNames, object invoker, string functionName)
         {
-            MessageHandler a = null;
-
             var handlerType = Dependencies.Container.Resolve<IMessageHandlerFactory>()
-                                          .Create(propertyNames, "handler" + profilesCalled, functionName);
+                                         .Create(propertyNames, "handler" + profilesCalled, functionName);
 
             builder.clientInfo.MessageHandler = Activator.CreateInstance(handlerType, invoker) as IMessageHandler;
 

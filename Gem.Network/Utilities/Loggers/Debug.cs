@@ -8,6 +8,6 @@ namespace Gem.Network.Utilities.Loggers
 {
     public static class Debugger
     {
-        public static IDebugListener Append { get; set; }
+        public static IDebugHost Append { get; set; }
     }
 }

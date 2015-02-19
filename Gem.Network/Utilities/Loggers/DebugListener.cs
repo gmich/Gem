@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Gem.Network.Utilities.Loggers
 {
-    public class DebugListener : IDebugListener
+    public class DebugListener : IDebugHost
     {
         private List<IAppender> appenders;
 
@@ -13,12 +13,12 @@ namespace Gem.Network.Utilities.Loggers
             appenders = new List<IAppender>();
         }
 
-        public void Subscribe(IAppender appender)
+        public void RegisterAppender(IAppender appender)
         {
             appenders.Add(appender);
         }
 
-        public void UnSubscribe(IAppender appender)
+        public void DeregisterAppender(IAppender appender)
         {
             appenders.Remove(appender);
         }

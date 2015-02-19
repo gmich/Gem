@@ -13,7 +13,7 @@ namespace Gem.Network.Repositories
         public byte ID { get; set; }
 
         [Required]
-        public IncomingMessageTypes MessageType { get; set; }
+        public MessageType MessageType { get; set; }
 
         [Required]
         public Type MessagePoco { get; set; }      

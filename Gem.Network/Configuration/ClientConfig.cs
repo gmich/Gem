@@ -12,14 +12,6 @@ namespace Gem.Network.Configuration
 {
     using Extensions;
 
-    public class NetworkFacade
-    {
-        private NetworkProfileRepository Profiles;
-        private ClientConfig activeConfig;
-        private IClient client;
-        private ClientNetworkInfoBuilder builder;
-    }
-
     public class ClientConfig
     {
         private readonly GenericRepository<ClientNetworkInfo, byte> clientInfoRepository;
@@ -60,23 +52,5 @@ namespace Gem.Network.Configuration
             return randomByte;
         }
     }
-
-    public class ClientNetworkInfoBuilder
-    {
-        private readonly NetworkProfileRepository profiles;
-
-        public ClientNetworkInfo clientInfo { get; set; }
-        public string ProfileId { get; set; }
-
-        public ClientNetworkInfoBuilder(NetworkProfileRepository profiles)
-        {
-            clientInfo = new ClientNetworkInfo();
-            this.profiles = profiles;
-        }
-
-        public void End()
-        {
-            profiles.Get(ProfileId).AddConfig(clientInfo);
-        }
-    }
+       
 }

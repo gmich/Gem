@@ -41,7 +41,7 @@ namespace Gem.Network
 
         private readonly int maxConnections;
 
-        private Dictionary<IncomingMessageTypes, Action<NetIncomingMessage>> ServerEventHandler;
+        private Dictionary<MessageType, Action<NetIncomingMessage>> ServerEventHandler;
 
         public Action<NetIncomingMessage> OnConnected;
 
@@ -52,7 +52,7 @@ namespace Gem.Network
 
         public ClientHandler(IPEndPoint server, INetworkManager client, string name, int port, int maxConnections)
         {
-            this.ServerEventHandler = new Dictionary<IncomingMessageTypes, Action<NetIncomingMessage>>();
+            this.ServerEventHandler = new Dictionary<MessageType, Action<NetIncomingMessage>>();
             this.maxConnections = maxConnections;
             this.Name = name;
             this.client = client;
@@ -73,7 +73,7 @@ namespace Gem.Network
 
         #region Register Actions
 
-        public IDisposable RegisterAction(IncomingMessageTypes type, Action<NetIncomingMessage> action)
+        public IDisposable RegisterAction(MessageType type, Action<NetIncomingMessage> action)
         {
             if (ServerEventHandler.ContainsKey(type))
             {
@@ -83,7 +83,7 @@ namespace Gem.Network
             {
                 ServerEventHandler.Add(type, action);
             }
-            return new DeregisterDictionary<IncomingMessageTypes, Action<NetIncomingMessage>>(ServerEventHandler, action);
+            return new DeregisterDictionary<MessageType, Action<NetIncomingMessage>>(ServerEventHandler, action);
         }
         
 
@@ -122,7 +122,7 @@ namespace Gem.Network
                         WriteMessage("Approved new client");
                         break;
                     case NetIncomingMessageType.Data:
-                        var messageType = (IncomingMessageTypes)im.ReadByte();
+                        var messageType = (MessageType)im.ReadByte();
                         if (ServerEventHandler.ContainsKey(messageType))
                         {
                             ServerEventHandler[messageType](im);

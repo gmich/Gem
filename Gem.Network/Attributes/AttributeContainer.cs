@@ -65,7 +65,7 @@ namespace Gem.Network.Other
     {
         public string Text { get; set; }
 
-        public IncomingMessageTypes MessageType
+        public MessageType MessageType
         {
             get { throw new NotImplementedException(); }
         }

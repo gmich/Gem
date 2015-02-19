@@ -13,7 +13,7 @@ namespace Gem.Network
         static Startup()
         {
             Debugger.Append = new DebugListener();
-            Debugger.Append.Subscribe(new Log4NetWrapper("DebugLogger"));
+            Debugger.Append.RegisterAppender(new Log4NetWrapper("DebugLogger"));
 
             var config = new ConfigurationReaderXML();
             config.Load("gem.config");
