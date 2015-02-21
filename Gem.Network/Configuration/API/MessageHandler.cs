@@ -21,19 +21,21 @@ namespace Gem.Network.Configuration
 
         public IMessageHandler HandleWith<T>(T objectToHandle, Expression<Func<T, Delegate>> methodToHandle)
         {
-            var unaryExpression = (UnaryExpression)methodToHandle.Body;
+            var lambdaExpression = (LambdaExpression)methodToHandle;
+            var unaryExpression = (UnaryExpression)lambdaExpression.Body;
             var methodCallExpression = (MethodCallExpression)unaryExpression.Operand;
-            var methodInfoExpression = (ConstantExpression)methodCallExpression.Arguments.Last();
-            var methodInfo = (MemberInfo)methodInfoExpression.Value;
+            var methodInfoExpression = (ConstantExpression)methodCallExpression.Object;
+            var methodInfo = (MethodInfo)methodInfoExpression.Value;
 
-            var types = methodCallExpression.Arguments.ToList().Select(x => x.GetType()).ToArray();
+            var types = methodInfo.GetParameters().Select(x => x.ParameterType).ToArray();
+
             Guard.That(types.All(x => x.IsPrimitive || x == typeof(string)), "All types should be primitive");
 
             var properties = DynamicPropertyInfo.GetPropertyInfo(types);
             CreatePoco(properties);
             CreateEvent(builder.clientInfo.MessagePoco);
 
-            return GetMessageHandler(properties.Select(x => x.PropertyName).ToList(), objectToHandle, methodInfo.Name);
+            return GetMessageHandler(properties.Select(x => DynamicPropertyInfo.GetPrimitiveTypeAlias(x.PropertyType)).ToList(), objectToHandle, methodInfo.Name);
         }
 
         private IMessageHandler GetMessageHandler(List<string> propertyNames, object invoker, string functionName)

@@ -37,9 +37,12 @@ namespace Gem.Network.Builders
         /// <param name="functionName">The function to invoke. 
         /// The function must be a public member of the class that is being passed in the constructor</param>
         /// <returns>The type of the message handler</returns>
-        public Type Build(List<string> propertyNames, string classname, string functionName)
+        public Type Build(List<string> propertyTypes, string classname, string functionName)
         {
-            var str = String.Format(@"public class {0} : IMessageHandler
+            var str = String.Format(@"using Microsoft.CSharp;
+                                            namespace Gem.Network.Builders
+                                            {{
+                                            public class {0} : Gem.Network.Handlers.IMessageHandler
                                              {{ private readonly dynamic element;
                                               public {0}() {{}}                                                                                               
                                                  public {0}(dynamic element)
@@ -49,15 +52,16 @@ namespace Gem.Network.Builders
                                                  public void Handle(params object[] args)
                                                  {{
                                                      element.{1}({2});
-                                                 }}                                                                                             
+                                                 }}   
+                                                }}                                                                                        
                                              }}", classname,
                                                 functionName,
-                                                GetArgumentsCallForDynamicInvoker(propertyNames));                                        
+                                                GetArgumentsCallForDynamicInvoker(propertyTypes));
 
             return CSScript.LoadCode(str)
-                           //.CreateObject("*")
+                           .CreateObject("*")
                            .AlignToInterface<IMessageHandler>()
-                           .GetType();;
-        }
+                           .GetType();
+        }          
     }
 }

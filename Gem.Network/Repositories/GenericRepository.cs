@@ -78,7 +78,7 @@ namespace Gem.Network.Repositories
 
         public bool Add(Titem item)
         {          
-            Guard.That(item).IsNotDefault();
+            Guard.That(item).IsNotNull();
 
             if (!items.Contains(item))
             {

@@ -9,6 +9,6 @@ namespace Gem.Network.Factories
 {
    public  interface IMessageHandlerFactory
     {
-        Type Create(List<string> propertyNames, string classname, string functionName);
+       Type Create(List<string> propertyTypeNames, string classname, string functionName);
     }
 }

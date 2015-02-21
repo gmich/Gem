@@ -51,9 +51,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Third Party\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.CSharp">
-      <HintPath>..\packages\CS-Script.3.9.2.0\lib\net45\Mono.CSharp.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Seterlund.CodeGuard, Version=2.3.4.1324, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Third Party\Seterlund.CodeGuard.dll</HintPath>
@@ -64,7 +62,6 @@
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>

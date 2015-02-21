@@ -11,6 +11,7 @@ using System.Net;
 using Lidgren.Network;
 using Gem.Network.Builders;
 using Gem.Network.Factories;
+using Microsoft.CSharp;
 
 namespace Gem.Network.Configuration
 {

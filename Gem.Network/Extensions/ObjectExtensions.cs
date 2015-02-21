@@ -34,5 +34,10 @@ namespace Gem.Network.Extensions
         {
             obj.GetType().GetMethod(name).Invoke(obj, args);
         }
+
+        public static object[] ReadAllProperties(this object obj)
+        {
+            return obj.GetType().GetProperties().Select(x => x.GetValue(obj)).ToArray();
+        }
     }
 }

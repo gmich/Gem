@@ -74,6 +74,7 @@
       <DependentUpon>ClientCases.feature</DependentUpon>
     </Compile>
     <Compile Include="Flow\ClientCasesSteps.cs" />
+    <Compile Include="Handlers\MessageHandlerTests.cs" />
     <Compile Include="Messages\ByteGeneratorTest.cs" />
     <Compile Include="Messages\ClassBuilderTests.cs" />
     <Compile Include="NetworkConfig\DynamicEventTests.cs" />

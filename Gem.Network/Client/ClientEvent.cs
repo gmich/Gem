@@ -24,5 +24,11 @@ namespace Gem.Network.ClientEvents
                 newPeerEvent(this, (T)message);
             }
         }
+
+
+        public void Send(params object[] networkargs)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

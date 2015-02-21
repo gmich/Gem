@@ -47,7 +47,8 @@ namespace Gem.Network.Configuration
             do
             {
                 randomByte = RandomGenerator.GetRandomByte();
-            } while (!clientInfoRepository.HasKey(randomByte));
+
+            } while (clientInfoRepository.HasKey(randomByte));
 
             return randomByte;
         }

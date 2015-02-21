@@ -165,8 +165,7 @@ namespace Gem.Network.Tests
 
             myObject.A0 = "String";
             myObject.A1 = 1;
-
-
+            
             Assert.AreEqual(stringProperty.GetValue(myObject), "String");
             Assert.AreEqual(intProperty.GetValue(myObject), 1);   
         }

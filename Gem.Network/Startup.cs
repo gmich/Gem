@@ -10,7 +10,7 @@ namespace Gem.Network
 {
     public static class Startup
     {
-        static Startup()
+        public static void Setup()
         {
             Debugger.Append = new DebugListener();
             Debugger.Append.RegisterAppender(new Log4NetWrapper("DebugLogger"));
@@ -20,5 +20,6 @@ namespace Gem.Network
 
             Dependencies.Setup(config.Dependencies);
         }
+
     }
 }

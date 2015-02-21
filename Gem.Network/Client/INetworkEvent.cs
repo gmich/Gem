@@ -10,6 +10,8 @@ namespace Gem.Network.ClientEvents
     {
         void SubscribeEvent(IClient client);
 
+        void Send(params object[] networkargs);
+
         void OnEvent(object message);
     }
 }

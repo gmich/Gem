@@ -34,20 +34,20 @@ namespace Gem.Network.Factories
 
         #region IMessageHandlerFactorys Implementation
 
-        public Type Create(List<string> propertyNames, string classname, string functionName)
+        public Type Create(List<string> propertyTypeNames, string classname, string functionName)
         {
-            Guard.That(propertyNames.All(x => x!=null), "The propertyNames should not be null");
-            Guard.That(classname).IsNotDefault();
-            Guard.That(functionName).IsNotDefault();
-            
-            var handler = cache.Lookup(propertyNames);
+            Guard.That(propertyTypeNames.All(x => x != null), "The propertyTypeNames should not be null");
+            Guard.That(classname).IsNotNull();
+            Guard.That(functionName).IsNotNull();
+
+            var handler = cache.Lookup(propertyTypeNames);
             if (handler != null)
             {
                 return handler;
             }
 
-            var newHandler = messageBuilder.Build(propertyNames, classname, functionName);
-            cache.Add(propertyNames, newHandler);
+            var newHandler = messageBuilder.Build(propertyTypeNames, classname, functionName);
+            cache.Add(propertyTypeNames, newHandler);
 
             return newHandler;
         }
