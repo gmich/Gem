@@ -13,8 +13,7 @@ namespace Gem.Network.Commands
     /// <param name="host">Host who will execute the command</param>
     /// <param name="command">Command name</param>
     /// <param name="arguments">Command arguments</param>
-    public delegate void CommandExecute(ICommandHost host, string command,
-                                                            IList<string> arguments);
+    public delegate void CommandExecute(IServer server,string command, IList<string> arguments);
 
     public interface ICommandExecutioner
     {

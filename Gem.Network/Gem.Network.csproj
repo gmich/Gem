@@ -79,7 +79,7 @@
     <Compile Include="Client\INetworkEvent.cs" />
     <Compile Include="Commands\ICommandExecutioner.cs" />
     <Compile Include="Commands\ICommandHost.cs" />
-    <Compile Include="Commands\Commander.cs" />
+    <Compile Include="Commands\ServerCommandHost.cs" />
     <Compile Include="Configuration\API\NetworkEventBuilder.cs" />
     <Compile Include="Configuration\API\ABuilder.cs" />
     <Compile Include="Configuration\API\MessageRouter.cs" />
@@ -97,11 +97,11 @@
     <Compile Include="Factories\API\IPocoFactory.cs" />
     <Compile Include="Factories\MessageHandlerFactory.cs" />
     <Compile Include="Handlers\IMessageHandler.cs" />
-    <Compile Include="Managers\ClientInfoManager.cs" />
     <Compile Include="Factories\PocoTypeFactory.cs" />
     <Compile Include="Client\ClientNetworkInfo.cs" />
+    <Compile Include="Messages\Server\ConnectionApproval.cs" />
+    <Compile Include="Messages\Server\IServerMessage.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
-    <Compile Include="Repositories\TypeRepository.cs" />
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\ClientHandler.cs" />
     <Compile Include="Client\IClient.cs" />
@@ -109,7 +109,6 @@
     <Compile Include="Builders\ReflectionEmitBuilder.cs" />
     <Compile Include="Builders\DelegateBuilder.cs" />
     <Compile Include="Factories\ClientEventFactory.cs" />
-    <Compile Include="Repositories\IDynamicTypeRepository.cs" />
     <Compile Include="Configuration\NetworkConfig.cs" />
     <Compile Include="Builders\DynamicPropertyInfo.cs" />
     <Compile Include="Builders\CsScriptBuilder.cs" />
@@ -131,10 +130,8 @@
     <Compile Include="Utilities\RuntimeCompiler.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Configuration\IMessageConfiguration.cs" />
-    <Compile Include="Messages\ConnectionApproval.cs" />
     <Compile Include="Managers\INetworkManager.cs" />
     <Compile Include="Messages\MessageTypes.cs" />
-    <Compile Include="Messages\IServerMessage.cs" />
     <Compile Include="Client\ClientEvent.cs" />
     <Compile Include="Utilities\Registerer.cs" />
     <Compile Include="Server\IServer.cs" />

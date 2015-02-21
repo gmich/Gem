@@ -6,12 +6,20 @@
     using System.Collections.Generic;
     using Gem.Network.Utilities;
     using System.Net;
+    using Gem.Network.Utilities.Loggers;
 
     /// <summary>
     /// The server class. Sends and recieves messages
     /// </summary>
     public class Server : IServer
     {
+
+        #region Fields
+
+        private readonly IAppender appender;
+        private Action<string> Echo;
+
+        #endregion
 
         #region Construct / Dispose
 
@@ -20,7 +28,7 @@
             this.disconnectMessage = disconnectMessage;
             this.deliveryMethod = deliveryMethod;
             this.sequenceChannel = sequenceChannel;
-        
+            this.appender = new ActionAppender(Echo);        
         }
 
         private void Dispose(bool disposing)
@@ -86,6 +94,11 @@
         
         public void Connect(string serverName, int port)
         {
+            if (netServer != null)
+            {
+                appender.Error("Server already started");
+                return;
+            }
             var config = new NetPeerConfiguration(serverName)
                 {
                     Port = port
@@ -98,9 +111,11 @@
             config.EnableMessageType(NetIncomingMessageType.DebugMessage);
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
-
             this.netServer = new NetServer(config);
             this.netServer.Start();
+
+            appender.Info("Server started");
+
         }
         
         public NetOutgoingMessage CreateMessage()
@@ -137,7 +152,7 @@
         /// </summary>
         /// <param name="gameMessage">The message to send</param>
         /// <param name="connection">The sender</param>
-        public void SendMessage(IServerMessage gameMessage, NetConnection sender)
+        public void SendMessage(NetOutgoingMessage gameMessage, NetConnection sender)
         {
             this.netServer.SendToAll(CreateOutgoingMessage(gameMessage),
                                     sender,
@@ -150,7 +165,7 @@
         /// </summary>
         /// <param name="gameMessage">The message to send</param>
         /// <param name="clients">The clients the message is sent to</param>
-        public void SendMessage(IServerMessage gameMessage, List<NetConnection> clients)
+        public void SendMessage(NetOutgoingMessage gameMessage, List<NetConnection> clients)
         {
 
             this.netServer.SendMessage(CreateOutgoingMessage(gameMessage),
@@ -164,15 +179,23 @@
 
         #region Private Helper Methods
        
-        private NetOutgoingMessage CreateOutgoingMessage(IServerMessage gameMessage)
+        private NetOutgoingMessage CreateOutgoingMessage(object gameMessage)
         {
             NetOutgoingMessage om = this.netServer.CreateMessage();
-            om.Write((byte)gameMessage.MessageType);
-            gameMessage.Encode(om);
             return om;
         }
 
         #endregion
 
+
+        public List<IPEndPoint> ConnectedUsers
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public void Kick(IPEndPoint clientIp)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

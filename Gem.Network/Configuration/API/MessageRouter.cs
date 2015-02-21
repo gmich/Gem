@@ -15,7 +15,7 @@ namespace Gem.Network.Configuration
             return new MessageHandler(this.builder);
         }
 
-        public void RegisterCommand(CommandExecute callback, bool requiresAuthorization = true)
+        public void RegisterCommand(string command, string description, CommandExecute callback, bool requiresAuthorization = true)
         {
             throw new NotImplementedException();
         }

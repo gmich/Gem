@@ -22,6 +22,7 @@ namespace Gem.Network
 
         #endregion
 
+
         #region Configurations
 
         //INetworkConfiguration<IServerMessage> connectionApproval;

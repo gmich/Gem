@@ -6,6 +6,11 @@ using System.Linq;
 
 namespace Gem.Network.Repositories
 {
+    /// <summary>
+    /// Generic class for managing repositories
+    /// </summary>
+    /// <typeparam name="Titem">The object to manage</typeparam>
+    /// <typeparam name="Tid">The object's unique id</typeparam>
     public class GenericRepository<Titem, Tid> : IDataProvider<Titem, Tid>
         where Titem : class
     {

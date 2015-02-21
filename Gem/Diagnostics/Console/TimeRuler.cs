@@ -13,6 +13,7 @@ namespace Gem.Diagnostics.Console
 
     public class TimeRuler : DrawableGameComponent
     {
+
         #region Constants
 
         /// <summary>

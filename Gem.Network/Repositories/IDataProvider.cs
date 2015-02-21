@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gem.Network
 {
-
+    /// <summary>
+    /// Base class for repositories
+    /// </summary>
+    /// <typeparam name="TItem">The item to store</typeparam>
+    /// <typeparam name="TId">The item's id </typeparam>
     public interface IDataProvider<TItem,TId>
         where TItem: class 
     {

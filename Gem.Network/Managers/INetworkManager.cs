@@ -1,15 +1,9 @@
-﻿namespace Gem.Network
+﻿using System;
+using Lidgren.Network;
+using Gem.Network.Messages;
+
+namespace Gem.Network
 {
-    using System;
-    using Lidgren.Network;
-    using Gem.Network.Messages;
-
-
-    enum PacketTypes
-    {
-        LOGIN
-    }
-
     /// <summary>
     /// The base interface for clients and servers
     /// </summary>

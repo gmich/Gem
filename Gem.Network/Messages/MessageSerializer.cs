@@ -1,16 +1,13 @@
-﻿using Gem.Network.Messages;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using System;
-
 
 namespace Gem.Network.Messages
 {
     /// <summary>
-    /// TODO: make static
+    /// Encodes server outgoing messages and decodes incoming messages
     /// </summary>
-    public class MessageSerializer
+    public sealed class MessageSerializer
     {
-
         public static T Decode<T>(NetIncomingMessage im)
             where T: new()
         {
@@ -32,6 +29,5 @@ namespace Gem.Network.Messages
         {
             om.WriteAllProperties(objectToEncode);
         }
-
     }
 }

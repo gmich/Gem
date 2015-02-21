@@ -23,6 +23,7 @@ namespace Gem.Network.Other
                                       HelpAttr.Configuration);
                 }
             }
+
             //Querying Class-Method Attributes  
             foreach (MethodInfo method in type.GetMethods())
             {

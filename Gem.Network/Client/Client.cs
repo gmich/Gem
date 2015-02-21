@@ -1,11 +1,12 @@
-﻿namespace Gem.Network
+﻿using System;
+using Lidgren.Network;
+using Gem.Network.Messages;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+
+namespace Gem.Network
 {
-    using System;
-    using Lidgren.Network;
-    using Gem.Network.Messages;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
 
     public class Client : IClient
     {
@@ -84,14 +85,7 @@
         /// </summary>
         public void Connect(string serverName, int port)
         {        
-
-            //Configure a connection message
-            //NetOutgoingMessage om = this.client.CreateMessage();
-            //om.Write((byte)gameMessage.MessageType);
-            //gameMessage.Encode(om);
             client.Connect(serverIP);
-            //TODO: configure wait for approval
-            //configure server discovery response
         }
 
         public NetOutgoingMessage CreateMessage()
@@ -119,23 +113,20 @@
         {
             client.SendMessage(msg, NetDeliveryMethod.ReliableUnordered);
         }
-
-        public void SendMessage(IServerMessage gameMessage)
-        {
-            NetOutgoingMessage om = this.client.CreateMessage();
-            om.Write((byte)gameMessage.MessageType);
-            gameMessage.Encode(om);
-
-            client.SendMessage(om, deliveryMethod, sequenceChannel);
-        }
-
+        
         #endregion
         
-        public virtual void SendMessage<T>(T message)
+        public virtual void SendMessage<T>(T message,byte id)
         {
             var msg = client.CreateMessage();
+            msg.Write(id);
             MessageSerializer.Encode(message, ref msg);
             client.SendMessage(msg, NetDeliveryMethod.ReliableUnordered);
+        }
+
+        public void SendMessage<T>(T message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

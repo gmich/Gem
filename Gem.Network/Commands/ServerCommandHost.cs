@@ -1,10 +1,11 @@
 ﻿using Gem.Network.Utilities.Loggers;
+using Seterlund.CodeGuard;
 using System;
 using System.Collections.Generic;
 
 namespace Gem.Network.Commands
 {
-    public class Commander : ICommandHost
+    public class ServerCommandHost : ICommandHost
     {
         #region Private Fields
 
@@ -16,23 +17,40 @@ namespace Gem.Network.Commands
 
         // Registered commands
         private Dictionary<string, CommandInfo> commandTable;
-
-        //Registered appender        
-        private List<IAppender> appenders;
-             
+        
         private readonly IDebugHost echoer;
+
+        private readonly IServer commandHost;
 
         #endregion
 
         #region Constructor
 
-        public Commander(IDebugHost debugHost)
+        public ServerCommandHost(IServer commandHost, IDebugHost debugHost = null)
         {
-            appenders = new List<IAppender>();
+            Guard.That(commandHost, "Command host must not be null").IsNotNull();
+
+            if(debugHost==null)
+            {
+                debugHost = new DebugListener();
+            }
+            else
+            {
+                echoer = debugHost;
+            }
+
             executioners = new Stack<ICommandExecutioner>();
             commandTable = new Dictionary<string, CommandInfo>();
-            echoer = debugHost;
 
+            RegisterHelpComand();
+        }
+
+        #endregion
+
+        #region Commands
+
+        private void RegisterHelpComand()
+        {
             RegisterCommand("help", "Show command help",
             (host, command, args) =>
             {
@@ -48,10 +66,6 @@ namespace Gem.Network.Commands
                 }
             });
         }
-
-        #endregion
-
-        #region Commands
 
         public void RegisterCommand(string command, string description, CommandExecute callback)
         {
@@ -100,7 +114,7 @@ namespace Gem.Network.Commands
                 try
                 {
                     // Call registered command delegate.
-                    cmd.callback(this, command, args);
+                    cmd.callback(commandHost, command, args);
                 }
                 catch (Exception e)
                 {

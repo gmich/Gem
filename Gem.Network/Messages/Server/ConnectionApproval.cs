@@ -1,7 +1,6 @@
 ﻿using Gem.Network.Messages;
 using Lidgren.Network;
 
-
 namespace Gem.Network.Messages
 {
     public class ConnectionApproval : IServerMessage
@@ -11,10 +10,9 @@ namespace Gem.Network.Messages
         {
             this.Decode(im);
         }
-
-
-        #region Public Properties
         
+        #region Public Properties
+
         public string Message { get; private set; }
 
         public string Sender { get; private set; }
@@ -26,7 +24,7 @@ namespace Gem.Network.Messages
                 return MessageType.Data;
             }
         }
-        
+
         #endregion
 
 

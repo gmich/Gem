@@ -134,7 +134,7 @@ namespace Gem.Network
                         if (im.ReadByte() == (byte)MessageType.Data)
                         {
                             //Broadcast to all except sender
-                            networkManager.SendMessage(im as IServerMessage, im.SenderConnection);
+                           // networkManager.SendMessage(im as IServerMessage, im.SenderConnection);
                         }
                         break;
                     case NetIncomingMessageType.VerboseDebugMessage:
