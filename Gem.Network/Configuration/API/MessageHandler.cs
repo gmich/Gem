@@ -60,7 +60,6 @@ namespace Gem.Network.Configuration
         private void CreateEvent(Type newType)
         {
             builder.clientInfo.EventRaisingclass = Dependencies.Container.Resolve<IEventFactory>().Create(newType);
-
         }
     }
 }

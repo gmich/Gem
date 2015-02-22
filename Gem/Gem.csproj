@@ -112,6 +112,7 @@
     <Content Include="Content\Materials\pavement.png" />
     <Content Include="Content\Materials\squares.png" />
     <Content Include="Content\Materials\waves.png" />
+    <Content Include="Content\Misc\aclient_messageflow.png" />
     <Content Include="gem.ico" />
   </ItemGroup>
   <ItemGroup>
