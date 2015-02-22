@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gem.Network.Configuration;
 using Moq;
+using System.Linq;
 
 namespace Gem.Network.Tests.Handlers
 {
@@ -19,10 +20,13 @@ namespace Gem.Network.Tests.Handlers
             var repository = new NetworkProfileRepository();
             //setup a builder
             var networkInfoBuilder = new ClientNetworkInfoBuilder(repository);
+            networkInfoBuilder.ProfileId = "Default";
             //create a new message handler object
-            var messageHandler = new MessageHandler(networkInfoBuilder);
-
-            var handler = messageHandler.HandleWith(tester.Object, x => new Action<string>(x.Write));
+            var messageHandler = new ClientInfoBuilder(networkInfoBuilder);
+            
+            var netEvent = messageHandler.HandleWith(tester.Object, x => new Action<string>(x.Write));
+            
+            var handler = repository.Get("Default").Query(x => true).First().MessageHandler;
 
             handler.Handle("say");
             handler.Handle("say");
@@ -47,11 +51,13 @@ namespace Gem.Network.Tests.Handlers
             var repository = new NetworkProfileRepository();
             //setup a builder
             var networkInfoBuilder = new ClientNetworkInfoBuilder(repository);
+            networkInfoBuilder.ProfileId = "Default";
             //create a new message handler object
-            var messageHandler = new MessageHandler(networkInfoBuilder);
+            var messageHandler = new ClientInfoBuilder(networkInfoBuilder);
 
-            var handler = messageHandler.HandleWith(tester.Object, x => new Action<float, int, long, string, int>(x.Write));
+            var netEvent = messageHandler.HandleWith(tester.Object, x => new Action<float, int, long, string, int>(x.Write));
 
+            var handler = repository.Get("Default").Query(x => true).First().MessageHandler;
             handler.Handle(0.0f, 1, 2L, "three", 4);
             handler.Handle(0.0f, 1, 2L, "three", 4);
             handler.Handle(0.0f, 1, 2L, "three", 4);

@@ -1,8 +1,13 @@
 ﻿namespace Gem.Network.Configuration
 {
-    public class NetworkEventBuilder
+    public class NetworkProfile
     {
-        private NetworkProfileRepository profileRepository;
+        private readonly NetworkProfileRepository profileRepository;
+
+        public NetworkProfile()
+        {
+            profileRepository = new NetworkProfileRepository();
+        }
 
         public MessageRouter this[string index]
         {

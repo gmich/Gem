@@ -1,4 +1,7 @@
-﻿using Gem.Network.Repositories;
+﻿using Gem.Network.Factories;
+using Gem.Network.Repositories;
+using Autofac;
+using Gem.Network.Events;
 
 namespace Gem.Network.Configuration
 {
@@ -16,9 +19,12 @@ namespace Gem.Network.Configuration
             this.profiles = profiles;
         }
 
-        public void End()
+        public INetworkEvent End()
         {
-            profiles.Get(ProfileId).AddConfig(clientInfo);
+            var configDisposable = profiles.Get(ProfileId).AddConfig(clientInfo);
+            clientInfo.EventRaisingclass = Dependencies.Container.Resolve<IEventFactory>().Create(clientInfo.MessagePoco, configDisposable);
+
+            return clientInfo.EventRaisingclass;
         }
     }
 }

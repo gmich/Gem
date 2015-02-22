@@ -8,18 +8,19 @@ using Gem.Network.Builders;
 using Autofac;
 using System.Collections.Generic;
 using Gem.Network.Factories;
+using Gem.Network.Events;
 
 namespace Gem.Network.Configuration
 {
      
-    public class MessageHandler : ABuilder
+    public class ClientInfoBuilder : ABuilder
     {
 
-        public MessageHandler(ClientNetworkInfoBuilder builder)
+        public ClientInfoBuilder(ClientNetworkInfoBuilder builder)
             : base(builder)
         { }
 
-        public IMessageHandler HandleWith<T>(T objectToHandle, Expression<Func<T, Delegate>> methodToHandle)
+        public INetworkEvent HandleWith<T>(T objectToHandle, Expression<Func<T, Delegate>> methodToHandle)
         {
             var lambdaExpression = (LambdaExpression)methodToHandle;
             var unaryExpression = (UnaryExpression)lambdaExpression.Body;
@@ -33,9 +34,10 @@ namespace Gem.Network.Configuration
 
             var properties = DynamicPropertyInfo.GetPropertyInfo(types);
             CreatePoco(properties);
-            CreateEvent(builder.clientInfo.MessagePoco);
 
-            return GetMessageHandler(properties.Select(x => DynamicPropertyInfo.GetPrimitiveTypeAlias(x.PropertyType)).ToList(), objectToHandle, methodInfo.Name);
+            builder.clientInfo.MessageHandler= GetMessageHandler(properties.Select(x => DynamicPropertyInfo.GetPrimitiveTypeAlias(x.PropertyType)).ToList(), objectToHandle, methodInfo.Name);
+
+            return builder.End();
         }
 
         private IMessageHandler GetMessageHandler(List<string> propertyNames, object invoker, string functionName)
@@ -56,11 +58,7 @@ namespace Gem.Network.Configuration
 
             builder.clientInfo.MessagePoco = newType;
         }
-
-        private void CreateEvent(Type newType)
-        {
-            builder.clientInfo.EventRaisingclass = Dependencies.Container.Resolve<IEventFactory>().Create(newType);
-        }
+        
     }
 }
 

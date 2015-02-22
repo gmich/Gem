@@ -18,27 +18,23 @@ namespace Gem.Network
 
         private Dictionary<string, IDisposable> disposables;
 
-        private readonly int maxRegistrations;
-
         private bool isDisposed;
-
-        private bool AllowRegistration
-        {
-            get
-            {
-                return Registered.Count < maxRegistrations;
-            }
-        }
-
+                
         #endregion
 
 
         #region Construct / Dispose
 
-        public Registerer(int maxRegistrations)
+        public Registerer(int? maxRegistrations = null)
         {
-            this.maxRegistrations = maxRegistrations;
-            Registered = new List<T>();  
+            if (maxRegistrations == null)
+            {
+                Registered = new List<T>();
+            }
+            else
+            {
+                Registered = new List<T>(maxRegistrations.Value);
+            }
         }
 
         private void Dispose(bool disposing)
@@ -71,12 +67,8 @@ namespace Gem.Network
         /// <returns>The registered object's disposable</returns>
         public IDisposable Register(T obj)
         {
-            if (AllowRegistration)
-            {
-                Registered.Add(obj);
-                return new DeregisterDisposable<T>(Registered, obj);
-            }
-            return null;
+            Registered.Add(obj);
+            return new DeregisterDisposable<T>(Registered, obj);   
         }
 
         /// <summary>

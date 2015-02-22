@@ -1,5 +1,5 @@
-﻿using Gem.Network.ClientEvents;
-using Gem.Network.Configuration;
+﻿using Gem.Network.Configuration;
+using Gem.Network.Events;
 using Gem.Network.Handlers;
 using Gem.Network.Messages;
 using System;

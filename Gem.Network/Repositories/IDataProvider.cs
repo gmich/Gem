@@ -23,7 +23,7 @@ namespace Gem.Network
  
         bool Delete(TId id);
             
-        bool Add(TItem entity);
+        IDisposable Add(TItem entity);
     }
 }
 

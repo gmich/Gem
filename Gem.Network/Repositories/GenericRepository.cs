@@ -76,16 +76,34 @@ namespace Gem.Network.Repositories
             return false;
         }
 
-        public bool Add(Titem item)
+        public IDisposable Add(Titem item)
         {          
             Guard.That(item).IsNotNull();
 
             if (!items.Contains(item))
             {
                 items.Add(item);
-                return true;
+                return new DeregisterDisposable<Titem>(items, item);   
             }
-            return false;
+            return null;
+        }
+
+        internal class DeregisterDisposable<T> : IDisposable
+        {
+            private List<T> registered;
+            private T current;
+
+            internal DeregisterDisposable(List<T> registered, T current)
+            {
+                this.registered = registered;
+                this.current = current;
+            }
+
+            public void Dispose()
+            {
+                if (registered.Contains(current))
+                    registered.Remove(current);
+            }
         }
     }
 }

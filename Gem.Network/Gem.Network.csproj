@@ -73,7 +73,8 @@
     <Compile Include="Cache\Events\EventAggregator.cs" />
     <Compile Include="Cache\Events\ICacheEvent.cs" />
     <Compile Include="Cache\Events\IEventProvider.cs" />
-    <Compile Include="Client\INetworkEvent.cs" />
+    <Compile Include="Messages\ClientMessageProcessor.cs" />
+    <Compile Include="Events\INetworkEvent.cs" />
     <Compile Include="Commands\ICommandExecutioner.cs" />
     <Compile Include="Commands\ICommandHost.cs" />
     <Compile Include="Commands\ServerCommandHost.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Handlers\IMessageHandler.cs" />
     <Compile Include="Factories\PocoTypeFactory.cs" />
     <Compile Include="Client\ClientNetworkInfo.cs" />
+    <Compile Include="Messages\IMessageProcessor.cs" />
     <Compile Include="Messages\Server\ConnectionApproval.cs" />
     <Compile Include="Messages\Server\IServerMessage.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
@@ -114,7 +116,7 @@
     <Compile Include="Attributes\AttributeResolver.cs" />
     <Compile Include="ConnectionDetails.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Utilities\Deregister.cs" />
+    <Compile Include="Utilities\DeregisterDictionary.cs" />
     <Compile Include="Repositories\IDataProvider.cs" />
     <Compile Include="Utilities\Loggers\ActionAppender.cs" />
     <Compile Include="Utilities\Loggers\Debug.cs" />
@@ -129,7 +131,7 @@
     <Compile Include="Configuration\IMessageConfiguration.cs" />
     <Compile Include="Managers\INetworkManager.cs" />
     <Compile Include="Messages\MessageTypes.cs" />
-    <Compile Include="Client\ClientEvent.cs" />
+    <Compile Include="Events\ClientEvent.cs" />
     <Compile Include="Utilities\Registerer.cs" />
     <Compile Include="Server\IServer.cs" />
     <Compile Include="Server\Server.cs" />

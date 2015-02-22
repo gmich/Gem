@@ -8,11 +8,11 @@ namespace Gem.Network.Configuration
     {
         public MessageRouter(ClientNetworkInfoBuilder builder) : base(builder) { }
 
-        public MessageHandler Send(MessageType messageType)
+        public ClientInfoBuilder Send(MessageType messageType)
         {
             profilesCalled++;
             builder.clientInfo.MessageType = messageType;
-            return new MessageHandler(this.builder);
+            return new ClientInfoBuilder(this.builder);
         }
 
         public void RegisterCommand(string command, string description, CommandExecute callback, bool requiresAuthorization = true)

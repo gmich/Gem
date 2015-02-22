@@ -1,4 +1,4 @@
-﻿using Gem.Network.ClientEvents;
+﻿using Gem.Network.Events;
 using System;
 using System.Reflection;
 
@@ -9,10 +9,10 @@ namespace Gem.Network.Factories
     /// </summary>
     public sealed class ClientEventFactory : IEventFactory
     {
-        public INetworkEvent Create(Type type)
+        public INetworkEvent Create(Type type,params object[] constructorArgs)
         {
             var dynamicType = typeof(ClientEvent<>);
-            return Activator.CreateInstance(dynamicType.MakeGenericType(type))
+            return Activator.CreateInstance(dynamicType.MakeGenericType(type), constructorArgs)
                             .AlignToInterface<INetworkEvent>();
         }
 

@@ -21,19 +21,24 @@ namespace Gem.Network.Configuration
             clientInfoRepository = new GenericRepository<ClientNetworkInfo, byte>(x => x.ID);
         }
 
-        public void AddConfig(ClientNetworkInfo clientInfo)
+        public IDisposable AddConfig(ClientNetworkInfo clientInfo)
         {
             Guard.That(clientInfoRepository).IsTrue(x => x.TotalElements < (int)byte.MaxValue,
             "You have reached the maximum capacity. Consider deregistering");
 
             clientInfo.ID = GetUniqueByte();
-            clientInfoRepository.Add(clientInfo);
+            return clientInfoRepository.Add(clientInfo);            
         }
 
         public void SubscribeEvents(IClient client)
         {
             clientInfoRepository.GetAll()
                                 .ForEach(x => x.EventRaisingclass.SubscribeEvent(client));
+        }
+
+        public IEnumerable<ClientNetworkInfo> Query(Func<ClientNetworkInfo,bool> whereClause)
+        {
+            return clientInfoRepository.GetAll().Where(whereClause);
         }
 
         public void GetById(byte id)
