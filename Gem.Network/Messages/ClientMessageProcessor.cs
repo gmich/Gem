@@ -1,4 +1,5 @@
 ﻿using Gem.Network.Configuration;
+using Gem.Network.Containers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,9 @@ namespace Gem.Network.Messages
 {
     class ClientMessageProcessor :IMessageProcessor
     {
-        private readonly ClientConfig config;
+        private readonly ClientConfigurationContainer config;
 
-        public ClientMessageProcessor(ClientConfig config)
+        public ClientMessageProcessor(ClientConfigurationContainer config)
         {
             this.config = config;
         }

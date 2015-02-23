@@ -1,12 +1,13 @@
-﻿namespace Gem.Network.Configuration
+﻿using Gem.Network.Containers;
+namespace Gem.Network.Configuration
 {
     public class NetworkProfile
     {
-        private readonly NetworkProfileRepository profileRepository;
+        private readonly NetworkProfileContainer profileRepository;
 
-        public NetworkProfile()
+        public NetworkProfile(IDataProvider<ClientConfigurationContainer,string> dataprovider)
         {
-            profileRepository = new NetworkProfileRepository();
+            profileRepository = new NetworkProfileContainer(dataprovider);
         }
 
         public MessageRouter this[string index]

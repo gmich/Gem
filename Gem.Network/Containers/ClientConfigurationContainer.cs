@@ -8,15 +8,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gem.Network.Configuration
+namespace Gem.Network.Containers
 {
     using Extensions;
 
-    public class ClientConfig
+    public class ClientConfigurationContainer
     {
         private readonly GenericRepository<ClientNetworkInfo, byte> clientInfoRepository;
 
-        public ClientConfig()
+        public ClientConfigurationContainer()
         {
             clientInfoRepository = new GenericRepository<ClientNetworkInfo, byte>(x => x.ID);
         }
@@ -27,7 +27,7 @@ namespace Gem.Network.Configuration
             "You have reached the maximum capacity. Consider deregistering");
 
             clientInfo.ID = GetUniqueByte();
-            return clientInfoRepository.Add(clientInfo);            
+            return clientInfoRepository.Add(clientInfo.ID,clientInfo);            
         }
 
         public void SubscribeEvents(IClient client)

@@ -51,11 +51,11 @@ namespace Gem.Network.Repositories
             return items.Where(x => expression(x)).Select(x => x).FirstOrDefault();
         }
 
-        public bool Update(Titem item)
+        public bool Update(Tid id, Titem item)
         {
             Guard.That(item).IsNotDefault();
 
-            var itemToUpdate = items.Find(x => x.Equals(item));
+            var itemToUpdate = this.GetById(id);
 
             if (itemToUpdate != null)
             {
@@ -76,7 +76,7 @@ namespace Gem.Network.Repositories
             return false;
         }
 
-        public IDisposable Add(Titem item)
+        public IDisposable Add(Tid id,Titem item)
         {          
             Guard.That(item).IsNotNull();
 

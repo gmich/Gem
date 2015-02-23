@@ -6,24 +6,24 @@ namespace Gem.Network
     /// <summary>
     /// Base class for repositories
     /// </summary>
-    /// <typeparam name="TItem">The item to store</typeparam>
-    /// <typeparam name="TId">The item's id </typeparam>
-    public interface IDataProvider<TItem,TId>
-        where TItem: class 
+    /// <typeparam name="TData">The item to store</typeparam>
+    /// <typeparam name="TKey">The item's id </typeparam>
+    public interface IDataProvider<TData,TKey>
+        where TData: class 
     {
-        bool HasKey(TId id);
+        bool HasKey(TKey id);
 
-        TItem GetById(TId id);
+        TData GetById(TKey id);
 
-        TItem Get(Func<TItem, bool> expression);
+        TData Get(Func<TData, bool> expression);
 
-        List<TItem> GetAll();
+        List<TData> GetAll();
 
-        bool Update(TItem entity);
+        bool Update(TKey id, TData entity);
  
-        bool Delete(TId id);
-            
-        IDisposable Add(TItem entity);
+        bool Delete(TKey id);
+
+        IDisposable Add(TKey id, TData item);
     }
 }
 

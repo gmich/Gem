@@ -2,18 +2,19 @@
 using Gem.Network.Repositories;
 using Autofac;
 using Gem.Network.Events;
+using Gem.Network.Containers;
 
 namespace Gem.Network.Configuration
 {
 
     public class ClientNetworkInfoBuilder
     {
-        private readonly NetworkProfileRepository profiles;
+        private readonly NetworkProfileContainer profiles;
 
         public ClientNetworkInfo clientInfo { get; set; }
         public string ProfileId { get; set; }
 
-        public ClientNetworkInfoBuilder(NetworkProfileRepository profiles)
+        public ClientNetworkInfoBuilder(NetworkProfileContainer profiles)
         {
             clientInfo = new ClientNetworkInfo();
             this.profiles = profiles;

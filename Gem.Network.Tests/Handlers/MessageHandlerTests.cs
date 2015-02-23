@@ -3,6 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gem.Network.Configuration;
 using Moq;
 using System.Linq;
+using Gem.Network.Containers;
+using Gem.Network.Repositories;
 
 namespace Gem.Network.Tests.Handlers
 {
@@ -17,7 +19,7 @@ namespace Gem.Network.Tests.Handlers
             //setup dependencies
             Startup.Setup();
             //setup the profile repository
-            var repository = new NetworkProfileRepository();
+            var repository = new NetworkProfileContainer(new FlyweightRepository<ClientConfigurationContainer, string>());
             //setup a builder
             var networkInfoBuilder = new ClientNetworkInfoBuilder(repository);
             networkInfoBuilder.ProfileId = "Default";
@@ -48,7 +50,7 @@ namespace Gem.Network.Tests.Handlers
             //setup dependencies
             Startup.Setup();
             //setup the profile repository
-            var repository = new NetworkProfileRepository();
+            var repository = new NetworkProfileContainer(new FlyweightRepository<ClientConfigurationContainer,string>());
             //setup a builder
             var networkInfoBuilder = new ClientNetworkInfoBuilder(repository);
             networkInfoBuilder.ProfileId = "Default";

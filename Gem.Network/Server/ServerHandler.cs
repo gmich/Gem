@@ -3,6 +3,7 @@ using Lidgren.Network;
 using Gem.Network.Messages;
 using System.Collections.Generic;
 using Gem.Network.Configuration;
+using Gem.Network.Containers;
 
 namespace Gem.Network
 {
@@ -78,7 +79,7 @@ namespace Gem.Network
 
         #region Messages
 
-        Dictionary<NetIncomingMessageType, ClientConfig> NetworkMessagesDictionary;
+        Dictionary<NetIncomingMessageType, ClientConfigurationContainer> NetworkMessagesDictionary;
 
         private void AbstractProcessMessages()
         {
