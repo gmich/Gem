@@ -72,7 +72,8 @@
     <Compile Include="Cache\Events\EventAggregator.cs" />
     <Compile Include="Cache\Events\ICacheEvent.cs" />
     <Compile Include="Cache\Events\IEventProvider.cs" />
-    <Compile Include="Containers\AbstractContainer.cs" />
+    <Compile Include="Containers\Directors\AbstractContainer.cs" />
+    <Compile Include="Containers\Directors\NetworkConfigDirector.cs" />
     <Compile Include="Messages\ClientMessageProcessor.cs" />
     <Compile Include="Events\INetworkEvent.cs" />
     <Compile Include="Commands\ICommandExecutioner.cs" />

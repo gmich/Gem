@@ -6,7 +6,7 @@ using System.Linq;
 namespace Gem.Network.Containers
 {
     public class AbstractContainer<TData, TKey>
-        where TData : class
+        where TData : class,new()
     {
         private readonly IDataProvider<TData, TKey> dataRepository;
 
@@ -15,16 +15,13 @@ namespace Gem.Network.Containers
             this.dataRepository = dataRepository;
         }
         
-        public void AddOrUpdate(TData data,TKey key)
+        public bool Update(TData data,TKey key)
         {
             if(dataRepository.HasKey(key))
             {
-                dataRepository.Update(key, data);
+                return dataRepository.Update(key, data);
             }
-            else
-            {
-                dataRepository.Add(key, data);
-            }
+            return false;
         }
 
         public IEnumerable<TData> GetAll()
@@ -36,7 +33,16 @@ namespace Gem.Network.Containers
         {
             get
             {
-                return dataRepository.GetById(id);
+                if (dataRepository.HasKey(id))
+                {
+                    return dataRepository.GetById(id);
+                }
+                else
+                {
+                    var newData = new TData();
+                    dataRepository.Add(id, newData);
+                    return newData;
+                }               
             }
         }
     }       
