@@ -21,8 +21,13 @@ namespace Gem.Network.Tests
         public void SendMessageThroughDynamicPeerEventTest()
         {
             Mock<Client> mockClient = new Mock<Client>();
-            var client = new Client(new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241), "local");
-            client.Connect("local", 14241);
+
+            var client = new Client();
+            client.Connect(new ConnectionDetails
+            {
+                ServerIP = new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241),
+                ServerName = "local"
+            });
 
             //create a new dynamic type
             var propertyList = new List<DynamicPropertyInfo>

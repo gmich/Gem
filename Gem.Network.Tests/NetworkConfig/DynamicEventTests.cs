@@ -37,7 +37,12 @@ namespace Gem.Network.Tests
         [TestMethod]
         public void DynamicSendMesssageInvocationTest()
         {
-            var client = new Client(new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241), "local");
+            var client = new Client();
+            client.Connect(new ConnectionDetails
+            {
+                ServerIP = new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241),
+                ServerName = "local"
+            });
             var tester = new Mock<EventTester>();
             var mockClient = new Mock<Client>();
             var msg = client.CreateMessage();

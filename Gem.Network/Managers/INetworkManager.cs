@@ -10,15 +10,12 @@ namespace Gem.Network
     public interface INetworkManager : IDisposable
     {
 
-        void Connect(string serverName, int port);
-
         NetOutgoingMessage CreateMessage();
-
-        void Disconnect();
 
         NetIncomingMessage ReadMessage();
 
         void Recycle(NetIncomingMessage im);
 
+        void Disconnect();
     }
 }

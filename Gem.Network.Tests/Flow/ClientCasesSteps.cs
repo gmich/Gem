@@ -45,9 +45,12 @@ namespace Gem.Network.Tests.Flow
         public void GivenIConnectToTheServer()
         {
             myNewType = pocoBuilder.Build("POCO", propertyList);
-            client = new Client(new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241), "local");
-
-            client.Connect("local", 14241);
+            client = new Client();
+            client.Connect(new ConnectionDetails
+            {
+                ServerIP = new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241),
+                ServerName = "local"
+            });
         }
 
         [When(@"I send a greeding message")]

@@ -23,5 +23,6 @@ namespace Gem.Network.Repositories
 
         [Required]
         public IMessageHandler MessageHandler { get; set; }
+
     }
 }

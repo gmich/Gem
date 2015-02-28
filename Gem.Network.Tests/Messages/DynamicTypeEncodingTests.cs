@@ -30,8 +30,8 @@ namespace Gem.Network.Tests.Messages
 
             myObject.Name = "DynamicType";
 
-            var server = new Server(NetDeliveryMethod.ReliableUnordered, 0);
-            server.Connect("local", 14242);
+            var server = new Server(5);
+            server.Connect(new ServerConfig { Name = "local", Port = 14241 });
 
             var outgoingmessage = server.CreateMessage();
 
@@ -70,9 +70,12 @@ namespace Gem.Network.Tests.Messages
             IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
             Type myNewType = PocoBuilder.Build("POCO", propertyList);
 
-            var client = new Client(new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241), "local");
-
-            client.Connect("local", 14241);
+            var client = new Client();
+            client.Connect(new ConnectionDetails
+            {
+                ServerIP = new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241),
+                ServerName = "local"
+            });
 
             NetIncomingMessage msg;
             Stopwatch stopwatch = new Stopwatch();

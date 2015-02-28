@@ -13,7 +13,7 @@ namespace Gem.Network.Containers
         { }
     }
 
-    internal class MessageTypeManager
+    public class MessageTypeManager
     : AbstractContainer<ClientNetworkInfoManager, MessageType>
     {
                 public MessageTypeManager()
@@ -21,7 +21,7 @@ namespace Gem.Network.Containers
         { }
     }
 
-    internal class ClientNetworkInfoManager
+    public class ClientNetworkInfoManager
            : AbstractContainer<ClientNetworkInfo, byte>
     {
         public ClientNetworkInfoManager()
@@ -29,11 +29,11 @@ namespace Gem.Network.Containers
         { }
     }
     
-    public class NetworkConfigDirector
+    public class NetworkDirector
     {
         private readonly NetworkConfigurationManager configurationManager;
 
-        public NetworkConfigDirector()
+        public NetworkDirector()
         {
             configurationManager = new NetworkConfigurationManager();
         }
@@ -49,6 +49,24 @@ namespace Gem.Network.Containers
             get
             {
                 return configurationManager[tag][messagetype][configID];
+            }
+        }
+
+        //Readonly
+        public ClientNetworkInfoManager this[string tag, MessageType messagetype]
+        {
+            get
+            {
+                return configurationManager[tag][messagetype];
+            }
+        }
+
+        //Readonly
+        public MessageTypeManager this[string tag]
+        {
+            get
+            {
+                return configurationManager[tag];
             }
         }
     }

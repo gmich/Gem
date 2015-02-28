@@ -23,9 +23,9 @@ namespace Gem.Network.Tests
 
         [TestMethod]
         public void SuccessfulEncodeTest()
-        {          
-            var server = new Server(NetDeliveryMethod.ReliableUnordered, 0);
-            server.Connect("local", 14242);
+        {
+            var server = new Server(5);
+            server.Connect(new ServerConfig { Name = "local", Port = 14241 });
 
             var outgoingmessage = server.CreateMessage();
             var obj = new ClassToSerialize();
@@ -59,9 +59,12 @@ namespace Gem.Network.Tests
                 Assert.Fail("Failed to launch the server. Reason:" + ex.Message);
             }
 
-            var client = new Client(new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14242), "local");
-
-            client.Connect("local", 14242);
+            var client = new Client();
+            client.Connect(new ConnectionDetails
+            {
+                ServerIP = new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241),
+                ServerName = "local"
+            });
 
             NetIncomingMessage msg;
             Stopwatch stopwatch = new Stopwatch();

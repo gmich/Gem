@@ -95,15 +95,15 @@
     <Compile Include="Factories\API\IEventFactory.cs" />
     <Compile Include="Factories\API\IPocoFactory.cs" />
     <Compile Include="Factories\MessageHandlerFactory.cs" />
-    <Compile Include="Handlers\IMessageHandler.cs" />
     <Compile Include="Factories\PocoTypeFactory.cs" />
     <Compile Include="Client\ClientNetworkInfo.cs" />
     <Compile Include="Messages\IMessageProcessor.cs" />
     <Compile Include="Messages\Server\ConnectionApproval.cs" />
     <Compile Include="Messages\Server\IServerMessage.cs" />
+    <Compile Include="Handlers\IMessageHandler.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="Client\Client.cs" />
-    <Compile Include="Client\ClientHandler.cs" />
+    <Compile Include="Client\ClientManager.cs" />
     <Compile Include="Client\IClient.cs" />
     <Compile Include="Builders\Dynamic\API\IPocoBuilder.cs" />
     <Compile Include="Builders\Dynamic\ReflectionEmitBuilder.cs" />
@@ -117,6 +117,7 @@
     <Compile Include="Attributes\AttributeResolver.cs" />
     <Compile Include="ConnectionDetails.cs" />
     <Compile Include="Repositories\FlyweightRepository.cs" />
+    <Compile Include="Server\ServerConfig.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\DeregisterDictionary.cs" />
     <Compile Include="Repositories\IDataProvider.cs" />
@@ -136,7 +137,7 @@
     <Compile Include="Utilities\Registerer.cs" />
     <Compile Include="Server\IServer.cs" />
     <Compile Include="Server\Server.cs" />
-    <Compile Include="Server\ServerHandler.cs" />
+    <Compile Include="Server\ServerManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

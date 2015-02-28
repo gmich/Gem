@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using System;
+using System.Net;
 
 namespace Gem.Network
 {
@@ -8,13 +9,11 @@ namespace Gem.Network
 
         public string ServerName { get; set; }
 
-        public int Port { get; set; }
+        public IPEndPoint ServerIP { get; set; }
 
         public int SequenceChannel { get; set; }
 
         public NetDeliveryMethod DeliveryMethod { get; set; }
 
-        public string DisconnectMessage { get; set; }
-        
     }
 }

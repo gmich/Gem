@@ -7,45 +7,30 @@ using Gem.Network.Containers;
 
 namespace Gem.Network
 {
-    public class ServerHandler : IDisposable
+    public class ServerManager : IDisposable
     {
 
         #region Events
 
-        public event Action<string> WriteMessage;
+        public Action<string> WriteMessage;
 
-        #endregion
+        private readonly IServer server;
 
-
-        #region Declarations
-
-        private readonly IServer networkManager;
-
-        public string Name { get; private set; }
-
-        public int Port { get; private set; }
-        
         public bool IsRunning { get; private set; }
-
-        //private Dictionary<string, Registerer<NetConnection>> Groups;
-
-        private Registerer<NetConnection> Clients;
-
         #endregion
+               
         
 
         #region Constructor
 
-        public ServerHandler(IServer networkManager, string name, int port,int maxConnections)
+        public ServerManager(IServer server, ServerConfig serverConfig)
         {
-            this.Name = name;
-            this.Port = port;
-            this.networkManager = networkManager;
-            Clients = new Registerer<NetConnection>(maxConnections);
 
+            this.server = server;
+ 
             try
             {
-                networkManager.Connect(name, port);
+                server.Connect(serverConfig);
                 IsRunning = true;
                 WriteMessage("Server session started");
             }
@@ -63,8 +48,7 @@ namespace Gem.Network
 
         public void Disconnect()
         {
-            networkManager.Disconnect();
-            Clients.Dispose();
+            server.Disconnect();
             IsRunning = false;
 
         }
@@ -79,25 +63,12 @@ namespace Gem.Network
 
         #region Messages
 
-        Dictionary<NetIncomingMessageType, ClientConfigurationContainer> NetworkMessagesDictionary;
-
-        private void AbstractProcessMessages()
-        {
-                        NetIncomingMessage im;
-
-            while ((im = this.networkManager.ReadMessage()) != null)
-            {
-                //NetworkMessagesDictionary[im.MessageType];
-
-            }
-        }
-
 
         private void ProcessNetworkMessages()
         {
             NetIncomingMessage im;
 
-            while ((im = this.networkManager.ReadMessage()) != null)
+            while ((im = this.server.ReadMessage()) != null)
             {
                 switch (im.MessageType)
                 {
@@ -106,8 +77,8 @@ namespace Gem.Network
                         {
                             var message = new ConnectionApproval(im);
                             WriteMessage("Incoming Connection");
-
-                            if (Clients.Register(message.Sender,im.SenderConnection))
+                            //TODO: change
+                            if(server.ClientsCount<5)
                             {
                                 im.SenderConnection.Approve();     
                                 //Send a message to notify the others
@@ -140,7 +111,7 @@ namespace Gem.Network
 
                             case NetConnectionStatus.RespondedConnect:
                                 //Configure approval
-                                NetOutgoingMessage hailMessage = this.networkManager.CreateMessage();
+                                NetOutgoingMessage hailMessage = this.server.CreateMessage();
                                 im.SenderConnection.Approve(hailMessage);
                                 break;
                         }
@@ -164,7 +135,7 @@ namespace Gem.Network
                         //notify the client 
                         break;
                 }
-                this.networkManager.Recycle(im);
+                this.server.Recycle(im);
             }
         }
 

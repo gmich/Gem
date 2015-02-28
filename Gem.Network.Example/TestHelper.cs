@@ -60,9 +60,8 @@ namespace Gem.Network.Example
         /// </summary>
         public static void MessageDecodingTestHelper()
         {
-            Server server;
-            server = new Server(NetDeliveryMethod.ReliableUnordered, 0);
-            server.Connect("local", 14242);
+            var server = new Server(5);
+            server.Connect(new ServerConfig { Name = "local", Port = 14241 });
             
             NetIncomingMessage inc;
 
@@ -112,8 +111,8 @@ namespace Gem.Network.Example
             #endregion
 
             Server server;
-            server = new Server(NetDeliveryMethod.ReliableUnordered, 0);
-            server.Connect("local", 14241);
+            server = new Server(5);
+            server.Connect(new ServerConfig { Name = "local", Port = 14241 });
 
             NetIncomingMessage inc;
 

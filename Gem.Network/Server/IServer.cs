@@ -8,14 +8,19 @@ namespace Gem.Network
     public interface IServer : INetworkManager
     {
 
-        List<IPEndPoint> ConnectedUsers { get; }
+        bool Connect(ServerConfig config);
 
-        void Kick(IPEndPoint clientIp);
+        List<IPEndPoint> ClientsIP { get; }
+
+        int ClientsCount { get; }
+
+        void Kick(IPEndPoint clientIp,string reason);
 
         void SendMessage(NetOutgoingMessage message);
 
         void SendMessage(NetOutgoingMessage message, NetConnection sender);
 
         void SendMessage(NetOutgoingMessage message, List<NetConnection> clients);
+
     }
 }

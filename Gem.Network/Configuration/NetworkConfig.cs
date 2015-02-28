@@ -23,8 +23,14 @@ namespace Gem.Network.Configuration
 
         public static DynamicMessage ForInterface(string tag)
         {
+
             client = new Client();
-            client = new Client(new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241), "local");
+            client.Connect(new ConnectionDetails
+            {
+                ServerIP = new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241),
+                ServerName = "local"
+            });
+
             return new DynamicMessage(tag);
         }
 

@@ -1,12 +1,15 @@
-﻿namespace Gem.Network
+﻿using System;
+using Lidgren.Network;
+using Gem.Network.Messages;
+using System.Collections.Generic;
+using Gem.Network.Utilities;
+using System.Net;
+using Gem.Network.Utilities.Loggers;
+using Gem.Network;
+using System.Linq;
+
+namespace Gem.Network
 {
-    using System;
-    using Lidgren.Network;
-    using Gem.Network.Messages;
-    using System.Collections.Generic;
-    using Gem.Network.Utilities;
-    using System.Net;
-    using Gem.Network.Utilities.Loggers;
 
     /// <summary>
     /// The server class. Sends and recieves messages
@@ -16,18 +19,27 @@
 
         #region Fields
 
-        private readonly IAppender appender;
-        private Action<string> Echo;
+        private readonly string disconnectMessage;
 
+        private readonly int maxConnections;
+
+        private ServerConfig serverConfig;
+
+        private bool isDisposed;
+
+        private NetServer netServer;
+        
+        private readonly IAppender appender;
+
+        private Action<string> Echo;
+        
         #endregion
 
         #region Construct / Dispose
 
-        public Server(NetDeliveryMethod deliveryMethod, int sequenceChannel, int maxConnections = 4 , string disconnectMessage = "Bye")
+        public Server( int maxConnections)
         {
-            this.disconnectMessage = disconnectMessage;
-            this.deliveryMethod = deliveryMethod;
-            this.sequenceChannel = sequenceChannel;
+            this.maxConnections = maxConnections;
             this.appender = new ActionAppender(Echo);        
         }
 
@@ -43,22 +55,16 @@
             }
         }
 
-        //TODO: refactor
         public IPAddress IP
         {
             get
-            {
-                return this.netServer.Configuration.LocalAddress;
-            }
+            {  return this.netServer.Configuration.LocalAddress;  }
         }
 
-        //TODO: refactor
         public int Port
         {
             get
-            {
-                return this.netServer.Configuration.Port;
-            }
+            { return this.netServer.Configuration.Port;   }
         }
 
         public void Dispose()
@@ -69,41 +75,22 @@
         #endregion
 
 
-        #region  Fields
-        
-        private readonly int sequenceChannel;
-        
-        /// <summary>
-        /// This is shown when the server shuts down
-        /// </summary>
-        private readonly string disconnectMessage;
-        
-        /// <summary>
-        /// How the message is delivered
-        /// </summary>
-        private readonly NetDeliveryMethod deliveryMethod;
+        #region Connect / Disconnect
 
-        private bool isDisposed;
-
-        private NetServer netServer;
-        
-        #endregion
-
-
-        #region IServer Implementation
-        
-        public void Connect(string serverName, int port)
+        public bool Connect(ServerConfig serverConfig)
         {
+            this.serverConfig = serverConfig;
             if (netServer != null)
             {
                 appender.Error("Server already started");
-                return;
+                return false;
             }
-            var config = new NetPeerConfiguration(serverName)
+            var config = new NetPeerConfiguration(serverConfig.Name)
                 {
-                    Port = port
-                    //MaximumConnections = maxConnections
+                    Port = serverConfig.Port,
+                    MaximumConnections = maxConnections
                 };
+            config.EnableMessageType(NetIncomingMessageType.Data);
             config.EnableMessageType(NetIncomingMessageType.WarningMessage);
             config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
             config.EnableMessageType(NetIncomingMessageType.ErrorMessage);
@@ -111,23 +98,38 @@
             config.EnableMessageType(NetIncomingMessageType.DebugMessage);
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
+
             this.netServer = new NetServer(config);
-            this.netServer.Start();
 
-            appender.Info("Server started");
+            try
+            {
+                this.netServer.Start();
+                appender.Info("Server started");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                appender.Error("Failed to start the server. Reason ", ex.Message);
+                return false;
+            }
 
-        }
-        
-        public NetOutgoingMessage CreateMessage()
-        {
-            return this.netServer.CreateMessage();
         }
 
         public void Disconnect()
         {
             this.netServer.Shutdown(disconnectMessage);
         }
-        
+
+        #endregion
+
+
+        #region Message Related
+
+        public NetOutgoingMessage CreateMessage()
+        {
+            return this.netServer.CreateMessage();
+        }
+                
         public NetIncomingMessage ReadMessage()
         {
             return this.netServer.ReadMessage();
@@ -144,7 +146,7 @@
         /// <param name="message">The message to send</param>
         public void SendMessage(NetOutgoingMessage message)
         {
-            this.netServer.SendToAll(message, deliveryMethod);
+            this.netServer.SendToAll(message, serverConfig.DeliveryMethod);
         }
 
         /// <summary>
@@ -156,8 +158,8 @@
         {
             this.netServer.SendToAll(CreateOutgoingMessage(gameMessage),
                                     sender,
-                                    deliveryMethod,
-                                    sequenceChannel);
+                                    serverConfig.DeliveryMethod,
+                                    serverConfig.SequenceChannel);
         }
 
         /// <summary>
@@ -170,32 +172,42 @@
 
             this.netServer.SendMessage(CreateOutgoingMessage(gameMessage),
                                         clients,
-                                        deliveryMethod,
-                                        sequenceChannel);
+                                        serverConfig.DeliveryMethod,
+                                        serverConfig.SequenceChannel);
         }   
         
-        #endregion
-
-
-        #region Private Helper Methods
-       
         private NetOutgoingMessage CreateOutgoingMessage(object gameMessage)
         {
-            NetOutgoingMessage om = this.netServer.CreateMessage();
-            return om;
+            return netServer.CreateMessage();
         }
 
         #endregion
 
 
-        public List<IPEndPoint> ConnectedUsers
+        #region Server Management
+
+        public List<IPEndPoint> ClientsIP
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                return netServer.Connections.Select(x => x.RemoteEndpoint).ToList();
+            }
         }
 
-        public void Kick(IPEndPoint clientIp)
+        public int ClientsCount
         {
-            throw new NotImplementedException();
+            get
+            {
+                return netServer.ConnectionsCount;
+            }
         }
+
+        public void Kick(IPEndPoint clientIp, string reason)
+        {
+            netServer.GetConnection(clientIp).Disconnect(reason);
+        }
+
+        #endregion
+
     }
 }
