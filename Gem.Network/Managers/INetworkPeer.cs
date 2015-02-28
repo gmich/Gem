@@ -7,7 +7,7 @@ namespace Gem.Network
     /// <summary>
     /// The base interface for clients and servers
     /// </summary>
-    public interface INetworkManager : IDisposable
+    public interface INetworkPeer : IDisposable
     {
 
         NetOutgoingMessage CreateMessage();

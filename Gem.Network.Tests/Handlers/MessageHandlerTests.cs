@@ -5,6 +5,7 @@ using Moq;
 using System.Linq;
 using Gem.Network.Containers;
 using Gem.Network.Repositories;
+using Gem.Network.Managers;
 
 namespace Gem.Network.Tests.Handlers
 {
@@ -19,12 +20,12 @@ namespace Gem.Network.Tests.Handlers
             //setup dependencies
             Startup.Setup();
             //setup the profile repository
-            var repository = new NetworkProfileContainer(new FlyweightRepository<ClientConfigurationContainer, string>());
+            var repository = new NetworkProfileContainer(new FlyweightRepository<MessageFlowContainer, string>());
             //setup a builder
             var networkInfoBuilder = new ClientNetworkInfoBuilder(repository);
             networkInfoBuilder.ProfileId = "Default";
             //create a new message handler object
-            var messageHandler = new ClientInfoBuilder(networkInfoBuilder);
+            var messageHandler = new MessageFlowBuilder(networkInfoBuilder);
             
             var netEvent = messageHandler.HandleWith(tester.Object, x => new Action<string>(x.Write));
             
@@ -50,12 +51,12 @@ namespace Gem.Network.Tests.Handlers
             //setup dependencies
             Startup.Setup();
             //setup the profile repository
-            var repository = new NetworkProfileContainer(new FlyweightRepository<ClientConfigurationContainer,string>());
+            var repository = new ClientMessageFlowInfoProvider(new FlyweightRepository<MessageFlowProvider, string>());
             //setup a builder
             var networkInfoBuilder = new ClientNetworkInfoBuilder(repository);
             networkInfoBuilder.ProfileId = "Default";
             //create a new message handler object
-            var messageHandler = new ClientInfoBuilder(networkInfoBuilder);
+            var messageHandler = new MessageFlowBuilder(networkInfoBuilder);
 
             var netEvent = messageHandler.HandleWith(tester.Object, x => new Action<float, int, long, string, int>(x.Write));
 

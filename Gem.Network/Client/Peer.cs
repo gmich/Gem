@@ -8,7 +8,7 @@ using System.Net;
 namespace Gem.Network
 {
 
-    public class Client : IClient
+    public class Peer : IClient
     {
 
         #region Declarations
@@ -25,7 +25,7 @@ namespace Gem.Network
 
         #region Construct / Dispose
 
-        public Client() { }
+        public Peer() { }
         
         private void Dispose(bool disposing)
         {

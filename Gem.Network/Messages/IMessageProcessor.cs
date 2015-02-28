@@ -1,9 +1,9 @@
-﻿using Lidgren.Network;
+﻿using System;
 
 namespace Gem.Network.Messages
 {
-    interface IMessageProcessor
+    public interface IMessageProcessor 
     {
-        void ProcessMessage(NetIncomingMessage message);
+        void ProcessNetworkMessages();
     }
 }

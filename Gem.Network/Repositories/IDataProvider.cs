@@ -11,6 +11,8 @@ namespace Gem.Network
     public interface IDataProvider<TData,TKey>
         where TData: class 
     {
+        int TotalElements { get; }
+
         bool HasKey(TKey id);
 
         TData GetById(TKey id);

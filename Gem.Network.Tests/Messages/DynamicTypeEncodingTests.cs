@@ -30,7 +30,7 @@ namespace Gem.Network.Tests.Messages
 
             myObject.Name = "DynamicType";
 
-            var server = new Server(5);
+            var server = new NetworkServer(5);
             server.Connect(new ServerConfig { Name = "local", Port = 14241 });
 
             var outgoingmessage = server.CreateMessage();

@@ -5,7 +5,7 @@ using Gem.Network.Messages;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Gem.Network.Repositories
+namespace Gem.Network.Messages
 {
     public class MessageFlowArguments
     {
@@ -22,4 +22,5 @@ namespace Gem.Network.Repositories
         public IMessageHandler MessageHandler { get; set; }
 
     }
+    
 }

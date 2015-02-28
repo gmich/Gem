@@ -5,7 +5,7 @@ using System.Net;
 
 namespace Gem.Network
 {
-    public interface IServer : INetworkManager
+    public interface IServer : INetworkPeer
     {
 
         bool Connect(ServerConfig config);

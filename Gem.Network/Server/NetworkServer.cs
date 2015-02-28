@@ -14,7 +14,7 @@ namespace Gem.Network
     /// <summary>
     /// The server class. Sends and recieves messages
     /// </summary>
-    public class Server : IServer
+    public class NetworkServer : IServer
     {
 
         #region Fields
@@ -32,15 +32,27 @@ namespace Gem.Network
         private readonly IAppender appender;
 
         private Action<string> Echo;
+
+        public IPAddress IP
+        {
+            get
+            {  return this.netServer.Configuration.LocalAddress;  }
+        }
+
+        public int Port
+        {
+            get
+            { return this.netServer.Configuration.Port;   }
+        }
         
         #endregion
 
         #region Construct / Dispose
 
-        public Server( int maxConnections)
+        public NetworkServer( int maxConnections)
         {
             this.maxConnections = maxConnections;
-            this.appender = new ActionAppender(Echo);        
+            this.appender = new ActionAppender(Echo);       
         }
 
         private void Dispose(bool disposing)
@@ -53,18 +65,6 @@ namespace Gem.Network
                 }
                 this.isDisposed = true;
             }
-        }
-
-        public IPAddress IP
-        {
-            get
-            {  return this.netServer.Configuration.LocalAddress;  }
-        }
-
-        public int Port
-        {
-            get
-            { return this.netServer.Configuration.Port;   }
         }
 
         public void Dispose()
@@ -117,7 +117,7 @@ namespace Gem.Network
 
         public void Disconnect()
         {
-            this.netServer.Shutdown(disconnectMessage);
+            netServer.Shutdown(disconnectMessage);
         }
 
         #endregion
@@ -127,17 +127,17 @@ namespace Gem.Network
 
         public NetOutgoingMessage CreateMessage()
         {
-            return this.netServer.CreateMessage();
+            return netServer.CreateMessage();
         }
                 
         public NetIncomingMessage ReadMessage()
         {
-            return this.netServer.ReadMessage();
+            return netServer.ReadMessage();
         }
 
         public void Recycle(NetIncomingMessage im)
         {
-            this.netServer.Recycle(im);
+            netServer.Recycle(im);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Gem.Network
         /// <param name="message">The message to send</param>
         public void SendMessage(NetOutgoingMessage message)
         {
-            this.netServer.SendToAll(message, serverConfig.DeliveryMethod);
+            netServer.SendToAll(message, serverConfig.DeliveryMethod);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Gem.Network
         /// <param name="connection">The sender</param>
         public void SendMessage(NetOutgoingMessage gameMessage, NetConnection sender)
         {
-            this.netServer.SendToAll(CreateOutgoingMessage(gameMessage),
+            netServer.SendToAll(CreateOutgoingMessage(gameMessage),
                                     sender,
                                     serverConfig.DeliveryMethod,
                                     serverConfig.SequenceChannel);
@@ -170,7 +170,7 @@ namespace Gem.Network
         public void SendMessage(NetOutgoingMessage gameMessage, List<NetConnection> clients)
         {
 
-            this.netServer.SendMessage(CreateOutgoingMessage(gameMessage),
+            netServer.SendMessage(CreateOutgoingMessage(gameMessage),
                                         clients,
                                         serverConfig.DeliveryMethod,
                                         serverConfig.SequenceChannel);

@@ -14,7 +14,7 @@ namespace Gem.Network.Tests.Flow
     public class ClientCasesSteps
     {
         private Process server;
-        private Client client;
+        private IClient client;
         private NetIncomingMessage msg;
         private List<DynamicPropertyInfo> propertyList = new List<DynamicPropertyInfo>
             {
@@ -45,7 +45,7 @@ namespace Gem.Network.Tests.Flow
         public void GivenIConnectToTheServer()
         {
             myNewType = pocoBuilder.Build("POCO", propertyList);
-            client = new Client();
+            client = new Peer();
             client.Connect(new ConnectionDetails
             {
                 ServerIP = new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241),

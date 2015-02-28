@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace Gem.Network.Containers
 {
-    public class AbstractContainer<TData, TKey>
+    public abstract class AbstractContainer<TData, TKey>
         where TData : class,new()
     {
-        private readonly IDataProvider<TData, TKey> dataRepository;
+        protected readonly IDataProvider<TData, TKey> dataRepository;
 
         public AbstractContainer(IDataProvider<TData, TKey> dataRepository)
         {
@@ -29,7 +29,7 @@ namespace Gem.Network.Containers
             return dataRepository.GetAll();
         }
 
-        public TData this[TKey id]
+        public virtual TData this[TKey id]
         {
             get
             {
@@ -43,7 +43,7 @@ namespace Gem.Network.Containers
                     dataRepository.Add(id, newData);
                     return newData;
                 }               
-            }
+            }           
         }
     }       
 }

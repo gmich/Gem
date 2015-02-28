@@ -3,7 +3,7 @@ using Lidgren.Network;
 
 namespace Gem.Network
 {
-    public interface IClient : INetworkManager
+    public interface IClient : INetworkPeer
     {
 
         void Connect(ConnectionDetails connectionDetails);
