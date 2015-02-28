@@ -22,7 +22,10 @@ namespace Gem.Network
 
         private readonly IAppender Write;
 
-        public bool IsRunning { get; private set; } 
+        public bool IsRunning { get; private set; }
+
+        private string Profile;
+
         #endregion
 
 
@@ -72,28 +75,16 @@ namespace Gem.Network
 
             while ((im = this.client.ReadMessage()) != null)
             {
-                switch (im.MessageType)
+                try
                 {
-                    case NetIncomingMessageType.ConnectionApproval:
-                        //handle 
-                        Write.Info("Approved new client");
-                        break;
-                    case NetIncomingMessageType.Data:
-                        var messageType = (MessageType)im.ReadByte();
+                    var config = networkDirector[Profile, im.MessageType.Transform(), im.ReadByte()];
 
-                        break;
-                    case NetIncomingMessageType.VerboseDebugMessage:
-                    case NetIncomingMessageType.DebugMessage:
-                    case NetIncomingMessageType.WarningMessage:
-                        Write.Debug(im.ReadString());
-                        break;
-                    case NetIncomingMessageType.ErrorMessage:
-                        Write.Error(im.ReadString());
-                        break;
-                    case NetIncomingMessageType.DiscoveryResponse:
-                        break;
                 }
-                this.client.Recycle(im);
+                catch (Exception ex)
+                {
+                    Write.Error("Unable to read incoming message. Reason: " + ex.Message);
+                }
+                client.Recycle(im);
             }
         }
 

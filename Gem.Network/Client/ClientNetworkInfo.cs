@@ -7,13 +7,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Gem.Network.Repositories
 {
-    public class ClientNetworkInfo
+    public class MessageFlowArguments
     {
         [Key]
         public byte ID { get; set; }
-
-        [Required]
-        public MessageType MessageType { get; set; }
 
         [Required]
         public Type MessagePoco { get; set; }      

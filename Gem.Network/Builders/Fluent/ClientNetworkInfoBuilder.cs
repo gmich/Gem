@@ -11,12 +11,12 @@ namespace Gem.Network.Configuration
     {
         private readonly NetworkProfileContainer profiles;
 
-        public ClientNetworkInfo clientInfo { get; set; }
+        public MessageFlowArguments clientInfo { get; set; }
         public string ProfileId { get; set; }
 
         public ClientNetworkInfoBuilder(NetworkProfileContainer profiles)
         {
-            clientInfo = new ClientNetworkInfo();
+            clientInfo = new MessageFlowArguments();
             this.profiles = profiles;
         }
 

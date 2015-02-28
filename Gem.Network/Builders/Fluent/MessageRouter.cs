@@ -11,7 +11,7 @@ namespace Gem.Network.Configuration
         public ClientInfoBuilder Send(MessageType messageType)
         {
             profilesCalled++;
-            builder.clientInfo.MessageType = messageType;
+            //builder.clientInfo = messageType;
             return new ClientInfoBuilder(this.builder);
         }
 

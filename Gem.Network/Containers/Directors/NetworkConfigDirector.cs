@@ -22,10 +22,10 @@ namespace Gem.Network.Containers
     }
 
     public class ClientNetworkInfoManager
-           : AbstractContainer<ClientNetworkInfo, byte>
+           : AbstractContainer<MessageFlowArguments, byte>
     {
         public ClientNetworkInfoManager()
-            : base(new FlyweightRepository<ClientNetworkInfo, byte>())
+            : base(new FlyweightRepository<MessageFlowArguments, byte>())
         { }
     }
     
@@ -44,7 +44,7 @@ namespace Gem.Network.Containers
         }
 
         //Readonly
-        public ClientNetworkInfo this[string tag,MessageType messagetype,byte configID]
+        public MessageFlowArguments this[string tag,MessageType messagetype,byte configID]
         {
             get
             {

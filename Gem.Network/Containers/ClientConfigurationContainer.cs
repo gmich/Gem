@@ -14,14 +14,14 @@ namespace Gem.Network.Containers
 
     public class ClientConfigurationContainer
     {
-        private readonly GenericRepository<ClientNetworkInfo, byte> clientInfoRepository;
+        private readonly GenericRepository<MessageFlowArguments, byte> clientInfoRepository;
 
         public ClientConfigurationContainer()
         {
-            clientInfoRepository = new GenericRepository<ClientNetworkInfo, byte>(x => x.ID);
+            clientInfoRepository = new GenericRepository<MessageFlowArguments, byte>(x => x.ID);
         }
 
-        public IDisposable AddConfig(ClientNetworkInfo clientInfo)
+        public IDisposable AddConfig(MessageFlowArguments clientInfo)
         {
             Guard.That(clientInfoRepository).IsTrue(x => x.TotalElements < (int)byte.MaxValue,
             "You have reached the maximum capacity. Consider deregistering");
@@ -36,7 +36,7 @@ namespace Gem.Network.Containers
                                 .ForEach(x => x.EventRaisingclass.SubscribeEvent(client));
         }
 
-        public IEnumerable<ClientNetworkInfo> Query(Func<ClientNetworkInfo,bool> whereClause)
+        public IEnumerable<MessageFlowArguments> Query(Func<MessageFlowArguments,bool> whereClause)
         {
             return clientInfoRepository.GetAll().Where(whereClause);
         }
