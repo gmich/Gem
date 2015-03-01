@@ -1,60 +1,35 @@
 ﻿﻿using System;
 using Lidgren.Network;
 using Gem.Network.Messages;
+using System.Net;
 using System.Collections.Generic;
-using Gem.Network.Configuration;
+using Gem.Network.Utilities;
 using Gem.Network.Containers;
+using Gem.Network.Utilities.Loggers;
+using Gem.Network.Extensions;
 
 namespace Gem.Network
 {
-
-    public class ServerManager : IDisposable
+    public class ServerMessageProcessor : IMessageProcessor
     {
 
-        #region Events
-
-        public Action<string> WriteMessage;
+        #region Declarations
 
         private readonly IServer server;
 
-        public bool IsRunning { get; private set; }
+        public Action<string> Echo;
 
+        private readonly IAppender Write;
+       
         #endregion
-        
+
 
         #region Constructor
 
-        public ServerManager(IServer server, ServerConfig serverConfig)
+        public ServerMessageProcessor(IServer server)
         {
             this.server = server;
- 
-            try
-            {
-                server.Connect(serverConfig);
-                IsRunning = true;
-                WriteMessage("Server session started");
-            }
-            catch (Exception ex)
-            {
-                WriteMessage("Server failed to connect : " + ex);
-                IsRunning = false;
-            }
-        }
-
-        #endregion
-
-
-        #region Close Connection
-
-        public void Disconnect()
-        {
-            server.Disconnect();
-            IsRunning = false;
-        }
-
-        public void Dispose()
-        {
-            Disconnect();
+            Write = new ActionAppender(Echo);
         }
 
         #endregion
@@ -62,8 +37,7 @@ namespace Gem.Network
 
         #region Messages
 
-
-        private void ProcessNetworkMessages()
+        public void ProcessNetworkMessages()
         {
             NetIncomingMessage im;
 
@@ -74,7 +48,7 @@ namespace Gem.Network
                     case NetIncomingMessageType.ConnectionApproval:
                         if (im.ReadByte() == (byte)MessageType.ConnectionApproval)
                         {
-                            WriteMessage("Incoming Connection");
+                            Write.Info("Incoming Connection");
                             var message = MessageSerializer.Decode<ConnectionApprovalMessage>(im);
                             GemNetwork.ServerConfiguration[GemNetwork.ActiveProfile].ConnectionApprove(server, im.SenderConnection, message);
                         }
@@ -83,18 +57,17 @@ namespace Gem.Network
                         switch ((NetConnectionStatus)im.ReadByte())
                         {
                             case NetConnectionStatus.Connected:
-                                WriteMessage("Connected to {0}");
+                                Write.Info("Connected to {0}");
                                 break;
                             case NetConnectionStatus.Disconnected:
-                                WriteMessage(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
+                                Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
                                 if (im.SenderConnection.Status == NetConnectionStatus.Disconnected
-                                  || im.SenderConnection.Status == NetConnectionStatus.Disconnecting)
+                                 || im.SenderConnection.Status == NetConnectionStatus.Disconnecting)
                                 { }
                                 break;
                             case NetConnectionStatus.RespondedConnect:
                                 break;
                         }
-
                         break;
                     case NetIncomingMessageType.Data:
                         //broadcast to all exception sender
@@ -105,8 +78,10 @@ namespace Gem.Network
                     case NetIncomingMessageType.VerboseDebugMessage:
                     case NetIncomingMessageType.DebugMessage:
                     case NetIncomingMessageType.WarningMessage:
+                        Write.Warn(im.ReadString());
+                        break;
                     case NetIncomingMessageType.ErrorMessage:
-                        WriteMessage(im.ReadString());
+                        Write.Error(im.ReadString());
                         break;
                     case NetIncomingMessageType.DiscoveryRequest:
                         //notify the client 
@@ -117,6 +92,7 @@ namespace Gem.Network
         }
 
         #endregion
+
 
     }
 }

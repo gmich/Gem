@@ -23,6 +23,7 @@ namespace Gem.Network
 
         #endregion
 
+
         #region Construct / Dispose
 
         public Peer() { }
@@ -52,7 +53,7 @@ namespace Gem.Network
         /// <summary>
         /// Connect to the server
         /// </summary>
-        public void Connect(ConnectionDetails connectionDetails)
+        public void Connect(ConnectionDetails connectionDetails, ConnectionApprovalMessage approvalMessage = null)
         {
             this.connectionDetails = connectionDetails;
 
@@ -72,7 +73,14 @@ namespace Gem.Network
             client = new NetClient(config);
             client.Start();
 
-            client.Connect(connectionDetails.ServerIP);
+            if (approvalMessage == null)
+            {
+                approvalMessage = new ConnectionApprovalMessage();
+            }
+
+            var hailMessage = CreateMessage();
+            MessageSerializer.Encode(approvalMessage, ref hailMessage);
+            client.Connect(connectionDetails.ServerIP, hailMessage);
         }
 
         public NetOutgoingMessage CreateMessage()
@@ -102,6 +110,7 @@ namespace Gem.Network
         }
         
         #endregion
+
 
         public void SendMessage<T>(T message)
         {

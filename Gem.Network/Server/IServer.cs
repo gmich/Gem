@@ -14,6 +14,8 @@ namespace Gem.Network
 
         int ClientsCount { get; }
 
+        string Password { get; }
+
         void Kick(IPEndPoint clientIp,string reason);
 
         void SendMessage(NetOutgoingMessage message);

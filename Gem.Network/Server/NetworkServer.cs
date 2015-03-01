@@ -19,6 +19,9 @@ namespace Gem.Network
 
         #region Fields
 
+        private string password;
+        public string Password { get { return password; } }
+
         private readonly string disconnectMessage;
 
         private readonly int maxConnections;
@@ -31,7 +34,7 @@ namespace Gem.Network
         
         private readonly IAppender appender;
 
-        private Action<string> Echo;
+        public Action<string> Echo;
 
         public IPAddress IP
         {
@@ -46,6 +49,7 @@ namespace Gem.Network
         }
         
         #endregion
+
 
         #region Construct / Dispose
 

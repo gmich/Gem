@@ -15,13 +15,12 @@ namespace Gem.Network
 
         #region Declarations
 
-        private readonly INetworkPeer client;
+        private readonly IClient client;
 
         public Action<string> Echo;
 
         private readonly IAppender Write;
        
-
         #endregion
 
 
@@ -29,6 +28,7 @@ namespace Gem.Network
 
         public ClientMessageProcessor(IClient client)
         {
+            this.client = client;
             Write = new ActionAppender(Echo);
         }
 
@@ -45,7 +45,7 @@ namespace Gem.Network
             {
                 try
                 {
-                    GemNetwork.ClientMessageFlowManager[GemNetwork.ActiveProfile,im.MessageType.Transform(), im.ReadByte()]
+                    GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile,im.MessageType.Transform(), im.ReadByte()]
                               .HandleIncomingMessage(im);
                 }
                 catch (Exception ex)

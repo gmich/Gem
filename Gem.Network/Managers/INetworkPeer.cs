@@ -17,5 +17,7 @@ namespace Gem.Network
         void Recycle(NetIncomingMessage im);
 
         void Disconnect();
+
     }
+
 }

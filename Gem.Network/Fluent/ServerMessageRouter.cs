@@ -1,21 +1,23 @@
 ﻿using Gem.Network.Commands;
 using Gem.Network.Messages;
+using Lidgren.Network;
 using System;
 
 namespace Gem.Network.Fluent
 {
-    public class MessageRouter : IMessageRouter
+
+    public class ServerMessageRouter : IServerMessageRouter
     {
         private readonly string profile;
 
-        public MessageRouter(string profile) 
+        public ServerMessageRouter(string profile) 
         {
             this.profile = profile;
         }
 
-        public IMessageFlowBuilder Send(MessageType messageType)
+        public void ForIncomingConnections(Action<IServer, NetConnection,ConnectionApprovalMessage> action)
         {
-            return new MessageFlowBuilder(profile, messageType);
+            GemNetwork.ServerConfiguration[profile].ConnectionApprove = action;
         }
 
         public void RegisterCommand(string command, string description, CommandExecute callback, bool requiresAuthorization = true)

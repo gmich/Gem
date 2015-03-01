@@ -6,14 +6,14 @@ using System;
 
 namespace Gem.Network.Providers
 {
-    internal class NetworkConfigurationProvider
+    internal class ClientConfigurationProvider
     : AbstractContainer<MessageTypeProvider, string>
     {
-        public NetworkConfigurationProvider()
+        public ClientConfigurationProvider()
             : base(new FlyweightRepository<MessageTypeProvider, string>())
         { }
     }
-
+    
     public class MessageTypeProvider
     : AbstractContainer<ClientMessageFlowInfoProvider, MessageType>
     {
@@ -21,4 +21,13 @@ namespace Gem.Network.Providers
             : base(new FlyweightRepository<ClientMessageFlowInfoProvider, MessageType>())
         { }
     }
+
+    internal class ServerConfigurationManager
+    : AbstractContainer<ServerMessageFlowManager, string>
+    {
+        public ServerConfigurationManager()
+            : base(new FlyweightRepository<ServerMessageFlowManager, string>())
+        { }
+    }
+
 }

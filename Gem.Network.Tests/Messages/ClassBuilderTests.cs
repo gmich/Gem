@@ -136,38 +136,38 @@ namespace Gem.Network.Tests
             Assert.AreEqual(myObject.FloatProperty, 1.0f);
         }
 
-        [TestMethod]
-        public void CreatePOCOByNetConfigArgumentsTest()
-        {
-            var types = NetworkConfig.Send("string", 1);
+        //[TestMethod]
+        //public void CreatePOCOByNetConfigArgumentsTest()
+        //{
+        //    var types = NetworkConfig.Send("string", 1);
 
-            var propertyList = new List<DynamicPropertyInfo>();
-            int counter=0;
-            foreach (var type in types)
-            {
-                propertyList.Add(new DynamicPropertyInfo
-                {
-                    PropertyName = "A" + counter,
-                    PropertyType = type
-                });
-                counter++;
-            }
-            IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
-            Type myNewType = PocoBuilder.Build("POCO", propertyList);
+        //    var propertyList = new List<DynamicPropertyInfo>();
+        //    int counter=0;
+        //    foreach (var type in types)
+        //    {
+        //        propertyList.Add(new DynamicPropertyInfo
+        //        {
+        //            PropertyName = "A" + counter,
+        //            PropertyType = type
+        //        });
+        //        counter++;
+        //    }
+        //    IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
+        //    Type myNewType = PocoBuilder.Build("POCO", propertyList);
 
-            dynamic myObject = Activator.CreateInstance(myNewType);
-            Assert.IsTrue(myObject.GetType().Name == "POCO");
+        //    dynamic myObject = Activator.CreateInstance(myNewType);
+        //    Assert.IsTrue(myObject.GetType().Name == "POCO");
 
-            var stringProperty = myObject.GetType().GetProperty("A0");
-            var intProperty = myObject.GetType().GetProperty("A1");
+        //    var stringProperty = myObject.GetType().GetProperty("A0");
+        //    var intProperty = myObject.GetType().GetProperty("A1");
 
-            Assert.IsNull(stringProperty.GetValue(myObject));
+        //    Assert.IsNull(stringProperty.GetValue(myObject));
 
-            myObject.A0 = "String";
-            myObject.A1 = 1;
+        //    myObject.A0 = "String";
+        //    myObject.A1 = 1;
             
-            Assert.AreEqual(stringProperty.GetValue(myObject), "String");
-            Assert.AreEqual(intProperty.GetValue(myObject), 1);   
-        }
+        //    Assert.AreEqual(stringProperty.GetValue(myObject), "String");
+        //    Assert.AreEqual(intProperty.GetValue(myObject), 1);   
+        //}
     }
 }

@@ -8,11 +8,11 @@ namespace Gem.Network.Managers
     
     public class MessageFlowManager
     {
-        private NetworkConfigurationProvider configurationManager;
+        private ClientConfigurationProvider configurationManager;
 
         public MessageFlowManager()
         {
-            configurationManager = new NetworkConfigurationProvider();
+            configurationManager = new ClientConfigurationProvider();
         }
 
         public MessageFlowArguments this[string tag,MessageType messagetype,byte configID]
@@ -39,4 +39,5 @@ namespace Gem.Network.Managers
             }
         }
     }
+
 }

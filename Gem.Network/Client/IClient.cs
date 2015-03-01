@@ -6,7 +6,7 @@ namespace Gem.Network
     public interface IClient : INetworkPeer
     {
 
-        void Connect(ConnectionDetails connectionDetails);
+        void Connect(ConnectionDetails connectionDetails, ConnectionApprovalMessage approvalMessage = null);
 
         void SendMessage<T>(T message);
 

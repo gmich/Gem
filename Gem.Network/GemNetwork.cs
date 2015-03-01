@@ -8,13 +8,28 @@ namespace Gem.Network
     public static class GemNetwork
     {
 
-        public static string ActiveProfile { get; set;}
-
+        #region Fields
+        
         private static MessageFlowManager clientMessageFlowManager = new MessageFlowManager();
+
+        private static ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager();
+
+        private static ClientConfigurationManager configurationManager = new ClientConfigurationManager();
 
         internal static int profilesInvoked = 0;
 
-        internal static MessageFlowManager ClientMessageFlowManager
+        #endregion
+
+
+        #region Properties
+
+        public static string ActiveProfile
+        {
+            get;
+            set;
+        }
+
+        internal static MessageFlowManager ClientMessageFlow
         {
             get
             {
@@ -22,10 +37,29 @@ namespace Gem.Network
             }
         }
 
-        public static IMessageRouter Profile(string profileName)
+        internal static ClientConfigurationManager ClientConfiguration
+        {
+            get
+            {
+                return configurationManager;
+            }
+        }
+
+        internal static ServerConfigurationManager ServerConfiguration
+        {
+            get
+            {
+                return serverConfigurationManager;
+            }
+        }
+
+        public static ProfileRouter Profile(string profileName)
         {
             profilesInvoked++;
-            return new MessageRouter(profileName);
+            return new ProfileRouter(profileName);
         }
+
+        #endregion
+
     }
 }

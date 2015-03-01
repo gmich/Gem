@@ -34,6 +34,8 @@ namespace Gem.Network.Client
             this.connectionDetails = connectionDetails;
             this.client = new Peer();
             this.messageProcessor = new ClientMessageProcessor(client);
+            asyncMessageProcessor = new ParallelTaskStarter(TimeSpan.Zero);
+            Write = new ActionAppender(Echo);
             //TODO: register ClientMessageProcesssor's Action<string> Echo    
         }
 
@@ -58,7 +60,7 @@ namespace Gem.Network.Client
         {
             try
             {
-                client.Connect(connectionDetails);
+                client.Connect(connectionDetails,GemNetwork.ClientConfiguration.ApprovalMessageDelegate());
                 asyncMessageProcessor.Start(() => messageProcessor.ProcessNetworkMessages());
                 IsRunning = true;
             }

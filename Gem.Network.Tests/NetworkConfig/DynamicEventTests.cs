@@ -1,79 +1,79 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Gem.Network.Other;
-using Gem.Network.Configuration;
-using Gem.Network.Messages;
-using Moq;
-using System.Net;
-using Lidgren.Network;
+﻿//using System;
+//using System.Linq;
+//using System.Collections.Generic;
+//using Microsoft.VisualStudio.TestTools.UnitTesting;
+//using Gem.Network.Other;
+//using Gem.Network.Configuration;
+//using Gem.Network.Messages;
+//using Moq;
+//using System.Net;
+//using Lidgren.Network;
 
-namespace Gem.Network.Tests
-{
-    [TestClass]
-    public class DynamicEventTests
-    {
+//namespace Gem.Network.Tests
+//{
+//    [TestClass]
+//    public class DynamicEventTests
+//    {
 
-        [TestMethod]
-        public void DynamicEventInvocationTest()
-        {
-            var tester = new Mock<EventTester>();
+//        [TestMethod]
+//        public void DynamicEventInvocationTest()
+//        {
+//            var tester = new Mock<EventTester>();
 
-            var messageHandler = NetworkConfig.ForInterface("tag")
-                .CreateEvent(typeof(string))
-                .HandleWith(tester.Object, "AppendSomething");
+//            var messageHandler = NetworkConfig.ForInterface("tag")
+//                .CreateEvent(typeof(string))
+//                .HandleWith(tester.Object, "AppendSomething");
 
-            messageHandler.HandleMessage("say");
+//            messageHandler.HandleMessage("say");
 
-            tester.Verify(x => x.AppendSomething("say"), Times.Once);
+//            tester.Verify(x => x.AppendSomething("say"), Times.Once);
 
-            messageHandler.HandleMessage("say twice");
-            messageHandler.HandleMessage("say twice");
+//            messageHandler.HandleMessage("say twice");
+//            messageHandler.HandleMessage("say twice");
    
-            tester.Verify(x => x.AppendSomething("say twice"), Times.Exactly(2));
-        }
+//            tester.Verify(x => x.AppendSomething("say twice"), Times.Exactly(2));
+//        }
 
-        [TestMethod]
-        public void DynamicSendMesssageInvocationTest()
-        {
-            var client = new Client();
-            client.Connect(new ConnectionDetails
-            {
-                ServerIP = new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241),
-                ServerName = "local"
-            });
-            var tester = new Mock<EventTester>();
-            var mockClient = new Mock<Client>();
-            var msg = client.CreateMessage();
+//        [TestMethod]
+//        public void DynamicSendMesssageInvocationTest()
+//        {
+//            var client = new Client();
+//            client.Connect(new ConnectionDetails
+//            {
+//                ServerIP = new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241),
+//                ServerName = "local"
+//            });
+//            var tester = new Mock<EventTester>();
+//            var mockClient = new Mock<Client>();
+//            var msg = client.CreateMessage();
 
-            var messageHandler = NetworkConfig.ForInterface("tag", mockClient.Object)
-                .CreateEvent(typeof(string))
-                .HandleWith(tester.Object, "AppendSomething");
+//            var messageHandler = NetworkConfig.ForInterface("tag", mockClient.Object)
+//                .CreateEvent(typeof(string))
+//                .HandleWith(tester.Object, "AppendSomething");
 
-            messageHandler.Send("something");
-            //mockClient.Verify(x => x.SendMessage(poco), Times.Once);
-        }
+//            messageHandler.Send("something");
+//            //mockClient.Verify(x => x.SendMessage(poco), Times.Once);
+//        }
 
-        [TestMethod]
-        public void ComplexDynamicEventInvocationTest()
-        {
-            var tester = new Mock<EventTester>();
-            var messageHandler = NetworkConfig.ForInterface("tag")
-                .CreateEvent(typeof(string), typeof(int), typeof(int), typeof(string))
-                .HandleWith(tester.Object, "DoSomethingComplicated");
+//        [TestMethod]
+//        public void ComplexDynamicEventInvocationTest()
+//        {
+//            var tester = new Mock<EventTester>();
+//            var messageHandler = NetworkConfig.ForInterface("tag")
+//                .CreateEvent(typeof(string), typeof(int), typeof(int), typeof(string))
+//                .HandleWith(tester.Object, "DoSomethingComplicated");
 
-            messageHandler.HandleMessage("say", 1, 2, "error");
+//            messageHandler.HandleMessage("say", 1, 2, "error");
 
-            //TODO: handle floats
-            tester.Verify(x => x.DoSomethingComplicated("say", 1, 2, "error"), Times.Once);
+//            //TODO: handle floats
+//            tester.Verify(x => x.DoSomethingComplicated("say", 1, 2, "error"), Times.Once);
 
-        }
+//        }
 
-        public interface EventTester
-        {
-            void AppendSomething(string message);
-            void DoSomethingComplicated(string msg, int count, int value, string error);
-        }
-    }
-}
+//        public interface EventTester
+//        {
+//            void AppendSomething(string message);
+//            void DoSomethingComplicated(string msg, int count, int value, string error);
+//        }
+//    }
+//}

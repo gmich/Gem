@@ -59,12 +59,11 @@ namespace Gem.Network.Fluent
             SetDynamicPoco(properties);
             SetMessageHandler(properties.Select(x => DynamicPropertyInfo.GetPrimitiveTypeAlias(x.PropertyType)).ToList(), objectToHandle, methodInfo.Name);
             
-            var argumentsDisposable = GemNetwork.ClientMessageFlowManager[profile,messageType].Add(messageFlowArgs);
+            var argumentsDisposable = GemNetwork.ClientMessageFlow[profile,messageType].Add(messageFlowArgs);
             SetDynamicEvent(argumentsDisposable);
 
             return messageFlowArgs.EventRaisingclass;
         }
-
 
         #endregion
 
@@ -74,7 +73,7 @@ namespace Gem.Network.Fluent
         private void SetMessageHandler(List<string> propertyNames, object invoker, string functionName)
         {
             var handlerType = Dependencies.Container.Resolve<IMessageHandlerFactory>()
-                                         .Create(propertyNames, "handler" + GemNetwork.profilesInvoked, functionName);
+                                          .Create(propertyNames, "handler" + GemNetwork.profilesInvoked, functionName);
 
             messageFlowArgs.MessageHandler = Activator.CreateInstance(handlerType, invoker) as IMessageHandler;
         }
