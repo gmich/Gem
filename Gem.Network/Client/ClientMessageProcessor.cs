@@ -7,6 +7,7 @@ using Gem.Network.Utilities;
 using Gem.Network.Containers;
 using Gem.Network.Utilities.Loggers;
 using Gem.Network.Extensions;
+using Gem.Network.Events;
 
 namespace Gem.Network
 {
@@ -67,7 +68,10 @@ namespace Gem.Network
                     case NetIncomingMessageType.Data:
                         try
                         {
-                            GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile, im.MessageType.Transform(), im.ReadByte()]
+                            byte id = im.ReadByte();
+                            Write.Info("Received package with id : {0}",id);
+
+                            GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile, im.MessageType.Transform(),id]
                                       .HandleIncomingMessage(im);
                         }
                         catch (Exception ex)

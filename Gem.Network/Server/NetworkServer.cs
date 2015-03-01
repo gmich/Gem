@@ -95,9 +95,11 @@ namespace Gem.Network.Server
             var config = new NetPeerConfiguration(serverConfig.Name)
                 {
                     Port = serverConfig.Port,
-                    MaximumConnections = serverConfig.MaxConnections
+                    MaximumConnections = serverConfig.MaxConnections,
+                    PingInterval = 2.0f,
+                    //TODO: configure timeout
+                    ConnectionTimeout = 10000f
                 };
-            config.ConnectionTimeout = 20.0f;
             config.EnableMessageType(NetIncomingMessageType.Data);
             config.EnableMessageType(NetIncomingMessageType.WarningMessage);
             config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);

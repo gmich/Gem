@@ -9,6 +9,7 @@ using Gem.Network.Builders;
 namespace Gem.Network.Tests
 {
     using Extensions;
+    using Gem.Network.Events;
 
     [TestClass]
     public class ObjectExtensionsTests
@@ -20,17 +21,44 @@ namespace Gem.Network.Tests
             var propertyList = new List<DynamicPropertyInfo>
             {
                 new DynamicPropertyInfo{
-                        PropertyName = "Name",
+                        PropertyName = "StringParameter",
                         PropertyType = typeof(string)
+                },      
+                new DynamicPropertyInfo{
+                        PropertyName = "IntParameter",
+                        PropertyType = typeof(Byte)
                 }
             };
             IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
             Type myNewType = PocoBuilder.Build("POCO", propertyList);
 
-            object myObject = Activator.CreateInstance(myNewType);
-            var value = myObject.GetValue("Name");
-            Assert.IsNull(value);
+            object myObject = Activator.CreateInstance(myNewType, "string", (byte)1);
+            var value = myObject.GetValue("StringParameter");
+            Assert.AreEqual(value, "string");
         }
+
+        [TestMethod]
+        public void SetDynamicObjectValueTest_CsScript()
+        {
+            var propertyList = new List<DynamicPropertyInfo>
+            {
+                new DynamicPropertyInfo{
+                        PropertyName = "StringParameter",
+                        PropertyType = typeof(string)
+                },      
+                new DynamicPropertyInfo{
+                        PropertyName = "IntParameter",
+                        PropertyType = typeof(Byte)
+                }
+            };
+            IPocoBuilder PocoBuilder = new CsScriptPocoBuilder();
+            Type myNewType = PocoBuilder.Build("POCO", propertyList);
+
+            var myObject = (INetworkPackage)Activator.CreateInstance(myNewType, "string", (byte)1);
+            myObject.Id= 1;
+            Assert.AreEqual(myObject.Id, 1);
+        }
+        
 
         [TestMethod]
         public void GetSetDynamicObjectValueTest()

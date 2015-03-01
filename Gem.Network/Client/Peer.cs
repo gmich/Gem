@@ -121,14 +121,23 @@ namespace Gem.Network
             client.SendMessage(msg, NetDeliveryMethod.ReliableUnordered);
         }
         
-        #endregion
-
-
         public void SendMessage<T>(T message)
         {
             var msg = client.CreateMessage();
             MessageSerializer.Encode(message, ref msg);
             client.SendMessage(msg, connectionDetails.DeliveryMethod);
         }
+
+        public void SendMessage<T>(T message, byte id)
+        {
+            var msg = client.CreateMessage();
+            MessageSerializer.Encode(message, ref msg);
+            msg.Write(id);
+
+            client.SendMessage(msg, connectionDetails.DeliveryMethod);
+        }
+
+        #endregion
+
     }
 }

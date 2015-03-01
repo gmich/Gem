@@ -16,15 +16,18 @@ namespace Gem.Network.Events
 
         private bool isDisposed;
 
+        private readonly byte Id;
+
         #endregion
 
 
         #region Construct / Dispose
 
-        public ClientEvent(IDisposable clientConfig)
+        public ClientEvent(IDisposable clientConfig,byte id)
         {
             this.isDisposed = false;
             this.clientConfig = clientConfig;
+            this.Id = id;
         }
 
         public void Dispose()
@@ -46,12 +49,13 @@ namespace Gem.Network.Events
 
         public void SubscribeEvent(IClient client)
         {
-            Event = (sender, e) => client.SendMessage<T>(e);
+            Event = (sender, e) => client.SendMessage<T>(e, Id);
         }
                 
         public void Send(params object[] networkargs)
         {
-            var package = Activator.CreateInstance(typeof(T),networkargs);
+            var package = (INetworkPackage)Activator.CreateInstance(typeof(T), networkargs);
+            package.Id = Id;
             OnEvent(package);
         }
         

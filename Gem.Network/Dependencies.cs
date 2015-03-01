@@ -42,7 +42,7 @@ namespace Gem.Network
             switch (runtimeBuilder)
             {
                 default:
-                    builder.RegisterType<ReflectionEmitBuilder>()
+                    builder.RegisterType<CsScriptPocoBuilder>()
                            .As<IPocoBuilder>().SingleInstance();
 
                     builder.RegisterType<CsScriptBuilder>()

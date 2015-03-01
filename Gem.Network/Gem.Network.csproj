@@ -73,6 +73,8 @@
     <Compile Include="Async\AsyncIncomingMessageHandler.cs" />
     <Compile Include="Async\ParallelTask.cs" />
     <Compile Include="Builders\API\IMessageHandlerBuilder.cs" />
+    <Compile Include="Builders\CsScriptPocoBuilder.cs" />
+    <Compile Include="Events\INetworkPackage.cs" />
     <Compile Include="NetworkStatus.cs" />
     <Compile Include="Server\GemServer.cs" />
     <Compile Include="Messages\Connection\PlainText.cs" />

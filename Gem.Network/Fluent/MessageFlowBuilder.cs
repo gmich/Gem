@@ -50,11 +50,11 @@ namespace Gem.Network.Fluent
             var methodInfoExpression = (ConstantExpression)methodCallExpression.Object;
             var methodInfo = (MethodInfo)methodInfoExpression.Value;
 
-            var types = methodInfo.GetParameters().Select(x => x.ParameterType).ToArray();
+            var types = methodInfo.GetParameters().Select(x => x.ParameterType).ToList();
 
             Guard.That(types.All(x => x.IsPrimitive || x == typeof(string)), "All types should be primitive");
 
-            var properties = DynamicPropertyInfo.GetPropertyInfo(types);
+            var properties = DynamicPropertyInfo.GetPropertyInfo(types.ToArray());
             
             SetDynamicPoco(properties);
             SetMessageHandler(properties.Select(x => DynamicPropertyInfo.GetPrimitiveTypeAlias(x.PropertyType)).ToList(), objectToHandle, methodInfo.Name);
@@ -88,7 +88,7 @@ namespace Gem.Network.Fluent
 
         private void SetDynamicEvent(IDisposable argumentDisposable)
         {
-            messageFlowArgs.EventRaisingclass = Dependencies.Container.Resolve<IEventFactory>().Create(messageFlowArgs.MessagePoco, argumentDisposable);
+            messageFlowArgs.EventRaisingclass = Dependencies.Container.Resolve<IEventFactory>().Create(messageFlowArgs.MessagePoco, argumentDisposable,messageFlowArgs.ID);
         }
 
         #endregion
