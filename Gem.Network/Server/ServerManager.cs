@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Gem.Network.Configuration;
 using Gem.Network.Containers;
 
-namespace Gem.Network
+namespace Gem.Network.Server
 {
 
     public class ServerManager : IDisposable

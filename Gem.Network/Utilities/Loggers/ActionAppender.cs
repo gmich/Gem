@@ -49,7 +49,7 @@ namespace Gem.Network.Utilities.Loggers
 
         private string FormatMessage(string prefix, string message, params object[] args)
         {
-            return String.Format("{0} - {1} {2}",prefix, message, args);
+            return String.Format(prefix + " - " +  message, args);
         }
         #endregion
     }

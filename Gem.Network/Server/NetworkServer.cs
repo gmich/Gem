@@ -8,7 +8,7 @@ using Gem.Network.Utilities.Loggers;
 using Gem.Network;
 using System.Linq;
 
-namespace Gem.Network
+namespace Gem.Network.Server
 {
 
     /// <summary>
@@ -19,13 +19,11 @@ namespace Gem.Network
 
         #region Fields
 
-        private string password;
-        public string Password { get { return password; } }
+        public string Password { get { return serverConfig.Password; } }
 
-        private readonly string disconnectMessage;
-
-        private readonly int maxConnections;
-
+        //TODO: provide this somehow
+        private readonly string disconnectMessage = "bye";
+        
         private ServerConfig serverConfig;
 
         private bool isDisposed;
@@ -33,8 +31,6 @@ namespace Gem.Network
         private NetServer netServer;
         
         private readonly IAppender appender;
-
-        public Action<string> Echo;
 
         public IPAddress IP
         {
@@ -53,10 +49,9 @@ namespace Gem.Network
 
         #region Construct / Dispose
 
-        public NetworkServer( int maxConnections)
+        public NetworkServer(Action<string> DebugListener)
         {
-            this.maxConnections = maxConnections;
-            this.appender = new ActionAppender(Echo);       
+            this.appender = new ActionAppender(DebugListener);       
         }
 
         private void Dispose(bool disposing)
@@ -92,7 +87,7 @@ namespace Gem.Network
             var config = new NetPeerConfiguration(serverConfig.Name)
                 {
                     Port = serverConfig.Port,
-                    MaximumConnections = maxConnections
+                    MaximumConnections = serverConfig.MaxConnections
                 };
             config.EnableMessageType(NetIncomingMessageType.Data);
             config.EnableMessageType(NetIncomingMessageType.WarningMessage);

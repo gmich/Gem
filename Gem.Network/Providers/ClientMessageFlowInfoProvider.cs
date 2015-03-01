@@ -20,13 +20,13 @@ namespace Gem.Network.Managers
             "You have reached the maximum capacity. Consider deregistering");
 
             clientInfo.ID = GetUniqueByte();
+
             return dataRepository.Add(clientInfo.ID, clientInfo);
         }
 
-        public void SubscribeEvents(IClient client)
+        public void SubscribeEvent(byte id)
         {
-            dataRepository.GetAll()
-                          .ForEach(x => x.EventRaisingclass.SubscribeEvent(client));
+            this[id].EventRaisingclass.SubscribeEvent(GemNetwork.Client);
         }
 
         public override MessageFlowArguments this[byte id]

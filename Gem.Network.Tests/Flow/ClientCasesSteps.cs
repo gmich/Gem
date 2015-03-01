@@ -48,7 +48,8 @@ namespace Gem.Network.Tests.Flow
             client = new Peer();
             client.Connect(new ConnectionDetails
             {
-                ServerIP = new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241),
+                IPorHost = "127.0.0.1",
+                Port = 14241,
                 ServerName = "local"
             });
         }

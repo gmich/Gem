@@ -8,7 +8,7 @@ using Gem.Network.Containers;
 using Gem.Network.Utilities.Loggers;
 using Gem.Network.Extensions;
 
-namespace Gem.Network
+namespace Gem.Network.Server
 {
     public class ServerMessageProcessor : IMessageProcessor
     {

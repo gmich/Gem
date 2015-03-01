@@ -1,5 +1,6 @@
 ﻿using Gem.Network.Builders;
 using Gem.Network.Messages;
+using Gem.Network.Server;
 using Lidgren.Network;
 using System;
 using System.Collections.Generic;
@@ -60,7 +61,7 @@ namespace Gem.Network.Example
         /// </summary>
         public static void MessageDecodingTestHelper()
         {
-            var server = new NetworkServer(5);
+            var server = new NetworkServer(Console.Write);
             server.Connect(new ServerConfig { Name = "local", Port = 14241 });
             
             NetIncomingMessage inc;
@@ -111,7 +112,7 @@ namespace Gem.Network.Example
             #endregion
 
             NetworkServer server;
-            server = new NetworkServer(5);
+            server = new NetworkServer(Console.Write);
             server.Connect(new ServerConfig { Name = "local", Port = 14241 });
 
             NetIncomingMessage inc;

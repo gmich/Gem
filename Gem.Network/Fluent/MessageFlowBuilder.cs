@@ -58,9 +58,10 @@ namespace Gem.Network.Fluent
             
             SetDynamicPoco(properties);
             SetMessageHandler(properties.Select(x => DynamicPropertyInfo.GetPrimitiveTypeAlias(x.PropertyType)).ToList(), objectToHandle, methodInfo.Name);
-            
             var argumentsDisposable = GemNetwork.ClientMessageFlow[profile,messageType].Add(messageFlowArgs);
             SetDynamicEvent(argumentsDisposable);
+
+            GemNetwork.ClientMessageFlow[profile, messageType].SubscribeEvent(messageFlowArgs.ID);
 
             return messageFlowArgs.EventRaisingclass;
         }

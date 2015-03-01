@@ -73,7 +73,9 @@
     <Compile Include="Async\AsyncIncomingMessageHandler.cs" />
     <Compile Include="Async\ParallelTask.cs" />
     <Compile Include="Builders\API\IMessageHandlerBuilder.cs" />
-    <Compile Include="Client\ServerMessageProcessor.cs" />
+    <Compile Include="Server\GemServer.cs" />
+    <Compile Include="Messages\Server\PlainText.cs" />
+    <Compile Include="Server\ServerMessageProcessor.cs" />
     <Compile Include="Client\GemClient.cs" />
     <Compile Include="Extensions\MessageFlowExtensions.cs" />
     <Compile Include="Fluent\API\IServerMessageRouter.cs" />

@@ -19,7 +19,8 @@ namespace Gem.Network
 
         private ConnectionDetails connectionDetails;
 
-        private readonly string disconnectMessage;
+        //TODO: provide this somehow
+        private readonly string disconnectMessage = "bye";
 
         #endregion
 
@@ -87,10 +88,13 @@ namespace Gem.Network
         {
             return client.CreateMessage();
         }
-             
+
         public void Disconnect()
         {
-            client.Shutdown(disconnectMessage);
+            if (client != null)
+            {
+                client.Shutdown(disconnectMessage);
+            }
         }
 
         public NetIncomingMessage ReadMessage()

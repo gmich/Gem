@@ -3,7 +3,7 @@ using Lidgren.Network;
 using System.Collections.Generic;
 using System.Net;
 
-namespace Gem.Network
+namespace Gem.Network.Server
 {
     public interface IServer : INetworkPeer
     {

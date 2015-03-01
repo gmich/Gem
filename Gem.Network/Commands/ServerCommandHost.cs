@@ -1,4 +1,5 @@
-﻿using Gem.Network.Utilities.Loggers;
+﻿using Gem.Network.Server;
+using Gem.Network.Utilities.Loggers;
 using Seterlund.CodeGuard;
 using System;
 using System.Collections.Generic;

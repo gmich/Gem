@@ -1,6 +1,7 @@
 ﻿using Gem.Network.Async;
 using Gem.Network.Messages;
 using Gem.Network.Utilities.Loggers;
+using Seterlund.CodeGuard;
 using System;
 
 namespace Gem.Network.Client
@@ -14,28 +15,39 @@ namespace Gem.Network.Client
 
         public bool IsRunning { get; set; }
 
-        public Action<string> Echo;
-
         private readonly IAppender Write;
 
         private readonly IMessageProcessor messageProcessor;
 
-        private readonly ConnectionDetails connectionDetails;
+        private ConnectionDetails connectionDetails;
 
         private ParallelTaskStarter asyncMessageProcessor;
-        
+
         #endregion
 
 
         #region Constructor
 
-        public GemClient(ConnectionDetails connectionDetails)
+        public GemClient(string serverName, string IPorHost, int port, Action<string> DebugListener = null)
         {
-            this.connectionDetails = connectionDetails;
-            this.client = new Peer();
+            Guard.That(IPorHost).IsNotNull();
+            connectionDetails = new ConnectionDetails { ServerName = serverName, IPorHost = IPorHost, Port = port };
+
+            //TODO: check if the client is already connected
+            this.client = GemNetwork.Client;
+
             this.messageProcessor = new ClientMessageProcessor(client);
             asyncMessageProcessor = new ParallelTaskStarter(TimeSpan.Zero);
-            Write = new ActionAppender(Echo);
+
+            if (DebugListener != null)
+            {
+                Write = new ActionAppender(DebugListener);
+            }
+            else
+            {
+                Write = new Log4NetWrapper("DebugLogger");
+            }
+
             //TODO: register ClientMessageProcesssor's Action<string> Echo    
         }
 
@@ -55,12 +67,12 @@ namespace Gem.Network.Client
         {
             Disconnect();
         }
-          
-        public void RunAsync()
+
+        public void RunAsync(Func<ConnectionApprovalMessage> ApprovalMessageDelegate)
         {
             try
             {
-                client.Connect(connectionDetails,GemNetwork.ClientConfiguration.ApprovalMessageDelegate());
+                client.Connect(connectionDetails, ApprovalMessageDelegate());
                 asyncMessageProcessor.Start(() => messageProcessor.ProcessNetworkMessages());
                 IsRunning = true;
             }

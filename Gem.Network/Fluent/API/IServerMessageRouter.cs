@@ -1,5 +1,6 @@
 ﻿using Gem.Network.Commands;
 using Gem.Network.Messages;
+using Gem.Network.Server;
 using Lidgren.Network;
 using System;
 

@@ -13,7 +13,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gem.Engine", "Gem.Engine", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gem.Tests", "Gem.Tests", "{7D9867F2-E0A0-4ADE-99F9-43CEF3C4816E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Example", "Gem.Network.Example\Gem.Network.Example.csproj", "{CA391A93-F890-481D-84F7-6D7D1A59AB43}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.TestHelper", "Gem.Network.Example\Gem.Network.TestHelper.csproj", "{CA391A93-F890-481D-84F7-6D7D1A59AB43}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{84AE5719-A57A-4438-A051-43AA5A041CEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Chat.Client", "Gem.Network.Chat.Client\Gem.Network.Chat.Client.csproj", "{00E67143-1670-411A-BB37-5A21AB672D19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Chat.Server", "Gem.Network.Chat.Server\Gem.Network.Chat.Server.csproj", "{0218CECB-45A0-4B88-85D9-5D6925408943}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +71,26 @@ Global
 		{CA391A93-F890-481D-84F7-6D7D1A59AB43}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{CA391A93-F890-481D-84F7-6D7D1A59AB43}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{CA391A93-F890-481D-84F7-6D7D1A59AB43}.Release|x86.ActiveCfg = Release|Any CPU
+		{00E67143-1670-411A-BB37-5A21AB672D19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00E67143-1670-411A-BB37-5A21AB672D19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00E67143-1670-411A-BB37-5A21AB672D19}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{00E67143-1670-411A-BB37-5A21AB672D19}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{00E67143-1670-411A-BB37-5A21AB672D19}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{00E67143-1670-411A-BB37-5A21AB672D19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00E67143-1670-411A-BB37-5A21AB672D19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00E67143-1670-411A-BB37-5A21AB672D19}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{00E67143-1670-411A-BB37-5A21AB672D19}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{00E67143-1670-411A-BB37-5A21AB672D19}.Release|x86.ActiveCfg = Release|Any CPU
+		{0218CECB-45A0-4B88-85D9-5D6925408943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0218CECB-45A0-4B88-85D9-5D6925408943}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0218CECB-45A0-4B88-85D9-5D6925408943}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0218CECB-45A0-4B88-85D9-5D6925408943}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{0218CECB-45A0-4B88-85D9-5D6925408943}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0218CECB-45A0-4B88-85D9-5D6925408943}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0218CECB-45A0-4B88-85D9-5D6925408943}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0218CECB-45A0-4B88-85D9-5D6925408943}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0218CECB-45A0-4B88-85D9-5D6925408943}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{0218CECB-45A0-4B88-85D9-5D6925408943}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,5 +100,7 @@ Global
 		{3DAC3EA3-2910-4453-B0C6-3F5011251FA3} = {479BCF5C-B1BF-4480-ABDE-40F4E42722A5}
 		{E83893E0-5BC0-4C8A-876A-E1F1E526432A} = {7D9867F2-E0A0-4ADE-99F9-43CEF3C4816E}
 		{CA391A93-F890-481D-84F7-6D7D1A59AB43} = {7D9867F2-E0A0-4ADE-99F9-43CEF3C4816E}
+		{00E67143-1670-411A-BB37-5A21AB672D19} = {84AE5719-A57A-4438-A051-43AA5A041CEE}
+		{0218CECB-45A0-4B88-85D9-5D6925408943} = {84AE5719-A57A-4438-A051-43AA5A041CEE}
 	EndGlobalSection
 EndGlobal

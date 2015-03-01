@@ -1,10 +1,10 @@
 ﻿using Gem.Network.Containers;
 using Gem.Network.Messages;
-using Gem.Network.Other;
 using Gem.Network.Repositories;
 using Lidgren.Network;
 using Seterlund.CodeGuard;
 using System;
+using Gem.Network.Server;
 
 namespace Gem.Network.Managers
 {

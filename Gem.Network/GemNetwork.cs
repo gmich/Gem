@@ -1,6 +1,7 @@
 ﻿using Gem.Network.Fluent;
 using Gem.Network.Managers;
 using Gem.Network.Providers;
+using Gem.Network.Server;
 using System;
 
 namespace Gem.Network
@@ -8,15 +9,30 @@ namespace Gem.Network
     public static class GemNetwork
     {
 
+        static GemNetwork()
+        {
+            Startup.Setup();
+            clientMessageFlowManager = new MessageFlowManager();
+            serverConfigurationManager = new ServerConfigurationManager();
+            configurationManager = new ClientConfigurationManager();
+            Client = new Peer();
+            Server = new NetworkServer(Console.WriteLine);
+        }    
+
         #region Fields
         
-        private static MessageFlowManager clientMessageFlowManager = new MessageFlowManager();
+        private static MessageFlowManager clientMessageFlowManager;
 
-        private static ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager();
+        private static ServerConfigurationManager serverConfigurationManager;
 
-        private static ClientConfigurationManager configurationManager = new ClientConfigurationManager();
+        private static ClientConfigurationManager configurationManager;
 
+        internal static IClient Client;
+
+        internal static IServer Server;
+        
         internal static int profilesInvoked = 0;
+
 
         #endregion
 

@@ -6,17 +6,17 @@ namespace Gem.Network.Messages
     public partial class ConnectionApprovalMessage
     {
 
-        public string Message { get; private set; }
+        public string Message { get; set; }
 
-        public string Sender { get; private set; }
+        public string Sender { get; set; }
 
-        public string Password { get; private set; }
+        public string Password { get; set; }
 
-        public byte ID
+        public MessageType ID
         {
             get
             {
-                return 1;
+                return MessageType.ConnectionApproval;
             }
         }
 
