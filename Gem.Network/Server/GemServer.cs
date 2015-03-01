@@ -39,7 +39,7 @@ namespace Gem.Network.Server
             messageProcessor = new ServerMessageProcessor(server);
             asyncMessageProcessor = new ParallelTaskStarter(TimeSpan.Zero);
 
-            Write = new ActionAppender(GemDebugger.Echo);            
+            Write = new ActionAppender(GemNetworkDebugger.Echo);            
         }
 
         #endregion

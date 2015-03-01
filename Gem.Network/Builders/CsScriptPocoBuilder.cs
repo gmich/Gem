@@ -6,6 +6,7 @@ using CSScriptLibrary;
 using System.Linq;
 using Gem.Network.Handlers;
 using Gem.Network.Events;
+using Lidgren.Network;
 
 namespace Gem.Network.Builders
 {
@@ -36,6 +37,18 @@ namespace Gem.Network.Builders
             return sb.ToString();
         }
 
+        private string GetDecodeConstructorBody(List<DynamicPropertyInfo> propertyFields)
+        {
+            NetIncomingMessage im;
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < propertyFields.Count; i++)
+            {
+                sb.Append(string.Format("this.{0} = msg.{1}();", propertyFields[i].PropertyName, DynamicPropertyInfo.GetDecodePrefix(propertyFields[i].PropertyType)));
+            }
+            return sb.ToString();
+        }
+
         private string GetGetterSetters(List<DynamicPropertyInfo> propertyFields)
         {
             StringBuilder sb = new StringBuilder();
@@ -46,16 +59,17 @@ namespace Gem.Network.Builders
             return sb.ToString();
         }
 
-
-
+ 
         public Type Build(string className, List<DynamicPropertyInfo> propertyFields)
         {
-            var str = String.Format(@"using Microsoft.CSharp;
+            var str = String.Format(@"using Microsoft.CSharp; using Lidgren.Network;
                                             namespace Gem.Network.Builders
                                             {{
                                             public class {0} : Gem.Network.Events.INetworkPackage
                                              {{ 
-                                              public {0}() {{}}                                                                                               
+                                              public {0}() {{}}  
+                                              public {0}(NetIncomingMessage msg) {{{4}}}                                                                                               
+                                                                                             
                                                  public {0}({1})
                                                  {{
                                                   {2}
@@ -78,7 +92,8 @@ namespace Gem.Network.Builders
                                              }}", className,
                                                 GetConstructorDeclaration(propertyFields),
                                                 GetConstructorBody(propertyFields),
-                                                GetGetterSetters(propertyFields));
+                                                GetGetterSetters(propertyFields),
+                                                GetDecodeConstructorBody(propertyFields));
 
             return CSScript.LoadCode(str)
                            .CreateObject("*")

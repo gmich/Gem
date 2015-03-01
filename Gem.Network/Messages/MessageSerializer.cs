@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using System;
+using System.Reflection;
 
 namespace Gem.Network.Messages
 {
@@ -19,8 +20,8 @@ namespace Gem.Network.Messages
 
         public static object Decode(NetIncomingMessage im,Type messageType)
         {
-            var obj = Activator.CreateInstance(messageType);
-            im.ReadAllProperties(obj);
+            var obj = Activator.CreateInstance(messageType,im);
+            //im.ReadAllProperties(obj);
 
             return obj;
         }

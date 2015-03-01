@@ -28,7 +28,7 @@ namespace Gem.Network.Server
         {
             this.server = server;
 
-            Write = new ActionAppender(GemDebugger.Echo);
+            Write = new ActionAppender(GemNetworkDebugger.Echo);
         }
 
         #endregion

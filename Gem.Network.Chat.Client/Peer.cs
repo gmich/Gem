@@ -12,35 +12,46 @@ namespace Gem.Network.Chat.Client
     {
         public string Name { get; set; }
 
-        private readonly INetworkEvent onSay;
-        private readonly INetworkEvent onChangeName;
+        private readonly INetworkEvent onEvent;
 
         public Peer(string name)
         {
             this.Name = name;
 
-            onSay = GemNetwork.Profile("Chat")
+            onEvent = GemNetwork.Profile("GemChat")
                   .Client.Send(MessageType.Data)
-                  .HandleWith(this, x => new Action<string>(x.Say));
+                  .HandleWith(this, x => new Action<string>(x.Print));
 
-            onChangeName = GemNetwork.Profile("Chat")
-                          .Client.Send(MessageType.Data)
-                          .HandleWith(this, x => new Action<string>(x.ChangeName));
+            onEvent.Send(name + " has joined");
         }
 
         public void Say(string message)
         {
-            Console.WriteLine("{2} {0} : {1} {2}",Name,message,Environment.NewLine);
+            string formattedMessage = String.Format(" >> {0} : {1}", Name, message);
+            Console.WriteLine("{0} : {1}", Name, message);
 
-            onSay.Send(message);
+            onEvent.Send(formattedMessage);
         }
 
         public void ChangeName(string newName)
         {
-            Console.WriteLine("{2} {0} changed his/her name to: {1} {2}",Name,newName,Environment.NewLine);
-            this.Name=newName;
+            string formattedMessage = String.Format(" >> {0} changed his/her name to {1}", Name, newName);
 
-            onChangeName.Send(newName);
+            Console.WriteLine("you have changed your name to {0}", newName);
+
+            this.Name = newName;
+
+            onEvent.Send(formattedMessage);
+        }
+
+        public void Print(string message)
+        {
+            Console.WriteLine(message);
+        }
+
+        public void SayGoodBye()
+        {
+            onEvent.Send(" >> " + Name + " has left ");
         }
 
     }

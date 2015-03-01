@@ -48,7 +48,7 @@ namespace Gem.Network.Managers
         {
             byte uniqueByte = (byte)dataRepository.TotalElements;
             do
-            {} while (dataRepository.HasKey(uniqueByte++));
+            {} while (dataRepository.HasKey(++uniqueByte));
 
             return uniqueByte;
         }

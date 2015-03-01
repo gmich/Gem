@@ -9,8 +9,8 @@ namespace Gem.Network
 
         public static void Setup()
         {
-            GemDebugger.Append = new DebugListener();
-            GemDebugger.Append.RegisterAppender(new Log4NetWrapper("DebugLogger"));
+            GemNetworkDebugger.Append = new DebugListener();
+            GemNetworkDebugger.Append.RegisterAppender(new Log4NetWrapper("DebugLogger"));
 
             var config = new ConfigurationReaderXML();
             config.Load("gem.config");

@@ -13,7 +13,7 @@ namespace Gem.Network.Chat.Server
         static void Main(string[] args)
         {
             GemNetwork.ActiveProfile = "GemChat";
-            GemDebugger.Echo = Console.WriteLine;
+            GemNetworkDebugger.Echo = Console.WriteLine;
 
             GemServer server = new GemServer("GemChat", 14242, 10);
 

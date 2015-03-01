@@ -39,7 +39,7 @@ namespace Gem.Network.Client
             this.messageProcessor = new ClientMessageProcessor(client);
             asyncMessageProcessor = new ParallelTaskStarter(TimeSpan.Zero);
             
-            Write = new ActionAppender(GemDebugger.Echo);
+            Write = new ActionAppender(GemNetworkDebugger.Echo);
 
             //TODO: register ClientMessageProcesssor's Action<string> Echo    
         }

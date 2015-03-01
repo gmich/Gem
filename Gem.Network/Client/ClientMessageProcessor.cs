@@ -28,7 +28,7 @@ namespace Gem.Network
         public ClientMessageProcessor(IClient client)
         {
             this.client = client;
-            Write = new ActionAppender(GemDebugger.Echo);
+            Write = new ActionAppender(GemNetworkDebugger.Echo);
         }
 
         #endregion
@@ -69,8 +69,7 @@ namespace Gem.Network
                         try
                         {
                             byte id = im.ReadByte();
-                            Write.Info("Received package with id : {0}",id);
-
+                            //Write.Info("Received package with id : {0}",id);
                             GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile, im.MessageType.Transform(),id]
                                       .HandleIncomingMessage(im);
                         }

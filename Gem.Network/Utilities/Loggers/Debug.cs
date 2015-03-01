@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Gem.Network.Utilities.Loggers
 {
-    public static class GemDebugger
+    public static class GemNetworkDebugger
     {
 
-        static GemDebugger()
+        static GemNetworkDebugger()
         {
             Echo = x => { };
         }

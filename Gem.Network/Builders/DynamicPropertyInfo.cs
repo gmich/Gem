@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Gem.Network.Builders
 {
@@ -55,6 +53,24 @@ namespace Gem.Network.Builders
                  {typeof(Decimal),"decimal"}
             };
 
+        private static Dictionary<Type, string> DecodeInfo = new Dictionary<Type, string>()
+            {
+                 {typeof(Byte),"ReadByte"},
+                 {typeof(SByte),"ReadSByte"},
+                 {typeof(Int32),"ReadInt32"},
+                 {typeof(UInt32),"ReadUInt32"},
+                 {typeof(Int16),"ReadInt16"},
+                 {typeof(UInt16),"ReadUInt16"},
+                 {typeof(Int64),"ReadInt64"},
+                 {typeof(UInt64),"ReadUInt64"},
+                 {typeof(Single),"ReadFloat"},
+                 {typeof(Double),"ReadDouble"},
+                //{typeof(Char),"char"},
+                 {typeof(Boolean),"ReadBoolean"},
+                 {typeof(String),"ReadString"},
+                //{typeof(Decimal),"decimal"}
+            };
+
         public static string GetPrimitiveTypeAlias(Type primitiveType)
         {
             if (PrimitiveTypesAndAliases.ContainsKey(primitiveType))
@@ -64,6 +80,18 @@ namespace Gem.Network.Builders
             else
             {
                 throw new InvalidOperationException("Unsupported type");
+            }
+        }
+
+        public static string GetDecodePrefix(Type primitiveType)
+        {
+            if (DecodeInfo.ContainsKey(primitiveType))
+            {
+                return DecodeInfo[primitiveType];
+            }
+            else
+            {
+                throw new InvalidOperationException("Unsupported type for decoding");
             }
         }
 
