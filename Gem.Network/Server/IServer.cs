@@ -7,7 +7,8 @@ namespace Gem.Network.Server
 {
     public interface IServer : INetworkPeer
     {
-
+        bool IsConnected { get;
+        }
         bool Connect(ServerConfig config);
 
         List<IPEndPoint> ClientsIP { get; }

@@ -17,8 +17,6 @@ namespace Gem.Network.Server
 
         private readonly IServer server;
 
-        public Action<string> Echo;
-
         private readonly IAppender Write;
        
         #endregion
@@ -29,7 +27,8 @@ namespace Gem.Network.Server
         public ServerMessageProcessor(IServer server)
         {
             this.server = server;
-            Write = new ActionAppender(Echo);
+
+            Write = new ActionAppender(GemDebugger.Echo);
         }
 
         #endregion
@@ -46,18 +45,15 @@ namespace Gem.Network.Server
                 switch (im.MessageType)
                 {
                     case NetIncomingMessageType.ConnectionApproval:
-                        if (im.ReadByte() == (byte)MessageType.ConnectionApproval)
-                        {
-                            Write.Info("Incoming Connection");
-                            var message = MessageSerializer.Decode<ConnectionApprovalMessage>(im);
-                            GemNetwork.ServerConfiguration[GemNetwork.ActiveProfile].ConnectionApprove(server, im.SenderConnection, message);
-                        }
+                        im.SenderConnection.Approve();
+                        Write.Info("Appproved {0}", im.SenderConnection);
                         break;
                     case NetIncomingMessageType.StatusChanged:
                         switch ((NetConnectionStatus)im.ReadByte())
                         {
                             case NetConnectionStatus.Connected:
-                                Write.Info("Connected to {0}");
+                                im.SenderConnection.Approve();
+                                Write.Info("{0} Connected", im.SenderConnection);
                                 break;
                             case NetConnectionStatus.Disconnected:
                                 Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
@@ -66,6 +62,13 @@ namespace Gem.Network.Server
                                 { }
                                 break;
                             case NetConnectionStatus.RespondedConnect:
+                                if (im.ReadByte() == 1)
+                                {
+                                    Write.Info("Incoming Connection");
+                                    var message = MessageSerializer.Decode<ConnectionApprovalMessage>(im);
+                                    GemNetwork.ServerConfiguration[GemNetwork.ActiveProfile].ConnectionApprove(server, im.SenderConnection, message);
+                                }
+
                                 break;
                         }
                         break;

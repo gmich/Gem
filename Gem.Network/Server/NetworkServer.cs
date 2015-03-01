@@ -44,6 +44,14 @@ namespace Gem.Network.Server
             { return this.netServer.Configuration.Port;   }
         }
         
+        public bool IsConnected
+        {
+            get
+            {
+                return netServer.Status == NetPeerStatus.Running;
+            }
+        }
+
         #endregion
 
 
@@ -89,6 +97,7 @@ namespace Gem.Network.Server
                     Port = serverConfig.Port,
                     MaximumConnections = serverConfig.MaxConnections
                 };
+            config.ConnectionTimeout = 20.0f;
             config.EnableMessageType(NetIncomingMessageType.Data);
             config.EnableMessageType(NetIncomingMessageType.WarningMessage);
             config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
@@ -151,34 +160,30 @@ namespace Gem.Network.Server
         /// <summary>
         /// Sends the message to all except the sender
         /// </summary>
-        /// <param name="gameMessage">The message to send</param>
+        /// <param name="message">The message to send</param>
         /// <param name="connection">The sender</param>
-        public void SendMessage(NetOutgoingMessage gameMessage, NetConnection sender)
+        public void SendMessage(NetOutgoingMessage message, NetConnection sender)
         {
-            netServer.SendToAll(CreateOutgoingMessage(gameMessage),
-                                    sender,
-                                    serverConfig.DeliveryMethod,
-                                    serverConfig.SequenceChannel);
+            netServer.SendToAll(message,
+                                sender,
+                                serverConfig.DeliveryMethod,
+                                serverConfig.SequenceChannel);
         }
 
         /// <summary>
         /// Sends the message to the clients in the list
         /// </summary>
-        /// <param name="gameMessage">The message to send</param>
+        /// <param name="message">The message to send</param>
         /// <param name="clients">The clients the message is sent to</param>
-        public void SendMessage(NetOutgoingMessage gameMessage, List<NetConnection> clients)
+        public void SendMessage(NetOutgoingMessage message, List<NetConnection> clients)
         {
 
-            netServer.SendMessage(CreateOutgoingMessage(gameMessage),
-                                        clients,
-                                        serverConfig.DeliveryMethod,
-                                        serverConfig.SequenceChannel);
+            netServer.SendMessage(message,
+                                  clients,
+                                  serverConfig.DeliveryMethod,
+                                  serverConfig.SequenceChannel);
         }   
-        
-        private NetOutgoingMessage CreateOutgoingMessage(object gameMessage)
-        {
-            return netServer.CreateMessage();
-        }
+            
 
         #endregion
 

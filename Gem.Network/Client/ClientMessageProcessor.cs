@@ -17,8 +17,6 @@ namespace Gem.Network
 
         private readonly IClient client;
 
-        public Action<string> Echo;
-
         private readonly IAppender Write;
        
         #endregion
@@ -29,7 +27,7 @@ namespace Gem.Network
         public ClientMessageProcessor(IClient client)
         {
             this.client = client;
-            Write = new ActionAppender(Echo);
+            Write = new ActionAppender(GemDebugger.Echo);
         }
 
         #endregion
@@ -43,16 +41,43 @@ namespace Gem.Network
 
             while ((im = this.client.ReadMessage()) != null)
             {
-                try
+                switch (im.MessageType)
                 {
-                    GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile,im.MessageType.Transform(), im.ReadByte()]
-                              .HandleIncomingMessage(im);
-                }
-                catch (Exception ex)
-                {
-                    Write.Error("Unable to handle incoming message. Reason: " + ex.Message);
-                }
+                    case NetIncomingMessageType.ConnectionApproval:
+                        im.SenderConnection.Approve();
+                        Write.Info("Appproved {0}", im.SenderConnection);
+                        break;
+                    case NetIncomingMessageType.StatusChanged:
+                        switch ((NetConnectionStatus)im.ReadByte())
+                        {
+                            case NetConnectionStatus.Connected:
+                                Write.Info("Connected to {0}", im.SenderConnection);
+                                break;
+                            case NetConnectionStatus.Disconnected:
+                                Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
+                                if (im.SenderConnection.Status == NetConnectionStatus.Disconnected
+                                 || im.SenderConnection.Status == NetConnectionStatus.Disconnecting)
+                                { }
+                                break;
+                            case NetConnectionStatus.InitiatedConnect:
+                                break;
+                        }
+                        break;
 
+                    case NetIncomingMessageType.Data:
+                        try
+                        {
+                            GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile, im.MessageType.Transform(), im.ReadByte()]
+                                      .HandleIncomingMessage(im);
+                        }
+                        catch (Exception ex)
+                        {
+                            Write.Error("Unable to handle incoming message. Reason: " + ex.Message);
+                        }
+                        break;
+                        
+                }
+             
                 client.Recycle(im);
             }
         }

@@ -46,14 +46,11 @@ namespace Gem.Network.Managers
 
         private byte GetUniqueByte()
         {
-            byte randomByte;
+            byte uniqueByte = (byte)dataRepository.TotalElements;
             do
-            {
-                randomByte = RandomGenerator.GetRandomByte();
+            {} while (dataRepository.HasKey(uniqueByte++));
 
-            } while (dataRepository.HasKey(randomByte));
-
-            return randomByte;
+            return uniqueByte;
         }
     }
 }

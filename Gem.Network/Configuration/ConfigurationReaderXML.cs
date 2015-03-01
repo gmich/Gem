@@ -28,11 +28,11 @@ namespace Gem.Network.Configuration
                              })
                          .Single();
 
-                Debugger.Append.Info("Network configuration loaded successfully");
+                GemDebugger.Append.Info("Network configuration loaded successfully");
             }
             catch (Exception ex)
             {
-                Debugger.Append.Error(@"Failed to load Network configuration.
+                GemDebugger.Append.Error(@"Failed to load Network configuration.
                                       Falling back to the default settings. Reason: {0}", ex.Message);
 
                 dependArgs = new DependencyArgs { Factory = "default", RuntimeBuilder = "default" };

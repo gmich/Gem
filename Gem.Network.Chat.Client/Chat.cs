@@ -1,5 +1,6 @@
 ﻿using Gem.Network.Client;
 using Gem.Network.Messages;
+using Gem.Network.Utilities.Loggers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +9,14 @@ using System.Threading.Tasks;
 
 namespace Gem.Network.Chat.Client
 {
-    class Program
+    class Chat
     {
         static void Main(string[] args)
         {
             GemNetwork.ActiveProfile = "GemChat";
+            GemDebugger.Echo = Console.WriteLine;
 
-            var client = new GemClient("GemChat", "127.0.0.1", 14242, Console.Write);
+            var client = new GemClient("GemChat", "127.0.0.1", 14242);
 
             Console.WriteLine("Your nickname : ");
             var peer = new Peer(Console.ReadLine());
@@ -29,7 +31,7 @@ namespace Gem.Network.Chat.Client
             client.RunAsync(() => new ConnectionApprovalMessage { Sender = "Dummy" , Password = "123" } );
             
             string input = string.Empty;
-            while(input!="-quit" && client.IsRunning)
+            while(input!="-quit")
             {
                 input = Console.ReadLine();
                 Console.SetCursorPosition(input.Length,Console.CursorTop-2);
@@ -51,6 +53,8 @@ namespace Gem.Network.Chat.Client
             }
 
             client.Dispose();
+
+            Console.ReadLine();
         }
 
     }

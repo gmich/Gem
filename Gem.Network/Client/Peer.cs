@@ -22,6 +22,14 @@ namespace Gem.Network
         //TODO: provide this somehow
         private readonly string disconnectMessage = "bye";
 
+        public bool IsConnected
+        {
+            get
+            {
+                return client.ConnectionStatus == NetConnectionStatus.Connected;
+            }
+        }
+
         #endregion
 
 

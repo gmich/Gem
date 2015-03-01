@@ -13,7 +13,7 @@ namespace Gem.Network.Client
 
         private readonly IClient client;
 
-        public bool IsRunning { get; set; }
+        public bool IsConnected { get { return client.IsConnected; } }
 
         private readonly IAppender Write;
 
@@ -28,7 +28,7 @@ namespace Gem.Network.Client
 
         #region Constructor
 
-        public GemClient(string serverName, string IPorHost, int port, Action<string> DebugListener = null)
+        public GemClient(string serverName, string IPorHost, int port)
         {
             Guard.That(IPorHost).IsNotNull();
             connectionDetails = new ConnectionDetails { ServerName = serverName, IPorHost = IPorHost, Port = port };
@@ -38,15 +38,8 @@ namespace Gem.Network.Client
 
             this.messageProcessor = new ClientMessageProcessor(client);
             asyncMessageProcessor = new ParallelTaskStarter(TimeSpan.Zero);
-
-            if (DebugListener != null)
-            {
-                Write = new ActionAppender(DebugListener);
-            }
-            else
-            {
-                Write = new Log4NetWrapper("DebugLogger");
-            }
+            
+            Write = new ActionAppender(GemDebugger.Echo);
 
             //TODO: register ClientMessageProcesssor's Action<string> Echo    
         }
@@ -59,8 +52,6 @@ namespace Gem.Network.Client
         public void Disconnect()
         {
             client.Disconnect();
-            IsRunning = false;
-
         }
 
         public void Dispose()
@@ -74,12 +65,10 @@ namespace Gem.Network.Client
             {
                 client.Connect(connectionDetails, ApprovalMessageDelegate());
                 asyncMessageProcessor.Start(() => messageProcessor.ProcessNetworkMessages());
-                IsRunning = true;
             }
             catch (Exception ex)
             {
                 Write.Error("Unable to connect to {0} . Reason: {1}", connectionDetails.ServerIP, ex.Message);
-                IsRunning = false;
             }
         }
 

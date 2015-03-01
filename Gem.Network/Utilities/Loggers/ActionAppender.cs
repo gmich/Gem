@@ -10,9 +10,18 @@ namespace Gem.Network.Utilities.Loggers
     {
         private readonly Action<string> Echo;
 
-        public ActionAppender(Action<string> Echo)
+        public ActionAppender(Action<string> debugListener)
         {
-            this.Echo = Echo;
+
+            if (debugListener != null)
+            {
+                Echo = debugListener;
+            }
+            else
+            {
+                Echo = x => { };
+            }
+            Echo = debugListener;
         }
         
         #region Logging

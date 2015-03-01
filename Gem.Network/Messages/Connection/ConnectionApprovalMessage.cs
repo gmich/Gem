@@ -12,11 +12,11 @@ namespace Gem.Network.Messages
 
         public string Password { get; set; }
 
-        public MessageType ID
+        public byte ID
         {
             get
             {
-                return MessageType.ConnectionApproval;
+                return 1;
             }
         }
 

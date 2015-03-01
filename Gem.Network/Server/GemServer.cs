@@ -13,11 +13,7 @@ namespace Gem.Network.Server
 
         private readonly IServer server;
 
-        public bool IsRunning { get; set; }
-
-        public Action<string> Echo;
-
-        private readonly IAppender Write;
+        public bool IsConnected { get { return server.IsConnected; } }
 
         private readonly IMessageProcessor messageProcessor;
 
@@ -25,12 +21,14 @@ namespace Gem.Network.Server
 
         private ParallelTaskStarter asyncMessageProcessor;
 
+        private IAppender Write;
+
         #endregion
 
 
         #region Constructor
 
-        public GemServer(string serverName, int port,int maxConnections , string password = null)
+        public GemServer(string serverName, int port,int maxConnections, string password = null)
         {
             Guard.That(serverName).IsNotNull();
             config = new ServerConfig {  Name = serverName, MaxConnections = maxConnections , Port = port ,Password = null};
@@ -40,7 +38,8 @@ namespace Gem.Network.Server
 
             messageProcessor = new ServerMessageProcessor(server);
             asyncMessageProcessor = new ParallelTaskStarter(TimeSpan.Zero);
-            Write = new ActionAppender(Echo);
+
+            Write = new ActionAppender(GemDebugger.Echo);            
         }
 
         #endregion
@@ -51,8 +50,6 @@ namespace Gem.Network.Server
         public void Disconnect()
         {
             server.Disconnect();
-            IsRunning = false;
-
         }
 
         public void Dispose()
@@ -66,12 +63,10 @@ namespace Gem.Network.Server
             {
                 server.Connect(config);
                 asyncMessageProcessor.Start(() => messageProcessor.ProcessNetworkMessages());
-                IsRunning = true;
             }
             catch (Exception ex)
             {
                 Write.Error("Unable to start the server. Reason: {0}", ex.Message);
-                IsRunning = false;
             }
         }
 

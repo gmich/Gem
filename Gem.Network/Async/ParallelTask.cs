@@ -42,12 +42,12 @@ namespace Gem.Network.Async
 
             block = new ActionBlock<DateTimeOffset>(async now =>
             {
-                await action(now, cancellationToken).             
+                await action(now, cancellationToken).
                       ConfigureAwait(false);
 
                 await Task.Delay(repostDelay, cancellationToken).
                       ConfigureAwait(false);
-                            
+
                 block.Post(DateTimeOffset.Now);
 
             }, new ExecutionDataflowBlockOptions
@@ -69,14 +69,14 @@ namespace Gem.Network.Async
         {
             wtoken = new CancellationTokenSource();
             this.asyncAction = action;
-            task = (ActionBlock<DateTimeOffset>)CreateParallelTask((now, ct) => DoWorkAsync(ct), wtoken.Token);
+            task = (ActionBlock<DateTimeOffset>)CreateParallelTask((now, ct) => DoAsync(ct), wtoken.Token);
 
             task.Post(DateTimeOffset.Now);
         }
 
-        private Task DoWorkAsync(CancellationToken cancellationToken)
+        private Task DoAsync(CancellationToken cancellationToken)
         {
-            return new Task(asyncAction); 
+            return Task.Run(asyncAction); 
         }
         
         public void Stop()
