@@ -4,21 +4,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Gem.Network.Extensions;
 
 namespace Gem.Network.Messages
 {
-    public enum MessageType
+    public enum ClientMessageType
     {
-
-        Hail,
-    
+        //TODO: rename
         ConnectionApproval,
 
-        NewClient,
+        Handshake,
 
-        Command,
-                
-        Disconnect,
+        Connecting,
+
+        Connected,
+
+        Disconnecting,
+
+        Disconnected,
+
+        DiscoveryRequest,
 
         DiscoveryResponse,
 
@@ -28,22 +33,7 @@ namespace Gem.Network.Messages
 
         Error
     }
-
-    public static class NetIncomingMessageTypeExtensions
-    {
-        private static readonly Dictionary<NetIncomingMessageType, MessageType> Matcher
-        = new Dictionary<NetIncomingMessageType, MessageType>
-            {
-                  { NetIncomingMessageType.ConnectionApproval,MessageType.ConnectionApproval},
-                  { NetIncomingMessageType.Data,              MessageType.Data},
-                  { NetIncomingMessageType.Error,             MessageType.Error},
-                  //TODO: complete
-            };
-
-        public static MessageType Transform(this NetIncomingMessageType messageType)
-        {
-            return Matcher[messageType];
-        }
-    }
+    
 }
+
 

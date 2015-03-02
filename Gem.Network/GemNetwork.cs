@@ -27,12 +27,13 @@ namespace Gem.Network
 
         private static ClientConfigurationManager configurationManager;
 
+        private static NetworkActionManager clientActionManager;
+
         internal static IClient Client;
 
         internal static IServer Server;
-        
-        internal static int profilesInvoked = 0;
 
+        internal static int profilesInvoked = 0;
 
         #endregion
 
@@ -50,6 +51,14 @@ namespace Gem.Network
             get
             {
                 return clientMessageFlowManager;
+            }
+        }
+
+        internal static NetworkActionManager ClientActionManager
+        {
+            get
+            {
+                return clientActionManager;
             }
         }
 

@@ -29,6 +29,11 @@ namespace Gem.Network.Containers
             return dataRepository.GetAll();
         }
 
+        public bool HasKey(TKey id)
+        {
+            return dataRepository.HasKey(id);
+        }
+
         public virtual TData this[TKey id]
         {
             get

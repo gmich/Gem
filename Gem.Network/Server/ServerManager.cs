@@ -72,7 +72,7 @@ namespace Gem.Network.Server
                 switch (im.MessageType)
                 {
                     case NetIncomingMessageType.ConnectionApproval:
-                        if (im.ReadByte() == (byte)MessageType.ConnectionApproval)
+                        if (im.ReadByte() == (byte)ClientMessageType.ConnectionApproval)
                         {
                             WriteMessage("Incoming Connection");
                             var message = MessageSerializer.Decode<ConnectionApprovalMessage>(im);

@@ -48,9 +48,9 @@ namespace Gem.Network.Utilities.Loggers
             AppendAll(x => x.Info(message, args));
         }
 
-        public void Warn(string message, params object[] args)
+        public void Warning(string message, params object[] args)
         {
-            AppendAll(x => x.Warn(message, args));
+            AppendAll(x => x.Warning(message, args));
         }
 
         private void AppendAll(Action<IAppender> appendAction)

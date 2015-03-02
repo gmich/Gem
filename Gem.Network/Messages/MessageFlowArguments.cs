@@ -20,7 +20,8 @@ namespace Gem.Network.Messages
 
         [Required]
         public IMessageHandler MessageHandler { get; set; }
-
+        
+        public object[] CachedMessage { get; set; }
     }
     
 }

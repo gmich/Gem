@@ -26,7 +26,7 @@ namespace Gem.Network.Fluent
             throw new NotImplementedException();
         }
 
-        public IMessageFlowBuilder WhenReceived(MessageType messageType)
+        public IMessageFlowBuilder WhenReceived(ClientMessageType messageType)
         {
             throw new NotImplementedException();
         }

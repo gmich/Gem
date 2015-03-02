@@ -21,7 +21,7 @@ namespace Gem.Network.Fluent
 
         private readonly string profile;
         
-        private readonly MessageType messageType;
+        private readonly ClientMessageType messageType;
         
         private MessageFlowArguments messageFlowArgs;
 
@@ -30,11 +30,16 @@ namespace Gem.Network.Fluent
 
         #region Constructor
         
-        public MessageFlowBuilder(string profile,MessageType messageType)
+        public MessageFlowBuilder(string profile,ClientMessageType messageType)
         {
             this.profile = profile;
             this.messageType = messageType;
             this.messageFlowArgs = new MessageFlowArguments();
+        }
+
+        public MessageFlowBuilder(string profile, ClientMessageType messageType,object[] cachedMessage):this(profile,messageType)
+        {
+            this.messageFlowArgs.CachedMessage = cachedMessage;
         }
 
         #endregion
@@ -42,7 +47,7 @@ namespace Gem.Network.Fluent
 
         #region IMessageFlowBuilder Implementation
 
-        public INetworkEvent HandleWith<T>(T objectToHandle, Expression<Func<T, Delegate>> methodToHandle)
+        public INetworkEvent AndHandleWith<T>(T objectToHandle, Expression<Func<T, Delegate>> methodToHandle)
         {
             var lambdaExpression = (LambdaExpression)methodToHandle;
             var unaryExpression = (UnaryExpression)lambdaExpression.Body;

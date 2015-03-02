@@ -15,7 +15,7 @@ namespace Gem.Network.Managers
             configurationManager = new ClientConfigurationProvider();
         }
 
-        public MessageFlowArguments this[string tag,MessageType messagetype,byte configID]
+        public MessageFlowArguments this[string tag,ClientMessageType messagetype,byte configID]
         {
             get
             {
@@ -23,7 +23,7 @@ namespace Gem.Network.Managers
             }
         }
 
-        public ClientMessageFlowInfoProvider this[string tag, MessageType messagetype]
+        public ClientMessageFlowInfoProvider this[string tag, ClientMessageType messagetype]
         {
             get
             {

@@ -44,15 +44,13 @@ namespace Gem.Network
             {
                 switch (im.MessageType)
                 {
-                    case NetIncomingMessageType.ConnectionApproval:
-                        im.SenderConnection.Approve();
-                        Write.Info("Appproved {0}", im.SenderConnection);
-                        break;
                     case NetIncomingMessageType.StatusChanged:
                         switch ((NetConnectionStatus)im.ReadByte())
                         {
                             case NetConnectionStatus.Connected:
                                 Write.Info("Connected to {0}", im.SenderConnection);
+
+                                ClientMessageType.Connected.Handle(im);
                                 break;
                             case NetConnectionStatus.Disconnected:
                                 Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
@@ -66,25 +64,38 @@ namespace Gem.Network
                         break;
 
                     case NetIncomingMessageType.Data:
-                        try
-                        {
-                            byte id = im.ReadByte();
-                            //Write.Info("Received package with id : {0}",id);
-                            GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile, im.MessageType.Transform(),id]
-                                      .HandleIncomingMessage(im);
-                        }
-                        catch (Exception ex)
-                        {
-                            Write.Error("Unable to handle incoming message. Reason: " + ex.Message);
-                        }
+                        ClientMessageType.Data.Handle(im);
                         break;
-                        
+                    case NetIncomingMessageType.VerboseDebugMessage:
+                    case NetIncomingMessageType.DebugMessage:
+                    case NetIncomingMessageType.WarningMessage:
+                        Write.Warning(im.ReadString());
+                        break;
+                    case NetIncomingMessageType.ErrorMessage:
+                        Write.Error(im.ReadString());
+                        break;
+
                 }
              
                 client.Recycle(im);
             }
+
         }
 
+            private void HandleIncomingMessage(byte id, NetIncomingMessage message)
+            {
+                if (GemNetwork.ClientActionManager[GemNetwork.ActiveProfile, ClientMessageType.Connected].HasKey(id))
+                {
+                    GemNetwork.ClientActionManager[GemNetwork.ActiveProfile, ClientMessageType.Connected, id](message);
+                }
+                if (GemNetwork.ClientActionManager[GemNetwork.ActiveProfile, ClientMessageType.Connected].HasKey(id))
+                {
+                    GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile, ClientMessageType.Connected, id]
+                      .SendCachedMessage();
+                    GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile, ClientMessageType.Data, id]
+                          .HandleIncomingMessage(message);
+                }
+            }
         #endregion
 
 

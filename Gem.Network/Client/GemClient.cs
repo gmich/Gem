@@ -41,7 +41,6 @@ namespace Gem.Network.Client
             
             Write = new ActionAppender(GemNetworkDebugger.Echo);
 
-            //TODO: register ClientMessageProcesssor's Action<string> Echo    
         }
 
         #endregion

@@ -13,7 +13,7 @@ namespace Gem.Network.Fluent
        
         void RegisterCommand(string command, string description, CommandExecute callback, bool requiresAuthorization = true);
 
-        IMessageFlowBuilder WhenReceived(MessageType messageType);
+        IMessageFlowBuilder WhenReceived(ClientMessageType messageType);
 
     }
 }

@@ -24,7 +24,7 @@ namespace Gem.Network.Utilities.Loggers
             log.InfoFormat(message,args);
         }
 
-        public void Warn(string message, params object[] args)
+        public void Warning(string message, params object[] args)
         {
             log.WarnFormat(message, args);
         }

@@ -14,6 +14,6 @@ namespace Gem.Network.Utilities.Loggers
 
         void Info(string message, params object[] args);
 
-        void Warn(string message, params object[] args);
+        void Warning(string message, params object[] args);
     }
 }

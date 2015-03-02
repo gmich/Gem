@@ -36,7 +36,7 @@ namespace Gem.Network.Utilities.Loggers
             Echo(FormatMessage("Info", message, args));
         }
 
-        public void Warn(string message, params object[] args)
+        public void Warning(string message, params object[] args)
         {
             Echo(FormatMessage("Warn", message, args));
         }

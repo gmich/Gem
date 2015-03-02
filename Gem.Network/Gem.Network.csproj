@@ -75,7 +75,10 @@
     <Compile Include="Builders\API\IMessageHandlerBuilder.cs" />
     <Compile Include="Builders\CsScriptPocoBuilder.cs" />
     <Compile Include="Events\INetworkPackage.cs" />
+    <Compile Include="Extensions\MessageTypeExtensions.cs" />
+    <Compile Include="Managers\NetworkActionManager.cs" />
     <Compile Include="NetworkStatus.cs" />
+    <Compile Include="Providers\ClientActionProvider.cs" />
     <Compile Include="Server\GemServer.cs" />
     <Compile Include="Messages\Connection\PlainText.cs" />
     <Compile Include="Server\ServerMessageProcessor.cs" />
@@ -97,7 +100,7 @@
     <Compile Include="Managers\ServerMessageFlowProvider.cs" />
     <Compile Include="Managers\ClientConfigurationManager.cs" />
     <Compile Include="Providers\ClientMessageFlowInfoProvider.cs" />
-    <Compile Include="Managers\NetworkManager.cs" />
+    <Compile Include="Managers\MessageFlowManager.cs" />
     <Compile Include="Events\INetworkEvent.cs" />
     <Compile Include="Commands\ICommandExecutioner.cs" />
     <Compile Include="Commands\ICommandHost.cs" />
@@ -138,7 +141,7 @@
     <Compile Include="Utilities\DeregisterDictionary.cs" />
     <Compile Include="Repositories\IDataProvider.cs" />
     <Compile Include="Utilities\Loggers\ActionAppender.cs" />
-    <Compile Include="Utilities\Loggers\Debug.cs" />
+    <Compile Include="Utilities\Loggers\GemNetworkDebugger.cs" />
     <Compile Include="Utilities\Loggers\DebugListener.cs" />
     <Compile Include="Utilities\Loggers\IAppender.cs" />
     <Compile Include="Utilities\Loggers\IDebugHost.cs" />

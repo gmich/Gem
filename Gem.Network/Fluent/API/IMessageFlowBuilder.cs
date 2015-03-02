@@ -7,7 +7,7 @@ namespace Gem.Network.Fluent
 
     public interface IMessageFlowBuilder
     {
-        INetworkEvent HandleWith<T>(T objectToHandle, Expression<Func<T, Delegate>> methodToHandle);
+        INetworkEvent AndHandleWith<T>(T objectToHandle, Expression<Func<T, Delegate>> methodToHandle);
     }
 
 }

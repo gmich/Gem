@@ -7,9 +7,21 @@ namespace Gem.Network.Fluent
 
     public interface IClientMessageRouter
     {
-        IMessageFlowBuilder Send(MessageType messageType);    
-        
-        IMessageFlowBuilder WhenReceived(MessageType messageType);
+        void HandleErrors(Action<Lidgren.Network.NetIncomingMessage> action);
+
+        void HandleWarnings(Action<Lidgren.Network.NetIncomingMessage> action);
+
+        ActionDirector OnConnected();
+
+        ActionDirector OnConnecting();
+
+        ActionDirector OnDisconnected();
+
+        ActionDirector OnDisconnecting();
+
+        ActionDirector OnHandshake();
+
+        IMessageFlowBuilder CreateNetworkEvent();
     }
 
 }

@@ -2,6 +2,7 @@
 using Gem.Network.Managers;
 using Gem.Network.Messages;
 using Gem.Network.Repositories;
+using Lidgren.Network;
 using System;
 
 namespace Gem.Network.Providers
@@ -15,12 +16,13 @@ namespace Gem.Network.Providers
     }
     
     public class MessageTypeProvider
-    : AbstractContainer<ClientMessageFlowInfoProvider, MessageType>
+    : AbstractContainer<ClientMessageFlowInfoProvider, ClientMessageType>
     {
         public MessageTypeProvider()
-            : base(new FlyweightRepository<ClientMessageFlowInfoProvider, MessageType>())
+            : base(new FlyweightRepository<ClientMessageFlowInfoProvider, ClientMessageType>())
         { }
     }
+
 
     internal class ServerConfigurationManager
     : AbstractContainer<ServerMessageFlowManager, string>
@@ -29,5 +31,5 @@ namespace Gem.Network.Providers
             : base(new FlyweightRepository<ServerMessageFlowManager, string>())
         { }
     }
-
+    
 }

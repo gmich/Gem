@@ -17,5 +17,11 @@ namespace Gem.Network.Extensions
             args.MessageHandler.Handle(readableMessage.ReadAllProperties());
         }
 
+        public static void SendCachedMessage(this MessageFlowArguments args)
+        {
+            args.EventRaisingclass.Send(args.CachedMessage);
+
+        }
+        
     }
 }
