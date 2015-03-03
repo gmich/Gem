@@ -20,7 +20,9 @@ namespace Gem.Network
         }    
 
         #region Fields
-        
+
+        private static PredefinedMessageFlowManager predefinedMessageFlowManager;
+
         private static MessageFlowManager clientMessageFlowManager;
 
         private static ServerConfigurationManager serverConfigurationManager;
@@ -51,6 +53,14 @@ namespace Gem.Network
             get
             {
                 return clientMessageFlowManager;
+            }
+        }
+
+        internal static PredefinedMessageFlowManager PredefinedMessageFlowManager
+        {
+            get
+            {
+                return predefinedMessageFlowManager;
             }
         }
 

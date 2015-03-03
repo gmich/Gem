@@ -9,34 +9,48 @@ namespace Gem.Network.Fluent
     {
         private readonly string profile;
 
-        public ClientMessageRouter(string profile) 
+        public ClientMessageRouter(string profile)
         {
             this.profile = profile;
         }
 
-        public ActionDirector OnHandshake()
+        public ActionDirector OnHandshake
         {
-            return new ActionDirector(profile, ClientMessageType.Handshake);
+            get
+            {
+                return new ActionDirector(profile, ClientMessageType.Handshake);
+            }
         }
 
-        public ActionDirector OnConnecting()
+        public ActionDirector OnConnecting
         {
-            return new ActionDirector(profile, ClientMessageType.Connecting);
+            get
+            {
+                return new ActionDirector(profile, ClientMessageType.Connecting);
+            }
+        }
+        public ActionDirector WhenConnected
+        {
+            get
+            {
+                return new ActionDirector(profile, ClientMessageType.Connected);
+            }
         }
 
-        public ActionDirector OnConnected()
+        public ActionDirector OnDisconnecting
         {
-            return new ActionDirector(profile, ClientMessageType.Connected);
+            get
+            {
+                return new ActionDirector(profile, ClientMessageType.Disconnecting);
+            }
         }
 
-        public ActionDirector OnDisconnecting()
+        public ActionDirector OnDisconnected
         {
-            return new ActionDirector(profile, ClientMessageType.Disconnecting);
-        }
-
-        public ActionDirector OnDisconnected()
-        {
-            return new ActionDirector(profile, ClientMessageType.Disconnected);
+            get
+            {
+                return new ActionDirector(profile, ClientMessageType.Disconnected);
+            }
         }
 
         public void HandleWarnings(Action<NetIncomingMessage> action)
@@ -49,11 +63,14 @@ namespace Gem.Network.Fluent
 
         }
 
-        public IMessageFlowBuilder CreateNetworkEvent()
+        public IMessageFlowBuilder CreateNetworkEvent
         {
-            return new MessageFlowBuilder(profile, ClientMessageType.Data);
+            get
+            {
+                return new MessageFlowBuilder(profile, ClientMessageType.Data);
+            }
         }
-        
+
     }
 
     public class ActionDirector
@@ -72,7 +89,7 @@ namespace Gem.Network.Fluent
             return new MessageFlowBuilder(profile, messageType);
         }
 
-        void Do(Action<NetIncomingMessage> action)
+        public void Do(Action<NetIncomingMessage> action)
         {
             GemNetwork.ClientActionManager[profile, messageType].Add(action);
         }

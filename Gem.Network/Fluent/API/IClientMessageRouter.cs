@@ -11,17 +11,17 @@ namespace Gem.Network.Fluent
 
         void HandleWarnings(Action<Lidgren.Network.NetIncomingMessage> action);
 
-        ActionDirector OnConnected();
+        ActionDirector WhenConnected { get; }
 
-        ActionDirector OnConnecting();
+        ActionDirector OnConnecting { get; }
 
-        ActionDirector OnDisconnected();
+        ActionDirector OnDisconnected { get; }
 
-        ActionDirector OnDisconnecting();
+        ActionDirector OnDisconnecting { get; }
 
-        ActionDirector OnHandshake();
+        ActionDirector OnHandshake { get; }
 
-        IMessageFlowBuilder CreateNetworkEvent();
+        IMessageFlowBuilder CreateNetworkEvent { get; }
     }
 
 }

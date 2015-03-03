@@ -4,6 +4,8 @@ using Gem.Network.Messages;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Gem.Network.Utilities.Loggers;
+using Gem.Network.Fluent;
 
 namespace Gem.Network
 {
@@ -35,7 +37,13 @@ namespace Gem.Network
 
         #region Construct / Dispose
 
-        public Peer() { }
+        public Peer()
+        {
+            //TODO: write a new networkEvent builder
+            //GemNetwork.PredefinedMessageFlowManager[ClientMessageType.Connected]
+              //  .Add(new MessageFlowBuilder().AndHandleWith(GemNetworkDebugger.Echo, x => new Action<string>(x)), 0);
+      
+        }
         
         private void Dispose(bool disposing)
         {

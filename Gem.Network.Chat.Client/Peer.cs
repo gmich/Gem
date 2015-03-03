@@ -19,7 +19,7 @@ namespace Gem.Network.Chat.Client
             this.Name = name;
 
             onEvent = GemNetwork.Profile("GemChat")
-                  .Client.CreateNetworkEvent()
+                  .Client.CreateNetworkEvent
                   .AndHandleWith(this, x => new Action<string>(x.Print));
 
             onEvent.Send(name + " has joined");

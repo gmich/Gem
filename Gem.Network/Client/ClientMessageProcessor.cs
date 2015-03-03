@@ -82,20 +82,6 @@ namespace Gem.Network
 
         }
 
-            private void HandleIncomingMessage(byte id, NetIncomingMessage message)
-            {
-                if (GemNetwork.ClientActionManager[GemNetwork.ActiveProfile, ClientMessageType.Connected].HasKey(id))
-                {
-                    GemNetwork.ClientActionManager[GemNetwork.ActiveProfile, ClientMessageType.Connected, id](message);
-                }
-                if (GemNetwork.ClientActionManager[GemNetwork.ActiveProfile, ClientMessageType.Connected].HasKey(id))
-                {
-                    GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile, ClientMessageType.Connected, id]
-                      .SendCachedMessage();
-                    GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile, ClientMessageType.Data, id]
-                          .HandleIncomingMessage(message);
-                }
-            }
         #endregion
 
 

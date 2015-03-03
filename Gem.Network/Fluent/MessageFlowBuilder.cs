@@ -22,7 +22,7 @@ namespace Gem.Network.Fluent
         private readonly string profile;
         
         private readonly ClientMessageType messageType;
-        
+
         private MessageFlowArguments messageFlowArgs;
 
         #endregion

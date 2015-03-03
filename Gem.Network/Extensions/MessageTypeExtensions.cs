@@ -29,10 +29,10 @@ namespace Gem.Network.Extensions
             {
                 GemNetwork.ClientActionManager[GemNetwork.ActiveProfile, messageType, id](message);
             }
-            if (GemNetwork.ClientActionManager[GemNetwork.ActiveProfile, messageType].HasKey(id))
+            if (GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile, messageType].HasKey(id))
             {
                 GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile, messageType, id]
-                  .SendCachedMessage();
+                      .SendCachedMessage();
                 GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile, messageType, id]
                       .HandleIncomingMessage(message);
             }

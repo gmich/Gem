@@ -7,7 +7,8 @@ using System.Collections.Generic;
 namespace Gem.Network.Commands
 {
     public class ServerCommandHost : ICommandHost
-    {
+    {    
+
         #region Private Fields
 
         /// Maximum command history entries
@@ -27,19 +28,14 @@ namespace Gem.Network.Commands
 
         #region Constructor
 
-        public ServerCommandHost(IServer commandHost, IDebugHost debugHost = null)
+        public ServerCommandHost(IServer commandHost, IAppender appender)
         {
             Guard.That(commandHost, "Command host must not be null").IsNotNull();
+            Guard.That(appender).Is(typeof(ServerCommandHost));
 
-            if(debugHost==null)
-            {
-                debugHost = new DebugListener();
-            }
-            else
-            {
-                echoer = debugHost;
-            }
-
+            echoer = new DebugListener();
+            echoer.RegisterAppender(appender);
+            
             executioners = new Stack<ICommandExecutioner>();
             commandTable = new Dictionary<string, CommandInfo>();
 
@@ -157,5 +153,6 @@ namespace Gem.Network.Commands
         }
 
         #endregion
+
     }
 }
