@@ -7,6 +7,7 @@ using Gem.Network.Utilities;
 using Gem.Network.Containers;
 using Gem.Network.Utilities.Loggers;
 using Gem.Network.Extensions;
+using Gem.Network.Events;
 
 namespace Gem.Network.Server
 {
@@ -45,8 +46,12 @@ namespace Gem.Network.Server
                 switch (im.MessageType)
                 {
                     case NetIncomingMessageType.ConnectionApproval:
-                        im.SenderConnection.Approve();
-                        Write.Info("Appproved {0}", im.SenderConnection);
+                        var approvalMsg = new ConnectionApprovalMessage(im);
+                        Write.Info("Incoming Connection");
+                        GemNetwork.ServerConfiguration[GemNetwork.ActiveProfile].ConnectionApprove(server, im.SenderConnection, approvalMsg);
+
+                        //im.SenderConnection.Approve();
+                        //Write.Info("Appproved {0}", im.SenderConnection);
                         break;
                     case NetIncomingMessageType.StatusChanged:
                         switch ((NetConnectionStatus)im.ReadByte())
@@ -62,12 +67,6 @@ namespace Gem.Network.Server
                                 { }
                                 break;
                             case NetConnectionStatus.RespondedConnect:
-                                if (im.ReadByte() == 1)
-                                {
-                                    Write.Info("Incoming Connection");
-                                    var message = MessageSerializer.Decode<ConnectionApprovalMessage>(im);
-                                    GemNetwork.ServerConfiguration[GemNetwork.ActiveProfile].ConnectionApprove(server, im.SenderConnection, message);
-                                }
 
                                 break;
                         }

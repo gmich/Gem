@@ -70,7 +70,7 @@ namespace Gem.Network
         /// <summary>
         /// Connect to the server
         /// </summary>
-        public void Connect(ConnectionDetails connectionDetails, ConnectionApprovalMessage approvalMessage = null)
+        public void Connect(ConnectionDetails connectionDetails, ConnectionApprovalMessage approvalMessage)
         {
             this.connectionDetails = connectionDetails;
 
@@ -88,15 +88,11 @@ namespace Gem.Network
 
             client = new NetClient(config);
             client.Start();
+            
+            var handshake = CreateMessage();
+            approvalMessage.Encode(handshake);
 
-            if (approvalMessage == null)
-            {
-                approvalMessage = new ConnectionApprovalMessage();
-            }
-
-            var hailMessage = CreateMessage();
-            MessageSerializer.Encode(approvalMessage, ref hailMessage);
-            client.Connect(connectionDetails.ServerIP, hailMessage);
+            client.Connect(connectionDetails.ServerIP, handshake);
         }
 
         public NetOutgoingMessage CreateMessage()

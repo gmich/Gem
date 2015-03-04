@@ -28,18 +28,53 @@ namespace Gem.Network.Server
 
         #region Constructor
 
-        public GemServer(string serverName, int port,int maxConnections, string password = null)
+        public GemServer(string serverName, int port, int maxConnections, string password, bool requireAuthentication = false)
         {
             Guard.That(serverName).IsNotNull();
-            config = new ServerConfig {  Name = serverName, MaxConnections = maxConnections , Port = port ,Password = null};
-            
+
+            SetupAuthentication(requireAuthentication);
+            config = new ServerConfig { Name = serverName, MaxConnections = maxConnections, Port = port, Password = password };
+
             //GemNetwork.Server.Dispose();
             server = GemNetwork.Server;
 
             messageProcessor = new ServerMessageProcessor(server);
             asyncMessageProcessor = new ParallelTaskStarter(TimeSpan.Zero);
 
-            Write = new ActionAppender(GemNetworkDebugger.Echo);            
+            Write = new ActionAppender(GemNetworkDebugger.Echo);
+        }
+
+        #endregion
+
+
+        #region Settings Helpers
+
+        public void SetupAuthentication(bool authenticate)
+        {
+            if (authenticate)
+            {
+                GemNetwork.Profile(GemNetwork.ActiveProfile).Server.ForIncomingConnections((server, netconnection, msg) =>
+                {
+                    if (msg.Password == server.Password)
+                    {
+                        netconnection.Approve();
+                        GemNetworkDebugger.Echo("Approved " + netconnection);
+                    }
+                    else
+                    {
+                        GemNetworkDebugger.Echo(String.Format("Declined connection {0}. Reason: Invalid credentials ", netconnection));
+                        netconnection.Deny();
+                    }
+                });
+            }
+            else
+            {
+                GemNetwork.Profile(GemNetwork.ActiveProfile).Server.ForIncomingConnections((server, netconnection, msg) =>
+                {
+                    netconnection.Approve();
+                    GemNetworkDebugger.Echo("Approved " + netconnection);
+                });
+            }
         }
 
         #endregion

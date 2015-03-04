@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Lidgren.Network;
 
 namespace Gem.Network.Chat.Server
 {
@@ -15,9 +16,9 @@ namespace Gem.Network.Chat.Server
             GemNetwork.ActiveProfile = "GemChat";
             GemNetworkDebugger.Echo = Console.WriteLine;
 
-            GemServer server = new GemServer("GemChat", 14242, 10);
+            GemServer gemServer = new GemServer("GemChat", 14242, 10,"123456");
 
-            server.RunAsync();
+            gemServer.RunAsync();
 
             while (Console.ReadLine() != "quit") ;
         }

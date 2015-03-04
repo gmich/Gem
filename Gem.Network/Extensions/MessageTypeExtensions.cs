@@ -25,14 +25,14 @@ namespace Gem.Network.Extensions
         public static void Handle(this ClientMessageType messageType, NetIncomingMessage message)
         {
             byte id = message.ReadByte();
-            if (GemNetwork.ClientActionManager[GemNetwork.ActiveProfile, messageType].HasKey(id))
-            {
-                GemNetwork.ClientActionManager[GemNetwork.ActiveProfile, messageType, id](message);
-            }
+            //if (GemNetwork.ClientActionManager[GemNetwork.ActiveProfile, messageType].HasKey(id))
+            //{
+            //    GemNetwork.ClientActionManager[GemNetwork.ActiveProfile, messageType, id](message);
+            //}
             if (GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile, messageType].HasKey(id))
             {
-                GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile, messageType, id]
-                      .SendCachedMessage();
+                //GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile, messageType, id]
+                //      .SendCachedMessage();
                 GemNetwork.ClientMessageFlow[GemNetwork.ActiveProfile, messageType, id]
                       .HandleIncomingMessage(message);
             }

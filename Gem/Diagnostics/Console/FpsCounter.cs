@@ -93,7 +93,7 @@ namespace Gem.Diagnostics.Console
         {
             if (arguments.Count == 0)
                 Visible = !Visible;
-
+            
             foreach (string arg in arguments)
             {
                 switch (arg.ToLower())

@@ -16,7 +16,6 @@ namespace Gem.Network.Chat.Client
 
         private static Peer peer;
         private static GemClient client;
-        private static string name;
 
         #endregion
 
@@ -38,7 +37,7 @@ namespace Gem.Network.Chat.Client
             GemNetwork.ActiveProfile = "GemChat";
             GemNetworkDebugger.Echo = Console.WriteLine;
 
-            client = new GemClient("GemChat", "83.212.103.13", 14242);
+            client = new GemClient("GemChat", "127.0.0.1", 14242);
         }
 
         private static void ProcessInput()
@@ -79,9 +78,12 @@ namespace Gem.Network.Chat.Client
             Console.WriteLine("Your nickname : ");
             string name = Console.ReadLine();
 
+            Console.WriteLine("Password : ");
+            string pwd = Console.ReadLine();
+
             PrintIntroMessage();
 
-            client.RunAsync(() => new ConnectionApprovalMessage { Sender = "Dummy", Password = "123" });
+            client.RunAsync(() => new ConnectionApprovalMessage { Message = "Hello", Sender = "Dummy", Password = pwd });
 
             //Initialize a chat peer
             peer = new Peer(name);

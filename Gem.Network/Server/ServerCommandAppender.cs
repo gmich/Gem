@@ -17,8 +17,8 @@ namespace Gem.Network.Server
             Echo = msg =>
                 {
                    var om =  server.CreateMessage();
-                   var package = new ServerNotification(om,msg);
-
+                   var package = new ServerNotification { Message = msg };
+                   package.Encode(om);
                    server.SendMessage(om);
                 };
         }
