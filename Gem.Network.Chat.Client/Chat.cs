@@ -27,6 +27,7 @@ namespace Gem.Network.Chat.Client
             @" 
              Commands {0}
 -------------------------------------{0}
+-gem <command>      |  Gem console        
 -setname <newname>  |  Change nickname  
 -quit               |  Quit  {0}{0}", Environment.NewLine));
 
@@ -46,9 +47,17 @@ namespace Gem.Network.Chat.Client
             while (input != "-quit")
             {
                 input = Console.ReadLine();
-                Console.SetCursorPosition(0, Console.CursorTop - 1);
+              //  Console.SetCursorPosition(0, Console.CursorTop - 1);
                 if (input.Length >= 1)
                 {
+                    if (input.StartsWith("-gem "))
+                    {
+                        var cmd = input.Substring(5);
+                        if (cmd.Length > 0)
+                        {
+                            client.SendCommand(cmd);
+                        }
+                    }
                     if (input[0] == '-')
                     {
                         var processed = input.Split(' ');
@@ -83,7 +92,7 @@ namespace Gem.Network.Chat.Client
 
             PrintIntroMessage();
 
-            client.RunAsync(() => new ConnectionApprovalMessage { Message = "Hello", Sender = "Dummy", Password = pwd });
+            client.RunAsync(() => new ConnectionApprovalMessage { Message = "Incoming client", Sender = name, Password = pwd });
 
             //Initialize a chat peer
             peer = new Peer(name);

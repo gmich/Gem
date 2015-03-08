@@ -21,9 +21,13 @@ namespace Gem.Network.Server
 
         string Password { get; }
 
-        void Kick(IPEndPoint clientIp,string reason);
+        bool Kick(IPAddress clientIp,string reason);
+
+        bool Kick(IPEndPoint clientIp, string reason);
 
         void NotifyAll(string message);
+
+        void NotifyOnly(string message,NetConnection client);
 
         void SendToAll(NetOutgoingMessage message);
 

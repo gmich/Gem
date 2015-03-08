@@ -32,9 +32,12 @@ namespace Gem.Network.Client
 
         public GemClient(string profile, string serverName, string IPorHost, int port)
         {
-            GemNetwork.ActiveProfile = profile;
             Guard.That(IPorHost).IsNotNull();
+            Guard.That(profile).IsNotNull();
+            Guard.That(serverName).IsNotNull();
+
             connectionDetails = new ConnectionDetails { ServerName = serverName, IPorHost = IPorHost, Port = port };
+            GemNetwork.ActiveProfile = profile;
 
             //TODO: check if the client is already connected
             this.client = GemNetwork.Client;

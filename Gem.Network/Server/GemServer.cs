@@ -80,8 +80,8 @@ namespace Gem.Network.Server
                 }
                 else
                 {
-                    GemNetworkDebugger.Echo(String.Format("Declined connection {0}. Reason: Invalid credentials {3} Sender: {1}{3} Message: {2}"
-                                           ,netconnection,msg.Sender,msg.Message,Environment.NewLine));
+                    GemNetworkDebugger.Echo(String.Format("Declined connection {0}. Reason: Invalid credentials {4} Sender: {1}{4} Message: {2}{4} Password: {3}"
+                                           ,netconnection,msg.Sender,msg.Message,msg.Password,Environment.NewLine));
                     netconnection.Deny();
                 }
             });

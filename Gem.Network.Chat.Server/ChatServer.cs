@@ -17,8 +17,8 @@ namespace Gem.Network.Chat.Server
             var ActiveProfile = "GemChat";
             GemNetworkDebugger.Echo = Console.WriteLine;
 
-            GemServer gemServer = new GemServer(ActiveProfile,"GemChat", 14242, 10,"123456");
-            
+            GemServer gemServer = new GemServer(ActiveProfile, "GemChat", 14242, 10, "gem", requireAuthentication: true);
+            //GemServer.SetConsolePassword("123");
             gemServer.RunAsync();
 
             while (true)

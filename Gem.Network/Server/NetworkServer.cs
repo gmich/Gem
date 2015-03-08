@@ -222,19 +222,53 @@ namespace Gem.Network.Server
             }
         }
 
-        public void Kick(IPEndPoint clientIp, string reason)
+        public bool Kick(IPAddress clientIp, string reason)
         {
-            netServer.GetConnection(clientIp).Disconnect(reason);
+            var netconnection = netServer.Connections.Where(x => x.RemoteEndpoint.Address == clientIp).Select(x => x.RemoteEndpoint).FirstOrDefault();
+
+            if(netconnection!=null)
+            {
+                netServer.GetConnection(netconnection).Disconnect(reason);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
+        public bool Kick(IPEndPoint clientIp, string reason)
+        {
+            netServer.GetConnection(clientIp).Disconnect(reason);
+            return true;
+        }
+    
         #endregion
 
         public void NotifyAll(string message)
         {
+            GemNetworkDebugger.Echo(String.Format("Sent to all :  {0}", message));
             var serverNotification = new ServerNotification(GemNetwork.NotificationByte,message);
             var om = netServer.CreateMessage();
             MessageSerializer.Encode(serverNotification, ref om);
             SendToAll(om);
+        }
+
+
+        public void NotifyOnly(string message, NetConnection client)
+        {
+            if (client != null)
+            {
+                GemNetworkDebugger.Echo(String.Format("{0}  :  {1}", client, message));
+                var serverNotification = new ServerNotification(GemNetwork.NotificationByte, message);
+                var om = netServer.CreateMessage();
+                MessageSerializer.Encode(serverNotification, ref om);
+                SendOnlyTo(om, client);
+            }
+            else
+            {
+                GemNetworkDebugger.Echo(String.Format("Server  :  {0}", message));
+            }
         }
     }
 }

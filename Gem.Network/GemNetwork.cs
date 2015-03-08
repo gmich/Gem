@@ -24,8 +24,8 @@ namespace Gem.Network
             commander = new ServerCommandHost(Server);
             predefinedMessageFlowManager = new ClientPredefinedMessageFlowManager();
             clientActionManager = new ClientNetworkActionManager();   
-        }    
-
+        }
+  
         #region Fields
 
         private static ClientPredefinedMessageFlowManager predefinedMessageFlowManager;
