@@ -10,10 +10,10 @@ namespace Gem.Network.Providers
 {
 
     public class PredefinedMessageTypeProvider
-             : AbstractContainer<PredefinedMessageFlow, ClientMessageType>
+             : AbstractContainer<PredefinedMessageFlow, MessageType>
     {
         public PredefinedMessageTypeProvider()
-            : base(new FlyweightRepository<PredefinedMessageFlow, ClientMessageType>())
+            : base(new FlyweightRepository<PredefinedMessageFlow, MessageType>())
         { }
     }
 

@@ -37,13 +37,6 @@ namespace Gem.Network
 
         #region Construct / Dispose
 
-        public Peer()
-        {
-            //TODO: write a new networkEvent builder
-            //GemNetwork.PredefinedMessageFlowManager[ClientMessageType.Connected]
-              //  .Add(new MessageFlowBuilder().AndHandleWith(GemNetworkDebugger.Echo, x => new Action<string>(x)), 0);
-      
-        }
         
         private void Dispose(bool disposing)
         {
@@ -118,8 +111,7 @@ namespace Gem.Network
             client.Recycle(im);
         }
 
-        //virtual is set for mocking purposes
-        public virtual void SendMessage(NetOutgoingMessage msg)
+        public void SendMessage(NetOutgoingMessage msg)
         {
             client.SendMessage(msg, NetDeliveryMethod.ReliableUnordered);
         }

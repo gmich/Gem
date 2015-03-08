@@ -21,7 +21,7 @@ namespace Gem.Network.Fluent
 
         private readonly string profile;
         
-        private readonly ClientMessageType messageType;
+        private readonly MessageType messageType;
 
         private MessageFlowArguments messageFlowArgs;
 
@@ -30,14 +30,14 @@ namespace Gem.Network.Fluent
 
         #region Constructor
         
-        public MessageFlowBuilder(string profile,ClientMessageType messageType)
+        public MessageFlowBuilder(string profile,MessageType messageType)
         {
             this.profile = profile;
             this.messageType = messageType;
             this.messageFlowArgs = new MessageFlowArguments();
         }
 
-        public MessageFlowBuilder(string profile, ClientMessageType messageType,object[] cachedMessage):this(profile,messageType)
+        public MessageFlowBuilder(string profile, MessageType messageType,object[] cachedMessage):this(profile,messageType)
         {
             this.messageFlowArgs.CachedMessage = cachedMessage;
         }
@@ -79,14 +79,14 @@ namespace Gem.Network.Fluent
         private void SetMessageHandler(List<string> propertyNames, object invoker, string functionName)
         {
             var handlerType = Dependencies.Container.Resolve<IMessageHandlerFactory>()
-                                          .Create(propertyNames, "handler" + GemNetwork.profilesInvoked, functionName);
+                                          .Create(propertyNames, "handler" + GemNetwork.dynamicMessagesCreated, functionName);
 
             messageFlowArgs.MessageHandler = Activator.CreateInstance(handlerType, invoker) as IMessageHandler;
         }
 
         private void SetDynamicPoco(List<DynamicPropertyInfo> properties)
         {
-            var newType = Dependencies.Container.Resolve<IPocoFactory>().Create(properties, "poco" + GemNetwork.profilesInvoked);
+            var newType = Dependencies.Container.Resolve<IPocoFactory>().Create(properties, "poco" + GemNetwork.dynamicMessagesCreated);
 
             messageFlowArgs.MessagePoco = newType;
         }

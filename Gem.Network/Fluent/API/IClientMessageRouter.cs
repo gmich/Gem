@@ -7,19 +7,19 @@ namespace Gem.Network.Fluent
 
     public interface IClientMessageRouter
     {
-        void HandleErrors(Action<Lidgren.Network.NetIncomingMessage> action);
+        IActionDirector HandleErrors { get; }
 
-        void HandleWarnings(Action<Lidgren.Network.NetIncomingMessage> action);
+        IActionDirector HandleWarnings { get; }
 
-        ActionDirector WhenConnected { get; }
+        IActionDirector WhenConnected { get; }
 
-        ActionDirector OnConnecting { get; }
+        IActionDirector OnConnecting { get; }
 
-        ActionDirector OnDisconnected { get; }
+        IActionDirector OnDisconnected { get; }
 
-        ActionDirector OnDisconnecting { get; }
+        IActionDirector OnDisconnecting { get; }
 
-        ActionDirector OnHandshake { get; }
+        IActionDirector OnHandshake { get; }
 
         IMessageFlowBuilder CreateNetworkEvent { get; }
     }

@@ -6,16 +6,16 @@ using System;
 namespace Gem.Network.Managers
 {   
     
-    public class PredefinedMessageFlowManager
+    public class ClientPredefinedMessageFlowManager
     {
         private readonly PredefinedMessageTypeProvider configurationManager;
 
-        public PredefinedMessageFlowManager()
+        public ClientPredefinedMessageFlowManager()
         {
             configurationManager = new PredefinedMessageTypeProvider();
         }
 
-        public MessageFlowArguments this[ClientMessageType messagetype,byte configID]
+        public MessageFlowArguments this[MessageType messagetype,byte configID]
         {
             get
             {
@@ -23,7 +23,7 @@ namespace Gem.Network.Managers
             }
         }
 
-        public PredefinedMessageFlow this[ClientMessageType messagetype]
+        public PredefinedMessageFlow this[MessageType messagetype]
         {
             get
             {

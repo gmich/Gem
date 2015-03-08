@@ -39,8 +39,6 @@ namespace Gem.Network.Builders
 
         private string GetDecodeConstructorBody(List<DynamicPropertyInfo> propertyFields)
         {
-            NetIncomingMessage im;
-
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < propertyFields.Count; i++)
             {

@@ -10,17 +10,14 @@ namespace Gem.Network.Server
     public class ServerCommandAppender : IAppender
     {
 
-        Action<string> Echo;
-
+        public Action<string> Echo;
+        
         public ServerCommandAppender(IServer server)
         {
             Echo = msg =>
-                {
-                   var om =  server.CreateMessage();
-                   var package = new ServerNotification { Message = msg };
-                   package.Encode(om);
-                   server.SendMessage(om);
-                };
+            {
+                server.NotifyAll(msg);
+            };
         }
 
         public void Write(string message)

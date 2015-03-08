@@ -1,6 +1,9 @@
 ﻿using Gem.Network.Async;
+using Gem.Network.Commands;
+using Gem.Network.Fluent;
 using Gem.Network.Messages;
 using Gem.Network.Utilities.Loggers;
+using Lidgren.Network;
 using Seterlund.CodeGuard;
 using System;
 
@@ -28,11 +31,27 @@ namespace Gem.Network.Server
 
         #region Constructor
 
-        public GemServer(string serverName, int port, int maxConnections, string password, bool requireAuthentication = false)
+        public GemServer(string profileName, string serverName, int port, int maxConnections, string password, bool requireAuthentication = false)
         {
+            Guard.That(profileName).IsNotNull();
             Guard.That(serverName).IsNotNull();
+            
+            GemNetwork.ActiveProfile = profileName;
 
-            SetupAuthentication(requireAuthentication);
+            if (requireAuthentication)
+            {
+                RequireAuthentication();
+            }
+            else
+            {
+                Profile(GemNetwork.ActiveProfile).OnIncomingConnection((srvr, netconnection, msg) =>
+                {
+                    netconnection.Approve();
+                    GemNetworkDebugger.Echo(String.Format("Approved {0} {3} Sender: {1}{3} Message: {2}"
+                                            , netconnection, msg.Sender, msg.Message, Environment.NewLine));
+                });
+            }
+
             config = new ServerConfig { Name = serverName, MaxConnections = maxConnections, Port = port, Password = password };
 
             //GemNetwork.Server.Dispose();
@@ -49,33 +68,25 @@ namespace Gem.Network.Server
 
         #region Settings Helpers
 
-        public void SetupAuthentication(bool authenticate)
+        private void RequireAuthentication()
         {
-            if (authenticate)
+            Profile(GemNetwork.ActiveProfile).OnIncomingConnection((svr, netconnection, msg) =>
             {
-                GemNetwork.Profile(GemNetwork.ActiveProfile).Server.ForIncomingConnections((server, netconnection, msg) =>
-                {
-                    if (msg.Password == server.Password)
-                    {
-                        netconnection.Approve();
-                        GemNetworkDebugger.Echo("Approved " + netconnection);
-                    }
-                    else
-                    {
-                        GemNetworkDebugger.Echo(String.Format("Declined connection {0}. Reason: Invalid credentials ", netconnection));
-                        netconnection.Deny();
-                    }
-                });
-            }
-            else
-            {
-                GemNetwork.Profile(GemNetwork.ActiveProfile).Server.ForIncomingConnections((server, netconnection, msg) =>
+                if (msg.Password == server.Password)
                 {
                     netconnection.Approve();
-                    GemNetworkDebugger.Echo("Approved " + netconnection);
-                });
-            }
+                    GemNetworkDebugger.Echo(String.Format("Approved {0} {3} Sender: {1}{3} Message: {2}"
+                                            ,netconnection,msg.Sender,msg.Message,Environment.NewLine));
+                }
+                else
+                {
+                    GemNetworkDebugger.Echo(String.Format("Declined connection {0}. Reason: Invalid credentials {3} Sender: {1}{3} Message: {2}"
+                                           ,netconnection,msg.Sender,msg.Message,Environment.NewLine));
+                    netconnection.Deny();
+                }
+            });
         }
+    
 
         #endregion
 
@@ -103,6 +114,34 @@ namespace Gem.Network.Server
             {
                 Write.Error("Unable to start the server. Reason: {0}", ex.Message);
             }
+        }
+
+        #endregion
+
+
+        #region Static Settings
+
+        public static IServerMessageRouter Profile(string profileName)
+        {
+            GemNetwork.dynamicMessagesCreated++;
+
+            return new ServerMessageRouter(profileName);
+
+        }
+
+        public static void RegisterCommand(string command,string description,bool requireAuthorization,CommandExecute callback)
+        {
+            GemNetwork.Commander.RegisterCommand(command, requireAuthorization, description, callback);
+        }
+
+        public static void SetConsolePassword(string password)
+        {
+            GemNetwork.Commander.SetPassword(password);
+        }
+
+        public static void ExecuteCommand(string command)
+        {
+            GemNetwork.Commander.ExecuteCommand(null,command);
         }
 
         #endregion

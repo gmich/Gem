@@ -48,34 +48,35 @@ namespace Gem.Network.Server
                     case NetIncomingMessageType.ConnectionApproval:
                         var approvalMsg = new ConnectionApprovalMessage(im);
                         Write.Info("Incoming Connection");
-                        GemNetwork.ServerConfiguration[GemNetwork.ActiveProfile].ConnectionApprove(server, im.SenderConnection, approvalMsg);
-
-                        //im.SenderConnection.Approve();
-                        //Write.Info("Appproved {0}", im.SenderConnection);
+                        GemNetwork.ServerConfiguration[GemNetwork.ActiveProfile].OnIncomingConnection(server, im.SenderConnection, approvalMsg);
                         break;
                     case NetIncomingMessageType.StatusChanged:
                         switch ((NetConnectionStatus)im.ReadByte())
                         {
                             case NetConnectionStatus.Connected:
-                                im.SenderConnection.Approve();
+                                //im.SenderConnection.Approve();
                                 Write.Info("{0} Connected", im.SenderConnection);
                                 break;
                             case NetConnectionStatus.Disconnected:
                                 Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
-                                if (im.SenderConnection.Status == NetConnectionStatus.Disconnected
-                                 || im.SenderConnection.Status == NetConnectionStatus.Disconnecting)
-                                { }
                                 break;
                             case NetConnectionStatus.RespondedConnect:
-
+                                Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
                                 break;
                         }
                         break;
                     case NetIncomingMessageType.Data:
-                        //broadcast to all exception sender
-                        var msg = server.CreateMessage();
-                        msg.Write(im);
-                        server.SendMessage(msg, im.SenderConnection);
+                        if (im.ReadByte() == GemNetwork.NotificationByte)
+                        {
+                            var cmd = new ServerNotification(im);
+                            GemNetwork.Commander.ExecuteCommand(im.SenderConnection, cmd.Message);
+                        }
+                        else
+                        {
+                            var msg = server.CreateMessage();
+                            msg.Write(im);
+                            server.SendAndExclude(msg, im.SenderConnection);
+                        }
                         break;
                     case NetIncomingMessageType.VerboseDebugMessage:
                     case NetIncomingMessageType.DebugMessage:

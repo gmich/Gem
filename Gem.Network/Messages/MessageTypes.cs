@@ -8,10 +8,9 @@ using Gem.Network.Extensions;
 
 namespace Gem.Network.Messages
 {
-    public enum ClientMessageType
+    public enum MessageType
     {
-        //TODO: rename
-        ConnectionApproval,
+        ServerNotification,
 
         Handshake,
 

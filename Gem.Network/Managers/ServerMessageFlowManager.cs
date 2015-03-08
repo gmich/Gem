@@ -11,14 +11,17 @@ namespace Gem.Network.Managers
     public class ServerMessageFlowManager
     {
 
-        public Action<IServer, NetConnection, ConnectionApprovalMessage> ConnectionApprove { get; set; }
+        public Action<IServer, NetConnection, ConnectionApprovalMessage> OnIncomingConnection { get; set; }
 
-        public Action DiscoveryResponse { get; set; }
+        public Action<IServer, NetConnection> OnClientDisconnect { get; set; }
+
+
+        //public Action DiscoveryResponse { get; set; }
 
         public ServerMessageFlowManager()
         {
-            ConnectionApprove = null;
-            DiscoveryResponse = null;
+            OnIncomingConnection = null;
+            OnClientDisconnect = null;
         }
 
     }

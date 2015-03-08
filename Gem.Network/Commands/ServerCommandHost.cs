@@ -1,5 +1,7 @@
-﻿using Gem.Network.Server;
+﻿using Gem.Network.Messages;
+using Gem.Network.Server;
 using Gem.Network.Utilities.Loggers;
+using Lidgren.Network;
 using Seterlund.CodeGuard;
 using System;
 using System.Collections.Generic;
@@ -20,36 +22,68 @@ namespace Gem.Network.Commands
         // Registered commands
         private Dictionary<string, CommandInfo> commandTable;
         
-        private readonly IDebugHost echoer;
+        public Action<string, NetConnection> Echo;
+
+        private readonly IDebugHost EchoToAll;
 
         private readonly IServer commandHost;
 
+        private string password;
+
         #endregion
+
 
         #region Constructor
 
-        public ServerCommandHost(IServer commandHost, IAppender appender)
+        public ServerCommandHost(IServer commandHost)
         {
             Guard.That(commandHost, "Command host must not be null").IsNotNull();
-            Guard.That(appender).Is(typeof(ServerCommandHost));
 
-            echoer = new DebugListener();
-            echoer.RegisterAppender(appender);
-            
+            this.commandHost = commandHost;
             executioners = new Stack<ICommandExecutioner>();
             commandTable = new Dictionary<string, CommandInfo>();
 
+            EchoToAll = new DebugListener();
+            EchoToAll.RegisterAppender(new ServerCommandAppender(commandHost));
+            
+            Echo = (msg, connection) =>
+            {
+                var om = commandHost.CreateMessage();
+                var package = new ServerNotification(GemNetwork.NotificationByte,msg);
+                var serverNotification = new ServerNotification(GemNetwork.NotificationByte, msg);
+                MessageSerializer.Encode(serverNotification, ref om);
+                GemNetworkDebugger.Echo(msg);
+                commandHost.SendOnlyTo(om, connection);
+            };
+
             RegisterHelpComand();
+
+            RegisterEchoCommand();
+            password = string.Empty;
+
         }
 
         #endregion
 
+
         #region Commands
+
+        public void SetPassword(string newPassword)
+        {
+            this.password = newPassword;
+        }
+
+        private void RegisterEchoCommand()
+        {
+            GemServer.RegisterCommand("echo", "Echo message", false,
+                (Server, connection, command, arguments)
+                => Server.NotifyAll(command.Substring(4)));
+        }
 
         private void RegisterHelpComand()
         {
-            RegisterCommand("help", "Show command help",
-            (host, command, args) =>
+            RegisterCommand("help", false, "Show command help",
+            (host, netConnection, command, args) =>
             {
                 int maxLen = 0;
                 foreach (CommandInfo cmd in commandTable.Values)
@@ -59,12 +93,18 @@ namespace Gem.Network.Commands
 
                 foreach (CommandInfo cmd in commandTable.Values)
                 {
-                    echoer.Write(String.Format(fmt, cmd.command, cmd.description));
+                    Echo(String.Format(fmt, cmd.command, cmd.description), netConnection);
                 }
+            });
+
+            RegisterCommand("setpwd", true, "Set new password",
+            (host, netConnection, command, args) =>
+            {
+                SetPassword(password);
             });
         }
 
-        public void RegisterCommand(string command, string description, CommandExecute callback)
+        public void RegisterCommand(string command, bool requiresAuthorization, string description, CommandExecute callback)
         {
             string lowerCommand = command.ToLower();
             if (commandTable.ContainsKey(lowerCommand))
@@ -73,7 +113,7 @@ namespace Gem.Network.Commands
                     String.Format("Command \"{0}\" is already registered.", command));
             }
 
-            commandTable.Add(lowerCommand, new CommandInfo(command, description, callback));
+            commandTable.Add(lowerCommand, new CommandInfo(command,requiresAuthorization, description, callback));
         }
 
         public void DeregisterCommand(string command)
@@ -87,17 +127,17 @@ namespace Gem.Network.Commands
             commandTable.Remove(command);
         }
 
-        public void ExecuteCommand(string command)
+        public void ExecuteCommand(NetConnection sender, string command)
         {          
             if (executioners.Count != 0)
             {
-                executioners.Peek().ExecuteCommand(command);
+                executioners.Peek().ExecuteCommand(sender,command);
                 return;
             }
 
             char[] spaceChars = new char[] { ' ' };
 
-            echoer.Write(command);
+            //EchoToAll.Write(command);
 
             command = command.TrimStart(spaceChars);
 
@@ -110,21 +150,37 @@ namespace Gem.Network.Commands
             {
                 try
                 {
-                    // Call registered command delegate.
-                    cmd.callback(commandHost, command, args);
+                    if (cmd.requiresAuthentication)
+                    {
+                        if (args.Count > 0)
+                        {
+                            if (args[0] == password)
+                            {
+                                cmd.callback(commandHost, sender, command, args);
+                            }
+                            else
+                            {
+                                Echo("Wrong password", sender);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        cmd.callback(commandHost, sender, command, args);
+                    }
                 }
                 catch (Exception e)
                 {
-                    echoer.Error("Unhandled Exception occurred");
+                    Echo("Unhandled Exception occurred", sender);
 
                     string[] lines = e.Message.Split(new char[] { '\n' });
                     foreach (string line in lines)
-                        echoer.Error(line);
+                        EchoToAll.Error(line);
                 }
             }
             else
             {
-                echoer.Write("Unknown Command");
+                Echo("Unknown Command",sender);
             }
         }
 
@@ -144,12 +200,12 @@ namespace Gem.Network.Commands
 
         public void RegisterAppender(IAppender appender)
         {
-            echoer.RegisterAppender(appender);
+            EchoToAll.RegisterAppender(appender);
         }
 
         public void DeregisterAppender(IAppender appender)
         {
-            echoer.DeregisterAppender(appender);
+            EchoToAll.DeregisterAppender(appender);
         }
 
         #endregion

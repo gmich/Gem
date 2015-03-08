@@ -47,34 +47,37 @@ namespace Gem.Network
                     case NetIncomingMessageType.StatusChanged:
                         switch ((NetConnectionStatus)im.ReadByte())
                         {
+                            case NetConnectionStatus.InitiatedConnect:
+                                Write.Info("Connected to {0}", im.SenderConnection);
+                                MessageType.Connecting.ClientHandle(im);
+                                break;
                             case NetConnectionStatus.Connected:
                                 Write.Info("Connected to {0}", im.SenderConnection);
-
-                                ClientMessageType.Connected.Handle(im);
+                                MessageType.Connected.ClientHandle(im);
+                                break;
+                            case NetConnectionStatus.Disconnecting:
+                                Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
+                                MessageType.Disconnecting.ClientHandle(im);
                                 break;
                             case NetConnectionStatus.Disconnected:
                                 Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
-                                if (im.SenderConnection.Status == NetConnectionStatus.Disconnected
-                                 || im.SenderConnection.Status == NetConnectionStatus.Disconnecting)
-                                { }
-                                break;
-                            case NetConnectionStatus.InitiatedConnect:
+                                MessageType.Disconnected.ClientHandle(im);
                                 break;
                         }
                         break;
-
                     case NetIncomingMessageType.Data:
-                        ClientMessageType.Data.Handle(im);
+                        MessageType.Data.ClientHandle(im);
                         break;
                     case NetIncomingMessageType.VerboseDebugMessage:
                     case NetIncomingMessageType.DebugMessage:
                     case NetIncomingMessageType.WarningMessage:
                         Write.Warning(im.ReadString());
+                        //MessageType.Warning.ClientHandle(im); 
                         break;
                     case NetIncomingMessageType.ErrorMessage:
                         Write.Error(im.ReadString());
+                        //MessageType.Error.ClientHandle(im); 
                         break;
-
                 }
              
                 client.Recycle(im);

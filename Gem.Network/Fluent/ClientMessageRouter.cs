@@ -14,71 +14,85 @@ namespace Gem.Network.Fluent
             this.profile = profile;
         }
 
-        public ActionDirector OnHandshake
+        public IActionDirector OnReceivedServerNotification
         {
             get
             {
-                return new ActionDirector(profile, ClientMessageType.Handshake);
+                return new ClientActionDirector(profile, MessageType.ServerNotification);
             }
         }
 
-        public ActionDirector OnConnecting
+        public IActionDirector OnHandshake
         {
             get
             {
-                return new ActionDirector(profile, ClientMessageType.Connecting);
+                return new ClientActionDirector(profile, MessageType.Handshake);
             }
         }
-        public ActionDirector WhenConnected
+
+        public IActionDirector OnConnecting
         {
             get
             {
-                return new ActionDirector(profile, ClientMessageType.Connected);
+                return new ClientActionDirector(profile, MessageType.Connecting);
             }
         }
-
-        public ActionDirector OnDisconnecting
+        public IActionDirector WhenConnected
         {
             get
             {
-                return new ActionDirector(profile, ClientMessageType.Disconnecting);
+                return new ClientActionDirector(profile, MessageType.Connected);
             }
         }
 
-        public ActionDirector OnDisconnected
+        public IActionDirector OnDisconnecting
         {
             get
             {
-                return new ActionDirector(profile, ClientMessageType.Disconnected);
+                return new ClientActionDirector(profile, MessageType.Disconnecting);
             }
         }
 
-        public void HandleWarnings(Action<NetIncomingMessage> action)
+        public IActionDirector OnDisconnected
         {
-
+            get
+            {
+                return new ClientActionDirector(profile, MessageType.Disconnected);
+            }
         }
 
-        public void HandleErrors(Action<NetIncomingMessage> action)
+        public IActionDirector HandleWarnings
         {
+            get
+            {
+                return new ClientActionDirector(profile, MessageType.Disconnected);
+            }
+        }
 
+        public IActionDirector HandleErrors
+        {
+            get
+            {
+                return new ClientActionDirector(profile, MessageType.Disconnected);
+            }
         }
 
         public IMessageFlowBuilder CreateNetworkEvent
         {
             get
             {
-                return new MessageFlowBuilder(profile, ClientMessageType.Data);
+                return new MessageFlowBuilder(profile, MessageType.Data);
             }
         }
 
     }
 
-    public class ActionDirector
+    public class ClientActionDirector : IActionDirector
     {
         private readonly string profile;
-        private readonly ClientMessageType messageType;
+        private readonly MessageType messageType;
 
-        public ActionDirector(string profile, ClientMessageType messageType)
+        public ClientActionDirector(string profile, MessageType messageType)
         {
             this.profile = profile;
             this.messageType = messageType;

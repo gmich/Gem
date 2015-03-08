@@ -74,10 +74,12 @@
     <Compile Include="Async\ParallelTask.cs" />
     <Compile Include="Builders\API\IMessageHandlerBuilder.cs" />
     <Compile Include="Builders\CsScriptPocoBuilder.cs" />
-    <Compile Include="Managers\PredefinedMessageFlowManager.cs" />
+    <Compile Include="Fluent\API\IActionDirector.cs" />
+    <Compile Include="Handlers\NotificationHandler.cs" />
+    <Compile Include="Managers\ClientPredefinedMessageFlowManager.cs" />
     <Compile Include="Messages\INetworkPackage.cs" />
     <Compile Include="Extensions\MessageTypeExtensions.cs" />
-    <Compile Include="Managers\NetworkActionManager.cs" />
+    <Compile Include="Managers\ClientNetworkActionManager.cs" />
     <Compile Include="NetworkStatus.cs" />
     <Compile Include="Providers\PredefinedEventProvider.cs" />
     <Compile Include="Providers\ClientActionProvider.cs" />
@@ -91,7 +93,6 @@
     <Compile Include="Fluent\API\IMessageFlowBuilder.cs" />
     <Compile Include="Fluent\API\IClientMessageRouter.cs" />
     <Compile Include="Fluent\ServerMessageRouter.cs" />
-    <Compile Include="Fluent\ProfileRouter.cs" />
     <Compile Include="GemNetwork.cs" />
     <Compile Include="Cache\ManagedCache.cs" />
     <Compile Include="Cache\GCache.cs" />
@@ -100,10 +101,9 @@
     <Compile Include="Cache\Events\IEventProvider.cs" />
     <Compile Include="Messages\IMessageProcessor.cs" />
     <Compile Include="Providers\AbstractProvider.cs" />
-    <Compile Include="Managers\ServerMessageFlowProvider.cs" />
-    <Compile Include="Managers\ClientConfigurationManager.cs" />
+    <Compile Include="Managers\ServerMessageFlowManager.cs" />
     <Compile Include="Providers\ClientMessageFlowInfoProvider.cs" />
-    <Compile Include="Managers\MessageFlowManager.cs" />
+    <Compile Include="Managers\ClientMessageFlowManager.cs" />
     <Compile Include="Events\INetworkEvent.cs" />
     <Compile Include="Commands\ICommandExecutioner.cs" />
     <Compile Include="Commands\ICommandHost.cs" />

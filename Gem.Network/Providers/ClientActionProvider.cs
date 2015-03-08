@@ -17,10 +17,10 @@ namespace Gem.Network.Providers
     }
 
     public class ActionMessageTypeProvider
-             : AbstractContainer<ActionProvider, ClientMessageType>
+             : AbstractContainer<ActionProvider, MessageType>
     {
         public ActionMessageTypeProvider()
-            : base(new FlyweightRepository<ActionProvider, ClientMessageType>())
+            : base(new FlyweightRepository<ActionProvider, MessageType>())
         { }
     }
 

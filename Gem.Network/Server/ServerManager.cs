@@ -72,11 +72,11 @@ namespace Gem.Network.Server
                 switch (im.MessageType)
                 {
                     case NetIncomingMessageType.ConnectionApproval:
-                        if (im.ReadByte() == (byte)ClientMessageType.ConnectionApproval)
+                        if (im.ReadByte() == (byte)MessageType.Handshake)
                         {
                             WriteMessage("Incoming Connection");
                             var message = MessageSerializer.Decode<ConnectionApprovalMessage>(im);
-                            GemNetwork.ServerConfiguration[GemNetwork.ActiveProfile].ConnectionApprove(server, im.SenderConnection, message);
+                            GemNetwork.ServerConfiguration[GemNetwork.ActiveProfile].OnIncomingConnection(server, im.SenderConnection, message);
                         }
                         break;
                     case NetIncomingMessageType.StatusChanged:
@@ -100,7 +100,7 @@ namespace Gem.Network.Server
                         //broadcast to all exception sender
                         var msg = server.CreateMessage();
                         msg.Write(im);
-                        server.SendMessage(msg, im.SenderConnection);
+                        server.SendAndExclude(msg, im.SenderConnection);
                         break;
                     case NetIncomingMessageType.VerboseDebugMessage:
                     case NetIncomingMessageType.DebugMessage:

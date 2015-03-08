@@ -34,10 +34,10 @@ namespace Gem.Network.Chat.Client
 
         private static void ClientSetup()
         {
-            GemNetwork.ActiveProfile = "GemChat";
+           // GemNetwork.ActiveProfile = "GemChat";
             GemNetworkDebugger.Echo = Console.WriteLine;
 
-            client = new GemClient("GemChat", "127.0.0.1", 14242);
+            client = new GemClient("GemChat","GemChat", "127.0.0.1", 14242);
         }
 
         private static void ProcessInput()

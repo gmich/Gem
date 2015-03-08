@@ -5,7 +5,7 @@ namespace Gem.Network.Messages
 
     public interface IServerMessage
     {
-        ClientMessageType MessageType { get; }
+        MessageType MessageType { get; }
     }
 
 }

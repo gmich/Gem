@@ -7,16 +7,16 @@ using System;
 namespace Gem.Network.Managers
 {   
     
-    public class NetworkActionManager
+    public class ClientNetworkActionManager
     {
         private NetworkActionProvider actionProvider;
 
-        public NetworkActionManager()
+        public ClientNetworkActionManager()
         {
             actionProvider = new NetworkActionProvider();
         }
 
-        public Action<NetIncomingMessage> this[string tag,ClientMessageType messagetype,byte configID]
+        public Action<NetIncomingMessage> this[string tag,MessageType messagetype,byte configID]
         {
             get
             {
@@ -24,7 +24,7 @@ namespace Gem.Network.Managers
             }
         }
 
-        public ActionProvider this[string tag, ClientMessageType messagetype]
+        public ActionProvider this[string tag, MessageType messagetype]
         {
             get
             {

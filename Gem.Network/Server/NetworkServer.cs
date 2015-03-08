@@ -154,7 +154,7 @@ namespace Gem.Network.Server
         /// Sends the message to all 
         /// </summary>
         /// <param name="message">The message to send</param>
-        public void SendMessage(NetOutgoingMessage message)
+        public void SendToAll(NetOutgoingMessage message)
         {
             netServer.SendToAll(message, serverConfig.DeliveryMethod);
         }
@@ -164,7 +164,7 @@ namespace Gem.Network.Server
         /// </summary>
         /// <param name="message">The message to send</param>
         /// <param name="connection">The sender</param>
-        public void SendMessage(NetOutgoingMessage message, NetConnection sender)
+        public void SendAndExclude(NetOutgoingMessage message, NetConnection sender)
         {
             netServer.SendToAll(message,
                                 sender,
@@ -184,9 +184,23 @@ namespace Gem.Network.Server
                                   clients,
                                   serverConfig.DeliveryMethod,
                                   serverConfig.SequenceChannel);
-        }   
-            
+        }
 
+        /// <summary>
+        /// Sends the message to the clients in the list
+        /// </summary>
+        /// <param name="message">The message to send</param>
+        /// <param name="clients">The clients the message is sent to</param>
+        public void SendOnlyTo(NetOutgoingMessage message, NetConnection client)
+        {
+            if (client != null)
+            {
+                netServer.SendMessage(message,
+                                      new List<NetConnection> { client },
+                                      serverConfig.DeliveryMethod,
+                                      serverConfig.SequenceChannel);
+            }
+        }
         #endregion
 
 
@@ -215,5 +229,12 @@ namespace Gem.Network.Server
 
         #endregion
 
+        public void NotifyAll(string message)
+        {
+            var serverNotification = new ServerNotification(GemNetwork.NotificationByte,message);
+            var om = netServer.CreateMessage();
+            MessageSerializer.Encode(serverNotification, ref om);
+            SendToAll(om);
+        }
     }
 }

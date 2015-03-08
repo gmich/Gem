@@ -4,33 +4,30 @@ using Lidgren.Network;
 
 namespace Gem.Network.Messages
 {
-    public partial class ServerNotification
+    public partial class ServerNotification 
     {
         public ServerNotification(NetIncomingMessage im)
         {
             Message = im.ReadString();
+       
         }
 
-        public ServerNotification()
-        {}
+        public ServerNotification(byte id, string message)
+        {
+            this.id = id;
+            this.Message = message;
+        }
 
-        public string Message { get; set; }
-
-        private readonly byte _id = 0;
+        private readonly byte id;
         public byte Id
         {
             get
             {
-                return _id;
+                return id;
             }
-            set
-            { }
         }
-        
-        public void Encode(NetOutgoingMessage om)
-        {
-            om.Write(Message);
-            om.Write(Id);
-        }
+
+        public string Message { get; set; }
+
     }
 }

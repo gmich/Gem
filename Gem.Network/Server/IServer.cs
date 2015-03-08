@@ -7,8 +7,12 @@ namespace Gem.Network.Server
 {
     public interface IServer : INetworkPeer
     {
-        bool IsConnected { get;
-        }
+        bool IsConnected { get; }
+
+        IPAddress IP { get; }
+
+        int Port { get; }
+ 
         bool Connect(ServerConfig config);
 
         List<IPEndPoint> ClientsIP { get; }
@@ -19,9 +23,13 @@ namespace Gem.Network.Server
 
         void Kick(IPEndPoint clientIp,string reason);
 
-        void SendMessage(NetOutgoingMessage message);
+        void NotifyAll(string message);
 
-        void SendMessage(NetOutgoingMessage message, NetConnection sender);
+        void SendToAll(NetOutgoingMessage message);
+
+        void SendAndExclude(NetOutgoingMessage message, NetConnection excludeSender);
+
+        void SendOnlyTo(NetOutgoingMessage message, NetConnection sender);
 
         void SendMessage(NetOutgoingMessage message, List<NetConnection> clients);
 

@@ -14,7 +14,7 @@ namespace Gem.Network
 
         void SendMessage<T>(T message,byte id);
 
-        void SendMessage(NetOutgoingMessage gameMessage);
+        void SendMessage(NetOutgoingMessage msg);
 
     }
 }

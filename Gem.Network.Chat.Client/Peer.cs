@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Gem.Network.Messages;
 using Gem.Network.Events;
+using Gem.Network.Client;
 
 namespace Gem.Network.Chat.Client
 {
@@ -18,8 +19,8 @@ namespace Gem.Network.Chat.Client
         {
             this.Name = name;
 
-            onEvent = GemNetwork.Profile("GemChat")
-                  .Client.CreateNetworkEvent
+            onEvent = GemClient.Profile("GemChat")
+                  .CreateNetworkEvent
                   .AndHandleWith(this, x => new Action<string>(x.Print));
 
             onEvent.Send(name + " has joined");

@@ -16,10 +16,10 @@ namespace Gem.Network.Providers
     }
     
     public class MessageTypeProvider
-    : AbstractContainer<ClientMessageFlowInfoProvider, ClientMessageType>
+    : AbstractContainer<ClientMessageFlowInfoProvider, MessageType>
     {
         public MessageTypeProvider()
-            : base(new FlyweightRepository<ClientMessageFlowInfoProvider, ClientMessageType>())
+            : base(new FlyweightRepository<ClientMessageFlowInfoProvider, MessageType>())
         { }
     }
 

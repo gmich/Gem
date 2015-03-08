@@ -27,7 +27,7 @@ namespace Gem.Network.Messages
         [Required]
         public string Password { get; set; }
 
-        private readonly byte _id = 1;
+        private readonly byte _id = 0;
         public byte Id
         {
             get

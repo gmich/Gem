@@ -83,7 +83,7 @@ namespace Gem.Network.Example
                             var obj = new ClassToSerialize();
                             obj.StringProperty = "SomeString";
                             MessageSerializer.Encode(obj, ref outgoingmessage);
-                            server.SendMessage(outgoingmessage);
+                            server.SendToAll(outgoingmessage);
 
                             Console.WriteLine("Sended a package with some string");
                             break;
@@ -132,7 +132,7 @@ namespace Gem.Network.Example
                         case NetIncomingMessageType.Data:
                             var outgoingmessage = server.CreateMessage();
                             MessageSerializer.Encode(myObject, ref outgoingmessage);
-                            server.SendMessage(outgoingmessage);
+                            server.SendToAll(outgoingmessage);
 
                             Console.WriteLine("Sended a package with some string");
                             break;

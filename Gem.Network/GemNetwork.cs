@@ -1,7 +1,9 @@
-﻿using Gem.Network.Fluent;
+﻿using Gem.Network.Commands;
+using Gem.Network.Fluent;
 using Gem.Network.Managers;
 using Gem.Network.Providers;
 using Gem.Network.Server;
+using Gem.Network.Utilities.Loggers;
 using System;
 
 namespace Gem.Network
@@ -9,46 +11,59 @@ namespace Gem.Network
     public static class GemNetwork
     {
 
+        //Predefined package types
+        internal static readonly byte NotificationByte = (byte)1;
+
         static GemNetwork()
         {
             Startup.Setup();
-            clientMessageFlowManager = new MessageFlowManager();
+            clientMessageFlowManager = new ClientMessageFlowManager();
             serverConfigurationManager = new ServerConfigurationManager();
-            configurationManager = new ClientConfigurationManager();
             Client = new Peer();
-            Server = new NetworkServer(Console.WriteLine);
+            Server = new NetworkServer(GemNetworkDebugger.Echo);
+            commander = new ServerCommandHost(Server);
+            predefinedMessageFlowManager = new ClientPredefinedMessageFlowManager();
+            clientActionManager = new ClientNetworkActionManager();   
         }    
 
         #region Fields
 
-        private static PredefinedMessageFlowManager predefinedMessageFlowManager;
+        private static ClientPredefinedMessageFlowManager predefinedMessageFlowManager;
 
-        private static MessageFlowManager clientMessageFlowManager;
+        private static ClientMessageFlowManager clientMessageFlowManager;
 
         private static ServerConfigurationManager serverConfigurationManager;
 
-        private static ClientConfigurationManager configurationManager;
+        private static ClientNetworkActionManager clientActionManager;
 
-        private static NetworkActionManager clientActionManager;
+        internal static ICommandHost commander;
 
         internal static IClient Client;
 
         internal static IServer Server;
 
-        internal static int profilesInvoked = 0;
+        internal static int dynamicMessagesCreated = 2;
 
         #endregion
 
 
         #region Properties
 
-        public static string ActiveProfile
+        internal static string ActiveProfile
         {
             get;
             set;
         }
 
-        internal static MessageFlowManager ClientMessageFlow
+        internal static ICommandHost Commander
+        {
+            get
+            {
+                return commander;
+            }
+        }
+
+        internal static ClientMessageFlowManager ClientMessageFlow
         {
             get
             {
@@ -56,30 +71,14 @@ namespace Gem.Network
             }
         }
 
-        internal static PredefinedMessageFlowManager PredefinedMessageFlowManager
-        {
-            get
-            {
-                return predefinedMessageFlowManager;
-            }
-        }
-
-        internal static NetworkActionManager ClientActionManager
+        internal static ClientNetworkActionManager ClientActionManager
         {
             get
             {
                 return clientActionManager;
             }
         }
-
-        internal static ClientConfigurationManager ClientConfiguration
-        {
-            get
-            {
-                return configurationManager;
-            }
-        }
-
+        
         internal static ServerConfigurationManager ServerConfiguration
         {
             get
@@ -88,11 +87,7 @@ namespace Gem.Network
             }
         }
 
-        public static ProfileRouter Profile(string profileName)
-        {
-            profilesInvoked++;
-            return new ProfileRouter(profileName);
-        }
+
 
         #endregion
 

@@ -19,8 +19,10 @@ namespace Gem.Network.Extensions
 
         public static void SendCachedMessage(this MessageFlowArguments args)
         {
-            args.EventRaisingclass.Send(args.CachedMessage);
-
+            if (args.CachedMessage != null)
+            {
+                args.EventRaisingclass.Send(args.CachedMessage);
+            }
         }
         
     }
