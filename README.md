@@ -5,9 +5,13 @@
 
 
  
-A game engine for developing 2D games using Monogame and Farseer physics
+A cross-platform game engine for developing 2D games using Monogame, Farseer physics and Lidgren
 
 ##Description
+
+###Gem Network
+Gem Network is a standalone library for client server applications using network sockets. Gem Network extends Lidgren Network, offering an easy to use API for creating network events and a fully configurable and expendable server console.
+
 You can find more info [here](http://gmich.github.io/Gem/)
 
 ##Documentation
