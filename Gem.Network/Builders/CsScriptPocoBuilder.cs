@@ -11,11 +11,18 @@ using Lidgren.Network;
 namespace Gem.Network.Builders
 {
     /// <summary>
-    /// Creates a type that handles the server incoming messages
+    /// Builds runtime POCOs using CsScriptLibary. 
+    /// The POCOs type is aligned to INetworkPackage
     /// </summary>
     public class CsScriptPocoBuilder : IPocoBuilder
     {
 
+        /// <summary>
+        /// Pass all the parameters to the constructor, so when the class is instantiated using Activator,
+        /// you can store properties using the constructor
+        /// </summary>
+        /// <param name="propertyFields">The types and names</param>
+        /// <returns>A string with the constructor declaration</returns>
         private string GetConstructorDeclaration(List<DynamicPropertyInfo> propertyFields)
         {
             StringBuilder sb = new StringBuilder();
@@ -27,6 +34,12 @@ namespace Gem.Network.Builders
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Store the parameters that are passed in the constructor
+        /// </summary>
+        /// <param name="propertyFields"></param>
+        /// <param name="propertyFields">The types and names</param>
+        /// <returns>A string with the constructor body</returns>
         private string GetConstructorBody(List<DynamicPropertyInfo> propertyFields)
         {
             StringBuilder sb = new StringBuilder();
@@ -37,6 +50,11 @@ namespace Gem.Network.Builders
             return sb.ToString();
         }
 
+        /// <summary>
+        /// This constrtuctor takes a NetIncomingMessage and decodes its data using Read()
+        /// </summary>
+        /// <param name="propertyFields">The fields that are being decoded</param>
+        /// <returns>A string with the constructor body</returns>
         private string GetDecodeConstructorBody(List<DynamicPropertyInfo> propertyFields)
         {
             StringBuilder sb = new StringBuilder();
@@ -47,6 +65,11 @@ namespace Gem.Network.Builders
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Creates prop {get; set;}
+        /// </summary>
+        /// <param name="propertyFields">The fields that are being decoded</param>
+        /// <returns>A string with properties</returns>
         private string GetGetterSetters(List<DynamicPropertyInfo> propertyFields)
         {
             StringBuilder sb = new StringBuilder();
@@ -58,6 +81,12 @@ namespace Gem.Network.Builders
         }
 
  
+        /// <summary>
+        /// Builds the dynamic POCO and aligns it to INetworkPackage
+        /// </summary>
+        /// <param name="className">The POCO class name</param>
+        /// <param name="propertyFields">The field's types and names</param>
+        /// <returns>A type that's aligned to INetworkPackage</returns>
         public Type Build(string className, List<DynamicPropertyInfo> propertyFields)
         {
             var str = String.Format(@"using Microsoft.CSharp; using Lidgren.Network;

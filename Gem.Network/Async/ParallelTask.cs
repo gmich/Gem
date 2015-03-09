@@ -6,15 +6,29 @@ using System.Threading.Tasks.Dataflow;
 
 namespace Gem.Network.Async
 {
+    /// <summary>
+    /// Starts a task that runs in a separate thread
+    /// </summary>
     public class ParallelTaskStarter
     {
 
         #region Fields
 
+        /// <summary>
+        /// The token to stop the parallel task
+        /// </summary>
         private CancellationTokenSource wtoken;
 
+        /// <summary>
+        /// The task
+        /// </summary>
         private ActionBlock<DateTimeOffset> task;
     
+        /// <summary>
+        /// The task delay. 
+        /// When a task run is finished, the thread pauses for as long as the repostDelay is specified
+        /// before restarting
+        /// </summary>
         private readonly TimeSpan repostDelay;
 
         #endregion
@@ -22,6 +36,10 @@ namespace Gem.Network.Async
 
         #region Constructor
 
+        /// <summary>
+        /// The task restart delay
+        /// </summary>
+        /// <param name="repostDelay">The delay</param>
         public ParallelTaskStarter(TimeSpan repostDelay)
         {
             this.repostDelay = repostDelay;
@@ -32,6 +50,12 @@ namespace Gem.Network.Async
 
         #region Task Creator
 
+        /// <summary>
+        /// Creates the parallel task
+        /// </summary>
+        /// <param name="action">The action thats' being run</param>
+        /// <param name="cancellationToken">The token that cancels the task</param>
+        /// <returns>A targetblock</returns>
         private ITargetBlock<DateTimeOffset> CreateParallelTask(
            Func<DateTimeOffset, CancellationToken, Task> action,
            CancellationToken cancellationToken)
@@ -65,6 +89,10 @@ namespace Gem.Network.Async
 
         private Action asyncAction;
 
+        /// <summary>
+        /// Starts a parallel task
+        /// </summary>
+        /// <param name="action">The action that's run in a separate thread</param>
         public void Start(Action action)
         {
             wtoken = new CancellationTokenSource();
@@ -79,6 +107,9 @@ namespace Gem.Network.Async
             return Task.Run(asyncAction); 
         }
         
+        /// <summary>
+        /// Stops the parallel task
+        /// </summary>
         public void Stop()
         {
             using (wtoken)

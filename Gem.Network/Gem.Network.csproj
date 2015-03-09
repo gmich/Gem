@@ -135,7 +135,7 @@
     <Compile Include="Builders\DynamicPropertyInfo.cs" />
     <Compile Include="Builders\CsScriptBuilder.cs" />
     <Compile Include="Messages\MessageSerializer.cs" />
-    <Compile Include="Attributes\AttributeContainer.cs" />
+    <Compile Include="Attributes\NetworkPackageAttribute.cs" />
     <Compile Include="Attributes\AttributeResolver.cs" />
     <Compile Include="ConnectionDetails.cs" />
     <Compile Include="Repositories\FlyweightRepository.cs" />

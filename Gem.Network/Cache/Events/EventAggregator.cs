@@ -13,6 +13,9 @@ namespace Gem.Network.Cache.Events
         public long ByteSize { get; set; }
     }
 
+    /// <summary>
+    /// Helper class for raising events in the cache
+    /// </summary>
     public class EventAggregator<TKey, TCached> : ICacheEvent<GCache<TKey, TCached>,
                                                      CacheEventArgs<TKey, TCached>>
        where TCached : class

@@ -38,7 +38,7 @@ namespace Gem.Network.Chat.Client
            // GemNetwork.ActiveProfile = "GemChat";
             GemNetworkDebugger.Echo = Console.WriteLine;
 
-            client = new GemClient("GemChat","GemChat", "127.0.0.1", 14242);
+            client = new GemClient("GemChat","GemChat", "83.212.103.13", 14242);
         }
 
         private static void ProcessInput()

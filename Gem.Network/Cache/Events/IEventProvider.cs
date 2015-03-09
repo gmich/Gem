@@ -5,12 +5,22 @@ using System.Text;
 
 namespace Gem.Network.Cache.Events
 {
-
+    /// <summary>
+    /// Provides event for GCache
+    /// </summary>
+    /// <typeparam name="Targs"></typeparam>
     public interface IEventProvider<Targs>
         where Targs : EventArgs
     {
+        /// <summary>
+        /// Raised when an item is added to the cache
+        /// </summary>
         event EventHandler<Targs> OnAddEvent;
 
+        /// <summary>
+        /// Raised when theres a change in the buffer 
+        /// e.g. deallocation
+        /// </summary>
         event EventHandler<Targs> OnUsedMemoryEvent;
     }
     

@@ -18,6 +18,11 @@ using System.Threading.Tasks;
 namespace Gem.Network.Cache
 {
 
+    /// <summary>
+    /// A cache for storing objects 
+    /// </summary>
+    /// <typeparam name="TKey">The lookups key</typeparam>
+    /// <typeparam name="TCached">The cached object</typeparam>
     public class GCache<TKey, TCached> : IDisposable
         where TCached : class
     {
@@ -26,6 +31,9 @@ namespace Gem.Network.Cache
 
         private readonly TCached NotFound = default(TCached);
 
+        /// <summary>
+        /// The cache's buffer in bytes
+        /// </summary>
         protected readonly long buffer;
 
         protected readonly MemoryCalculator memoryCalculator;
@@ -69,6 +77,11 @@ namespace Gem.Network.Cache
 
         #region Construct / Dispose
 
+        /// <summary>
+        /// Instantiate cache
+        /// </summary>
+        /// <param name="capacity">The buffers capacity</param>
+        /// <param name="keyEquality">How a cache lookup is performed</param>
         public GCache(long capacity, IEqualityComparer<TKey> keyEquality)
         {
             _cache = new ConcurrentDictionary<TKey, CacheEntry>(keyEquality);
@@ -98,6 +111,11 @@ namespace Gem.Network.Cache
 
         #region Public Methods
 
+        /// <summary>
+        /// Add an item to the cache by key
+        /// </summary>
+        /// <param name="tkey">The key</param>
+        /// <param name="tcache">The object</param>
         public void Add(TKey tkey, TCached tcache)
         {
             long additionalSize = (memoryCalculator.GetSizeInBytes(tkey) + memoryCalculator.GetSizeInBytes(tcache));
@@ -162,6 +180,9 @@ namespace Gem.Network.Cache
 
         #region Memory Management
 
+        /// <summary>
+        /// If the buffer is almost full, free resources
+        /// </summary>
         protected virtual void ManageSize()
         {
             if (MemoryUsed > ((buffer * 2) / 3))
@@ -206,6 +227,9 @@ namespace Gem.Network.Cache
             }
         }
 
+        /// <summary>
+        /// Calculates an object's size in bytes
+        /// </summary>
         protected class MemoryCalculator
         {
             private Stream ms;
@@ -226,6 +250,9 @@ namespace Gem.Network.Cache
             }
         }
 
+        /// <summary>
+        /// An entry in the cache with its size in bytes
+        /// </summary>
         protected class CacheEntry
         {
             public CacheEntry(TCached cachedEntry, long byteSize)

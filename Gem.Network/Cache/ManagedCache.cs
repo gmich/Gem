@@ -18,6 +18,11 @@ using System.Threading.Tasks;
 namespace Gem.Network.Cache
 {
 
+    /// <summary>
+    /// A cache that uses a callback to free resources
+    /// </summary>
+    /// <typeparam name="TKey">The lookup's key</typeparam>
+    /// <typeparam name="TCached">The stored object</typeparam>
     public sealed class ManagedCache<TKey, TCached> : GCache<TKey, TCached>
         where TCached : class
     {
@@ -31,6 +36,12 @@ namespace Gem.Network.Cache
 
         #region Construct / Dispose
 
+        /// <summary>
+        /// Instantiate a managed cache
+        /// </summary>
+        /// <param name="capacity">The buffer's capacity</param>
+        /// <param name="keyEquality">How the lookup is performed</param>
+        /// <param name="memoryManagementTime">How long until the memory management is performed</param>
         public ManagedCache(long capacity, IEqualityComparer<TKey> keyEquality, int memoryManagementTime = 300000)
             : base(capacity, keyEquality)
         {

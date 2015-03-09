@@ -9,8 +9,7 @@ namespace Gem.Network.Builders
         public Type PropertyType { get; set; }
 
         public string PropertyName { get; set; }
-
-
+        
         #region Static Helpers
 
         /// <summary>
@@ -34,7 +33,10 @@ namespace Gem.Network.Builders
 
             return propertyInfo;
         }
-
+        
+        /// <summary>
+        /// Matches the primitive types to their string representation
+        /// </summary>
         private static Dictionary<Type, string> PrimitiveTypesAndAliases = new Dictionary<Type, string>()
             {
                  {typeof(Byte),"byte"},
@@ -53,6 +55,9 @@ namespace Gem.Network.Builders
                  {typeof(Decimal),"decimal"}
             };
 
+        /// <summary>
+        /// This is used in the constructor body of CsScriptPOCOBuilder
+        /// </summary>
         private static Dictionary<Type, string> DecodeInfo = new Dictionary<Type, string>()
             {
                  {typeof(Byte),"ReadByte"},
