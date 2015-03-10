@@ -30,13 +30,13 @@ namespace Gem.Network.Client
 
         #region Constructor
 
-        public GemClient(string profile, string serverName, string IPorHost, int port)
+        public GemClient(string profile, string serverName, string IPorHost, int port,string disconnectMessage = "bye")
         {
             Guard.That(IPorHost).IsNotNull();
             Guard.That(profile).IsNotNull();
             Guard.That(serverName).IsNotNull();
 
-            connectionDetails = new ConnectionDetails { ServerName = serverName, IPorHost = IPorHost, Port = port };
+            connectionDetails = new ConnectionDetails { ServerName = serverName, IPorHost = IPorHost, Port = port ,DisconnectMessage = disconnectMessage};
             GemNetwork.ActiveProfile = profile;
 
             //TODO: check if the client is already connected

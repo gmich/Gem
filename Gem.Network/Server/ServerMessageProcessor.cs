@@ -59,6 +59,7 @@ namespace Gem.Network.Server
                                 break;
                             case NetConnectionStatus.Disconnected:
                                 Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
+                                server.NotifyAll("[Disconnected client] " + im.ReadString());
                                 break;
                             case NetConnectionStatus.RespondedConnect:
                                 Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);

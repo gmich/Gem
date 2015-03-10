@@ -6,24 +6,32 @@ using System.Threading.Tasks;
 using Gem.Network.Messages;
 using Gem.Network.Events;
 using Gem.Network.Client;
+using Gem.Network.Async;
+using System.Collections.Concurrent;
+using System.Threading;
 
 namespace Gem.Network.Chat.Client
 {
     public class Peer
     {
         public string Name { get; set; }
+        public ConcurrentQueue<string> IncomingMessages;
+        private readonly ParallelTaskStarter messageAppender;
 
         private readonly INetworkEvent onEvent;
 
         public Peer(string name)
         {
+            IncomingMessages = new ConcurrentQueue<string>();
             this.Name = name;
 
             onEvent = GemClient.Profile("GemChat")
                   .CreateNetworkEvent
-                  .AndHandleWith(this, x => new Action<string>(x.Print));
+                  .AndHandleWith(this, x => new Action<string>(x.QueueMessage));
 
             onEvent.Send(name + " has joined");
+            messageAppender = new ParallelTaskStarter(TimeSpan.Zero);
+            messageAppender.Start(DequeueIncomingMessages);
         }
 
         public void Say(string message)
@@ -45,13 +53,33 @@ namespace Gem.Network.Chat.Client
             onEvent.Send(formattedMessage);
         }
 
-        public void Print(string message)
+        public void QueueMessage(string message)
         {
-            Console.WriteLine(message);
+            IncomingMessages.Enqueue(message);
+            //Console.WriteLine(message);
         }
 
+        private void DequeueIncomingMessages()
+        {
+            if(Console.CursorLeft==0)
+            {
+                Thread.Sleep(10);
+                foreach (var msg in IncomingMessages)
+                {
+                    bool success = false;
+                    string message = string.Empty;
+                    while (!success)
+                    {
+                        success = IncomingMessages.TryDequeue(out message);
+                    }
+                    Console.WriteLine(message);
+                }
+            }
+        }
+        
         public void SayGoodBye()
         {
+            messageAppender.Stop();
             onEvent.Send(" >> " + Name + " has left ");
         }
 

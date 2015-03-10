@@ -13,6 +13,8 @@ namespace Gem.Network
 
         public int Port { get; set;  }
 
+        public string DisconnectMessage { get; set; }
+
         public int SequenceChannel
         {
             get

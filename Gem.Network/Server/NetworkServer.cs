@@ -98,7 +98,7 @@ namespace Gem.Network.Server
                     MaximumConnections = serverConfig.MaxConnections,
                     PingInterval = 2.0f,
                     //TODO: configure timeout
-                    ConnectionTimeout = 10000f
+                    ConnectionTimeout = 5f
                 };
             config.EnableMessageType(NetIncomingMessageType.Data);
             config.EnableMessageType(NetIncomingMessageType.WarningMessage);

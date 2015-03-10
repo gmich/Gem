@@ -21,9 +21,6 @@ namespace Gem.Network
 
         private ConnectionDetails connectionDetails;
 
-        //TODO: provide this somehow
-        private readonly string disconnectMessage = "bye";
-
         public bool IsConnected
         {
             get
@@ -97,7 +94,7 @@ namespace Gem.Network
         {
             if (client != null)
             {
-                client.Shutdown(disconnectMessage);
+                client.Shutdown(connectionDetails.DisconnectMessage);
             }
         }
 

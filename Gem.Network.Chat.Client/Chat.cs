@@ -4,11 +4,15 @@ using Gem.Network.Utilities.Loggers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Gem.Network.Chat.Client
 {
+    /// <summary>
+    /// This is just an example to test Gem.Network
+    /// </summary>
     class Chat
     {
 
@@ -16,6 +20,7 @@ namespace Gem.Network.Chat.Client
 
         private static Peer peer;
         private static GemClient client;
+        private static string name;
 
         #endregion
 
@@ -25,21 +30,25 @@ namespace Gem.Network.Chat.Client
         {
             Console.WriteLine(String.Format(
             @" 
-             Commands {0}
--------------------------------------{0}
--gem <command>      |  Gem console        
--setname <newname>  |  Change nickname  
--quit               |  Quit  {0}{0}", Environment.NewLine));
+ Command               Description 
+-------------------------------------
+-help                  Show commands
+-gem <command>         Gem console       
+-cls                   Clear screen 
+-setname <newname>     Change nickname  
+-quit                  Quit  {0}", Environment.NewLine));
 
         }
 
         private static void ClientSetup()
         {
-           // GemNetwork.ActiveProfile = "GemChat";
-            GemNetworkDebugger.Echo = Console.WriteLine;
+            // GemNetwork.ActiveProfile = "GemChat";
 
-            client = new GemClient("GemChat","GemChat", "83.212.103.13", 14242);
+            GemNetworkDebugger.Echo = Console.WriteLine;
+            //client = new GemClient("GemChat", "GemChat", "127.0.0.1", 14242, name);
+            client = new GemClient("GemChat", "GemChat", "83.212.103.13", 14242, name);
         }
+
 
         private static void ProcessInput()
         {
@@ -47,10 +56,15 @@ namespace Gem.Network.Chat.Client
             while (input != "-quit")
             {
                 input = Console.ReadLine();
-              //  Console.SetCursorPosition(0, Console.CursorTop - 1);
+                                
                 if (input.Length >= 1)
                 {
-                    if (input.StartsWith("-gem "))
+                    if (input == "-cls") Console.Clear();
+                    if (input == "-help")
+                    {
+                        PrintIntroMessage();
+                    }
+                    else if (input.StartsWith("-gem "))
                     {
                         var cmd = input.Substring(5);
                         if (cmd.Length > 0)
@@ -58,7 +72,7 @@ namespace Gem.Network.Chat.Client
                             client.SendCommand(cmd);
                         }
                     }
-                    if (input[0] == '-')
+                    else if (input[0] == '-')
                     {
                         var processed = input.Split(' ');
                         if (processed.Length >= 2)
@@ -67,12 +81,25 @@ namespace Gem.Network.Chat.Client
                             {
                                 peer.ChangeName(processed[1]);
                             }
+                            else
+                            {
+                                Console.WriteLine("Unknown command");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Unknown command");
                         }
                     }
                     else
                     {
+                        Console.SetCursorPosition(0, Console.CursorTop - 1);
                         peer.Say(input);
                     }
+                }
+                else
+                {
+                    Console.SetCursorPosition(0, Console.CursorTop - 1);
                 }
             }
         }
@@ -81,14 +108,17 @@ namespace Gem.Network.Chat.Client
 
         static void Main(string[] args)
         {
-            ClientSetup();
 
+            _handler += new EventHandler(Handler);
+            SetConsoleCtrlHandler(_handler, true);
             //Pick a name
             Console.WriteLine("Your nickname : ");
-            string name = Console.ReadLine();
+            name = Console.ReadLine();
 
             Console.WriteLine("Password : ");
             string pwd = Console.ReadLine();
+
+            ClientSetup();
 
             PrintIntroMessage();
 
@@ -96,6 +126,7 @@ namespace Gem.Network.Chat.Client
 
             //Initialize a chat peer
             peer = new Peer(name);
+            GemNetworkDebugger.Echo = peer.QueueMessage;
 
             ProcessInput();
 
@@ -105,6 +136,46 @@ namespace Gem.Network.Chat.Client
 
             Console.ReadLine();
         }
+
+        #region Override closing event
+
+        [DllImport("Kernel32")]
+        private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
+
+        private delegate bool EventHandler(CtrlType sig);
+        private static EventHandler _handler;
+
+        enum CtrlType
+        {
+            CTRL_C_EVENT = 0,
+            CTRL_BREAK_EVENT = 1,
+            CTRL_CLOSE_EVENT = 2,
+            CTRL_LOGOFF_EVENT = 5,
+            CTRL_SHUTDOWN_EVENT = 6
+        }
+
+        private static bool Handler(CtrlType sig)
+        {
+            switch (sig)
+            {
+                case CtrlType.CTRL_C_EVENT:
+                    return false;
+                case CtrlType.CTRL_LOGOFF_EVENT:
+                    return false;
+                case CtrlType.CTRL_SHUTDOWN_EVENT:
+                    peer.SayGoodBye();
+                    client.Dispose();
+                    return true;
+                case CtrlType.CTRL_CLOSE_EVENT:
+                    peer.SayGoodBye();
+                    client.Dispose();
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        #endregion
 
     }
 }
