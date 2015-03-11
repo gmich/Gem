@@ -22,6 +22,7 @@ namespace Gem.Network.Chat.Client
 
         public Peer(string name)
         {
+            CanAppend = true;
             IncomingMessages = new ConcurrentQueue<string>();
             this.Name = name;
 
@@ -59,9 +60,11 @@ namespace Gem.Network.Chat.Client
             //Console.WriteLine(message);
         }
 
+        public bool CanAppend { get; set; }
+
         private void DequeueIncomingMessages()
         {
-            if(Console.CursorLeft==0)
+            if(Console.CursorLeft==0 && CanAppend)
             {
                 Thread.Sleep(10);
                 foreach (var msg in IncomingMessages)

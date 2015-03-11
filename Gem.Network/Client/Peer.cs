@@ -90,6 +90,12 @@ namespace Gem.Network
             return client.CreateMessage();
         }
 
+        public void Wait()
+        {
+            this.client.MessageReceivedEvent.WaitOne();
+        }
+
+
         public void Disconnect()
         {
             if (client != null)

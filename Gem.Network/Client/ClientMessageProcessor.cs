@@ -39,7 +39,7 @@ namespace Gem.Network
         public void ProcessNetworkMessages()
         {
             NetIncomingMessage im;
-
+            client.Wait();
             while ((im = this.client.ReadMessage()) != null)
             {
                 switch (im.MessageType)

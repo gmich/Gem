@@ -16,5 +16,6 @@ namespace Gem.Network
 
         void SendMessage(NetOutgoingMessage msg);
 
+        void Wait();
     }
 }

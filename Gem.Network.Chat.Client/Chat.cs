@@ -22,6 +22,8 @@ namespace Gem.Network.Chat.Client
         private static GemClient client;
         private static string name;
 
+        private static Dictionary<string, Action<string>> CommandTable;
+
         #endregion
 
         #region Private Helpers
@@ -33,8 +35,11 @@ namespace Gem.Network.Chat.Client
  Command               Description 
 -------------------------------------
 -help                  Show commands
+-lock                  Stop appending
+-unlock                Continue appending
 -gem <command>         Gem console       
 -cls                   Clear screen 
+-clsx                  Clear screen and lock appending
 -setname <newname>     Change nickname  
 -quit                  Quit  {0}", Environment.NewLine));
 
@@ -56,39 +61,19 @@ namespace Gem.Network.Chat.Client
             while (input != "-quit")
             {
                 input = Console.ReadLine();
-                                
+
                 if (input.Length >= 1)
                 {
-                    if (input == "-cls") Console.Clear();
-                    if (input == "-help")
+                    if (input.StartsWith("-"))
                     {
-                        PrintIntroMessage();
-                    }
-                    else if (input.StartsWith("-gem "))
-                    {
-                        var cmd = input.Substring(5);
-                        if (cmd.Length > 0)
+                        var cmdAndArgs = input.Split(' ');
+                        if (CommandTable.ContainsKey(cmdAndArgs[0]))
                         {
-                            client.SendCommand(cmd);
-                        }
-                    }
-                    else if (input[0] == '-')
-                    {
-                        var processed = input.Split(' ');
-                        if (processed.Length >= 2)
-                        {
-                            if (processed[0] == "-setname")
-                            {
-                                peer.ChangeName(processed[1]);
-                            }
-                            else
-                            {
-                                Console.WriteLine("Unknown command");
-                            }
+                            CommandTable[cmdAndArgs[0]].Invoke(input);
                         }
                         else
                         {
-                            Console.WriteLine("Unknown command");
+                            Console.WriteLine("Unknown Command");
                         }
                     }
                     else
@@ -104,13 +89,84 @@ namespace Gem.Network.Chat.Client
             }
         }
 
+        private static bool HasOnlyOneArgument(string input)
+        {
+            if (input.Split(' ').Count() == 1)
+                return true;
+            else
+            {
+                Console.WriteLine("Unknown command");
+                return false;
+            }
+        }
+        private static void RegisterCommands()
+        {
+            CommandTable.Add("-cls", x =>
+            {
+                if (HasOnlyOneArgument(x))
+                    Console.Clear();
+            });
+            CommandTable.Add("-clsx", x =>
+            {
+                if (HasOnlyOneArgument(x))
+                {
+                    Console.Clear();
+                    peer.CanAppend = false;
+                }
+            });
+            CommandTable.Add("-help", x =>
+            {
+                if (HasOnlyOneArgument(x))
+                    PrintIntroMessage();
+            });
+            CommandTable.Add("-lock", x =>
+            {
+                if (HasOnlyOneArgument(x))
+                {
+                    Console.WriteLine("[Locked]");
+                    peer.CanAppend = false;
+                }
+            });
+            CommandTable.Add("-unlock", x =>
+            {
+                if (HasOnlyOneArgument(x))
+                {
+                    Console.WriteLine("[Unlocked]");
+                    peer.CanAppend = true;
+                }
+            });
+            CommandTable.Add("-gem", x =>
+            {
+                var cmd = x.Substring(5);
+                if (cmd.Length > 0)
+                {
+                    client.SendCommand(cmd);
+                }
+            });
+            CommandTable.Add("-setname", x =>
+            {
+                var args = x.Split(' ');
+                if (args.Count() >= 2)
+                {
+                    peer.ChangeName(args[1]);
+                }
+                else
+                {
+                    Console.WriteLine("Unknown Command");
+                }
+            });
+        }
+
         #endregion
 
         static void Main(string[] args)
         {
+            CommandTable = new Dictionary<string, Action<string>>();
+            RegisterCommands();
 
             _handler += new EventHandler(Handler);
             SetConsoleCtrlHandler(_handler, true);
+
             //Pick a name
             Console.WriteLine("Your nickname : ");
             name = Console.ReadLine();
