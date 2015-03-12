@@ -1,4 +1,5 @@
 ﻿using Gem.Network.Client;
+using Gem.Network.Events;
 using Gem.Network.Messages;
 using Gem.Network.Utilities.Loggers;
 using System;
@@ -13,7 +14,7 @@ namespace Gem.Network.Chat.Client
     /// <summary>
     /// This is just an example to test Gem.Network
     /// </summary>
-    class Chat
+    public static class Chat
     {
 
         #region Fields
@@ -21,8 +22,8 @@ namespace Gem.Network.Chat.Client
         private static Peer peer;
         private static GemClient client;
         private static string name;
-
-        private static Dictionary<string, Action<string>> CommandTable;
+        private static YoutubeSearch search;
+        private static Dictionary<string, Func<string,bool>> CommandTable;
 
         #endregion
 
@@ -32,16 +33,19 @@ namespace Gem.Network.Chat.Client
         {
             Console.WriteLine(String.Format(
             @" 
- Command               Description 
--------------------------------------
--help                  Show commands
--lock                  Stop appending
--unlock                Continue appending
--gem <command>         Gem console       
--cls                   Clear screen 
--clsx                  Clear screen and lock appending
--setname <newname>     Change nickname  
--quit                  Quit  {0}", Environment.NewLine));
+ Command                       Description 
+----------------------------------------------------
+-help                          Show commands
+-lock                          Stop appending
+-unlock                        Continue appending
+-gem <command>                 Gem console       
+-cls                           Clear screen 
+-clsx                          Clear screen and lock appending
+-yt <keyword>                  Search youtube and retrieve video indexed
+-yt <keyword> | <index>        Search youtube and retrieve video the number of videos specified
+-play <index>                  Plays video by index
+-setname <newname>             Change nickname  
+-quit                          Quit  {0}", Environment.NewLine));
 
         }
 
@@ -66,14 +70,12 @@ namespace Gem.Network.Chat.Client
                 {
                     if (input.StartsWith("-"))
                     {
-                        var cmdAndArgs = input.Split(' ');
-                        if (CommandTable.ContainsKey(cmdAndArgs[0]))
+                        if (Executecommand(input))
                         {
-                            CommandTable[cmdAndArgs[0]].Invoke(input);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Unknown Command");
+                            //if (input.StartsWith("-yt"))
+                            //{
+                            //    peer.SendCommand(input);
+                            //}
                         }
                     }
                     else
@@ -89,6 +91,20 @@ namespace Gem.Network.Chat.Client
             }
         }
 
+        public static bool Executecommand(string cmd)
+        {
+            var cmdAndArgs = cmd.Split(' ');
+            if (CommandTable.ContainsKey(cmdAndArgs[0]))
+            {
+                return CommandTable[cmdAndArgs[0]].Invoke(cmd);
+            }
+            else
+            {
+                Console.WriteLine("Unknown Command");
+                return false;
+            }
+        }
+
         private static bool HasOnlyOneArgument(string input)
         {
             if (input.Split(' ').Count() == 1)
@@ -99,12 +115,17 @@ namespace Gem.Network.Chat.Client
                 return false;
             }
         }
+
         private static void RegisterCommands()
         {
             CommandTable.Add("-cls", x =>
             {
                 if (HasOnlyOneArgument(x))
+                {
                     Console.Clear();
+                    return true;
+                }
+                return false;
             });
             CommandTable.Add("-clsx", x =>
             {
@@ -112,12 +133,18 @@ namespace Gem.Network.Chat.Client
                 {
                     Console.Clear();
                     peer.CanAppend = false;
+                    return true;
                 }
+                return false;
             });
             CommandTable.Add("-help", x =>
             {
                 if (HasOnlyOneArgument(x))
+                {
                     PrintIntroMessage();
+                    return true;
+                }
+                return false;
             });
             CommandTable.Add("-lock", x =>
             {
@@ -125,7 +152,9 @@ namespace Gem.Network.Chat.Client
                 {
                     Console.WriteLine("[Locked]");
                     peer.CanAppend = false;
+                    return true;
                 }
+                return false;
             });
             CommandTable.Add("-unlock", x =>
             {
@@ -133,7 +162,9 @@ namespace Gem.Network.Chat.Client
                 {
                     Console.WriteLine("[Unlocked]");
                     peer.CanAppend = true;
+                    return true;
                 }
+                return false;
             });
             CommandTable.Add("-gem", x =>
             {
@@ -141,7 +172,9 @@ namespace Gem.Network.Chat.Client
                 if (cmd.Length > 0)
                 {
                     client.SendCommand(cmd);
+                    return true;
                 }
+                return false;
             });
             CommandTable.Add("-setname", x =>
             {
@@ -149,10 +182,85 @@ namespace Gem.Network.Chat.Client
                 if (args.Count() >= 2)
                 {
                     peer.ChangeName(args[1]);
+                    return true;
                 }
                 else
                 {
                     Console.WriteLine("Unknown Command");
+                    return false;
+                }
+            });
+            CommandTable.Add("-yt", x =>
+                {
+                    try
+                    {
+                        if (x.Split(' ').Count() < 2)
+                        {
+                            Console.WriteLine("Unknown Command");
+                            return false;
+                        }
+                        var args = x.Substring(4);
+                        if (x.Contains("|"))
+                        {
+                            var index = x.Substring(x.IndexOf('|') + 1);
+                            int indexPos;
+                            if (Int32.TryParse(index,out indexPos))
+                            {
+                                var breakIndex = args.IndexOf("|");
+                                if (breakIndex > 0)
+                                {
+                                    args = args.Substring(0, breakIndex);
+                                }
+                                peer.Send(String.Format("[ {0} searched for {1} ]", peer.Name, args));
+                                search.Run(args, indexPos).Wait();
+                                return true;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid index");
+                                return true;
+                            }
+                        }
+                        else
+                        {
+                            peer.Send(String.Format("[ {0} searched for {1} ]", peer.Name,args));
+                            search.Run(args, 5).Wait();
+                            return true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error: " + ex.Message);
+                        return false;
+                    }
+                });
+
+            CommandTable.Add("-play", x =>
+            {
+                var args = x.Split(' ');
+                if (args.Count() == 2)
+                {
+                    int index;
+                    if (Int32.TryParse(args[1], out index))
+                    {
+                        string title;
+                        if(search.Play(index,out title))
+                        {
+                            peer.Send(String.Format("[ {0} is watching {1} ] ",peer.Name,title));
+                            return true;
+                        }
+                        return false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid index");
+                        return false;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Unknown Command");
+                    return false;
                 }
             });
         }
@@ -161,9 +269,9 @@ namespace Gem.Network.Chat.Client
 
         static void Main(string[] args)
         {
-            CommandTable = new Dictionary<string, Action<string>>();
+            CommandTable = new Dictionary<string, Func<string, bool>>();
             RegisterCommands();
-
+              
             _handler += new EventHandler(Handler);
             SetConsoleCtrlHandler(_handler, true);
 
@@ -182,6 +290,8 @@ namespace Gem.Network.Chat.Client
 
             //Initialize a chat peer
             peer = new Peer(name);
+            search = new YoutubeSearch(peer.QueueMessage);
+
             GemNetworkDebugger.Echo = peer.QueueMessage;
 
             ProcessInput();
@@ -219,12 +329,18 @@ namespace Gem.Network.Chat.Client
                 case CtrlType.CTRL_LOGOFF_EVENT:
                     return false;
                 case CtrlType.CTRL_SHUTDOWN_EVENT:
-                    peer.SayGoodBye();
-                    client.Dispose();
+                    if (peer != null)
+                    {
+                        peer.SayGoodBye();
+                        client.Dispose();
+                    }
                     return true;
                 case CtrlType.CTRL_CLOSE_EVENT:
-                    peer.SayGoodBye();
-                    client.Dispose();
+                    if (peer != null)
+                    {
+                        peer.SayGoodBye();
+                        client.Dispose();
+                    }
                     return true;
                 default:
                     return false;

@@ -17,8 +17,8 @@ namespace Gem.Network.Chat.Client
         public string Name { get; set; }
         public ConcurrentQueue<string> IncomingMessages;
         private readonly ParallelTaskStarter messageAppender;
-
         private readonly INetworkEvent onEvent;
+        private readonly INetworkEvent onCommandExecute;
 
         public Peer(string name)
         {
@@ -30,9 +30,29 @@ namespace Gem.Network.Chat.Client
                   .CreateNetworkEvent
                   .AndHandleWith(this, x => new Action<string>(x.QueueMessage));
 
+            onCommandExecute = GemClient.Profile("GemChat")
+                  .CreateNetworkEvent
+                  .AndHandleWith(this, x => new Action<string>(x.ExecuteCommand));
+
             onEvent.Send(name + " has joined");
             messageAppender = new ParallelTaskStarter(TimeSpan.Zero);
             messageAppender.Start(DequeueIncomingMessages);
+        }
+
+        public void Send(string message)
+        {
+            onEvent.Send(message);
+        }
+        
+        public void SendCommand(string cmd)
+        {
+            onCommandExecute.Send(cmd);
+        }
+       
+
+        public void ExecuteCommand(string cmd)
+        {
+            Chat.Executecommand(cmd);
         }
 
         public void Say(string message)
