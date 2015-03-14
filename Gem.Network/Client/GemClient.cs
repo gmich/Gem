@@ -1,6 +1,7 @@
 ﻿using Gem.Network.Async;
 using Gem.Network.Fluent;
 using Gem.Network.Handlers;
+using Gem.Network.Managers;
 using Gem.Network.Messages;
 using Gem.Network.Utilities.Loggers;
 using Seterlund.CodeGuard;
@@ -21,48 +22,66 @@ namespace Gem.Network.Client
 
         private readonly IMessageProcessor messageProcessor;
 
-        private ConnectionDetails connectionDetails;
+        private ConnectionConfig connectionDetails;
 
         private ParallelTaskStarter asyncMessageProcessor;
+
+        public PackageConfig PackageConfig
+        {
+            get;
+            set;
+        }
 
         #endregion
 
 
         #region Constructor
 
-        public GemClient(string profile, string serverName, string IPorHost, int port,string disconnectMessage = "bye")
+        public GemClient(string profile, ConnectionConfig connectionConfig, PackageConfig packageConfig )
         {
-            Guard.That(IPorHost).IsNotNull();
-            Guard.That(profile).IsNotNull();
-            Guard.That(serverName).IsNotNull();
+            Guard.That(connectionConfig).IsNotNull();
+            Guard.That(packageConfig).IsNotNull();
 
-            connectionDetails = new ConnectionDetails { ServerName = serverName, IPorHost = IPorHost, Port = port ,DisconnectMessage = disconnectMessage};
+            PackageConfig=packageConfig;
+            connectionDetails = connectionConfig;
             GemNetwork.ActiveProfile = profile;
 
             //TODO: check if the client is already connected
             this.client = GemNetwork.Client;
+            this.client.PackageConfig = PackageConfig;
 
-            GemNetwork.ClientMessageFlow[profile, MessageType.Data].Add(new MessageFlowArguments
-            {
-                MessageHandler = new NotificationHandler(),
-                MessagePoco = typeof(ServerNotification),
-                ID = 1
-            });
+            RegisterServerNotificationPackages(profile);
 
-            this.messageProcessor = new ClientMessageProcessor(client);
+            messageProcessor = new ClientMessageProcessor(client);
             asyncMessageProcessor = new ParallelTaskStarter(TimeSpan.Zero);
             
             Write = new ActionAppender(GemNetworkDebugger.Echo);
-
         }
 
         #endregion
 
+        #region Private Helpers
+
+        private void RegisterServerNotificationPackages(string profile)
+        {
+            if (!GemClient.MessageFlow[profile, MessageType.Data].HasKey(GemNetwork.NotificationByte))
+            {
+                GemClient.MessageFlow[profile, MessageType.Data].Add(new MessageFlowArguments
+                {
+                    MessageHandler = new NotificationHandler(),
+                    MessagePoco = typeof(Notification),
+                    ID = GemNetwork.NotificationByte
+                });
+            }
+        }
+
+        #endregion
 
         #region Start / Close Connection
 
         public void Disconnect()
         {
+            asyncMessageProcessor.Stop();
             client.Disconnect();
         }
 
@@ -75,7 +94,7 @@ namespace Gem.Network.Client
         {
             try
             {
-                client.Connect(connectionDetails, ApprovalMessageDelegate());
+                client.Connect(connectionDetails, PackageConfig,ApprovalMessageDelegate());
                 asyncMessageProcessor.Start(() => messageProcessor.ProcessNetworkMessages());
             }
             catch (Exception ex)
@@ -88,6 +107,26 @@ namespace Gem.Network.Client
 
         #region Settings
 
+        private static ClientMessageFlowManager clientMessageFlowManager;
+        internal static ClientMessageFlowManager MessageFlow
+        {
+            get 
+            { 
+                return  clientMessageFlowManager 
+                      = clientMessageFlowManager?? new ClientMessageFlowManager();
+            }
+        }
+
+        private static ClientNetworkActionManager clientActionManager;
+        internal static ClientNetworkActionManager ActionManager
+        {
+            get
+            {
+                return clientActionManager
+                     = clientActionManager ?? new ClientNetworkActionManager();
+            }
+        }
+
         public static IClientMessageRouter Profile(string profileName)
         {
             return new ClientMessageRouter(profileName);
@@ -96,7 +135,7 @@ namespace Gem.Network.Client
         public void SendCommand(string command)
         {
             var om = client.CreateMessage();
-            var msg = new ServerNotification(GemNetwork.NotificationByte,command);
+            var msg = new Notification(command,"command");
             MessageSerializer.Encode(msg, ref om);
             client.SendMessage(msg);
         }

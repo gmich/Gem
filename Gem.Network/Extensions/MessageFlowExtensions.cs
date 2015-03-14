@@ -16,14 +16,6 @@ namespace Gem.Network.Extensions
             var readableMessage = MessageSerializer.Decode(message, args.MessagePoco);
             args.MessageHandler.Handle(readableMessage.ReadAllProperties());
         }
-
-        public static void SendCachedMessage(this MessageFlowArguments args)
-        {
-            if (args.CachedMessage != null)
-            {
-                args.EventRaisingclass.Send(args.CachedMessage);
-            }
-        }
         
     }
 }

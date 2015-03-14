@@ -51,8 +51,7 @@ namespace Gem.Network.Commands
             Echo = (msg, connection) =>
             {
                 var om = commandHost.CreateMessage();
-                var package = new ServerNotification(GemNetwork.NotificationByte,msg);
-                var serverNotification = new ServerNotification(GemNetwork.NotificationByte, msg);
+                var serverNotification = new Notification(msg,"message");
                 MessageSerializer.Encode(serverNotification, ref om);
                 GemNetworkDebugger.Echo(msg);
                 commandHost.SendOnlyTo(om, connection);
@@ -78,102 +77,7 @@ namespace Gem.Network.Commands
             this.password = newPassword;
         }
 
-        #region Register
 
-        private void RegisterEchoCommand()
-        {
-            RegisterCommand("echo",false, "Echo message",
-                (Server, connection, command, arguments)
-                => Server.NotifyAll(String.Format("{0} [Server] {1}",Environment.NewLine, command.Substring(4))));
-        }
-
-        private void RegisterViewClientsCommand()
-        {
-            RegisterCommand("showclients", false, "Show all the connected clients",
-                (Server, connection, command, arguments) =>
-                {
-                    var listOfIps = String.Join(Environment.NewLine, Server.ClientsIP.Select(x => x.ToString()));
-                    Server.NotifyOnly(listOfIps, connection);
-                });
-        }
-
-        private void RegisterHelpComand()
-        {
-            RegisterCommand("help", false, "Show command help",
-            (host, netConnection, command, args) =>
-            {
-                int maxLen = 0;
-                foreach (CommandInfo cmd in commandTable.Values)
-                    maxLen = Math.Max(maxLen, cmd.command.Length);
-
-                string fmt = String.Format("{{0,-{0}}}    {{1}}", maxLen);
-
-                Echo(String.Format("{0} Commands marked with -pwd require password {0}",Environment.NewLine),netConnection);
-                Echo(String.Format(fmt, "Commmand","Description"), netConnection);
-                Echo("---------------------------------", netConnection);
-                foreach (CommandInfo cmd in commandTable.Values)
-                {
-                    var commmandMessage = cmd.command;
-
-                    if(cmd.requiresAuthentication)
-                    {
-                        commmandMessage += " -pwd";
-                    }
-                    Echo(String.Format(fmt, commmandMessage, cmd.description), netConnection);
-                }
-                Echo(Environment.NewLine, netConnection);
-            });
-        }
-
-        private void RegisterKickCommand()
-        {
-            RegisterCommand("kick", true, "Kick player -[IP:Port] reason",
-            (host, netConnection, command, args) =>
-            {
-                string reason = string.Empty;
-                if (args.Count > 1)
-                {
-                    reason = args[1];
-                }
-                if (args.Count > 0)
-                {
-                    var ipAndPort = args[0].Split(':');
-                    int port = Int32.Parse(ipAndPort[1]);
-                    if(ipAndPort.Length==2)
-                    {
-
-                        if (host.Kick(new IPEndPoint(NetUtility.Resolve(ipAndPort[0]), port), reason))
-                    {
-                        host.NotifyOnly("Successfully kicked: " + args[1], netConnection);
-                        GemNetworkDebugger.Echo(String.Format(" {0} was kicked by {1}", args[1], GetConnectionInfo(netConnection)));
-                        return;
-                    }
-                    }
-                }
-                host.NotifyOnly("Unable to execute command",netConnection);
-
-            });
-        }
-
-        private void RegisterSetPasswordCommand()
-        {
-            RegisterCommand("setpwd", true, "Set new password",
-            (host, netConnection, command, args) =>
-            {
-                if (args.Count > 0)
-                {
-                    SetPassword(args[0]);
-                    host.NotifyOnly("New password: " + password, netConnection);
-                    GemNetworkDebugger.Echo(String.Format("New password: [ {0} ] by {1}", password, GetConnectionInfo(netConnection)));
-                }
-                else
-                {
-                    host.NotifyOnly("Problem occured", netConnection);
-                }
-            });
-        }
-
-        #endregion
 
         public void RegisterCommand(string command, bool requiresAuthorization, string description, CommandExecute callback)
         {
@@ -262,6 +166,7 @@ namespace Gem.Network.Commands
 
         #endregion
 
+
         #region Helpers
 
         private string GetConnectionInfo(NetConnection connection)
@@ -277,6 +182,7 @@ namespace Gem.Network.Commands
         }
 
         #endregion
+
 
         #region Register / Deregister
 
@@ -302,5 +208,102 @@ namespace Gem.Network.Commands
 
         #endregion
 
+
+        #region Common Commands
+
+        private void RegisterEchoCommand()
+        {
+            RegisterCommand("echo", false, "Echo message",
+                (Server, connection, command, arguments)
+                => Server.NotifyAll(String.Format("{0} [Server] {1}", Environment.NewLine, command.Substring(4))));
+        }
+
+        private void RegisterViewClientsCommand()
+        {
+            RegisterCommand("showclients", false, "Show all the connected clients",
+                (Server, connection, command, arguments) =>
+                {
+                    var listOfIps = String.Join(Environment.NewLine, Server.ClientsIP.Select(x => x.ToString()));
+                    Server.NotifyOnly(listOfIps, connection);
+                });
+        }
+
+        private void RegisterHelpComand()
+        {
+            RegisterCommand("help", false, "Show command help",
+            (host, netConnection, command, args) =>
+            {
+                int maxLen = 0;
+                foreach (CommandInfo cmd in commandTable.Values)
+                    maxLen = Math.Max(maxLen, cmd.command.Length);
+
+                string fmt = String.Format("{{0,-{0}}}    {{1}}", maxLen);
+
+                Echo(String.Format("{0} Commands marked with -pwd require password {0}", Environment.NewLine), netConnection);
+                Echo(String.Format(fmt, "Commmand", "Description"), netConnection);
+                Echo("---------------------------------", netConnection);
+                foreach (CommandInfo cmd in commandTable.Values)
+                {
+                    var commmandMessage = cmd.command;
+
+                    if (cmd.requiresAuthentication)
+                    {
+                        commmandMessage += " -pwd";
+                    }
+                    Echo(String.Format(fmt, commmandMessage, cmd.description), netConnection);
+                }
+                Echo(Environment.NewLine, netConnection);
+            });
+        }
+
+        private void RegisterKickCommand()
+        {
+            RegisterCommand("kick", true, "Kick player -[IP:Port] reason",
+            (host, netConnection, command, args) =>
+            {
+                string reason = string.Empty;
+                if (args.Count > 1)
+                {
+                    reason = args[1];
+                }
+                if (args.Count > 0)
+                {
+                    var ipAndPort = args[0].Split(':');
+                    int port = Int32.Parse(ipAndPort[1]);
+                    if (ipAndPort.Length == 2)
+                    {
+
+                        if (host.Kick(new IPEndPoint(NetUtility.Resolve(ipAndPort[0]), port), reason))
+                        {
+                            host.NotifyOnly("Successfully kicked: " + args[1], netConnection);
+                            GemNetworkDebugger.Echo(String.Format(" {0} was kicked by {1}", args[1], GetConnectionInfo(netConnection)));
+                            return;
+                        }
+                    }
+                }
+                host.NotifyOnly("Unable to execute command", netConnection);
+
+            });
+        }
+
+        private void RegisterSetPasswordCommand()
+        {
+            RegisterCommand("setpwd", true, "Set new password",
+            (host, netConnection, command, args) =>
+            {
+                if (args.Count > 0)
+                {
+                    SetPassword(args[0]);
+                    host.NotifyOnly("New password: " + password, netConnection);
+                    GemNetworkDebugger.Echo(String.Format("New password: [ {0} ] by {1}", password, GetConnectionInfo(netConnection)));
+                }
+                else
+                {
+                    host.NotifyOnly("Problem occured", netConnection);
+                }
+            });
+        }
+
+        #endregion
     }
 }

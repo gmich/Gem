@@ -27,7 +27,7 @@ namespace Gem.Network.Messages
         [Required]
         public string Password { get; set; }
 
-        private readonly byte _id = 0;
+        private readonly byte _id = GemNetwork.ConnectionApprovalByte;
         public byte Id
         {
             get
@@ -38,7 +38,7 @@ namespace Gem.Network.Messages
             { }
         }
 
-        public void Encode(NetOutgoingMessage om)
+        public virtual void Encode(NetOutgoingMessage om)
         {
             Guard.That(Message).IsNotNull();
             Guard.That(Sender).IsNotNull();

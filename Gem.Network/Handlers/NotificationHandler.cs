@@ -1,4 +1,6 @@
-﻿﻿using Gem.Network.Utilities.Loggers;
+﻿﻿using Gem.Network.Client;
+using Gem.Network.Messages;
+using Gem.Network.Utilities.Loggers;
 using System;
 
 namespace Gem.Network.Handlers
@@ -7,9 +9,14 @@ namespace Gem.Network.Handlers
     {
         public void Handle(params object[] args)
         {
-            if (args.Length > 1)
+            try
             {
-                GemNetworkDebugger.Echo((string)args[1]);
+                var notificaton = new Notification((string)args[1], (string)args[2]);
+                GemClient.ActionManager[GemNetwork.ActiveProfile].OnReceivedNotification(notificaton);
+            }
+            catch (Exception ex)
+            {
+                GemNetworkDebugger.Echo("Received unhandled notification " + ex.Message);
             }
         }
     }

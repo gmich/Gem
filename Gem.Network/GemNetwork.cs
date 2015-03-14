@@ -1,10 +1,10 @@
-﻿using Gem.Network.Commands;
+﻿using Gem.Network.Client;
+using Gem.Network.Commands;
 using Gem.Network.Fluent;
-using Gem.Network.Managers;
-using Gem.Network.Providers;
 using Gem.Network.Server;
 using Gem.Network.Utilities.Loggers;
 using System;
+using System.Collections.Generic;
 
 namespace Gem.Network
 {
@@ -12,37 +12,43 @@ namespace Gem.Network
     {
 
         //Predefined package types
+        internal static readonly byte InitialId = (byte)3;
+        internal static readonly byte DisconnectByte = (byte)2;
         internal static readonly byte NotificationByte = (byte)1;
+        internal static readonly byte ConnectionApprovalByte = (byte)0;
 
         static GemNetwork()
         {
             Startup.Setup();
-            clientMessageFlowManager = new ClientMessageFlowManager();
-            serverConfigurationManager = new ServerConfigurationManager();
             Client = new Peer();
             Server = new NetworkServer(GemNetworkDebugger.Echo);
             commander = new ServerCommandHost(Server);
-            predefinedMessageFlowManager = new ClientPredefinedMessageFlowManager();
-            clientActionManager = new ClientNetworkActionManager();   
+            MessageCounter = new Dictionary<string, byte>();
+
         }
   
         #region Fields
-
-        private static ClientPredefinedMessageFlowManager predefinedMessageFlowManager;
-
-        private static ClientMessageFlowManager clientMessageFlowManager;
-
-        private static ServerConfigurationManager serverConfigurationManager;
-
-        private static ClientNetworkActionManager clientActionManager;
-
+                
         internal static ICommandHost commander;
 
         internal static IClient Client;
 
         internal static IServer Server;
 
-        internal static int dynamicMessagesCreated = 2;
+        private static Dictionary<string, byte> MessageCounter;
+
+        internal static byte GetMesssageId(string profile) 
+        {
+               if(MessageCounter.ContainsKey(profile))
+               {
+                   return MessageCounter[profile]++;
+               }
+               else
+               {
+                   MessageCounter.Add(profile, InitialId);
+                   return InitialId;
+               }
+        }
 
         #endregion
 
@@ -62,32 +68,7 @@ namespace Gem.Network
                 return commander;
             }
         }
-
-        internal static ClientMessageFlowManager ClientMessageFlow
-        {
-            get
-            {
-                return clientMessageFlowManager;
-            }
-        }
-
-        internal static ClientNetworkActionManager ClientActionManager
-        {
-            get
-            {
-                return clientActionManager;
-            }
-        }
-        
-        internal static ServerConfigurationManager ServerConfiguration
-        {
-            get
-            {
-                return serverConfigurationManager;
-            }
-        }
-
-
+               
 
         #endregion
 

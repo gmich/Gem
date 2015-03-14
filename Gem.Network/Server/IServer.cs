@@ -13,7 +13,7 @@ namespace Gem.Network.Server
 
         int Port { get; }
  
-        bool Connect(ServerConfig config);
+        bool Connect(ServerConfig config,PackageConfig packageConfig);
 
         List<IPEndPoint> ClientsIP { get; }
 

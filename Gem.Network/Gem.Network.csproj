@@ -74,17 +74,14 @@
     <Compile Include="Async\ParallelTask.cs" />
     <Compile Include="Builders\API\IMessageHandlerBuilder.cs" />
     <Compile Include="Builders\CsScriptPocoBuilder.cs" />
-    <Compile Include="Fluent\API\IActionDirector.cs" />
     <Compile Include="Handlers\NotificationHandler.cs" />
-    <Compile Include="Managers\ClientPredefinedMessageFlowManager.cs" />
     <Compile Include="Messages\INetworkPackage.cs" />
-    <Compile Include="Extensions\MessageTypeExtensions.cs" />
     <Compile Include="Managers\ClientNetworkActionManager.cs" />
-    <Compile Include="NetworkStatus.cs" />
-    <Compile Include="Providers\PredefinedEventProvider.cs" />
+    <Compile Include="Messages\Predefined\DisconnectMessage.cs" />
+    <Compile Include="PackageConfig.cs" />
     <Compile Include="Providers\ClientActionProvider.cs" />
     <Compile Include="Server\GemServer.cs" />
-    <Compile Include="Messages\Connection\ServerNotification.cs" />
+    <Compile Include="Messages\Predefined\ServerNotification.cs" />
     <Compile Include="Server\ServerCommandAppender.cs" />
     <Compile Include="Server\ServerMessageProcessor.cs" />
     <Compile Include="Client\GemClient.cs" />
@@ -101,7 +98,7 @@
     <Compile Include="Cache\Events\IEventProvider.cs" />
     <Compile Include="Messages\IMessageProcessor.cs" />
     <Compile Include="Providers\AbstractProvider.cs" />
-    <Compile Include="Managers\ServerMessageFlowManager.cs" />
+    <Compile Include="Managers\ServerActionManager.cs" />
     <Compile Include="Providers\ClientMessageFlowInfoProvider.cs" />
     <Compile Include="Managers\ClientMessageFlowManager.cs" />
     <Compile Include="Events\INetworkEvent.cs" />
@@ -120,8 +117,8 @@
     <Compile Include="Factories\MessageHandlerFactory.cs" />
     <Compile Include="Factories\PocoTypeFactory.cs" />
     <Compile Include="Messages\MessageFlowArguments.cs" />
-    <Compile Include="Messages\Connection\ConnectionApprovalMessage.cs" />
-    <Compile Include="Messages\Connection\IServerMessage.cs" />
+    <Compile Include="Messages\Predefined\ConnectionApprovalMessage.cs" />
+    <Compile Include="Messages\Predefined\IServerMessage.cs" />
     <Compile Include="Handlers\IMessageHandler.cs" />
     <Compile Include="Providers\NetworkConfigurationProvider.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
@@ -159,7 +156,6 @@
     <Compile Include="Utilities\Registerer.cs" />
     <Compile Include="Server\IServer.cs" />
     <Compile Include="Server\NetworkServer.cs" />
-    <Compile Include="Server\ServerManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

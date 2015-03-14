@@ -47,8 +47,7 @@ namespace Gem.Network.Chat.Client
         public void SendCommand(string cmd)
         {
             onCommandExecute.Send(cmd);
-        }
-       
+        }       
 
         public void ExecuteCommand(string cmd)
         {

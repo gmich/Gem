@@ -2,6 +2,7 @@
 using Gem.Network.Commands;
 using Gem.Network.Fluent;
 using Gem.Network.Messages;
+using Gem.Network.Providers;
 using Gem.Network.Utilities.Loggers;
 using Lidgren.Network;
 using Seterlund.CodeGuard;
@@ -15,30 +16,42 @@ namespace Gem.Network.Server
         #region Fields
 
         private readonly IServer server;
-
-        public bool IsConnected { get { return server.IsConnected; } }
-
+        
         private readonly IMessageProcessor messageProcessor;
 
-        private ServerConfig config;
+        private ServerConfig serverConfig;
 
         private ParallelTaskStarter asyncMessageProcessor;
 
         private IAppender Write;
+
+        public PackageConfig PackageConfig
+        {
+            get;
+            set;
+        }
+
+        public bool IsConnected
+        {
+            get
+            {
+                return server.IsConnected;
+            }
+        }
 
         #endregion
 
 
         #region Constructor
 
-        public GemServer(string profileName, string serverName, int port, int maxConnections, string password, bool requireAuthentication = false)
+        public GemServer(string profileName, ServerConfig serverConfig,PackageConfig packageConfig)
         {
-            Guard.That(profileName).IsNotNull();
-            Guard.That(serverName).IsNotNull();
+            Guard.That(serverConfig).IsNotNull();
+            Guard.That(packageConfig).IsNotNull();
             
             GemNetwork.ActiveProfile = profileName;
 
-            if (requireAuthentication)
+            if (serverConfig.RequireAuthentication)
             {
                 RequireAuthentication();
             }
@@ -52,9 +65,9 @@ namespace Gem.Network.Server
                 });
             }
 
-            config = new ServerConfig { Name = serverName, MaxConnections = maxConnections, Port = port, Password = password };
+            this.serverConfig = serverConfig;
+            this.PackageConfig = packageConfig;
 
-            //GemNetwork.Server.Dispose();
             server = GemNetwork.Server;
 
             messageProcessor = new ServerMessageProcessor(server);
@@ -95,6 +108,7 @@ namespace Gem.Network.Server
 
         public void Disconnect()
         {
+            asyncMessageProcessor.Stop();
             server.Disconnect();
         }
 
@@ -107,7 +121,7 @@ namespace Gem.Network.Server
         {
             try
             {
-                server.Connect(config);
+                server.Connect(serverConfig,PackageConfig);
                 asyncMessageProcessor.Start(() => messageProcessor.ProcessNetworkMessages());
             }
             catch (Exception ex)
@@ -119,14 +133,21 @@ namespace Gem.Network.Server
         #endregion
 
 
-        #region Static Settings
+        #region Settings
+
+        private static ServerConfigurationManager serverConfigurationManager;
+        internal static ServerConfigurationManager ServerConfiguration
+        {
+            get
+            {
+                return serverConfigurationManager
+                      = serverConfigurationManager ?? new ServerConfigurationManager();
+            }
+        }
 
         public static IServerMessageRouter Profile(string profileName)
         {
-            GemNetwork.dynamicMessagesCreated++;
-
             return new ServerMessageRouter(profileName);
-
         }
 
         public static void RegisterCommand(string command,string description,bool requireAuthorization,CommandExecute callback)

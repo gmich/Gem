@@ -8,6 +8,7 @@ using Gem.Network.Containers;
 using Gem.Network.Utilities.Loggers;
 using Gem.Network.Extensions;
 using Gem.Network.Events;
+using Gem.Network.Client;
 
 namespace Gem.Network
 {
@@ -19,7 +20,7 @@ namespace Gem.Network
         private readonly IClient client;
 
         private readonly IAppender Write;
-       
+
         #endregion
 
 
@@ -49,24 +50,24 @@ namespace Gem.Network
                         {
                             case NetConnectionStatus.InitiatedConnect:
                                 Write.Info("Connected to {0}", im.SenderConnection);
-                                MessageType.Connecting.ClientHandle(im);
+                                MessageType.Connecting.Handle(im,client);
                                 break;
                             case NetConnectionStatus.Connected:
                                 Write.Info("Connected to {0}", im.SenderConnection);
-                                MessageType.Connected.ClientHandle(im);
+                                MessageType.Connected.Handle(im, client);
                                 break;
                             case NetConnectionStatus.Disconnecting:
                                 Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
-                                MessageType.Disconnecting.ClientHandle(im);
+                                MessageType.Disconnecting.Handle(im, client);
                                 break;
                             case NetConnectionStatus.Disconnected:
                                 Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
-                                MessageType.Disconnected.ClientHandle(im);
+                                MessageType.Disconnected.Handle(im, client);
                                 break;
                         }
                         break;
                     case NetIncomingMessageType.Data:
-                        MessageType.Data.ClientHandle(im);
+                        MessageType.Data.Handle(im, client);
                         break;
                     case NetIncomingMessageType.VerboseDebugMessage:
                     case NetIncomingMessageType.DebugMessage:
@@ -79,7 +80,7 @@ namespace Gem.Network
                         //MessageType.Error.ClientHandle(im); 
                         break;
                 }
-             
+
                 client.Recycle(im);
             }
 
@@ -87,6 +88,27 @@ namespace Gem.Network
 
         #endregion
 
+    }
 
+    internal static class MessageTypeExtensions
+    {
+        public static void Handle(this MessageType messageType, NetIncomingMessage im, IClient client)
+        {
+            byte id = im.ReadByte();
+
+            if (id == GemNetwork.NotificationByte)
+            {
+                GemClient.ActionManager[GemNetwork.ActiveProfile].OnReceivedNotification(new Notification(im));
+                return;
+            }
+
+            GemClient.ActionManager[GemNetwork.ActiveProfile, messageType].Action(client);
+
+            if (GemClient.MessageFlow[GemNetwork.ActiveProfile, messageType].HasKey(id))
+            {
+                GemClient.MessageFlow[GemNetwork.ActiveProfile, messageType, id]
+                      .HandleIncomingMessage(im);
+            }
+        }
     }
 }

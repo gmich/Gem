@@ -16,14 +16,28 @@ namespace Gem.Network.Fluent
             this.profile = profile;
         }
 
-        public void OnIncomingConnection(Action<IServer, NetConnection, ConnectionApprovalMessage> action)
+        public void OnIncomingConnection(Action<IServer, NetConnection, ConnectionApprovalMessage> action, bool append = false)
         {
-            GemNetwork.ServerConfiguration[profile].OnIncomingConnection = action;
+            if (append)
+            {
+                GemServer.ServerConfiguration[profile].OnIncomingConnection += action;
+            }
+            else
+            {
+                GemServer.ServerConfiguration[profile].OnIncomingConnection = action;
+            }
         }
-        
-        public void OnClientDisconnect(Action<IServer, NetConnection> action)
+
+        public void OnClientDisconnect(Action<IServer, NetConnection,string> action, bool append = false)
         {
-            GemNetwork.ServerConfiguration[profile].OnClientDisconnect = action;
+            if (append)
+            {
+                GemServer.ServerConfiguration[profile].OnClientDisconnect += action;
+            }
+            else
+            {
+                GemServer.ServerConfiguration[profile].OnClientDisconnect = action;
+            }
         }
 
         public void RegisterCommand(string command, string description, CommandExecute callback, bool requiresAuthorization = true)
@@ -31,6 +45,17 @@ namespace Gem.Network.Fluent
             GemNetwork.Commander.RegisterCommand(command,requiresAuthorization, description, callback);
         }
 
+        public void HandleNotifications(Action<IServer, NetConnection, Notification> action, bool append = false)
+        {
+            if (append)
+            {
+                GemServer.ServerConfiguration[profile].HandleNotifications += action;
+            }
+            else
+            {
+                GemServer.ServerConfiguration[profile].HandleNotifications = action;
+            }
+        }
     }
 }
 

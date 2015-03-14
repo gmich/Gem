@@ -9,6 +9,7 @@ namespace Gem.Network
     /// </summary>
     public interface INetworkPeer : IDisposable
     {
+        PackageConfig PackageConfig { get; set; }
 
         NetOutgoingMessage CreateMessage();
 

@@ -18,9 +18,13 @@ namespace Gem.Network.Server
 
         public int MaxConnections { get; set; }
 
-        public int SequenceChannel { get { return 1; } }
+        public bool RequireAuthentication { get; set; }
 
-        public NetDeliveryMethod DeliveryMethod { get { return NetDeliveryMethod.ReliableUnordered; } }
+        public float ConnectionTimeout { get; set; }
+
+        public bool EnableUPnP { get; set; }
+
+        public string DisconnectMessage { get; set; }
 
     }
 }

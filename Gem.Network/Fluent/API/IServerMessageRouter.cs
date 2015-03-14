@@ -9,9 +9,11 @@ namespace Gem.Network.Fluent
     public interface IServerMessageRouter
     {
 
-        void OnIncomingConnection(Action<IServer, NetConnection, ConnectionApprovalMessage> action);
+        void OnIncomingConnection(Action<IServer, NetConnection, ConnectionApprovalMessage> action, bool append = false);
 
-        void OnClientDisconnect(Action<IServer, NetConnection> action);
+        void OnClientDisconnect(Action<IServer, NetConnection,string> action, bool append = false);
+
+        void HandleNotifications(Action<IServer, NetConnection, Notification> action, bool append = false);
 
         void RegisterCommand(string command, string description, CommandExecute callback, bool requiresAuthorization = true);
 

@@ -1,4 +1,5 @@
-﻿using Gem.Network.Commands;
+﻿using Gem.Network.Client;
+using Gem.Network.Commands;
 using Gem.Network.Messages;
 using Lidgren.Network;
 using System;
@@ -14,67 +15,46 @@ namespace Gem.Network.Fluent
             this.profile = profile;
         }
 
-        public IActionDirector OnReceivedServerNotification
+        public void OnReceivedServerNotification(Action<Notification> action, bool append = false)
         {
-            get
+            if (append)
             {
-                return new ClientActionDirector(profile, MessageType.ServerNotification);
+                GemClient.ActionManager[profile].OnReceivedNotification += action;
+            }
+            else
+            {
+                GemClient.ActionManager[profile].OnReceivedNotification = action;
             }
         }
 
-        public IActionDirector OnHandshake
+        public void OnConnecting(Action<IClient> action, bool append = false)
         {
-            get
-            {
-                return new ClientActionDirector(profile, MessageType.Handshake);
-            }
+            Do(action, MessageType.Connecting, append);
+
+        }
+        public void WhenConnected(Action<IClient> action, bool append = false)
+        {
+            Do(action, MessageType.Connected, append);
         }
 
-        public IActionDirector OnConnecting
+        public void OnDisconnecting(Action<IClient> action, bool append = false)
         {
-            get
-            {
-                return new ClientActionDirector(profile, MessageType.Connecting);
-            }
-        }
-        public IActionDirector WhenConnected
-        {
-            get
-            {
-                return new ClientActionDirector(profile, MessageType.Connected);
-            }
+            Do(action, MessageType.Disconnecting, append);
         }
 
-        public IActionDirector OnDisconnecting
+        public void OnDisconnected(Action<IClient> action, bool append = false)
         {
-            get
-            {
-                return new ClientActionDirector(profile, MessageType.Disconnecting);
-            }
+            Do(action, MessageType.Disconnected, append);
         }
 
-        public IActionDirector OnDisconnected
+        public void HandleWarnings(Action<IClient> action, bool append = false)
         {
-            get
-            {
-                return new ClientActionDirector(profile, MessageType.Disconnected);
-            }
+            throw new NotImplementedException();
         }
 
-        public IActionDirector HandleWarnings
+        public void HandleErrors(Action<IClient> action, bool append = false)
         {
-            get
-            {
-                return new ClientActionDirector(profile, MessageType.Disconnected);
-            }
-        }
-
-        public IActionDirector HandleErrors
-        {
-            get
-            {
-                return new ClientActionDirector(profile, MessageType.Disconnected);
-            }
+            throw new NotImplementedException();
         }
 
         public IMessageFlowBuilder CreateNetworkEvent
@@ -85,30 +65,18 @@ namespace Gem.Network.Fluent
             }
         }
 
-    }
-
-    public class ClientActionDirector : IActionDirector
-    {
-        private readonly string profile;
-        private readonly MessageType messageType;
-
-        public ClientActionDirector(string profile, MessageType messageType)
+        private void Do(Action<IClient> action, MessageType messageType, bool append)
         {
-            this.profile = profile;
-            this.messageType = messageType;
-        }
-
-        public IMessageFlowBuilder Send(params object[] arguments)
-        {
-            return new MessageFlowBuilder(profile, messageType);
-        }
-
-        public void Do(Action<NetIncomingMessage> action)
-        {
-            GemNetwork.ClientActionManager[profile, messageType].Add(action);
+            if (append)
+            {
+                GemClient.ActionManager[profile, messageType].Action += action;
+            }
+            else
+            {
+                GemClient.ActionManager[profile, messageType].Action = action;
+            }
         }
     }
-
 }
 
 

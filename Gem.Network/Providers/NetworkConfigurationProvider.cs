@@ -25,10 +25,10 @@ namespace Gem.Network.Providers
 
 
     internal class ServerConfigurationManager
-    : AbstractContainer<ServerMessageFlowManager, string>
+    : AbstractContainer<ServerActionManager, string>
     {
         public ServerConfigurationManager()
-            : base(new FlyweightRepository<ServerMessageFlowManager, string>())
+            : base(new FlyweightRepository<ServerActionManager, string>())
         { }
     }
     

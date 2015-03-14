@@ -46,12 +46,12 @@ namespace Gem.Network.Tests.Flow
         {
             myNewType = pocoBuilder.Build("POCO", propertyList);
             client = new Peer();
-            client.Connect(new ConnectionDetails
-            {
-                IPorHost = "127.0.0.1",
-                Port = 14241,
-                ServerName = "local"
-            });
+            //client.Connect(new ConnectionConfig
+            //{
+            //    IPorHost = "127.0.0.1",
+            //    Port = 14241,
+            //    ServerName = "local"
+            //});
         }
 
         [When(@"I send a greeding message")]

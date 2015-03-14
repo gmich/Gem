@@ -19,36 +19,56 @@ namespace Gem.Network.Server
 
         #region Fields
 
-        public string Password { get { return serverConfig.Password; } }
-
-        //TODO: provide this somehow
-        private readonly string disconnectMessage = "bye";
-        
         private ServerConfig serverConfig;
 
         private bool isDisposed;
 
         private NetServer netServer;
-        
+
         private readonly IAppender appender;
+
+        public string Password
+        {
+            get
+            {
+                return serverConfig.Password;
+            }
+        }
 
         public IPAddress IP
         {
             get
-            {  return this.netServer.Configuration.LocalAddress;  }
+            {
+                return this.netServer.Configuration.LocalAddress;
+            }
         }
 
         public int Port
         {
             get
-            { return this.netServer.Configuration.Port;   }
+            {
+                return this.netServer.Configuration.Port;
+            }
         }
-        
+
         public bool IsConnected
         {
             get
             {
                 return netServer.Status == NetPeerStatus.Running;
+            }
+        }
+
+        private PackageConfig packageConfig;
+        public PackageConfig PackageConfig
+        {
+            get
+            {
+                return packageConfig;
+            }
+            set
+            {
+                packageConfig = value;
             }
         }
 
@@ -59,7 +79,7 @@ namespace Gem.Network.Server
 
         public NetworkServer(Action<string> DebugListener)
         {
-            this.appender = new ActionAppender(DebugListener);       
+            this.appender = new ActionAppender(DebugListener);
         }
 
         private void Dispose(bool disposing)
@@ -78,14 +98,15 @@ namespace Gem.Network.Server
         {
             this.Dispose(true);
         }
-        
+
         #endregion
 
 
         #region Connect / Disconnect
 
-        public bool Connect(ServerConfig serverConfig)
+        public bool Connect(ServerConfig serverConfig, PackageConfig packageConfig)
         {
+            this.PackageConfig = packageConfig;
             this.serverConfig = serverConfig;
             if (netServer != null)
             {
@@ -96,9 +117,8 @@ namespace Gem.Network.Server
                 {
                     Port = serverConfig.Port,
                     MaximumConnections = serverConfig.MaxConnections,
-                    PingInterval = 2.0f,
-                    //TODO: configure timeout
-                    ConnectionTimeout = 5f
+                    EnableUPnP = serverConfig.EnableUPnP,
+                    ConnectionTimeout = serverConfig.ConnectionTimeout
                 };
             config.EnableMessageType(NetIncomingMessageType.Data);
             config.EnableMessageType(NetIncomingMessageType.WarningMessage);
@@ -127,7 +147,7 @@ namespace Gem.Network.Server
 
         public void Disconnect()
         {
-            netServer.Shutdown(disconnectMessage);
+            netServer.Shutdown(serverConfig.DisconnectMessage);
         }
 
         #endregion
@@ -139,7 +159,7 @@ namespace Gem.Network.Server
         {
             return netServer.CreateMessage();
         }
-                
+
         public NetIncomingMessage ReadMessage()
         {
             return netServer.ReadMessage();
@@ -156,7 +176,7 @@ namespace Gem.Network.Server
         /// <param name="message">The message to send</param>
         public void SendToAll(NetOutgoingMessage message)
         {
-            netServer.SendToAll(message, serverConfig.DeliveryMethod);
+            netServer.SendToAll(message, packageConfig.DeliveryMethod);
         }
 
         /// <summary>
@@ -168,8 +188,8 @@ namespace Gem.Network.Server
         {
             netServer.SendToAll(message,
                                 sender,
-                                serverConfig.DeliveryMethod,
-                                serverConfig.SequenceChannel);
+                                packageConfig.DeliveryMethod,
+                                packageConfig.SequenceChannel);
         }
 
         /// <summary>
@@ -182,8 +202,8 @@ namespace Gem.Network.Server
 
             netServer.SendMessage(message,
                                   clients,
-                                  serverConfig.DeliveryMethod,
-                                  serverConfig.SequenceChannel);
+                                  packageConfig.DeliveryMethod,
+                                  packageConfig.SequenceChannel);
         }
 
         /// <summary>
@@ -197,8 +217,8 @@ namespace Gem.Network.Server
             {
                 netServer.SendMessage(message,
                                       new List<NetConnection> { client },
-                                      serverConfig.DeliveryMethod,
-                                      serverConfig.SequenceChannel);
+                                      packageConfig.DeliveryMethod,
+                                      packageConfig.SequenceChannel);
             }
         }
         #endregion
@@ -226,7 +246,7 @@ namespace Gem.Network.Server
         {
             var netconnection = netServer.Connections.Where(x => x.RemoteEndpoint.Address == clientIp).Select(x => x.RemoteEndpoint).FirstOrDefault();
 
-            if(netconnection!=null)
+            if (netconnection != null)
             {
                 netServer.GetConnection(netconnection).Disconnect(reason);
                 return true;
@@ -242,13 +262,16 @@ namespace Gem.Network.Server
             netServer.GetConnection(clientIp).Disconnect(reason);
             return true;
         }
-    
+
         #endregion
+
+
+        #region Notifications
 
         public void NotifyAll(string message)
         {
             GemNetworkDebugger.Echo(String.Format("Sent to all :  {0}", message));
-            var serverNotification = new ServerNotification(GemNetwork.NotificationByte,message);
+            var serverNotification = new Notification(message,"message");
             var om = netServer.CreateMessage();
             MessageSerializer.Encode(serverNotification, ref om);
             SendToAll(om);
@@ -260,7 +283,7 @@ namespace Gem.Network.Server
             if (client != null)
             {
                 GemNetworkDebugger.Echo(String.Format("{0}  :  {1}", client, message));
-                var serverNotification = new ServerNotification(GemNetwork.NotificationByte, message);
+                var serverNotification = new Notification(message,"message");
                 var om = netServer.CreateMessage();
                 MessageSerializer.Encode(serverNotification, ref om);
                 SendOnlyTo(om, client);
@@ -270,5 +293,8 @@ namespace Gem.Network.Server
                 GemNetworkDebugger.Echo(String.Format("Server  :  {0}", message));
             }
         }
+
+        #endregion
+
     }
 }

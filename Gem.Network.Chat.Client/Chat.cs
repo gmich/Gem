@@ -51,11 +51,20 @@ namespace Gem.Network.Chat.Client
 
         private static void ClientSetup()
         {
-            // GemNetwork.ActiveProfile = "GemChat";
 
             GemNetworkDebugger.Echo = Console.WriteLine;
-            //client = new GemClient("GemChat", "GemChat", "127.0.0.1", 14242, name);
-            client = new GemClient("GemChat", "GemChat", "83.212.103.13", 14242, name);
+
+            //client = new GemClient("GemChat", "GemChat",  "83.212.103.13",, 14242, name);
+            client = new GemClient("GemChat", new ConnectionConfig
+            {
+                ServerName = "GemChat",
+                IPorHost = "127.0.0.1",
+                Port = 14242,
+                DisconnectMessage = name
+            },  PackageConfig.TCP);
+
+            GemClient.Profile("GemChat").OnReceivedServerNotification(x => peer.QueueMessage(x.Message));
+            GemClient.Profile("GemChat").OnDisconnecting(x => peer.Send("bye bitches"));
         }
 
 
@@ -90,6 +99,8 @@ namespace Gem.Network.Chat.Client
                 }
             }
         }
+
+        #region Commands
 
         public static bool Executecommand(string cmd)
         {
@@ -267,6 +278,8 @@ namespace Gem.Network.Chat.Client
 
         #endregion
 
+        #endregion
+
         static void Main(string[] args)
         {
             CommandTable = new Dictionary<string, Func<string, bool>>();
@@ -295,10 +308,6 @@ namespace Gem.Network.Chat.Client
             GemNetworkDebugger.Echo = peer.QueueMessage;
 
             ProcessInput();
-
-            peer.SayGoodBye();
-
-            client.Dispose();
 
             Console.ReadLine();
         }

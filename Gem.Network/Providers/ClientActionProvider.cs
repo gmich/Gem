@@ -17,35 +17,15 @@ namespace Gem.Network.Providers
     }
 
     public class ActionMessageTypeProvider
-             : AbstractContainer<ActionProvider, MessageType>
+             : AbstractContainer<ActionProviderArguments, MessageType>
     {
         public ActionMessageTypeProvider()
-            : base(new FlyweightRepository<ActionProvider, MessageType>())
-        { }
-    }
-
-    public class ActionProviderArguments
-    {
-        public Action<NetIncomingMessage> Invoke { get; set; }
-    }
-
-    public class ActionProvider
-    : AbstractContainer<ActionProviderArguments, byte>
-    {
-        public ActionProvider()
-            : base(new FlyweightRepository<ActionProviderArguments, byte>()) { }
-
-        public IDisposable Add(Action<NetIncomingMessage> action)
+            : base(new FlyweightRepository<ActionProviderArguments, MessageType>())
         {
-            Guard.That(dataRepository).IsTrue(x => x.TotalElements < (int)byte.MaxValue,
-            "You have reached the maximum capacity. Consider deregistering");
-
-            byte id = GetUniqueByte();
-
-            return dataRepository.Add(id, new ActionProviderArguments { Invoke = action });
+            OnReceivedNotification = (x) => { };
         }
 
-        public override ActionProviderArguments this[byte id]
+        public override ActionProviderArguments this[MessageType id]
         {
             get
             {
@@ -55,18 +35,22 @@ namespace Gem.Network.Providers
                 }
                 else
                 {
-                    return null;
+                    return new ActionProviderArguments();
                 }
             }
         }
 
-        private byte GetUniqueByte()
-        {
-            byte uniqueByte = (byte)dataRepository.TotalElements;
-            do
-            { } while (dataRepository.HasKey(++uniqueByte));
+        public Action<Notification> OnReceivedNotification { get; set; }
 
-            return uniqueByte;
+    }
+
+    public class ActionProviderArguments
+    {
+        public ActionProviderArguments()
+        {
+            Action = x => { };
         }
+
+        public Action<IClient> Action { get; set; }
     }
 }

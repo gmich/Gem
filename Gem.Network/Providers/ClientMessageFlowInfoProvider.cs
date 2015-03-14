@@ -18,7 +18,7 @@ namespace Gem.Network.Managers
         {
             Guard.That(dataRepository).IsTrue(x => x.TotalElements < (int)byte.MaxValue,
             "You have reached the maximum capacity. Consider deregistering");
-
+            
             clientInfo.ID = GetUniqueByte();
 
             return dataRepository.Add(clientInfo.ID, clientInfo);

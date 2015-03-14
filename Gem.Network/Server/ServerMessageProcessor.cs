@@ -48,7 +48,7 @@ namespace Gem.Network.Server
                     case NetIncomingMessageType.ConnectionApproval:
                         var approvalMsg = new ConnectionApprovalMessage(im);
                         Write.Info("Incoming Connection");
-                        GemNetwork.ServerConfiguration[GemNetwork.ActiveProfile].OnIncomingConnection(server, im.SenderConnection, approvalMsg);
+                        GemServer.ServerConfiguration[GemNetwork.ActiveProfile].OnIncomingConnection(server, im.SenderConnection, approvalMsg);
                         break;
                     case NetIncomingMessageType.StatusChanged:
                         switch ((NetConnectionStatus)im.ReadByte())
@@ -59,6 +59,7 @@ namespace Gem.Network.Server
                                 break;
                             case NetConnectionStatus.Disconnected:
                                 Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
+                                GemServer.ServerConfiguration[GemNetwork.ActiveProfile].OnClientDisconnect(server, im.SenderConnection,im.ReadString());
                                 server.NotifyAll("[Disconnected client] " + im.ReadString());
                                 break;
                             case NetConnectionStatus.RespondedConnect:
@@ -69,8 +70,8 @@ namespace Gem.Network.Server
                     case NetIncomingMessageType.Data:
                         if (im.ReadByte() == GemNetwork.NotificationByte)
                         {
-                            var cmd = new ServerNotification(im);
-                            GemNetwork.Commander.ExecuteCommand(im.SenderConnection, cmd.Message);
+                            GemServer.ServerConfiguration[GemNetwork.ActiveProfile].HandleNotifications(server, im.SenderConnection, new Notification(im));                          
+                           // GemNetwork.Commander.ExecuteCommand(im.SenderConnection, cmd.Message);
                         }
                         else
                         {

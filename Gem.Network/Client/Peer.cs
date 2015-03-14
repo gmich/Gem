@@ -19,13 +19,26 @@ namespace Gem.Network
 
         private bool isDisposed;
 
-        private ConnectionDetails connectionDetails;
+        private ConnectionConfig connectionDetails;
 
         public bool IsConnected
         {
             get
             {
                 return client.ConnectionStatus == NetConnectionStatus.Connected;
+            }
+        }
+
+        private PackageConfig packageConfig;
+        public PackageConfig PackageConfig
+        {
+            get
+            {
+                return packageConfig;
+            }
+            set
+            {
+                packageConfig = value;
             }
         }
 
@@ -60,14 +73,12 @@ namespace Gem.Network
         /// <summary>
         /// Connect to the server
         /// </summary>
-        public void Connect(ConnectionDetails connectionDetails, ConnectionApprovalMessage approvalMessage)
+        public void Connect(ConnectionConfig connectionDetails,PackageConfig packageConfig, ConnectionApprovalMessage approvalMessage)
         {
             this.connectionDetails = connectionDetails;
+            this.PackageConfig = packageConfig;
 
-            var config = new NetPeerConfiguration(connectionDetails.ServerName)
-            {
-                //Port = serverIP.Port
-            };
+            var config = new NetPeerConfiguration(connectionDetails.ServerName);
             config.EnableMessageType(NetIncomingMessageType.Data);
             config.EnableMessageType(NetIncomingMessageType.WarningMessage);
             config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
@@ -78,30 +89,31 @@ namespace Gem.Network
 
             client = new NetClient(config);
             client.Start();
-            
+
+            //INetEncryption algo = new NetTripleDESEncryption("gem");
+            //handshake.Encrypt(algo);
             var handshake = CreateMessage();
             approvalMessage.Encode(handshake);
 
             client.Connect(connectionDetails.ServerIP, handshake);
         }
 
-        public NetOutgoingMessage CreateMessage()
-        {
-            return client.CreateMessage();
-        }
-
         public void Wait()
         {
             this.client.MessageReceivedEvent.WaitOne();
         }
-
-
+        
         public void Disconnect()
         {
             if (client != null)
             {
                 client.Shutdown(connectionDetails.DisconnectMessage);
             }
+        }
+
+        public NetOutgoingMessage CreateMessage()
+        {
+            return client.CreateMessage();
         }
 
         public NetIncomingMessage ReadMessage()
@@ -116,14 +128,22 @@ namespace Gem.Network
 
         public void SendMessage(NetOutgoingMessage msg)
         {
-            client.SendMessage(msg, NetDeliveryMethod.ReliableUnordered);
+            client.SendMessage(msg, PackageConfig.DeliveryMethod, PackageConfig.SequenceChannel);
         }
         
         public void SendMessage<T>(T message)
         {
             var msg = client.CreateMessage();
             MessageSerializer.Encode(message, ref msg);
-            client.SendMessage(msg, connectionDetails.DeliveryMethod);
+            client.SendMessage(msg, PackageConfig.DeliveryMethod,PackageConfig.SequenceChannel);
+        }
+
+        public void SendMessage<T>(object[] args)
+        {
+            var om = client.CreateMessage();
+            var msg = (T)Activator.CreateInstance(typeof(T), args);
+            MessageSerializer.Encode(msg, ref om);
+            client.SendMessage(om, PackageConfig.DeliveryMethod, PackageConfig.SequenceChannel);
         }
 
         public void SendMessage<T>(T message, byte id)
@@ -132,7 +152,7 @@ namespace Gem.Network
             MessageSerializer.Encode(message, ref msg);
             msg.Write(id);
 
-            client.SendMessage(msg, connectionDetails.DeliveryMethod);
+            client.SendMessage(msg, PackageConfig.DeliveryMethod, PackageConfig.SequenceChannel);
         }
 
         #endregion

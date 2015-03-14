@@ -4,21 +4,21 @@ using Lidgren.Network;
 
 namespace Gem.Network.Messages
 {
-    public partial class ServerNotification 
+    public partial class Notification 
     {
-        public ServerNotification(NetIncomingMessage im)
+        public Notification(NetIncomingMessage im)
         {
             Message = im.ReadString();
-       
+            Type = im.ReadString();
         }
 
-        public ServerNotification(byte id, string message)
+        public Notification(string message,string type)
         {
-            this.id = id;
             this.Message = message;
+            this.Type = type;
         }
 
-        private readonly byte id;
+        private readonly byte id = GemNetwork.NotificationByte;
         public byte Id
         {
             get
@@ -29,5 +29,7 @@ namespace Gem.Network.Messages
 
         public string Message { get; set; }
 
+        public string Type { get; set; }
     }
+ 
 }

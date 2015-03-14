@@ -16,15 +16,7 @@ namespace Gem.Network.Managers
             actionProvider = new NetworkActionProvider();
         }
 
-        public Action<NetIncomingMessage> this[string tag,MessageType messagetype,byte configID]
-        {
-            get
-            {
-                return actionProvider[tag][messagetype][configID].Invoke;
-            }
-        }
-
-        public ActionProvider this[string tag, MessageType messagetype]
+        public ActionProviderArguments this[string tag, MessageType messagetype]
         {
             get
             {

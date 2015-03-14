@@ -18,7 +18,6 @@ namespace Gem.Network.Factories
         #region Private Properties
 
         private readonly IMessageHandlerBuilder messageBuilder;
-        private readonly GCache<List<string>, Type> cache;
            
         #endregion
 
@@ -27,7 +26,6 @@ namespace Gem.Network.Factories
         public MessageHandlerFactory(IMessageHandlerBuilder messageBuilder)
         {
             this.messageBuilder = messageBuilder;
-            cache = new GCache<List<string>, Type>(GC.GetTotalMemory(true) / 10, new ArrayTypeEquality());
         }
 
         #endregion
@@ -40,14 +38,7 @@ namespace Gem.Network.Factories
             Guard.That(classname).IsNotNull();
             Guard.That(functionName).IsNotNull();
 
-            var handler = cache.Lookup(propertyTypeNames);
-            if (handler != null)
-            {
-                return handler;
-            }
-
             var newHandler = messageBuilder.Build(propertyTypeNames, classname, functionName);
-            cache.Add(propertyTypeNames, newHandler);
 
             return newHandler;
         }

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Gem.Network.Factories;
 using Gem.Network.Events;
 using Gem.Network.Messages;
+using Gem.Network.Client;
 
 namespace Gem.Network.Fluent
 {
@@ -25,6 +26,7 @@ namespace Gem.Network.Fluent
 
         private MessageFlowArguments messageFlowArgs;
 
+        private readonly byte Id; 
         #endregion
 
 
@@ -33,14 +35,11 @@ namespace Gem.Network.Fluent
         public MessageFlowBuilder(string profile,MessageType messageType)
         {
             this.profile = profile;
+            this.Id = GemNetwork.GetMesssageId(profile);
             this.messageType = messageType;
             this.messageFlowArgs = new MessageFlowArguments();
         }
 
-        public MessageFlowBuilder(string profile, MessageType messageType,object[] cachedMessage):this(profile,messageType)
-        {
-            this.messageFlowArgs.CachedMessage = cachedMessage;
-        }
 
         #endregion
 
@@ -63,10 +62,10 @@ namespace Gem.Network.Fluent
             
             SetDynamicPoco(properties);
             SetMessageHandler(properties.Select(x => DynamicPropertyInfo.GetPrimitiveTypeAlias(x.PropertyType)).ToList(), objectToHandle, methodInfo.Name);
-            var argumentsDisposable = GemNetwork.ClientMessageFlow[profile,messageType].Add(messageFlowArgs);
+            var argumentsDisposable = GemClient.MessageFlow[profile,messageType].Add(messageFlowArgs);
             SetDynamicEvent(argumentsDisposable);
 
-            GemNetwork.ClientMessageFlow[profile, messageType].SubscribeEvent(messageFlowArgs.ID);
+            GemClient.MessageFlow[profile, messageType].SubscribeEvent(messageFlowArgs.ID);
 
             return messageFlowArgs.EventRaisingclass;
         }
@@ -79,14 +78,14 @@ namespace Gem.Network.Fluent
         private void SetMessageHandler(List<string> propertyNames, object invoker, string functionName)
         {
             var handlerType = Dependencies.Container.Resolve<IMessageHandlerFactory>()
-                                          .Create(propertyNames, "handler" + GemNetwork.dynamicMessagesCreated, functionName);
+                                          .Create(propertyNames, "handler" + Id, functionName);
 
             messageFlowArgs.MessageHandler = Activator.CreateInstance(handlerType, invoker) as IMessageHandler;
         }
 
         private void SetDynamicPoco(List<DynamicPropertyInfo> properties)
         {
-            var newType = Dependencies.Container.Resolve<IPocoFactory>().Create(properties, "poco" + GemNetwork.dynamicMessagesCreated);
+            var newType = Dependencies.Container.Resolve<IPocoFactory>().Create(properties, "poco" + Id);
 
             messageFlowArgs.MessagePoco = newType;
         }
