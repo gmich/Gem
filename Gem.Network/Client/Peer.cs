@@ -155,6 +155,13 @@ namespace Gem.Network
             client.SendMessage(msg, PackageConfig.DeliveryMethod, PackageConfig.SequenceChannel);
         }
 
+        public void SendNotification(Notification notification)
+        {
+            var msg = client.CreateMessage();
+            MessageSerializer.Encode(notification, ref msg);
+            client.SendMessage(msg, PackageConfig.DeliveryMethod, PackageConfig.SequenceChannel);
+        }
+
         #endregion
 
     }

@@ -64,7 +64,6 @@ namespace Gem.Network.Chat.Client
             },  PackageConfig.TCP);
 
             GemClient.Profile("GemChat").OnReceivedServerNotification(x => peer.QueueMessage(x.Message));
-            GemClient.Profile("GemChat").OnDisconnecting(x => peer.Send("bye bitches"));
         }
 
 
@@ -182,7 +181,7 @@ namespace Gem.Network.Chat.Client
                 var cmd = x.Substring(5);
                 if (cmd.Length > 0)
                 {
-                    client.SendCommand(cmd);
+                    GemClient.SendCommand(cmd);
                     return true;
                 }
                 return false;

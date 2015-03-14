@@ -40,6 +40,7 @@ namespace Gem.Network.Server
         public void ProcessNetworkMessages()
         {
             NetIncomingMessage im;
+            server.Wait();
 
             while ((im = this.server.ReadMessage()) != null)
             {
@@ -60,7 +61,6 @@ namespace Gem.Network.Server
                             case NetConnectionStatus.Disconnected:
                                 Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
                                 GemServer.ServerConfiguration[GemNetwork.ActiveProfile].OnClientDisconnect(server, im.SenderConnection,im.ReadString());
-                                server.NotifyAll("[Disconnected client] " + im.ReadString());
                                 break;
                             case NetConnectionStatus.RespondedConnect:
                                 Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
@@ -71,7 +71,6 @@ namespace Gem.Network.Server
                         if (im.ReadByte() == GemNetwork.NotificationByte)
                         {
                             GemServer.ServerConfiguration[GemNetwork.ActiveProfile].HandleNotifications(server, im.SenderConnection, new Notification(im));                          
-                           // GemNetwork.Commander.ExecuteCommand(im.SenderConnection, cmd.Message);
                         }
                         else
                         {

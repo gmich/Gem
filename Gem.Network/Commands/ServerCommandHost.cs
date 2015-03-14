@@ -51,7 +51,7 @@ namespace Gem.Network.Commands
             Echo = (msg, connection) =>
             {
                 var om = commandHost.CreateMessage();
-                var serverNotification = new Notification(msg,"message");
+                var serverNotification = new Notification(msg, NotificationType.Message);
                 MessageSerializer.Encode(serverNotification, ref om);
                 GemNetworkDebugger.Echo(msg);
                 commandHost.SendOnlyTo(om, connection);
@@ -215,12 +215,12 @@ namespace Gem.Network.Commands
         {
             RegisterCommand("echo", false, "Echo message",
                 (Server, connection, command, arguments)
-                => Server.NotifyAll(String.Format("{0} [Server] {1}", Environment.NewLine, command.Substring(4))));
+                => Server.NotifyAll(String.Format("[Server] {0}", command.Substring(4))));
         }
 
         private void RegisterViewClientsCommand()
         {
-            RegisterCommand("showclients", false, "Show all the connected clients",
+            RegisterCommand("showall", true, "Show all the connected clients",
                 (Server, connection, command, arguments) =>
                 {
                     var listOfIps = String.Join(Environment.NewLine, Server.ClientsIP.Select(x => x.ToString()));

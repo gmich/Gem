@@ -21,6 +21,8 @@ namespace Gem.Network.Server
 
         string Password { get; }
 
+        void Wait();
+
         bool Kick(IPAddress clientIp,string reason);
 
         bool Kick(IPEndPoint clientIp, string reason);

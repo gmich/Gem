@@ -132,12 +132,20 @@ namespace Gem.Network.Client
             return new ClientMessageRouter(profileName);
         }
 
-        public void SendCommand(string command)
+        public static void SendCommand(string command)
         {
-            var om = client.CreateMessage();
-            var msg = new Notification(command,"command");
+            var om = GemNetwork.Client.CreateMessage();
+            var msg = new Notification(command, NotificationType.Command);
             MessageSerializer.Encode(msg, ref om);
-            client.SendMessage(msg);
+            GemNetwork.Client.SendMessage(msg);
+        }
+
+        public static void NotifyServer(string message)
+        {
+            var om = GemNetwork.Client.CreateMessage();
+            var msg = new Notification(message, NotificationType.Message);
+            MessageSerializer.Encode(msg, ref om);
+            GemNetwork.Client.SendMessage(msg);
         }
 
         #endregion

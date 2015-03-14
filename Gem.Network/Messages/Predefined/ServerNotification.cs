@@ -32,4 +32,9 @@ namespace Gem.Network.Messages
         public string Type { get; set; }
     }
  
+    public static class NotificationType
+    {
+        public const string Message = "#Message";
+        public const string Command = "#Command";
+    }
 }

@@ -150,6 +150,11 @@ namespace Gem.Network.Server
             netServer.Shutdown(serverConfig.DisconnectMessage);
         }
 
+        public void Wait()
+        {
+            netServer.MessageReceivedEvent.WaitOne();
+        }
+
         #endregion
 
 
@@ -271,7 +276,7 @@ namespace Gem.Network.Server
         public void NotifyAll(string message)
         {
             GemNetworkDebugger.Echo(String.Format("Sent to all :  {0}", message));
-            var serverNotification = new Notification(message,"message");
+            var serverNotification = new Notification(message, NotificationType.Message);
             var om = netServer.CreateMessage();
             MessageSerializer.Encode(serverNotification, ref om);
             SendToAll(om);
@@ -283,7 +288,7 @@ namespace Gem.Network.Server
             if (client != null)
             {
                 GemNetworkDebugger.Echo(String.Format("{0}  :  {1}", client, message));
-                var serverNotification = new Notification(message,"message");
+                var serverNotification = new Notification(message, NotificationType.Message);
                 var om = netServer.CreateMessage();
                 MessageSerializer.Encode(serverNotification, ref om);
                 SendOnlyTo(om, client);

@@ -165,6 +165,11 @@ namespace Gem.Network.Server
             GemNetwork.Commander.ExecuteCommand(null,command);
         }
 
+        public static void ExecuteCommand(NetConnection sender,string command)
+        {
+            GemNetwork.Commander.ExecuteCommand(sender, command);
+        }
+
         #endregion
 
     }

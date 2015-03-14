@@ -71,6 +71,7 @@ namespace Gem.Network.Chat.Client
             this.Name = newName;
 
             onEvent.Send(formattedMessage);
+            GemClient.NotifyServer("newname " + newName);
         }
 
         public void QueueMessage(string message)
