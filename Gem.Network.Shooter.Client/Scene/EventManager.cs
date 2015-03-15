@@ -17,6 +17,7 @@ namespace Gem.Network.Shooter.Client.Scene
         private readonly ContentManager content;
         private Dictionary<string,Actor> actors;
         private Dictionary<string, Action<string>> commandTable;
+        private GameTime gameTime;
 
         private readonly GemClient client;
 
@@ -32,10 +33,10 @@ namespace Gem.Network.Shooter.Client.Scene
             client = new GemClient("Shooter", new ConnectionConfig
             {
                 ServerName = "Shooter",
-                IPorHost = "127.0.0.1",
+                IPorHost = "83.212.103.13",
                 Port = 14242,
                 DisconnectMessage = name
-            }, PackageConfig.TCP);
+            }, PackageConfig.UDPSequenced);
 
             GemClient.Profile("Shooter").OnReceivedServerNotification(x => 
                 {
@@ -87,6 +88,7 @@ namespace Gem.Network.Shooter.Client.Scene
 
         public void Update(GameTime gameTime)
         {
+            this.gameTime=gameTime;
             foreach(var actor in actors)
             {
                 actor.Value.Update(gameTime);
@@ -95,9 +97,9 @@ namespace Gem.Network.Shooter.Client.Scene
 
         public void SetLocation(string id, float x, float y)
         {
-            if(actors.ContainsKey(id))
+            if (actors.ContainsKey(id))
             {
-                actors[id].WorldLocation = new Vector2(x,y);
+                actors[id].WorldLocation = new Vector2(x, y);
             }
         }
 

@@ -95,7 +95,7 @@ namespace Gem.Network.Shooter.Client
                 this.Exit();
 
             InputHandler.Update(gameTime);
-            player.HandleInput();
+            player.HandleInput(gameTime);
             player.Update(gameTime);
             effectsManager.Update(gameTime);
             eventManager.Update(gameTime);

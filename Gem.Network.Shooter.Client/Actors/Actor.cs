@@ -102,7 +102,7 @@ using System;
 
         #region Public Methods
 
-        public void HandleInput()
+        public void HandleInput(GameTime gameTime)
         {
             if (Dead) return;
 
@@ -122,22 +122,22 @@ using System;
                     Jump();
                 }
             }
+
+            velocity += fallSpeed;
+            HandleVelocity();
+            CheckCollision(gameTime);
             onLocationChange.Send(this.name, worldLocation.X, worldLocation.Y);
-            //   EffectsManager.AddBulletParticle(worldLocation + offSet, bulletDirection);   EffectsManager.AddBulletParticle(worldLocation + offSet, bulletDirection);
+           // EffectsManager.AddBulletParticle(worldLocation + offSet, bulletDirection);   EffectsManager.AddBulletParticle(worldLocation + offSet, bulletDirection);
+                  
+            Camera.Move((float)gameTime.ElapsedGameTime.TotalSeconds, WorldLocation, velocity, accelerationAmount.X);
         }
 
         public override void Update(GameTime gameTime)
         {
+
             label.ChaseLocation = this.worldLocation;
             label.Update(gameTime);
-            velocity += fallSpeed;
-
-            HandleVelocity();
-
-            CheckCollision(gameTime);
-
-            Camera.Move((float)gameTime.ElapsedGameTime.TotalSeconds, WorldLocation, velocity, accelerationAmount.X);
-        }
+         }
 
         public void HandleVelocity()
         {

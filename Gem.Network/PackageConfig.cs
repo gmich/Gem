@@ -32,6 +32,18 @@ namespace Gem.Network
                 };
             }
         }
+
+        public static PackageConfig UDPSequenced
+        {
+            get
+            {
+                return new PackageConfig
+                {
+                    SequenceChannel = 0,
+                    DeliveryMethod = NetDeliveryMethod.UnreliableSequenced
+                };
+            }
+        }
     }
 
 }

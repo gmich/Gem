@@ -30,7 +30,7 @@ namespace Gem.Network.Shooter.Server
                 ConnectionTimeout = 5.0f,
                 RequireAuthentication = false
             },
-            PackageConfig.UDP);
+            PackageConfig.UDPSequenced);
 
             GemServer.Profile(ActiveProfile).HandleNotifications((server, connection, msg) =>
             {
