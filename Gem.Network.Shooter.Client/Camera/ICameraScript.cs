@@ -5,7 +5,7 @@ namespace Gem.Network.Shooter.Client.Camera
 {
     public interface ICameraScript
     {
-        Camera Camera
+        Camera2D Camera
         {
             get;
         }

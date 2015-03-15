@@ -8,6 +8,8 @@ namespace Gem.Network.Shooter.Client.Camera
         private static CameraManager managerInstance;
         private ICameraScript cameraScript;
 
+        public Camera2D Camera { get { return cameraScript.Camera; } }
+
         CameraManager()
         {
             cameraScript = new ChasingCamera(new Vector2(1050, 50), new Vector2(1000, 500));

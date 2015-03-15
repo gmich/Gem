@@ -10,7 +10,7 @@ namespace Gem.Network.Shooter.Client.Camera
 
         #region Declarations
 
-        private Camera camera;
+        private Camera2D camera;
         private float distance;
         private Vector2 Offset;
         private const float horizontalOffset = 30;
@@ -23,14 +23,14 @@ namespace Gem.Network.Shooter.Client.Camera
         public ChasingCamera(Vector2 worldLocation,Vector2 viewportSize)
         {
             Offset = Vector2.Zero;
-            camera = new Camera(worldLocation, viewportSize);
+            camera = new Camera2D(worldLocation, viewportSize);
         }
 
         #endregion
 
         #region Properties
 
-        public Camera Camera
+        public Camera2D Camera
         {
             get
             {

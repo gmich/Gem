@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace Gem.Network.Shooter.Client.Camera
 {
-   public class Camera
+   public class Camera2D
     {
         #region Declarations
 
@@ -14,7 +14,7 @@ namespace Gem.Network.Shooter.Client.Camera
 
         #region Constructor
 
-        public Camera(Vector2 initialPos, Vector2 viewportSize)
+        public Camera2D(Vector2 initialPos, Vector2 viewportSize)
         {
             this.Position = initialPos;
             this.viewPortSize = viewportSize;

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Gem.Network.Shooter.Client.Actors
 {
-    using Camera;
+using Camera;
 using Gem.Network.Client;
 using Gem.Network.Events;
 using Gem.Network.Shooter.Client.Input;
@@ -21,6 +21,7 @@ using System;
         private EffectsManager EffectsManager;
         private readonly string name;
         private readonly INetworkEvent onLocationChange;
+        private readonly Label label;
 
         #region Velocity Handler Declarations
 
@@ -91,6 +92,10 @@ using System;
             livesRemaining = 999;
             worldLocation = location;
             EffectsManager = EffectsManager.GetInstance();
+
+            var font = content.Load<SpriteFont>(@"font");
+            label = new Label(this.Camera.Camera, this.worldLocation, new Vector2(+font.MeasureString(name).X / 2 - frameWidth/2, frameHeight / 2 + font.MeasureString(name).Y / 2),
+                new FontInfo { Color = Color.Black, Font = font, Text = name }, 20.0f);
         }
 
         #endregion
@@ -123,6 +128,8 @@ using System;
 
         public override void Update(GameTime gameTime)
         {
+            label.ChaseLocation = this.worldLocation;
+            label.Update(gameTime);
             velocity += fallSpeed;
 
             HandleVelocity();
@@ -182,6 +189,7 @@ using System;
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
+            label.Draw(spriteBatch);
         }
     }
 }
