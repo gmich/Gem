@@ -139,7 +139,7 @@ namespace Gem.Network.Server
             }
             catch (Exception ex)
             {
-                appender.Error("Failed to start the server. Reason ", ex.Message);
+                appender.Error("Failed to start the server. Reason {0}", ex.Message);
                 return false;
             }
 
@@ -273,22 +273,30 @@ namespace Gem.Network.Server
 
         #region Notifications
 
-        public void NotifyAll(string message)
+        public void NotifyAll(string message, string type = NotificationType.Message)
         {
             GemNetworkDebugger.Echo(String.Format("Sent to all :  {0}", message));
-            var serverNotification = new Notification(message, NotificationType.Message);
+            var serverNotification = new Notification(message, type);
             var om = netServer.CreateMessage();
             MessageSerializer.Encode(serverNotification, ref om);
             SendToAll(om);
         }
 
+        public void NotifyAllExcept(string message, NetConnection client, string type = NotificationType.Message)
+        {
+            GemNetworkDebugger.Echo(String.Format("Sent to all :  {0}", message));
+            var serverNotification = new Notification(message, type);
+            var om = netServer.CreateMessage();
+            MessageSerializer.Encode(serverNotification, ref om);
+            SendAndExclude(om,client);
+        }
 
-        public void NotifyOnly(string message, NetConnection client)
+        public void NotifyOnly(string message, NetConnection client, string type = NotificationType.Message)
         {
             if (client != null)
             {
                 GemNetworkDebugger.Echo(String.Format("{0}  :  {1}", client, message));
-                var serverNotification = new Notification(message, NotificationType.Message);
+                var serverNotification = new Notification(message, type);
                 var om = netServer.CreateMessage();
                 MessageSerializer.Encode(serverNotification, ref om);
                 SendOnlyTo(om, client);

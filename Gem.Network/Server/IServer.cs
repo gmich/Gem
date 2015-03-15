@@ -27,9 +27,11 @@ namespace Gem.Network.Server
 
         bool Kick(IPEndPoint clientIp, string reason);
 
-        void NotifyAll(string message);
+        void NotifyAll(string message,string type=NotificationType.Message);
 
-        void NotifyOnly(string message,NetConnection client);
+        void NotifyAllExcept(string message, NetConnection client, string type = NotificationType.Message);
+
+        void NotifyOnly(string message,NetConnection client,string type=NotificationType.Message);
 
         void SendToAll(NetOutgoingMessage message);
 
