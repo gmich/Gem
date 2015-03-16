@@ -7,13 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Engine", "Gem.Engine\Ge
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network", "Gem.Network\Gem.Network.csproj", "{3DAC3EA3-2910-4453-B0C6-3F5011251FA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Tests", "Gem.Network.Tests\Gem.Network.Tests.csproj", "{E83893E0-5BC0-4C8A-876A-E1F1E526432A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Tests", "Gem.Tests\Gem.Network.Tests\Gem.Network.Tests.csproj", "{E83893E0-5BC0-4C8A-876A-E1F1E526432A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gem.Engine", "Gem.Engine", "{479BCF5C-B1BF-4480-ABDE-40F4E42722A5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gem.Tests", "Gem.Tests", "{7D9867F2-E0A0-4ADE-99F9-43CEF3C4816E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.TestHelper", "Gem.Network.Tests\Gem.Network.TestHelper\Gem.Network.TestHelper.csproj", "{CA391A93-F890-481D-84F7-6D7D1A59AB43}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.TestHelper", "Gem.Tests\Gem.Network.TestHelper\Gem.Network.TestHelper.csproj", "{CA391A93-F890-481D-84F7-6D7D1A59AB43}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{84AE5719-A57A-4438-A051-43AA5A041CEE}"
 EndProject
