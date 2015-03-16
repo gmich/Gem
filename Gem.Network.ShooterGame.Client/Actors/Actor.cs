@@ -137,6 +137,8 @@ using System;
 
             label.ChaseLocation = this.worldLocation;
             label.Update(gameTime);
+
+          
          }
 
         public void HandleVelocity()

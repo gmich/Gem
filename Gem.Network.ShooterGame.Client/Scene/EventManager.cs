@@ -18,7 +18,6 @@ namespace Gem.Network.Shooter.Client.Scene
         private Dictionary<string,Actor> actors;
         private Dictionary<string, Action<string>> commandTable;
         private GameTime gameTime;
-
         private readonly GemClient client;
 
         public EventManager(ContentManager content,string name)
@@ -99,7 +98,28 @@ namespace Gem.Network.Shooter.Client.Scene
         {
             if (actors.ContainsKey(id))
             {
-                actors[id].WorldLocation = new Vector2(x, y);
+                var newX = Interpolate(x, actors[id].WorldLocation.X);
+                var newY = Interpolate(y, actors[id].WorldLocation.Y);
+                actors[id].WorldLocation = new Vector2(newX, newY);
+            }
+        }
+
+        private const float threshold = 1.0f;
+        private const float interpolationConstant = 0.3f;
+        private float Interpolate(float remotePosition, float localPosition)
+        {
+            //  var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            var difference = remotePosition - localPosition;
+
+            if (Math.Abs(difference) < threshold)
+            {
+                Console.WriteLine(String.Format(@"AbsDifference:{0} RawDifference:{1} Remote:{2} Local{3}", 
+                                  Math.Abs(difference), difference, remotePosition, localPosition));
+                return remotePosition;
+            }
+            else
+            {
+                return localPosition + (difference * interpolationConstant);
             }
         }
 
@@ -107,7 +127,7 @@ namespace Gem.Network.Shooter.Client.Scene
         {
             foreach (var actor in actors)
             {
-                actor.Value.Draw(spriteBatch);
+                actor.Value.Draw(spriteBatch);                
             }
         }
     }

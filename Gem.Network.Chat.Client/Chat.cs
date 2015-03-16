@@ -178,6 +178,7 @@ namespace Gem.Network.Chat.Client
             });
             CommandTable.Add("-gem", x =>
             {
+                if (x.Length < 5) return false;
                 var cmd = x.Substring(5);
                 if (cmd.Length > 0)
                 {

@@ -103,7 +103,7 @@ namespace Gem.Network
                 return;
             }
 
-            GemClient.ActionManager[GemNetwork.ActiveProfile, messageType].Action(client);
+            GemClient.ActionManager[GemNetwork.ActiveProfile, messageType].Action(client, im);
 
             if (GemClient.MessageFlow[GemNetwork.ActiveProfile, messageType].HasKey(id))
             {

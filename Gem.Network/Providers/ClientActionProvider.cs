@@ -35,7 +35,9 @@ namespace Gem.Network.Providers
                 }
                 else
                 {
-                    return new ActionProviderArguments();
+                    var providerArgs = new ActionProviderArguments();
+                    dataRepository.Add(id, providerArgs);
+                    return providerArgs;
                 }
             }
         }
@@ -48,9 +50,9 @@ namespace Gem.Network.Providers
     {
         public ActionProviderArguments()
         {
-            Action = x => { };
+            Action = (client,message) => { };
         }
 
-        public Action<IClient> Action { get; set; }
+        public Action<IClient,NetIncomingMessage> Action { get; set; }
     }
 }

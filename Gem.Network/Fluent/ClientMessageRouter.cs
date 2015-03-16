@@ -27,32 +27,32 @@ namespace Gem.Network.Fluent
             }
         }
 
-        public void OnConnecting(Action<IClient> action, bool append = false)
+        public void OnConnecting(Action<IClient, NetIncomingMessage> action, bool append = false)
         {
             Do(action, MessageType.Connecting, append);
 
         }
-        public void WhenConnected(Action<IClient> action, bool append = false)
+        public void WhenConnected(Action<IClient, NetIncomingMessage> action, bool append = false)
         {
             Do(action, MessageType.Connected, append);
         }
 
-        public void OnDisconnecting(Action<IClient> action, bool append = false)
+        public void OnDisconnecting(Action<IClient, NetIncomingMessage> action, bool append = false)
         {
             Do(action, MessageType.Disconnecting, append);
         }
 
-        public void OnDisconnected(Action<IClient> action, bool append = false)
+        public void OnDisconnected(Action<IClient, NetIncomingMessage> action, bool append = false)
         {
             Do(action, MessageType.Disconnected, append);
         }
 
-        public void HandleWarnings(Action<IClient> action, bool append = false)
+        public void HandleWarnings(Action<IClient, NetIncomingMessage> action, bool append = false)
         {
             throw new NotImplementedException();
         }
 
-        public void HandleErrors(Action<IClient> action, bool append = false)
+        public void HandleErrors(Action<IClient, NetIncomingMessage> action, bool append = false)
         {
             throw new NotImplementedException();
         }
@@ -65,7 +65,7 @@ namespace Gem.Network.Fluent
             }
         }
 
-        private void Do(Action<IClient> action, MessageType messageType, bool append)
+        private void Do(Action<IClient, NetIncomingMessage> action, MessageType messageType, bool append)
         {
             if (append)
             {

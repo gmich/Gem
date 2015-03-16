@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Gem.Network.Shooter.Client")]
-[assembly: AssemblyProduct("Gem.Network.Shooter.Client")]
+[assembly: AssemblyTitle("Gem.Network.ShooterGame.Client")]
+[assembly: AssemblyProduct("Gem.Network.ShooterGame.Client")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("9f5caf87-eef1-4145-9681-6da3db02c81c")]
+[assembly: Guid("177d6359-ea9b-49bc-8b70-e638e6e13c0d")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("3.3.0.2238")]
+[assembly: AssemblyFileVersion("3.3.0.2238")]

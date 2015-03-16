@@ -49,7 +49,6 @@ namespace Gem.Network.Shooter.Client
                 velocity = Target - currentLocation;
                 velocity.Normalize();
             }
-
             currentLocation += velocity * Distance * acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
