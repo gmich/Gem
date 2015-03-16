@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem", "Gem\Gem.csproj", "{2784D0E3-736D-4BCA-8536-EEA8834E6ED9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Engine", "Gem.Engine\Gem.Engine.csproj", "{2784D0E3-736D-4BCA-8536-EEA8834E6ED9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network", "Gem.Network\Gem.Network.csproj", "{3DAC3EA3-2910-4453-B0C6-3F5011251FA3}"
 EndProject
@@ -13,17 +13,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gem.Engine", "Gem.Engine", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gem.Tests", "Gem.Tests", "{7D9867F2-E0A0-4ADE-99F9-43CEF3C4816E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.TestHelper", "Gem.Network.Example\Gem.Network.TestHelper.csproj", "{CA391A93-F890-481D-84F7-6D7D1A59AB43}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.TestHelper", "Gem.Network.Tests\Gem.Network.TestHelper\Gem.Network.TestHelper.csproj", "{CA391A93-F890-481D-84F7-6D7D1A59AB43}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{84AE5719-A57A-4438-A051-43AA5A041CEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Chat.Client", "Gem.Network.Chat.Client\Gem.Network.Chat.Client.csproj", "{00E67143-1670-411A-BB37-5A21AB672D19}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Chat.Client", "Examples\Gem.Network.Chat.Client\Gem.Network.Chat.Client.csproj", "{00E67143-1670-411A-BB37-5A21AB672D19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Chat.Server", "Gem.Network.Chat.Server\Gem.Network.Chat.Server.csproj", "{0218CECB-45A0-4B88-85D9-5D6925408943}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Chat.Server", "Examples\Gem.Network.Chat.Server\Gem.Network.Chat.Server.csproj", "{0218CECB-45A0-4B88-85D9-5D6925408943}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Shooter.Server", "Gem.Network.Shooter.Server\Gem.Network.Shooter.Server.csproj", "{6A70A449-F0B8-4200-88D3-D9206D764E60}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Shooter.Server", "Examples\Gem.Network.Shooter.Server\Gem.Network.Shooter.Server.csproj", "{6A70A449-F0B8-4200-88D3-D9206D764E60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.ShooterGame.Client", "Gem.Network.ShooterGame.Client\Gem.Network.ShooterGame.Client.csproj", "{699E4A5F-F006-4EAC-8D6B-283A01E398CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.ShooterGame.Client", "Examples\Gem.Network.ShooterGame.Client\Gem.Network.ShooterGame.Client.csproj", "{699E4A5F-F006-4EAC-8D6B-283A01E398CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
