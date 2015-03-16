@@ -94,32 +94,35 @@ namespace Gem.Network.Shooter.Client.Scene
             }
         }
 
-        public void SetLocation(string id, float x, float y)
+        public void SetLocation(string id, float x, float y,double remoteTime)
         {
             if (actors.ContainsKey(id))
             {
-                var newX = Interpolate(x, actors[id].WorldLocation.X);
-                var newY = Interpolate(y, actors[id].WorldLocation.Y);
-                actors[id].WorldLocation = new Vector2(newX, newY);
+                //TODO: find out more about interpolation 
+                //var deltaTime = remoteTime - actors[id].LastUpdated;
+                //var newX = Interpolate(x, actors[id].WorldLocation.X, deltaTime);
+                //var newY = Interpolate(y, actors[id].WorldLocation.Y, deltaTime);
+                //actors[id].WorldLocation = new Vector2(newX, newY);
+                //actors[id].LastUpdated=remoteTime;
+
+                //this is permanent
+                actors[id].WorldLocation = new Vector2(x, y);
             }
         }
 
-        private const float threshold = 1.0f;
-        private const float interpolationConstant = 0.3f;
-        private float Interpolate(float remotePosition, float localPosition)
-        {
-            //  var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        private const float threshold = 10.0f;
+        private const double interpolationConstant = 1.0f;
+        private float Interpolate(float remotePosition, float localPosition,double deltaTime)
+        {   
             var difference = remotePosition - localPosition;
 
             if (Math.Abs(difference) < threshold)
             {
-                Console.WriteLine(String.Format(@"AbsDifference:{0} RawDifference:{1} Remote:{2} Local{3}", 
-                                  Math.Abs(difference), difference, remotePosition, localPosition));
                 return remotePosition;
             }
             else
             {
-                return localPosition + (difference * interpolationConstant);
+                return localPosition += (float)(difference * deltaTime * interpolationConstant);
             }
         }
 

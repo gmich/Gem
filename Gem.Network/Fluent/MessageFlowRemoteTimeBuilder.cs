@@ -14,8 +14,10 @@ using Gem.Network.Client;
 
 namespace Gem.Network.Fluent
 {
-     
-    public class MessageFlowBuilder : IMessageFlowBuilder
+     /// <summary>
+     /// Creates a network event that calculates the delta time from sending to receiving
+     /// </summary>
+    public class MessageFlowRemoteTimeBuilder : IMessageFlowBuilder
     {
 
         #region Fields
@@ -31,8 +33,8 @@ namespace Gem.Network.Fluent
 
 
         #region Constructor
-        
-        public MessageFlowBuilder(string profile,MessageType messageType)
+
+        public MessageFlowRemoteTimeBuilder(string profile, MessageType messageType)
         {
             this.profile = profile;
             this.Id = GemNetwork.GetMesssageId(profile);
@@ -55,17 +57,17 @@ namespace Gem.Network.Fluent
             var methodInfo = (MethodInfo)methodInfoExpression.Value;
 
             var types = methodInfo.GetParameters().Select(x => x.ParameterType).ToList();
-
             Guard.That(types.All(x => x.IsPrimitive || x == typeof(string)), "All types should be primitive");
-
+            
             var properties = DynamicPropertyInfo.GetPropertyInfo(types.ToArray());
             
             SetDynamicPoco(properties);
+
             SetMessageHandler(properties.Select(x => DynamicPropertyInfo.GetPrimitiveTypeAlias(x.PropertyType)).ToList(), objectToHandle, methodInfo.Name);
             var argumentsDisposable = GemClient.MessageFlow[profile,messageType].Add(messageFlowArgs);
             SetDynamicEvent(argumentsDisposable);
 
-            messageFlowArgs.IncludesLocalTime = false;
+            messageFlowArgs.IncludesLocalTime = true;
             GemClient.MessageFlow[profile, messageType].SubscribeEvent(messageFlowArgs.ID);
 
             return messageFlowArgs.EventRaisingclass;
@@ -93,7 +95,7 @@ namespace Gem.Network.Fluent
 
         private void SetDynamicEvent(IDisposable argumentDisposable)
         {
-            messageFlowArgs.EventRaisingclass = Dependencies.Container.Resolve<IEventFactory>().Create(messageFlowArgs.MessagePoco, argumentDisposable,messageFlowArgs.ID);
+            messageFlowArgs.EventRaisingclass = new TimeDeltaEventFactory().Create(messageFlowArgs.MessagePoco, argumentDisposable, messageFlowArgs.ID);
         }
 
         #endregion

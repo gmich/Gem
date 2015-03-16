@@ -14,7 +14,10 @@ namespace Gem.Network
 
         void SendMessage<T>(T message,byte id);
 
+        void SendMessageWithLocalTime<T>(T message, byte id);
+
         void SendNotification(Notification notification);
+
         /// <summary>
         /// Send a message via socket. The class is initialized via activator
         /// </summary>

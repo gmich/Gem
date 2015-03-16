@@ -22,6 +22,7 @@ using System;
         private readonly string name;
         private readonly INetworkEvent onLocationChange;
         private readonly Label label;
+        public double LastUpdated {get; set;}
 
         #region Velocity Handler Declarations
 
@@ -69,13 +70,14 @@ using System;
         {
             this.eventManager = eventManager;
             onLocationChange = GemClient.Profile("Shooter")
-            .CreateNetworkEvent
-            .AndHandleWith(eventManager, x => new Action<string, float, float>(x.SetLocation));
+            .CreateNetworkEventWithRemoteTime
+            .AndHandleWith(eventManager, x => new Action<string, float, float,double>(x.SetLocation));
 
         }
 
         public Actor(string name, ContentManager content,Vector2 location)
         {
+            LastUpdated = 0.0D;
             this.name = name;
             frameWidth = 48;
             frameHeight = 48;

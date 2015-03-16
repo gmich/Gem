@@ -65,6 +65,14 @@ namespace Gem.Network.Fluent
             }
         }
 
+        public IMessageFlowBuilder CreateNetworkEventWithRemoteTime
+        {
+            get
+            {
+                return new MessageFlowRemoteTimeBuilder(profile, MessageType.Data);
+            }
+        }
+
         private void Do(Action<IClient, NetIncomingMessage> action, MessageType messageType, bool append)
         {
             if (append)

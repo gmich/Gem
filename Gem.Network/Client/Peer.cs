@@ -86,7 +86,7 @@ namespace Gem.Network
             config.EnableMessageType(NetIncomingMessageType.Error);
             config.EnableMessageType(NetIncomingMessageType.DebugMessage);
             config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
-
+  
             client = new NetClient(config);
             client.Start();
 
@@ -151,7 +151,15 @@ namespace Gem.Network
             var msg = client.CreateMessage();
             MessageSerializer.Encode(message, ref msg);
             msg.Write(id);
+            client.SendMessage(msg, PackageConfig.DeliveryMethod, PackageConfig.SequenceChannel);
+        }
 
+        public void SendMessageWithLocalTime<T>(T message, byte id)
+        {
+            var msg = client.CreateMessage();
+            MessageSerializer.Encode(message, ref msg);
+            msg.Write(id);
+            msg.WriteTime(NetTime.Now, true);
             client.SendMessage(msg, PackageConfig.DeliveryMethod, PackageConfig.SequenceChannel);
         }
 

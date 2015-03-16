@@ -33,6 +33,15 @@ namespace Gem.Network.Builders
 
             return propertyInfo;
         }
+
+        public static DynamicPropertyInfo GetPropertyInfo(Type types, int order, string propertyPrefix = "pprefix")
+        {
+                return new DynamicPropertyInfo
+                {
+                    PropertyName = propertyPrefix + order,
+                    PropertyType = types
+                };
+        }
         
         /// <summary>
         /// Matches the primitive types to their string representation

@@ -74,6 +74,9 @@
     <Compile Include="Async\ParallelTask.cs" />
     <Compile Include="Builders\API\IMessageHandlerBuilder.cs" />
     <Compile Include="Builders\CsScriptPocoBuilder.cs" />
+    <Compile Include="Events\RemoteTimeEvent.cs" />
+    <Compile Include="Factories\TimeDeltaEventFactory.cs" />
+    <Compile Include="Fluent\MessageFlowRemoteTimeBuilder.cs" />
     <Compile Include="Handlers\NotificationHandler.cs" />
     <Compile Include="Messages\INetworkPackage.cs" />
     <Compile Include="Managers\ClientNetworkActionManager.cs" />

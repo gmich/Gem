@@ -23,6 +23,8 @@ namespace Gem.Network.Fluent
         void OnDisconnecting(Action<IClient, NetIncomingMessage> action, bool append = false);
 
         IMessageFlowBuilder CreateNetworkEvent { get; }
+
+        IMessageFlowBuilder CreateNetworkEventWithRemoteTime { get; }
     }
 
 }

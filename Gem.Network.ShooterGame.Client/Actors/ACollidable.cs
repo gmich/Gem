@@ -94,8 +94,7 @@ namespace Gem.Network.Shooter.Client.Actors
 
 
         #endregion
-
-
+        
         #region Map-Based Collision Detection Methods
 
         private Vector2 horizontalCollisionTest(Vector2 moveAmount)

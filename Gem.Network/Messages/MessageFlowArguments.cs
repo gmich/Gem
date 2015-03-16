@@ -20,6 +20,8 @@ namespace Gem.Network.Messages
 
         [Required]
         public IMessageHandler MessageHandler { get; set; }
+
+        public bool IncludesLocalTime { get; set; }
     }
     
 }
