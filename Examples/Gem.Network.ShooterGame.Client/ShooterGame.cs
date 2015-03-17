@@ -65,12 +65,13 @@ namespace Gem.Network.Shooter.Client
             spriteBatch = new SpriteBatch(GraphicsDevice);
             IsMouseVisible = true;
             eventManager = new EventManager(Content, name);
+            player = new Actor(name,Content,new Vector2(1500, 10),eventManager,5);
+            eventManager.Player = player;
 
             effectsManager = EffectsManager.GetInstance();
             effectsManager.Initialize(Content);
             tileMap.Initialize(Content.Load<Texture2D>(@"block"), 48,48);
             tileMap.Randomize(200, 50);
-            player = new Actor(name,Content,new Vector2(1500, 10),eventManager);
         }
 
         /// <summary>

@@ -10,6 +10,7 @@ namespace Gem.Network.Shooter.Client.Actors
 
     public abstract class ACollidable
     {
+
         #region Declarations
 
         protected Vector2 worldLocation;
@@ -31,6 +32,9 @@ namespace Gem.Network.Shooter.Client.Actors
         protected Texture2D texture;
         protected Color color;
 
+        public bool Collided { get; set; }
+
+        protected float Transparency { get; set; }
         #endregion
 
         #region Properties
@@ -94,7 +98,7 @@ namespace Gem.Network.Shooter.Client.Actors
 
 
         #endregion
-        
+
         #region Map-Based Collision Detection Methods
 
         private Vector2 horizontalCollisionTest(Vector2 moveAmount)
@@ -128,6 +132,7 @@ namespace Gem.Network.Shooter.Client.Actors
             {
                 moveAmount.X = 0;
                 velocity.X = 0;
+                Collided = true;
             }
 
             return moveAmount;
@@ -172,6 +177,7 @@ namespace Gem.Network.Shooter.Client.Actors
                 }
                 moveAmount.Y = 0;
                 velocity.Y = 0;
+                Collided = true;
             }
 
             return moveAmount;
@@ -206,11 +212,11 @@ namespace Gem.Network.Shooter.Client.Actors
         {
 
             spriteBatch.Draw(texture, Camera.WorldToScreen(WorldRectangle),
-                new Rectangle(0, 0, frameWidth, frameHeight), color, 0.0f, Vector2.Zero, SpriteEffects.None, drawDepth);
+                new Rectangle(0, 0, frameWidth, frameHeight), color * Transparency, 0.0f, Vector2.Zero, SpriteEffects.None, drawDepth);
         }
-    }
 
         #endregion
+    }
 
 }
 

@@ -13,16 +13,30 @@ using Level;
 using Scene;
 using System;
 
+    [Flags]
+    public enum Direction
+    {
+        Up = 1,
+        Down = 2,
+        Left = 4,
+        Right = 8
+    }
     public class Actor : ACollidable
     {
+        private const float bulletAcceleration = 1000f;
         private Vector2 fallSpeed = new Vector2(0, 20);
         private bool dead = false;
         private int livesRemaining = 999;
         private EffectsManager EffectsManager;
-        private readonly string name;
         private readonly INetworkEvent onLocationChange;
+        private readonly INetworkEvent onShoot;
         private readonly Label label;
+        private readonly Label lifeLabel;
         public double LastUpdated {get; set;}
+        private Direction direction;
+        private readonly int maxLives;
+        public string Name { get; private set; }
+        private readonly Vector2 initialLocation;
 
         #region Velocity Handler Declarations
 
@@ -65,20 +79,29 @@ using System;
 
         #region Constructor
 
-        public Actor(string name, ContentManager content, Vector2 location,EventManager eventManager)
-            : this(name , content, location)
+        public Actor(string name, ContentManager content, Vector2 location, EventManager eventManager, int maxLives)
+            : this(name, content, location, maxLives)
         {
+            this.livesRemaining = maxLives;
             this.eventManager = eventManager;
             onLocationChange = GemClient.Profile("Shooter")
             .CreateNetworkEventWithRemoteTime
-            .AndHandleWith(eventManager, x => new Action<string, float, float,double>(x.SetLocation));
+            .AndHandleWith(eventManager, x => new Action<string, float, float, double>(x.SetLocation));
 
+            onShoot = GemClient.Profile("Shooter")
+            .CreateNetworkEventWithRemoteTime
+            .AndHandleWith(eventManager, x => new Action<string, float, float, float, float, double>(x.Shoot));
         }
 
-        public Actor(string name, ContentManager content,Vector2 location)
+        public Actor(string name, ContentManager content, Vector2 location, int maxLives)
         {
+            Transparency = 1.0f;
+            this.initialLocation = location;
+            this.Name = name;
+            this.maxLives = maxLives;
+            this.livesRemaining = maxLives;
+            direction = Direction.Right;
             LastUpdated = 0.0D;
-            this.name = name;
             frameWidth = 48;
             frameHeight = 48;
             texture = content.Load<Texture2D>(@"block");
@@ -87,17 +110,19 @@ using System;
             drawDepth = 0.825f;
 
             enabled = true;
-
-
+            
             tileMap = TileMap.GetInstance();
             Camera = CameraManager.GetInstance();
-            livesRemaining = 999;
             worldLocation = location;
             EffectsManager = EffectsManager.GetInstance();
 
             var font = content.Load<SpriteFont>(@"font");
             label = new Label(this.Camera.Camera, this.worldLocation, new Vector2(+font.MeasureString(name).X / 2 - frameWidth/2, frameHeight / 2 + font.MeasureString(name).Y / 2),
-                new FontInfo { Color = Color.Black, Font = font, Text = name }, 20.0f);
+                new FontInfo { Color = Color.Black, Font = font, Text =  name }, 20.0f);
+            lifeLabel = new Label(this.Camera.Camera, this.worldLocation, 
+                new Vector2(+font.MeasureString(LivesRemaining.ToString()).X / 2 - frameWidth / 2,
+                frameHeight / 2 + font.MeasureString(LivesRemaining.ToString()).Y / 2 + font.MeasureString(name).Y / 2),
+                new FontInfo { Color = Color.DarkRed, Font = font, Text =  LivesRemaining.ToString() }, 20.0f);
         }
 
         #endregion
@@ -106,41 +131,68 @@ using System;
 
         public void HandleInput(GameTime gameTime)
         {
-            if (Dead) return;
+            if (Dead) Revive();
 
+            if (InputHandler.IsKeyDown(Keys.W))
+            {
+                direction = Direction.Up;
+                if (onGround)
+                {
+                    Jump();
+                }
+            }
+            if (InputHandler.IsKeyDown(Keys.S))
+            {
+                direction = Direction.Down;
+            }
             if (InputHandler.IsKeyDown(Keys.D))
             {
                 velocity += accelerationAmount;
+                direction = Direction.Right;
+                if (InputHandler.IsKeyDown(Keys.W)) direction |= Direction.Up;
+                if (InputHandler.IsKeyDown(Keys.S)) direction |= Direction.Down;
             }
             if (InputHandler.IsKeyDown(Keys.A))
             {
                 velocity -= accelerationAmount;
+                direction = Direction.Left;
+                if (InputHandler.IsKeyDown(Keys.W)) direction |= Direction.Up;
+                if (InputHandler.IsKeyDown(Keys.S)) direction |= Direction.Down;
             }
-            if (InputHandler.IsKeyDown(Keys.W))
+            if (InputHandler.IsKeyReleased(Keys.Space))
             {
-                if (onGround)
-                {
+                var bulletVelocity = Vector2.Zero;
 
-                    Jump();
-                }
+                if (direction.HasFlag(Direction.Up))
+                    bulletVelocity -= Vector2.UnitY;
+                if (direction.HasFlag(Direction.Down))
+                    bulletVelocity += Vector2.UnitY;
+                if (direction.HasFlag(Direction.Left))
+                    bulletVelocity -= Vector2.UnitX;
+                if (direction.HasFlag(Direction.Right))
+                    bulletVelocity += Vector2.UnitX;
+                bulletVelocity *= bulletAcceleration;
+
+                onShoot.Send(Name, worldLocation.X, worldLocation.Y, bulletVelocity.X, bulletVelocity.Y);
+
+                EffectsManager.AddBulletParticle(Name, this.worldLocation, bulletVelocity);
             }
 
             velocity += fallSpeed;
             HandleVelocity();
             CheckCollision(gameTime);
-            onLocationChange.Send(this.name, worldLocation.X, worldLocation.Y);
-           // EffectsManager.AddBulletParticle(worldLocation + offSet, bulletDirection);   EffectsManager.AddBulletParticle(worldLocation + offSet, bulletDirection);
+            onLocationChange.Send(Name, worldLocation.X, worldLocation.Y);
                   
             Camera.Move((float)gameTime.ElapsedGameTime.TotalSeconds, WorldLocation, velocity, accelerationAmount.X);
         }
 
         public override void Update(GameTime gameTime)
         {
-
-            label.ChaseLocation = this.worldLocation;
+            label.ChaseLocation = this.worldLocation;        
             label.Update(gameTime);
-
-          
+            lifeLabel.ChaseLocation = this.worldLocation;
+            lifeLabel.Update(gameTime);
+            this.Transparency = MathHelper.Min(1.0f, Transparency + 0.0005f * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
          }
 
         public void HandleVelocity()
@@ -172,19 +224,30 @@ using System;
 
         public void Jump()
         {
-            velocity.Y = -600;
+            velocity.Y = -700;
             onAir = true;
         }
 
-        public void Hit()
+        public void Hit(Vector2 otherVelocity)
         {
             LivesRemaining--;
-            velocity.X = 0;
-            dead = true;
+            if (LivesRemaining <= 0)
+            {
+                dead = true;
+                this.LivesRemaining = maxLives;
+            }
+
+            this.Transparency = 0.5f;
+            lifeLabel.Text = LivesRemaining.ToString();
+            otherVelocity.Normalize();
+            this.velocity += otherVelocity * 20.0f;
         }
 
         public void Revive()
         {
+            this.worldLocation = initialLocation;
+            //this.LivesRemaining = maxLives;
+            this.velocity = Vector2.Zero;
             dead = false;
         }
 
@@ -193,7 +256,8 @@ using System;
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-            label.Draw(spriteBatch);
+            label.Draw(spriteBatch,1.0f);
+            lifeLabel.Draw(spriteBatch, 0.7f);
         }
     }
 }

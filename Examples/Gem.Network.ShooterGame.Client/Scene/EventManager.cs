@@ -19,8 +19,9 @@ namespace Gem.Network.Shooter.Client.Scene
         private Dictionary<string, Action<string>> commandTable;
         private GameTime gameTime;
         private readonly GemClient client;
+        public Actor Player { get; set; }
 
-        public EventManager(ContentManager content,string name)
+        public EventManager(ContentManager content, string name)
         {
             this.content = content;
             this.actors = new Dictionary<string, Actor>();
@@ -73,9 +74,11 @@ namespace Gem.Network.Shooter.Client.Scene
         {
             if (!actors.ContainsKey(id))
             {
-                actors.Add(id, new Actor(id,content, location));
+                actors.Add(id, new Actor(id,content, location,5));
             }
         }
+
+
 
         public void RemoveActor(string id)
         {
@@ -92,6 +95,18 @@ namespace Gem.Network.Shooter.Client.Scene
             {
                 actor.Value.Update(gameTime);
             }
+
+            foreach (var actor in actors)
+            {
+                EffectsManager.GetInstance().BulletIntersects(actor.Value);
+                actor.Value.Update(gameTime);
+            }
+            EffectsManager.GetInstance().BulletIntersects(Player);
+        }
+
+        public void Shoot(string name, float locationX, float locationY, float velocityX, float velocityY, double time)
+        {
+            EffectsManager.GetInstance().AddBulletParticle(name, new Vector2(locationX, locationY), new Vector2(velocityX, velocityY));
         }
 
         public void SetLocation(string id, float x, float y,double remoteTime)

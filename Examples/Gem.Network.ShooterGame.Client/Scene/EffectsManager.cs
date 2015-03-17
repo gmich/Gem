@@ -12,8 +12,8 @@ namespace Gem.Network.Shooter.Client.Scene
     {
         #region Declarations
 
-        private List<Actor> Effects;
-        private Texture2D bullet;
+        private List<Particle> Bullets;
+        private ContentManager content;
         private static Random rand;
 
         #endregion
@@ -34,80 +34,63 @@ namespace Gem.Network.Shooter.Client.Scene
         private EffectsManager()
         {
             rand = new Random();
-            Effects = new List<Actor>();
+            Bullets = new List<Particle>();
         }
 
         #endregion
 
         #region Initialization
 
-        public void Initialize(ContentManager Content)
+        public void Initialize(ContentManager content)
         {
-            bullet = Content.Load<Texture2D>(@"bullet");
+            this.content = content;
         }
 
         #endregion
 
         #region Add Effects Methods
 
-        public void AddBulletParticle(Vector2 location, Vector2 velocity)
+        public void AddBulletParticle(string name, Vector2 location, Vector2 velocity)
         {
-        //    Particle particle = new Particle(location, bullet, new Rectangle(0, 0, bullet.Width, bullet.Height), true, velocity , velocity *1000f, 9999f, 100);
-        //    Effects.Add(particle);
+            var particle = new Particle(name, content, location, velocity, 0.0f, 2.0f);
+            Bullets.Add(particle);
         }
 
 
         #endregion
 
-        #region Helper Methods
+        #region Collision
 
-        Vector2 randomHorizontalDirection()
-        {
-            return new Vector2(rand.Next(0, 2000) - 1000, 0);
-        }
 
-        Vector2 randomDirection(float scale)
+        public void BulletIntersects(Actor actor)
         {
-            Vector2 direction;
-            do
+            for (int x = Bullets.Count - 1; x >= 0; x--)
             {
-                direction = new Vector2(rand.Next(0, 100) - 50, rand.Next(0, 100) - 50);
+                if (Bullets[x].CollisionRectangle.Intersects(actor.CollisionRectangle))
+                {
+                    //is not friendly
+                    if (Bullets[x].Name != actor.Name)
+                    {
+                        actor.Hit(Bullets[x].Velocity);
+                        Bullets.RemoveAt(x);
+                    }
+                }
             }
-            while (direction.Length() == 0);
-            direction.Normalize();
-            direction *= scale;
-
-            return direction;
         }
-
-        Vector2 randomNegativeDirection(float scale)
-        {
-            Vector2 direction;
-            do
-            {
-                direction = new Vector2(rand.Next(0, 20) - 10, rand.Next(45, 60));
-            }
-            while (direction.Length() == 0);
-            direction.Normalize();
-            direction *= scale;
-
-            return direction;
-        }
-
-
         #endregion
+
 
         #region Update
 
         public void Update(GameTime gameTime)
-        {          
-            for (int x = Effects.Count - 1; x >= 0; x--)
+        {
+            for (int x = Bullets.Count - 1; x >= 0; x--)
             {
-                Effects[x].Update(gameTime);
+                Bullets[x].Update(gameTime);
 
-                if (Effects[x].Enabled)
+                if (!Bullets[x].Enabled)
                 {
-                    Effects.RemoveAt(x);
+                    Bullets.RemoveAt(x);
                 }
             }   
         }
@@ -118,9 +101,9 @@ namespace Gem.Network.Shooter.Client.Scene
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (var effect in Effects)
+            foreach (var bullet in Bullets)
             {
-                effect.Draw(spriteBatch);
+                bullet.Draw(spriteBatch);
             }
 
         }

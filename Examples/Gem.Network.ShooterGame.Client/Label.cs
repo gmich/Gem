@@ -16,6 +16,18 @@ namespace Gem.Network.Shooter.Client
         private FontInfo fontInfo;
         private Camera2D camera;
 
+        public string Text
+        {
+            get
+            {
+                return fontInfo.Text;
+            }
+            set
+            {
+                fontInfo.Text = value;
+            }
+        }
+
         private Vector2 Target
         {
             get
@@ -52,9 +64,9 @@ namespace Gem.Network.Shooter.Client
             currentLocation += velocity * Distance * acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch,float zoom)
         {
-            spriteBatch.DrawString(fontInfo.Font, fontInfo.Text, camera.WorldToScreen(currentLocation), fontInfo.Color, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.0f);
+            spriteBatch.DrawString(fontInfo.Font, fontInfo.Text, camera.WorldToScreen(currentLocation), fontInfo.Color, 0.0f, Vector2.Zero, zoom, SpriteEffects.None, 0.0f);
         }
     }
 
