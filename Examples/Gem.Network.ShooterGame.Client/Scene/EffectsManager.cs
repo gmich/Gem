@@ -12,10 +12,10 @@ namespace Gem.Network.Shooter.Client.Scene
     {
         #region Declarations
 
-        private List<Particle> Bullets;
+        private List<Bullet> Bullets;
         private ContentManager content;
         private static Random rand;
-
+        private ParticleManager particleManager;
         #endregion
 
         #region Instance
@@ -34,15 +34,16 @@ namespace Gem.Network.Shooter.Client.Scene
         private EffectsManager()
         {
             rand = new Random();
-            Bullets = new List<Particle>();
+            Bullets = new List<Bullet>();
         }
 
         #endregion
 
         #region Initialization
 
-        public void Initialize(ContentManager content)
+        public void Initialize(ContentManager content,ParticleManager particleManager)
         {
+            this.particleManager = particleManager;
             this.content = content;
         }
 
@@ -52,7 +53,7 @@ namespace Gem.Network.Shooter.Client.Scene
 
         public void AddBulletParticle(string name, Vector2 location, Vector2 velocity)
         {
-            var particle = new Particle(name, content, location, velocity, 0.0f, 2.0f);
+            var particle = new Bullet(name, content, location, velocity, 0.0f, 2.0f);
             Bullets.Add(particle);
         }
 
@@ -72,6 +73,7 @@ namespace Gem.Network.Shooter.Client.Scene
                     if (Bullets[x].Name != actor.Name)
                     {
                         actor.Hit(Bullets[x].Velocity);
+                        particleManager.AddRectangleDestructionParticles(Color.DarkRed,  Bullets[x].WorldLocation, Bullets[x].SizeX, Bullets[x].SizeY, 1, 1);
                         Bullets.RemoveAt(x);
                     }
                 }
@@ -90,6 +92,7 @@ namespace Gem.Network.Shooter.Client.Scene
 
                 if (!Bullets[x].Enabled)
                 {
+                    particleManager.AddRectangleDestructionParticles(Color.DarkRed, Bullets[x].WorldLocation, Bullets[x].SizeX, Bullets[x].SizeY, 1, 1);
                     Bullets.RemoveAt(x);
                 }
             }   

@@ -33,7 +33,7 @@ namespace Gem.Network.Shooter.Client.Scene
             client = new GemClient("Shooter", new ConnectionConfig
             {
                 ServerName = "Shooter",
-                IPorHost = "83.212.103.13",
+                IPorHost = "localhost",
                 Port = 14242,
                 DisconnectMessage = name
             }, PackageConfig.UDPSequenced);
@@ -77,9 +77,7 @@ namespace Gem.Network.Shooter.Client.Scene
                 actors.Add(id, new Actor(id,content, location,5));
             }
         }
-
-
-
+        
         public void RemoveActor(string id)
         {
             if (actors.ContainsKey(id))

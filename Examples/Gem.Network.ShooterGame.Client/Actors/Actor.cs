@@ -23,6 +23,7 @@ using System;
     }
     public class Actor : ACollidable
     {
+        private const char lifeSymbol = 'o';
         private const float bulletAcceleration = 1000f;
         private Vector2 fallSpeed = new Vector2(0, 20);
         private bool dead = false;
@@ -37,7 +38,7 @@ using System;
         private readonly int maxLives;
         public string Name { get; private set; }
         private readonly Vector2 initialLocation;
-
+        SpriteFont font;
         #region Velocity Handler Declarations
 
         private Vector2 friction = Vector2.Zero;
@@ -46,7 +47,7 @@ using System;
         private Vector2 accelerationAmount = new Vector2(50f, 0);
         private Vector2 sprintAccelerationAmount = new Vector2(40f, 0);
         private Vector2 currentMaxVelocity = Vector2.Zero;
-        private Vector2 sprintMaxVelocity = new Vector2(250f, 0);
+        private Vector2 sprintMaxVelocity = new Vector2(300f, 0);
         private bool onAir;
         private readonly EventManager eventManager;
         #endregion
@@ -113,16 +114,18 @@ using System;
             
             tileMap = TileMap.GetInstance();
             Camera = CameraManager.GetInstance();
-            worldLocation = location;
+            this.location = location;
             EffectsManager = EffectsManager.GetInstance();
 
-            var font = content.Load<SpriteFont>(@"font");
-            label = new Label(this.Camera.Camera, this.worldLocation, new Vector2(+font.MeasureString(name).X / 2 - frameWidth/2, frameHeight / 2 + font.MeasureString(name).Y / 2),
+            font = content.Load<SpriteFont>(@"font");
+            label = new Label(this.Camera.Camera, this.location, new Vector2(+font.MeasureString(name).X / 2 - frameWidth/2, frameHeight / 2 + font.MeasureString(name).Y / 2),
                 new FontInfo { Color = Color.Black, Font = font, Text =  name }, 20.0f);
-            lifeLabel = new Label(this.Camera.Camera, this.worldLocation, 
-                new Vector2(+font.MeasureString(LivesRemaining.ToString()).X / 2 - frameWidth / 2,
-                frameHeight / 2 + font.MeasureString(LivesRemaining.ToString()).Y / 2 + font.MeasureString(name).Y / 2),
-                new FontInfo { Color = Color.DarkRed, Font = font, Text =  LivesRemaining.ToString() }, 20.0f);
+
+            string lifeLabelText = new String(lifeSymbol, LivesRemaining);
+            lifeLabel = new Label(this.Camera.Camera, this.location,
+                new Vector2(+font.MeasureString(lifeLabelText).X / 2 - frameWidth / 2,
+                frameHeight / 2 + font.MeasureString(lifeLabelText).Y / 2 + font.MeasureString(name).Y / 2),
+                new FontInfo { Color = Color.DarkRed, Font = font, Text = lifeLabelText }, 20.0f);
         }
 
         #endregion
@@ -173,24 +176,25 @@ using System;
                     bulletVelocity += Vector2.UnitX;
                 bulletVelocity *= bulletAcceleration;
 
-                onShoot.Send(Name, worldLocation.X, worldLocation.Y, bulletVelocity.X, bulletVelocity.Y);
+                var bulletLocation = this.location + new Vector2(this.frameWidth / 2, this.frameHeight / 2);
+                onShoot.Send(Name, bulletLocation.X, bulletLocation.Y, bulletVelocity.X, bulletVelocity.Y);
 
-                EffectsManager.AddBulletParticle(Name, this.worldLocation, bulletVelocity);
+                EffectsManager.AddBulletParticle(Name, bulletLocation, bulletVelocity);
             }
 
             velocity += fallSpeed;
             HandleVelocity();
             CheckCollision(gameTime);
-            onLocationChange.Send(Name, worldLocation.X, worldLocation.Y);
+            onLocationChange.Send(Name, location.X, location.Y);
                   
             Camera.Move((float)gameTime.ElapsedGameTime.TotalSeconds, WorldLocation, velocity, accelerationAmount.X);
         }
 
         public override void Update(GameTime gameTime)
         {
-            label.ChaseLocation = this.worldLocation;        
+            label.ChaseLocation = this.location;        
             label.Update(gameTime);
-            lifeLabel.ChaseLocation = this.worldLocation;
+            lifeLabel.ChaseLocation = this.location;
             lifeLabel.Update(gameTime);
             this.Transparency = MathHelper.Min(1.0f, Transparency + 0.0005f * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
          }
@@ -238,14 +242,15 @@ using System;
             }
 
             this.Transparency = 0.5f;
-            lifeLabel.Text = LivesRemaining.ToString();
+            lifeLabel.Text = new String(lifeSymbol, LivesRemaining);
+            lifeLabel.locationOffset = new Vector2(font.MeasureString(lifeLabel.Text).X / 2 - frameWidth/2, lifeLabel.locationOffset.Y);
             otherVelocity.Normalize();
-            this.velocity += otherVelocity * 20.0f;
+            this.velocity += otherVelocity * 100.0f;
         }
 
         public void Revive()
         {
-            this.worldLocation = initialLocation;
+            this.location = initialLocation;
             //this.LivesRemaining = maxLives;
             this.velocity = Vector2.Zero;
             dead = false;

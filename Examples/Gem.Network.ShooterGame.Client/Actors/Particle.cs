@@ -1,87 +1,103 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace Gem.Network.Shooter.Client.Actors
 {
-using Camera;
-using Gem.Network.Client;
-using Gem.Network.Events;
-using Gem.Network.Shooter.Client.Input;
-using Level;
-using Scene;
-using System;
-
-    public class Particle : ACollidable
+    public class Particle : Sprite
     {
+        #region Declarations
 
-        private Vector2 fallSpeed = new Vector2(0, 20);
-        private EffectsManager EffectsManager;
-        private readonly Label label;
-        private float acceleration;
-        private float aliveTime;
-        private float timePassed;
-        public string Name { get; set; }
+        private Vector2 acceleration;
+        private float maxSpeed;
+        private int initialDuration;
+        private int remainingDuration;
+        private Color initialColor;
+        private Color finalColor;
+
+        #endregion
+
+        #region Properties
+        
+        public int ElapsedDuration
+        {
+            get
+            {
+                return initialDuration - remainingDuration;
+            }
+        }
+
+        public float DurationProgress
+        {
+            get
+            {
+                return (float)ElapsedDuration /
+                    (float)initialDuration;
+            }
+        }
+
+        public bool IsActive
+        {
+            get
+            {
+                return (remainingDuration > 0);
+            }
+        }
+        #endregion
+
         #region Constructor
 
-
-        public Particle(string name, ContentManager content, Vector2 location, Vector2 velocity, float acceleration, float activeTime)
+        public Particle(Vector2 location, Texture2D texture, Rectangle initialFrame, Vector2 velocity, Vector2 acceleration, float maxSpeed, int duration, Color initialColor, Color finalColor)
+            : base(location, texture, initialFrame, velocity)
         {
-            this.Name = name;                
-            this.enabled = true;
-            frameWidth = 8;
-            frameHeight = 8;
-            this.velocity = velocity;
-            this.aliveTime = activeTime;
-            this.timePassed = 0.0f;
-            this.acceleration=acceleration;
-            texture = content.Load<Texture2D>(@"bullet");
-            CollisionRectangle = new Rectangle(0, 0, 8, 8);
-            this.color = Color.DarkRed;
-            drawDepth = 0.5f;
-
-            enabled = true;
-            tileMap = TileMap.GetInstance();
-            Camera = CameraManager.GetInstance();
-            worldLocation = location;
-            EffectsManager = EffectsManager.GetInstance();
-            this.Transparency = 1.0f;
-            var font = content.Load<SpriteFont>(@"font");
-            label = new Label(this.Camera.Camera, this.worldLocation, new Vector2(+font.MeasureString(name).X / 2 - frameWidth/2, frameHeight / 2 + font.MeasureString(name).Y / 2),
-                new FontInfo { Color = Color.Black, Font = font, Text = name }, 100.0f);
+            initialDuration = duration;
+            remainingDuration = duration;
+            this.acceleration = acceleration;
+            this.initialColor = initialColor;
+            this.maxSpeed = maxSpeed;
+            this.finalColor = finalColor;
         }
 
         #endregion
 
+        #region Update and Draw
 
         public override void Update(GameTime gameTime)
         {
-            //HandleVelocity();
-
-            label.ChaseLocation = this.worldLocation;
-            label.Update(gameTime);
-
-            this.timePassed += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            CheckCollision(gameTime);
-
-            if(timePassed>=aliveTime || Collided)
+            if (remainingDuration <= 0)
             {
-                Enabled = false;
+                Expired = true;
             }
-         }
 
-        private const float maxVelocity = 999999f;
-        public void HandleVelocity()
-        {
-            velocity.X = MathHelper.Clamp(Velocity.X + acceleration,
-            -maxVelocity, maxVelocity);
+            if (!Expired)
+            {
+                Velocity += acceleration;
+                if (Velocity.Length() > maxSpeed)
+                {
+                    Vector2 vel = Velocity;
+                    vel.Normalize();
+                    Velocity = vel * maxSpeed;
+                }
+                TintColor = Color.Lerp(
+                    initialColor,
+                    finalColor,
+                    DurationProgress);
+                remainingDuration--;
+                Transparency = 1 - DurationProgress;
+            }
+
+            base.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch);
-            label.Draw(spriteBatch,0.5f);
+            if (IsActive)
+            {
+                base.Draw(spriteBatch);
+            }
         }
+
+        #endregion
+
     }
 }

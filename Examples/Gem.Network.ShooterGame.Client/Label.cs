@@ -11,7 +11,7 @@ namespace Gem.Network.Shooter.Client
     public class Label
     {
         public Vector2 ChaseLocation { get; set; }
-        private readonly Vector2 locationOffset;
+        public Vector2 locationOffset { get; set; }
         private Vector2 currentLocation;
         private FontInfo fontInfo;
         private Camera2D camera;

@@ -13,7 +13,7 @@ namespace Gem.Network.Shooter.Client.Actors
 
         #region Declarations
 
-        protected Vector2 worldLocation;
+        protected Vector2 location;
         protected Vector2 velocity;
         protected Vector2 moveAmount;
         protected int frameWidth;
@@ -46,8 +46,8 @@ namespace Gem.Network.Shooter.Client.Actors
 
         public Vector2 WorldLocation
         {
-            get { return worldLocation; }
-            set { worldLocation = value; }
+            get { return location; }
+            set { location = value; }
         }
 
         public Vector2 MapLocation
@@ -66,8 +66,8 @@ namespace Gem.Network.Shooter.Client.Actors
             get
             {
                 return new Vector2(
-                  (int)worldLocation.X + (int)(frameWidth / 2),
-                  (int)worldLocation.Y + (int)(frameHeight / 2));
+                  (int)location.X + (int)(frameWidth / 2),
+                  (int)location.Y + (int)(frameHeight / 2));
             }
         }
 
@@ -76,8 +76,8 @@ namespace Gem.Network.Shooter.Client.Actors
             get
             {
                 return new Rectangle(
-                    (int)worldLocation.X,
-                    (int)worldLocation.Y,
+                    (int)location.X,
+                    (int)location.Y,
                     frameWidth,
                     frameHeight);
             }
@@ -88,7 +88,7 @@ namespace Gem.Network.Shooter.Client.Actors
             get
             {
                 return new Rectangle(
-                    (int)worldLocation.X + collisionRectangle.X,
+                    (int)location.X + collisionRectangle.X,
                     (int)WorldRectangle.Y + collisionRectangle.Y,
                     collisionRectangle.Width,
                     collisionRectangle.Height);
@@ -112,27 +112,25 @@ namespace Gem.Network.Shooter.Client.Actors
 
             if (moveAmount.X < 0)
             {
-                corner1 = new Vector2(afterMoveRect.Left,
-                                      afterMoveRect.Top + 1);
-                corner2 = new Vector2(afterMoveRect.Left,
-                                      afterMoveRect.Bottom - 1);
+                corner1 = new Vector2(location.X + moveAmount.X, location.Y);
+                corner2 = new Vector2(location.X + moveAmount.X, location.Y + frameHeight-1);
             }
             else
             {
-                corner1 = new Vector2(afterMoveRect.Right,
-                                      afterMoveRect.Top + 1);
-                corner2 = new Vector2(afterMoveRect.Right,
-                                      afterMoveRect.Bottom - 1);
+                corner1 = new Vector2(location.X + moveAmount.X + frameWidth, location.Y);
+                corner2 = new Vector2(location.X + moveAmount.X + frameWidth, location.Y + frameHeight - 1);
             }
 
             Vector2 mapCell1 = tileMap.GetCellByPixel(corner1);
             Vector2 mapCell2 = tileMap.GetCellByPixel(corner2);
 
-            if (!tileMap.CellIsPassable(mapCell1) || !tileMap.CellIsPassable(mapCell2))
+            if (!tileMap.CellIsPassable(mapCell1))
             {
-                moveAmount.X = 0;
-                velocity.X = 0;
-                Collided = true;
+                HorizontalCollision(mapCell1, ref moveAmount);
+            }
+            if (!tileMap.CellIsPassable(mapCell2))
+            {
+                HorizontalCollision(mapCell2, ref moveAmount);
             }
 
             return moveAmount;
@@ -147,40 +145,59 @@ namespace Gem.Network.Shooter.Client.Actors
             afterMoveRect.Offset((int)moveAmount.X, (int)moveAmount.Y);
             Vector2 corner1, corner2;
 
-            if (moveAmount.Y < 0)
+             if (moveAmount.Y < 0)
             {
-                corner1 = new Vector2(afterMoveRect.Left + 1,
-                                      afterMoveRect.Top);
-                corner2 = new Vector2(afterMoveRect.Right - 1,
-                                      afterMoveRect.Top);
+                corner1 = new Vector2(location.X,location.Y+moveAmount.Y);
+                corner2 = new Vector2(location.X + frameWidth, location.Y + moveAmount.Y);
             }
             else
             {
-                corner1 = new Vector2(afterMoveRect.Left + 1,
-                                      afterMoveRect.Bottom);
-                corner2 = new Vector2(afterMoveRect.Right - 1,
-                                      afterMoveRect.Bottom);
+                corner1 = new Vector2(location.X, location.Y +collideHeight+ moveAmount.Y);
+                corner2 = new Vector2(location.X + frameWidth, location.Y + frameHeight - 1 + moveAmount.Y);
             }
 
             Vector2 mapCell1 = tileMap.GetCellByPixel(corner1);
             Vector2 mapCell2 = tileMap.GetCellByPixel(corner2);
 
-            if ((!tileMap.CellIsPassable(mapCell1) || !tileMap.CellIsPassable(mapCell2)))
+            if (!tileMap.CellIsPassable(mapCell1))
             {
-                if (moveAmount.Y > 0)
-                {
-                    onGround = true;
-                }
-                if ((mapCell1.Y - 1) * tileMap.TileHeight > worldLocation.Y)
-                {
-                    worldLocation.Y = (mapCell1.Y) * tileMap.TileHeight - frameHeight;
-                }
-                moveAmount.Y = 0;
-                velocity.Y = 0;
-                Collided = true;
+                VerticalCollision(mapCell1, ref moveAmount);
+            }
+            if (!tileMap.CellIsPassable(mapCell2))
+            {
+                VerticalCollision(mapCell2, ref moveAmount);
             }
 
             return moveAmount;
+        }
+
+        private void VerticalCollision(Vector2 mapCell, ref Vector2 moveAmount)
+        {
+            if (moveAmount.Y > 0)
+            {
+                location = new Vector2(location.X, tileMap.GetCellLocation(mapCell).Y - this.frameHeight);
+                onGround = true;
+            }
+            else if (moveAmount.Y < 0)
+            {
+                location = new Vector2(location.X, tileMap.GetCellLocation(mapCell).Y + tileMap.TileHeight);
+            }
+
+            moveAmount.Y = 0;
+            velocity.Y = 0;
+            Collided = true;
+        }
+
+        private void HorizontalCollision(Vector2 mapCell, ref Vector2 moveAmount)
+        {
+            if (moveAmount.X > 0)
+                location = new Vector2(tileMap.GetCellLocation(mapCell).X - this.frameWidth - 1, location.Y);
+            else if (moveAmount.X < 0)
+                location = new Vector2(tileMap.GetCellLocation(mapCell).X + tileMap.TileWidth, location.Y);
+
+            moveAmount.X = 0;
+            velocity.X = 0;
+            Collided = true;
         }
 
         #endregion
@@ -201,9 +218,9 @@ namespace Gem.Network.Shooter.Client.Actors
             moveAmount = horizontalCollisionTest(moveAmount);
             moveAmount = verticalCollisionTest(moveAmount);
 
-            Vector2 newPosition = worldLocation + moveAmount;
+            Vector2 newPosition = location + moveAmount;
 
-            worldLocation = newPosition;
+            location = newPosition;
         }
 
         public abstract void Update(GameTime gameTime);

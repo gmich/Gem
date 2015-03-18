@@ -18,6 +18,7 @@ namespace Gem.Network.Shooter.Client
     using Actors;
     using Scene;
     using Gem.Network.Shooter.Client.Input;
+    using Gem.Network.Shooter.Client.Camera;
 
     public class ShooterGame : Microsoft.Xna.Framework.Game
     {
@@ -28,6 +29,7 @@ namespace Gem.Network.Shooter.Client
         private Actor player;
         private readonly string name;
         private EventManager eventManager;
+        private ParticleManager particleManager;
 
         public ShooterGame(string name)
         {
@@ -64,12 +66,13 @@ namespace Gem.Network.Shooter.Client
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             IsMouseVisible = true;
+            particleManager = new ParticleManager(Content, CameraManager.GetInstance().Camera);
             eventManager = new EventManager(Content, name);
             player = new Actor(name,Content,new Vector2(1500, 10),eventManager,5);
             eventManager.Player = player;
 
             effectsManager = EffectsManager.GetInstance();
-            effectsManager.Initialize(Content);
+            effectsManager.Initialize(Content,particleManager);
             tileMap.Initialize(Content.Load<Texture2D>(@"block"), 48,48);
             tileMap.Randomize(200, 50);
         }
@@ -99,6 +102,7 @@ namespace Gem.Network.Shooter.Client
             player.Update(gameTime);
             effectsManager.Update(gameTime);
             eventManager.Update(gameTime);
+            particleManager.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -117,6 +121,7 @@ namespace Gem.Network.Shooter.Client
             player.Draw(spriteBatch);
             effectsManager.Draw(spriteBatch);
             eventManager.Draw(spriteBatch);
+            particleManager.Draw(spriteBatch);
 
             spriteBatch.End();
 
