@@ -14,7 +14,8 @@ using Gem.Network.Client;
 
 namespace Gem.Network.Fluent
 {
-     
+   using Extensions;
+
     public class MessageFlowBuilder : IMessageFlowBuilder
     {
 
@@ -48,12 +49,7 @@ namespace Gem.Network.Fluent
 
         public INetworkEvent AndHandleWith<T>(T objectToHandle, Expression<Func<T, Delegate>> methodToHandle)
         {
-            var lambdaExpression = (LambdaExpression)methodToHandle;
-            var unaryExpression = (UnaryExpression)lambdaExpression.Body;
-            var methodCallExpression = (MethodCallExpression)unaryExpression.Operand;
-            var methodInfoExpression = (ConstantExpression)methodCallExpression.Object;
-            var methodInfo = (MethodInfo)methodInfoExpression.Value;
-
+            var methodInfo = methodToHandle.GetMethodInfo();
             var types = methodInfo.GetParameters().Select(x => x.ParameterType).ToList();
 
             Guard.That(types.All(x => x.IsPrimitive || x == typeof(string)), "All types should be primitive");

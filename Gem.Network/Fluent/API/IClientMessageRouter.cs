@@ -1,5 +1,6 @@
 ﻿using Gem.Network.Commands;
 using Gem.Network.Messages;
+using Gem.Network.Protocol;
 using Lidgren.Network;
 using System;
 
@@ -21,6 +22,8 @@ namespace Gem.Network.Fluent
         void OnDisconnected(Action<IClient, NetIncomingMessage> action, bool append = false);
 
         void OnDisconnecting(Action<IClient, NetIncomingMessage> action, bool append = false);
+
+        //IMessageFlowBuilder CreateProtocolEvent<T>()  where T : INetworkProtocol;
 
         IMessageFlowBuilder CreateNetworkEvent { get; }
 

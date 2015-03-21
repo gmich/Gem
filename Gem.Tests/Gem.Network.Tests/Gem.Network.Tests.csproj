@@ -73,6 +73,7 @@
     <Compile Include="NetworkConfig\DynamicEventTests.cs" />
     <Compile Include="Messages\DynamicTypeEncodingTests.cs" />
     <Compile Include="Messages\MessageEncodingTests.cs" />
+    <Compile Include="NetworkProtocol\NetworkProtocolTests.cs" />
     <Compile Include="ObjectExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

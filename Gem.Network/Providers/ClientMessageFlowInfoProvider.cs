@@ -23,7 +23,7 @@ namespace Gem.Network.Managers
 
             return dataRepository.Add(clientInfo.ID, clientInfo);
         }
-
+        
         public void SubscribeEvent(byte id)
         {
             this[id].EventRaisingclass.SubscribeEvent(GemNetwork.Client);

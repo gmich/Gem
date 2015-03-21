@@ -38,7 +38,7 @@ namespace Gem.Network.Factories
             Guard.That(propertyInfo.All(x => x.PropertyType.IsPrimitive
                 || x.PropertyType == typeof(string)
                 || x.PropertyType != typeof(byte)),
-              "All types should be primitive and not typeof byte. Bytes are reserved to be the message's unique id");
+              "All types should be primitive and not type of byte. Bytes are reserved to be the message's unique id");
 
             Type[] typeArray = propertyInfo.Select(x => x.PropertyType).ToArray();
 

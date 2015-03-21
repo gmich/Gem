@@ -15,11 +15,13 @@ using Gem.Network.Client;
 namespace Gem.Network.Fluent
 {
     using Extensions;
+    using Gem.Network.Protocol;
 
      /// <summary>
      /// Creates a network event that calculates the delta time from sending to receiving
      /// </summary>
-    public class MessageFlowRemoteTimeBuilder : IMessageFlowBuilder
+    public class MessageFlowNetworkProtocol<T> : IMessageFlowBuilder
+        where T : INetworkProtocol
     {
         
         #region Fields
@@ -36,7 +38,7 @@ namespace Gem.Network.Fluent
 
         #region Constructor
 
-        public MessageFlowRemoteTimeBuilder(string profile, MessageType messageType)
+        public MessageFlowNetworkProtocol(string profile, MessageType messageType)
         {
             this.profile = profile;
             this.Id = GemNetwork.GetMesssageId(profile);
@@ -50,10 +52,12 @@ namespace Gem.Network.Fluent
 
         #region IMessageFlowBuilder Implementation
 
-        public INetworkEvent AndHandleWith<T>(T objectToHandle, Expression<Func<T, Delegate>> methodToHandle)
+        public INetworkEvent AndHandleWith<Target>(Target objectToHandle, Expression<Func<Target, Delegate>> methodToHandle)
         {
             var methodInfo = methodToHandle.GetMethodInfo();
-            var types = methodInfo.GetParameters().Select(x => x.ParameterType).ToList();
+            var protocolType = methodInfo.GetParameters().Select(x => x.ParameterType).ToList();
+
+            var types = protocolType.GetPropertyTypes();
 
             Guard.That(types.All(x => x.IsPrimitive || x == typeof(string)), "All types should be primitive");
             

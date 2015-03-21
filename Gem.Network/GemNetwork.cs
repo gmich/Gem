@@ -55,10 +55,10 @@ namespace Gem.Network
 
         #region Properties
 
-        internal static string ActiveProfile
+        public static string ActiveProfile
         {
             get;
-            set;
+            internal set;
         }
 
         internal static ICommandHost Commander
