@@ -12,8 +12,6 @@ namespace Gem.Network
 
         void SendMessage<T>(T message);
 
-        void SendMessage<T>(T message,byte id);
-
         void SendMessageWithLocalTime<T>(T message, byte id);
 
         void SendNotification(Notification notification);

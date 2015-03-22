@@ -41,5 +41,6 @@ namespace Gem.Network.Server
 
         void SendMessage(NetOutgoingMessage message, List<NetConnection> clients);
 
+        void SendMessage<T>(NetConnection sender,T message, byte id);
     }
 }

@@ -47,7 +47,7 @@ namespace Gem.Network.Events
         #endregion
 
 
-        public void SubscribeEvent(IClient client)
+        public void SubscribeEvent(INetworkPeer client)
         {
             Event = (sender, e) => client.SendMessage<T>(e, Id);
         }

@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Lidgren.Network;
 using Gem.Network.Commands;
 using Gem.Network.Messages;
+using Gem.Network.Protocol;
+using Gem.Network.Chat.Protocol;
 
 namespace Gem.Network.Chat.Server
 {
@@ -16,10 +18,20 @@ namespace Gem.Network.Chat.Server
         const string ActiveProfile = "GemChat";
 
         public static Dictionary<NetConnection, string> ConnectedPeers = new Dictionary<NetConnection, string>();
+        private static IProtocolServerEvent onProtocolEvent;
 
         static void Main(string[] args)
         {
+
             GemNetworkDebugger.Echo = Console.WriteLine;
+
+            onProtocolEvent = GemServer.Profile("GemChat")
+                  .CreateNetworkProtocolEvent<Package>()
+                  .HandleIncoming(package =>
+                   {
+                       GemServer.ExecuteCommand("echo received package");
+                   })
+                  .GenerateSendEvent();
 
             GemServer gemServer = new GemServer(ActiveProfile, new ServerConfig
             {
@@ -32,6 +44,7 @@ namespace Gem.Network.Chat.Server
                 RequireAuthentication = true
             },
             PackageConfig.TCP);
+
 
             GemServer.Profile(ActiveProfile).HandleNotifications((server, connection, msg) =>
             {
@@ -65,6 +78,7 @@ namespace Gem.Network.Chat.Server
                 (server, sender, command, arguments) =>
                 {
                     server.NotifyOnly(String.Join(Environment.NewLine, ConnectedPeers.Select(x => x.Value)),sender);
+                    onProtocolEvent.Send(sender, new Package { Name = "troll" });
                 });
 
             GemServer.RegisterCommand("kickbyname", "Kick client by his name", true,

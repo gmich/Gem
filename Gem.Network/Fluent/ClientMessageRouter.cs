@@ -71,7 +71,6 @@ namespace Gem.Network.Fluent
             return new MessageFlowNetworkProtocol<T>(profile, MessageType.Data);
         }
 
-
         public IMessageFlowBuilder CreateNetworkEventWithRemoteTime
         {
             get

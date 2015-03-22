@@ -73,6 +73,10 @@
     <Compile Include="Async\AsyncIncomingMessageHandler.cs" />
     <Compile Include="Async\ParallelTask.cs" />
     <Compile Include="Builders\API\IMessageHandlerBuilder.cs" />
+    <Compile Include="Factories\ServerProtocolEventFactory.cs" />
+    <Compile Include="Server\MessageArguments.cs" />
+    <Compile Include="Server\IProtocolServerEvent.cs" />
+    <Compile Include="Server\ProtocolServerEvent.cs" />
     <Compile Include="Protocol\ProtocolHandlerBuilder.cs" />
     <Compile Include="Builders\CsScriptPocoBuilder.cs" />
     <Compile Include="Handlers\DummyHandler.cs" />
@@ -94,7 +98,11 @@
     <Compile Include="Providers\ClientActionProvider.cs" />
     <Compile Include="Server\GemServer.cs" />
     <Compile Include="Messages\Predefined\ServerNotification.cs" />
+    <Compile Include="Server\InfoProvider.cs" />
+    <Compile Include="Server\MessageProtocol.cs" />
+    <Compile Include="Server\ServerMessageFlowManager.cs" />
     <Compile Include="Server\ServerCommandAppender.cs" />
+    <Compile Include="Server\ServerMessageFlowProvider.cs" />
     <Compile Include="Server\ServerMessageProcessor.cs" />
     <Compile Include="Client\GemClient.cs" />
     <Compile Include="Extensions\MessageFlowExtensions.cs" />
@@ -111,7 +119,7 @@
     <Compile Include="Messages\IMessageProcessor.cs" />
     <Compile Include="Providers\AbstractProvider.cs" />
     <Compile Include="Managers\ServerActionManager.cs" />
-    <Compile Include="Providers\ClientMessageFlowInfoProvider.cs" />
+    <Compile Include="Providers\MessageFlowInfoProvider.cs" />
     <Compile Include="Managers\ClientMessageFlowManager.cs" />
     <Compile Include="Events\INetworkEvent.cs" />
     <Compile Include="Commands\ICommandExecutioner.cs" />

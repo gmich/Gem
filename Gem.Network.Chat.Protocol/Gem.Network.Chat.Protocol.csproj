@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0218CECB-45A0-4B88-85D9-5D6925408943}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{9A06EEC7-6275-4D27-BC98-0B7DBCDE5342}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Gem.Network.Chat.Server</RootNamespace>
-    <AssemblyName>Gem.Network.Chat.Server</AssemblyName>
+    <RootNamespace>Gem.Network.Chat.Protocol</RootNamespace>
+    <AssemblyName>Gem.Network.Chat.Protocol</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,10 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Lidgren.Network, Version=3.3.0.2238, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Gem.Network\Third Party\Lidgren.Network.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,18 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChatServer.cs" />
+    <Compile Include="Protocol.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Gem.Network.Chat.Protocol\Gem.Network.Chat.Protocol.csproj">
-      <Project>{9a06eec7-6275-4d27-bc98-0b7dbcde5342}</Project>
-      <Name>Gem.Network.Chat.Protocol</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Gem.Network\Gem.Network.csproj">
+    <ProjectReference Include="..\Gem.Network\Gem.Network.csproj">
       <Project>{3dac3ea3-2910-4453-b0c6-3f5011251fa3}</Project>
       <Name>Gem.Network</Name>
     </ProjectReference>

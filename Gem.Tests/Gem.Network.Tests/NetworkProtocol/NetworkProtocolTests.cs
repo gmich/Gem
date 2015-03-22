@@ -78,8 +78,8 @@ namespace Gem.Network.Tests.NetworkProtocol
         [TestMethod]
         public void ProtocolManagerSuccessfulyCachesType()
         {
-            var typeAndAttributeForTest = ProtocolManager.Provider["Test", 4];
-            var typeAndAttributeForSameTest = ProtocolManager.Provider["SameTest", 4];
+            var typeAndAttributeForTest = ProtocolManager.Provider["Test", 5];
+            var typeAndAttributeForSameTest = ProtocolManager.Provider["SameTest", 5];
 
             Assert.AreEqual(typeAndAttributeForTest.Type, typeof(Package));
             Assert.AreEqual(typeAndAttributeForSameTest.Type, typeof(AnotherPackage));

@@ -7,8 +7,9 @@ using System.Linq;
 namespace Gem.Network.Events
 {
     using Extensions;
+    using Gem.Network.Server;
 
-    public class ProtocolEvent<T> : INetworkEvent
+    public class ProtocolServerEvent<T> : Gem.Network.Server.IProtocolServerEvent
     {
 
         #region Private Fields
@@ -26,7 +27,7 @@ namespace Gem.Network.Events
 
         #region Construct / Dispose
 
-        public ProtocolEvent(IDisposable clientConfig, byte id)
+        public ProtocolServerEvent(IDisposable clientConfig, byte id)
         {
             this.isDisposed = false;
             this.clientConfig = clientConfig;
@@ -50,24 +51,24 @@ namespace Gem.Network.Events
         #endregion
 
 
-        public void SubscribeEvent(INetworkPeer client)
+        public void SubscribeEvent(INetworkPeer server)
         {
-            Event = (sender, e) => client.SendMessage<T>(e, Id);
+            Event = (sender, e) => (server as IServer).SendMessage<T>(sender as NetConnection, e, Id);
         }
 
-        public void Send(params object[] networkargs)
+        public void Send(NetConnection sender,object netpackage)
         {
-            var package = (INetworkPackage)Activator.CreateInstance(typeof(T), networkargs.First().ReadAllProperties());
+            var package = (INetworkPackage)Activator.CreateInstance(typeof(T), netpackage.ReadAllProperties());
             package.Id = Id;
-            OnEvent(package);
+            OnEvent(sender,package);
         }
         
-        private void OnEvent(object message)
+        private void OnEvent(NetConnection sender, object message)
         {
             EventHandler<T> newPeerEvent = Event;
             if (newPeerEvent != null)
             {
-                newPeerEvent(this, (T)message);
+                newPeerEvent(sender, (T)message);
             }
         }
              

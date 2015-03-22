@@ -12,13 +12,14 @@ namespace Gem.Network.Protocol
 {
     using Extensions;
     using System.Collections.Generic;
+    using Gem.Network.Server;
 
     public static class ProtocolManager
     {
 
         private readonly static ProtocolProviderManager protocolProvider;
 
-        internal static void Init() { }
+        public static void Init() { }
 
         static ProtocolManager()
         {
@@ -41,6 +42,12 @@ namespace Gem.Network.Protocol
             messageFlowArgs.MessagePoco = Dependencies.Container.Resolve<IPocoFactory>().Create(properties, "poco" + id);
 
             GemClient.MessageFlow[profile, MessageType.Data].Add(messageFlowArgs);
+            GemServer.MessageFlow[profile, MessageType.Data].Add(new MessageArguments
+            {
+                ID = messageFlowArgs.ID,
+                MessageHandler = new DummyHandler(),
+                MessagePoco = messageFlowArgs.MessagePoco
+            });
 
             return messageFlowArgs.ID;
         }

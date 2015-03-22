@@ -16,6 +16,12 @@ namespace Gem.Network.Fluent
             this.profile = profile;
         }
 
+        public IServerProtocolMessageBuilder<T> CreateNetworkProtocolEvent<T>()
+              where T : new()
+        {
+            return new ServerMessageFlowNetworkProtocol<T>(profile, MessageType.Data);
+        }
+
         public void OnIncomingConnection(Action<IServer, NetConnection, ConnectionApprovalMessage> action, bool append = false)
         {
             if (append)
@@ -56,6 +62,7 @@ namespace Gem.Network.Fluent
                 GemServer.ServerConfiguration[profile].HandleNotifications = action;
             }
         }
+
     }
 }
 

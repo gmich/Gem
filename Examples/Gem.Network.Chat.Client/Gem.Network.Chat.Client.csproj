@@ -87,6 +87,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Gem.Network.Chat.Protocol\Gem.Network.Chat.Protocol.csproj">
+      <Project>{9a06eec7-6275-4d27-bc98-0b7dbcde5342}</Project>
+      <Name>Gem.Network.Chat.Protocol</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Gem.Network\Gem.Network.csproj">
       <Project>{3dac3ea3-2910-4453-b0c6-3f5011251fa3}</Project>
       <Name>Gem.Network</Name>

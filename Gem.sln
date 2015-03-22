@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Shooter.Server"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.ShooterGame.Client", "Examples\Gem.Network.ShooterGame.Client\Gem.Network.ShooterGame.Client.csproj", "{699E4A5F-F006-4EAC-8D6B-283A01E398CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Chat.Protocol", "Gem.Network.Chat.Protocol\Gem.Network.Chat.Protocol.csproj", "{9A06EEC7-6275-4D27-BC98-0B7DBCDE5342}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -115,6 +117,16 @@ Global
 		{699E4A5F-F006-4EAC-8D6B-283A01E398CD}.Release|Mixed Platforms.Build.0 = Release|x86
 		{699E4A5F-F006-4EAC-8D6B-283A01E398CD}.Release|x86.ActiveCfg = Release|x86
 		{699E4A5F-F006-4EAC-8D6B-283A01E398CD}.Release|x86.Build.0 = Release|x86
+		{9A06EEC7-6275-4D27-BC98-0B7DBCDE5342}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A06EEC7-6275-4D27-BC98-0B7DBCDE5342}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A06EEC7-6275-4D27-BC98-0B7DBCDE5342}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9A06EEC7-6275-4D27-BC98-0B7DBCDE5342}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9A06EEC7-6275-4D27-BC98-0B7DBCDE5342}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9A06EEC7-6275-4D27-BC98-0B7DBCDE5342}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A06EEC7-6275-4D27-BC98-0B7DBCDE5342}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A06EEC7-6275-4D27-BC98-0B7DBCDE5342}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9A06EEC7-6275-4D27-BC98-0B7DBCDE5342}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9A06EEC7-6275-4D27-BC98-0B7DBCDE5342}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -128,5 +140,6 @@ Global
 		{0218CECB-45A0-4B88-85D9-5D6925408943} = {84AE5719-A57A-4438-A051-43AA5A041CEE}
 		{6A70A449-F0B8-4200-88D3-D9206D764E60} = {84AE5719-A57A-4438-A051-43AA5A041CEE}
 		{699E4A5F-F006-4EAC-8D6B-283A01E398CD} = {84AE5719-A57A-4438-A051-43AA5A041CEE}
+		{9A06EEC7-6275-4D27-BC98-0B7DBCDE5342} = {84AE5719-A57A-4438-A051-43AA5A041CEE}
 	EndGlobalSection
 EndGlobal

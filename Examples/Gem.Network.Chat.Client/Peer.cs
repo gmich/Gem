@@ -10,14 +10,10 @@ using Gem.Network.Async;
 using System.Collections.Concurrent;
 using System.Threading;
 using Gem.Network.Protocol;
+using Gem.Network.Chat.Protocol;
 
 namespace Gem.Network.Chat.Client
 {
-    [NetworkPackage("GemChat")]
-    public class Package
-    {
-        public string Name { get; set; }
-    }
 
     public class Peer
     {
@@ -26,7 +22,6 @@ namespace Gem.Network.Chat.Client
         private readonly ParallelTaskStarter messageAppender;
         private readonly INetworkEvent onEvent;
         private readonly INetworkEvent onCommandExecute;
-
         private readonly INetworkEvent protocolExample;
 
         public Peer(string name)
@@ -34,6 +29,7 @@ namespace Gem.Network.Chat.Client
             CanAppend = true;
             IncomingMessages = new ConcurrentQueue<string>();
             this.Name = name;
+
 
             onEvent = GemClient.Profile("GemChat")
                   .CreateNetworkEvent
@@ -47,7 +43,7 @@ namespace Gem.Network.Chat.Client
                   .CreateNetworkProtocolEvent<Package>()
                   .HandleIncoming(package =>
                    {
-                       QueueMessage("Protocol: " + name);
+                       QueueMessage("Protocol: " + package.Name);
                    })
                   .GenerateSendEvent();
 
@@ -77,7 +73,7 @@ namespace Gem.Network.Chat.Client
             Console.WriteLine("{0} : {1}", Name, message);
 
             onEvent.Send(formattedMessage);
-            protocolExample.Send(new Package { Name = "invoked protocol" });
+            //protocolExample.Send(new Package { Name = "invoked protocol " + Name });
         }
 
         public void ChangeName(string newName)

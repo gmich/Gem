@@ -1,6 +1,7 @@
 ﻿using Gem.Network.Client;
 using Gem.Network.Events;
 using Gem.Network.Messages;
+using Gem.Network.Protocol;
 using Gem.Network.Utilities.Loggers;
 using System;
 using System.Collections.Generic;

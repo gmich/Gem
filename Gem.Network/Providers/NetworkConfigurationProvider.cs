@@ -8,18 +8,18 @@ using System;
 namespace Gem.Network.Providers
 {
     internal class ClientConfigurationProvider
-    : AbstractContainer<MessageTypeProvider, string>
+    : AbstractContainer<ClientMessageTypeProvider, string>
     {
         public ClientConfigurationProvider()
-            : base(new FlyweightRepository<MessageTypeProvider, string>())
+            : base(new FlyweightRepository<ClientMessageTypeProvider, string>())
         { }
     }
     
-    public class MessageTypeProvider
-    : AbstractContainer<ClientMessageFlowInfoProvider, MessageType>
+    public class ClientMessageTypeProvider
+    : AbstractContainer<MessageFlowInfoProvider, MessageType>
     {
-        public MessageTypeProvider()
-            : base(new FlyweightRepository<ClientMessageFlowInfoProvider, MessageType>())
+        public ClientMessageTypeProvider()
+            : base(new FlyweightRepository<MessageFlowInfoProvider, MessageType>())
         { }
     }
 

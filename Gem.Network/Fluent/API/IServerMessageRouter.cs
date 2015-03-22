@@ -17,6 +17,7 @@ namespace Gem.Network.Fluent
 
         void RegisterCommand(string command, string description, CommandExecute callback, bool requiresAuthorization = true);
 
+        IServerProtocolMessageBuilder<T> CreateNetworkProtocolEvent<T>() where T : new();
     }
     
 }

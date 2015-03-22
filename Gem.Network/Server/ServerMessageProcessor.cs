@@ -68,9 +68,16 @@ namespace Gem.Network.Server
                         }
                         break;
                     case NetIncomingMessageType.Data:
-                        if (im.ReadByte() == GemNetwork.NotificationByte)
+                        byte id = im.ReadByte();
+
+                        if (id == GemNetwork.NotificationByte)
                         {
-                            GemServer.ServerConfiguration[GemNetwork.ActiveProfile].HandleNotifications(server, im.SenderConnection, new Notification(im));                          
+                            GemServer.ServerConfiguration[GemNetwork.ActiveProfile].HandleNotifications(server, im.SenderConnection, new Notification(im));
+                        }
+                        else if (GemServer.MessageFlow[GemNetwork.ActiveProfile, MessageType.Data].HasKey(id))
+                        {
+                            GemServer.MessageFlow[GemNetwork.ActiveProfile, MessageType.Data, id]
+                                     .HandleIncomingMessage(im);
                         }
                         else
                         {

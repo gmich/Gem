@@ -12,10 +12,10 @@ namespace Gem.Network
     {
 
         //Predefined package types
-        internal static readonly byte InitialId = (byte)3;
-        internal static readonly byte DisconnectByte = (byte)2;
-        internal static readonly byte NotificationByte = (byte)1;
-        internal static readonly byte ConnectionApprovalByte = (byte)0;
+        internal static readonly byte InitialId = (byte)4;
+        internal static readonly byte DisconnectByte = (byte)3;
+        internal static readonly byte NotificationByte = (byte)2;
+        internal static readonly byte ConnectionApprovalByte = (byte)1;
 
         static GemNetwork()
         {

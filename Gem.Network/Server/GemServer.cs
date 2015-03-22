@@ -1,6 +1,7 @@
 ﻿using Gem.Network.Async;
 using Gem.Network.Commands;
 using Gem.Network.Fluent;
+using Gem.Network.Managers;
 using Gem.Network.Messages;
 using Gem.Network.Providers;
 using Gem.Network.Utilities.Loggers;
@@ -134,6 +135,16 @@ namespace Gem.Network.Server
 
 
         #region Settings
+
+        private static ServerMessageFlowManager serverMessageFlowManager;
+        internal static ServerMessageFlowManager MessageFlow
+        {
+            get
+            {
+                return serverMessageFlowManager
+                      = serverMessageFlowManager ?? new ServerMessageFlowManager();
+            }
+        }
 
         private static ServerConfigurationManager serverConfigurationManager;
         internal static ServerConfigurationManager ServerConfiguration

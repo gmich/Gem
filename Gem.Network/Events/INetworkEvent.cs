@@ -4,7 +4,7 @@ namespace Gem.Network.Events
 {
     public interface INetworkEvent : IDisposable
     {
-        void SubscribeEvent(IClient client);
+        void SubscribeEvent(INetworkPeer client);
 
         void Send(params object[] networkargs);
     }

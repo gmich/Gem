@@ -1,21 +1,22 @@
 ﻿using Gem.Network.Messages;
 using Gem.Network.Providers;
 using Gem.Network.Repositories;
+using Gem.Network.Server;
 using System;
 
 namespace Gem.Network.Managers
-{   
-    
-    public class ClientMessageFlowManager
-    {
-        private ClientConfigurationProvider configurationManager;
+{
 
-        public ClientMessageFlowManager()
+    public class ServerMessageFlowManager
+    {
+        private ServerConfigurationProvider configurationManager;
+
+        public ServerMessageFlowManager()
         {
-            configurationManager = new ClientConfigurationProvider();
+            configurationManager = new ServerConfigurationProvider();
         }
 
-        public MessageFlowArguments this[string tag,MessageType messagetype,byte configID]
+        public MessageArguments this[string tag, MessageType messagetype, byte configID]
         {
             get
             {
@@ -23,7 +24,7 @@ namespace Gem.Network.Managers
             }
         }
 
-        public MessageFlowInfoProvider this[string tag, MessageType messagetype]
+        public InfoProvider this[string tag, MessageType messagetype]
         {
             get
             {
@@ -31,7 +32,7 @@ namespace Gem.Network.Managers
             }
         }
 
-        public ClientMessageTypeProvider this[string tag]
+        public ServerMessageTypeProvider this[string tag]
         {
             get
             {
@@ -39,5 +40,7 @@ namespace Gem.Network.Managers
             }
         }
     }
+
+
 
 }

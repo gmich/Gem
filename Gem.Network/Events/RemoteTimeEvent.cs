@@ -48,7 +48,7 @@ namespace Gem.Network.Events
         #endregion
 
 
-        public void SubscribeEvent(IClient client)
+        public void SubscribeEvent(INetworkPeer client)
         {
             Event = (sender, e) => client.SendMessage<T>(e, Id);
         }
@@ -65,7 +65,6 @@ namespace Gem.Network.Events
             var package = (INetworkPackage)Activator.CreateInstance(typeof(T), networkargs);
             package.Id = Id;
             OnEvent(package);
-
         }        
 
         private void OnEvent(object message)
@@ -76,6 +75,6 @@ namespace Gem.Network.Events
                 newPeerEvent(this, (T)message);
             }
         }
-             
+        
     }
 }

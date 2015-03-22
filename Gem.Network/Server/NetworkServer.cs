@@ -175,6 +175,25 @@ namespace Gem.Network.Server
             netServer.Recycle(im);
         }
 
+        public void SendMessage<T>(NetConnection sender, T message, byte id)
+        {
+            var msg = netServer.CreateMessage();
+            MessageSerializer.Encode(message, ref msg);
+            msg.Write(id);
+            netServer.SendToAll(msg,
+                                sender,
+                                packageConfig.DeliveryMethod,
+                                packageConfig.SequenceChannel);
+        }
+
+        public void SendMessage<T>(T message, byte id)
+        {
+            var msg = netServer.CreateMessage();
+            MessageSerializer.Encode(message, ref msg);
+            msg.Write(id);
+            netServer.SendToAll(msg, packageConfig.DeliveryMethod);
+        }
+
         /// <summary>
         /// Sends the message to all 
         /// </summary>
@@ -308,6 +327,8 @@ namespace Gem.Network.Server
         }
 
         #endregion
+
+
 
     }
 }

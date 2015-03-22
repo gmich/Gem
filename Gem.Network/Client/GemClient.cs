@@ -37,7 +37,7 @@ namespace Gem.Network.Client
         #region Constructor
 
         public GemClient(string profile, ConnectionConfig connectionConfig, PackageConfig packageConfig )
-        {
+        {            
             Guard.That(connectionConfig).IsNotNull();
             Guard.That(packageConfig).IsNotNull();
 

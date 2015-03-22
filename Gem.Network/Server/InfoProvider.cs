@@ -2,34 +2,35 @@
 using Gem.Network.Messages;
 using Gem.Network.Other;
 using Gem.Network.Repositories;
+using Gem.Network.Server;
 using Seterlund.CodeGuard;
 using System;
 
 namespace Gem.Network.Managers
 {
-    public class ClientMessageFlowInfoProvider
-             : AbstractContainer<MessageFlowArguments, byte>
+    public class InfoProvider
+             : AbstractContainer<MessageArguments, byte>
     {
-        public ClientMessageFlowInfoProvider()
-            : base(new FlyweightRepository<MessageFlowArguments, byte>())
+        public InfoProvider()
+            : base(new FlyweightRepository<MessageArguments, byte>())
         { }
 
-        public IDisposable Add(MessageFlowArguments clientInfo)
+        public IDisposable Add(MessageArguments clientInfo)
         {
             Guard.That(dataRepository).IsTrue(x => x.TotalElements < (int)byte.MaxValue,
             "You have reached the maximum capacity. Consider deregistering");
-            
-            clientInfo.ID = GetUniqueByte();
+
+            //clientInfo.ID = GetUniqueByte();
 
             return dataRepository.Add(clientInfo.ID, clientInfo);
         }
-        
+
         public void SubscribeEvent(byte id)
         {
-            this[id].EventRaisingclass.SubscribeEvent(GemNetwork.Client);
+            this[id].EventRaisingclass.SubscribeEvent(GemNetwork.Server);
         }
 
-        public override MessageFlowArguments this[byte id]
+        public override MessageArguments this[byte id]
         {
             get
             {
@@ -46,9 +47,9 @@ namespace Gem.Network.Managers
 
         private byte GetUniqueByte()
         {
-            byte uniqueByte = (byte)(GemNetwork.InitialId +  dataRepository.TotalElements);
+            byte uniqueByte = (byte)(GemNetwork.InitialId + dataRepository.TotalElements);
             do
-            {} while (dataRepository.HasKey(++uniqueByte));
+            { } while (dataRepository.HasKey(++uniqueByte));
 
             return uniqueByte;
         }
