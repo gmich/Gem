@@ -57,7 +57,7 @@ namespace Gem.Network.Builders
         /// <returns>A string with the constructor body</returns>
         private string GetDecodeConstructorBody(List<DynamicPropertyInfo> propertyFields)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             for (int i = 0; i < propertyFields.Count; i++)
             {
                 sb.Append(string.Format("this.{0} = msg.{1}();", propertyFields[i].PropertyName, DynamicPropertyInfo.GetDecodePrefix(propertyFields[i].PropertyType)));
@@ -72,7 +72,7 @@ namespace Gem.Network.Builders
         /// <returns>A string with properties</returns>
         private string GetGetterSetters(List<DynamicPropertyInfo> propertyFields)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             for (int i = 0; i < propertyFields.Count; i++)
             {
                 sb.Append(string.Format("public {0} {1} {{get;set;}}", DynamicPropertyInfo.GetPrimitiveTypeAlias(propertyFields[i].PropertyType), propertyFields[i].PropertyName));

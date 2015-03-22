@@ -1,4 +1,5 @@
 ﻿using Gem.Network.Protocol;
+using Gem.Network.Utilities.Loggers;
 using System;
 using System.Linq;
 
@@ -13,8 +14,8 @@ namespace Gem.Network.Utilities
         /// Checks if the class is marked with the specified attribute
         /// </summary>
         /// <param name="type">The type to check</param>
-        public static void FindAndDo<T>(Type type,Action<T> action)
-            where T: Attribute
+        public static void FindAndDo<T>(Type type, Action<T> action)
+            where T : Attribute
         {
             T Attr;
 
@@ -26,7 +27,7 @@ namespace Gem.Network.Utilities
                 {
                     action(Attr);
                 }
-            }                  
+            }
         }
 
         /// <summary>
@@ -40,16 +41,29 @@ namespace Gem.Network.Utilities
                                                                    bool isInherited = true)
                                                                    where TAttribute : Attribute
         {
-            AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(x => x.GetTypes())
-            .Where(x => x.IsDefined(typeof(TAttribute), isInherited))
-            .Select(x => new
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            foreach (var assembly in assemblies)
             {
-                Type = x,
-                Attribute = x.GetCustomAttributes(typeof(TAttribute), isInherited).First()
-            })
-            .ToList()
-            .ForEach(x => action(x.Type, x.Attribute as TAttribute));
+                if (assembly == null) continue;
+
+                try
+                {
+                    assembly.GetTypes()
+                            .Where(x => x.IsDefined(typeof(TAttribute), isInherited))
+                            .Select(x => new
+                            {
+                                Type = x,
+                                Attribute = x.GetCustomAttributes(typeof(TAttribute), isInherited).First()
+                            })
+                            .ToList()
+                            .ForEach(x => action(x.Type, x.Attribute as TAttribute));
+                }
+                catch (Exception ex)
+                {
+                    GemNetworkDebugger.Append.Error("Failed to load assembly {0}. Reason: {1}",assembly, ex.Message);
+                }
+            }
         }
     }
 }

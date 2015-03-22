@@ -18,6 +18,8 @@ namespace Gem.Network.Protocol
 
         private readonly static ProtocolProviderManager protocolProvider;
 
+        internal static void Init() { }
+
         static ProtocolManager()
         {
             protocolProvider = new ProtocolProviderManager();
@@ -26,13 +28,14 @@ namespace Gem.Network.Protocol
                               (type, attribute) =>
                               {
                                   byte id = CreateMessageFlowArguments(GemNetwork.GetMesssageId(attribute.Profile), type, attribute.Profile);
+                                  attribute.Id = id;
                                   protocolProvider[attribute.Profile].Add(id, new TypeAndAttribute { Type = type, Attribute = attribute } );
                               });
         }
 
         private static byte CreateMessageFlowArguments(byte id, Type type, string profile)
         {
-            var properties = DynamicPropertyInfo.GetPropertyInfo(type.GetDeclaredPropertyTypes().ToArray());
+            var properties = DynamicPropertyInfo.GetPropertyInfo(Activator.CreateInstance(type).GetPropertyTypes().ToArray());
             var messageFlowArgs = new MessageFlowArguments();
             messageFlowArgs.MessageHandler = new DummyHandler();
             messageFlowArgs.MessagePoco = Dependencies.Container.Resolve<IPocoFactory>().Create(properties, "poco" + id);

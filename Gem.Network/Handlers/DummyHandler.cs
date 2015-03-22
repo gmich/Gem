@@ -2,7 +2,7 @@
 {
     public class DummyHandler : IMessageHandler
     {
-        public void Handle(params object[] args)
+        public void Handle(object args)
         { }
     }
 }

@@ -46,7 +46,7 @@ namespace Gem.Network.Managers
 
         private byte GetUniqueByte()
         {
-            byte uniqueByte = (byte)dataRepository.TotalElements;
+            byte uniqueByte = (byte)(GemNetwork.InitialId +  dataRepository.TotalElements);
             do
             {} while (dataRepository.HasKey(++uniqueByte));
 

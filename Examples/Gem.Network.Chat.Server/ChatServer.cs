@@ -28,7 +28,7 @@ namespace Gem.Network.Chat.Server
                 EnableUPnP = false,
                 MaxConnections = 10,
                 Password = "gem",
-                ConnectionTimeout = 5.0f,
+                ConnectionTimeout = 25.0f,
                 RequireAuthentication = true
             },
             PackageConfig.TCP);

@@ -10,4 +10,11 @@ namespace Gem.Network.Fluent
         INetworkEvent AndHandleWith<T>(T objectToHandle, Expression<Func<T, Delegate>> methodToHandle);
     }
 
+    public interface IProtocolMessageBuilder<Target>
+        where Target: new()
+    {
+        IProtocolMessageBuilder<Target> HandleIncoming(Action<Target> action);
+        INetworkEvent GenerateSendEvent();
+    }
+
 }

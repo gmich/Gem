@@ -1,4 +1,5 @@
 ﻿using Gem.Network.Configuration;
+using Gem.Network.Protocol;
 using Gem.Network.Utilities.Loggers;
 using System;
 

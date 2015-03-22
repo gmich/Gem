@@ -4,6 +4,6 @@ namespace Gem.Network.Handlers
 {
     public interface IMessageHandler
     {
-        void Handle(params object[] args);
+        void Handle(object args);
     }
 }

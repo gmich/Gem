@@ -33,8 +33,7 @@ namespace Gem.Network.Client
         }
 
         #endregion
-
-
+        
         #region Constructor
 
         public GemClient(string profile, ConnectionConfig connectionConfig, PackageConfig packageConfig )

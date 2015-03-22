@@ -23,7 +23,13 @@ namespace Gem.Network.Fluent
 
         void OnDisconnecting(Action<IClient, NetIncomingMessage> action, bool append = false);
 
-        //IMessageFlowBuilder CreateProtocolEvent<T>()  where T : INetworkProtocol;
+        /// <summary>
+        /// The protocol class must be tagged with the NetworkPackage attribute
+        /// </summary>
+        /// <typeparam name="TNetworkPackage">The object tagged with the NetworkPackage attribute</typeparam>
+        /// <returns>The builder</returns>
+        IProtocolMessageBuilder<TNetworkPackage> CreateNetworkProtocolEvent<TNetworkPackage>()
+                where TNetworkPackage : new();
 
         IMessageFlowBuilder CreateNetworkEvent { get; }
 

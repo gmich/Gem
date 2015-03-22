@@ -15,7 +15,9 @@ namespace Gem.Network.Protocol
     public sealed class NetworkPackageAttribute : Attribute
     {
         public string Profile { get; private set; }
-        
+
+        public byte Id { get; set; }
+
         public NetworkPackageAttribute(string profile)
         {
             this.Profile = profile;

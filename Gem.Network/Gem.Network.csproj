@@ -73,14 +73,16 @@
     <Compile Include="Async\AsyncIncomingMessageHandler.cs" />
     <Compile Include="Async\ParallelTask.cs" />
     <Compile Include="Builders\API\IMessageHandlerBuilder.cs" />
+    <Compile Include="Protocol\ProtocolHandlerBuilder.cs" />
     <Compile Include="Builders\CsScriptPocoBuilder.cs" />
     <Compile Include="Handlers\DummyHandler.cs" />
+    <Compile Include="Protocol\ProtocolEventFactory.cs" />
     <Compile Include="Protocol\ProtocolProvider.cs" />
     <Compile Include="Protocol\ProtocolEvent.cs" />
     <Compile Include="Events\RemoteTimeEvent.cs" />
     <Compile Include="Extensions\LambdaExtensions.cs" />
     <Compile Include="Factories\TimeDeltaEventFactory.cs" />
-    <Compile Include="Fluent\MessageFlowNetworkProtocol.cs" />
+    <Compile Include="Protocol\MessageFlowNetworkProtocol.cs" />
     <Compile Include="Fluent\MessageFlowRemoteTimeBuilder.cs" />
     <Compile Include="Handlers\NotificationHandler.cs" />
     <Compile Include="Messages\INetworkPackage.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="Messages\Predefined\DisconnectMessage.cs" />
     <Compile Include="PackageConfig.cs" />
     <Compile Include="Protocol\ProtocolManager.cs" />
+    <Compile Include="Factories\EventFactory.cs" />
     <Compile Include="Providers\ClientActionProvider.cs" />
     <Compile Include="Server\GemServer.cs" />
     <Compile Include="Messages\Predefined\ServerNotification.cs" />

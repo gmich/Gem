@@ -65,6 +65,13 @@ namespace Gem.Network.Fluent
             }
         }
 
+        public IProtocolMessageBuilder<T> CreateNetworkProtocolEvent<T>()
+        where T : new()
+        {
+            return new MessageFlowNetworkProtocol<T>(profile, MessageType.Data);
+        }
+
+
         public IMessageFlowBuilder CreateNetworkEventWithRemoteTime
         {
             get

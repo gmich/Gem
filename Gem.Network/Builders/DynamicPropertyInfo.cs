@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using Gem.Network.Extensions;
 
 namespace Gem.Network.Builders
 {
@@ -9,7 +10,9 @@ namespace Gem.Network.Builders
         public Type PropertyType { get; set; }
 
         public string PropertyName { get; set; }
-        
+
+        public const string PropertyPrefix = "pprefix";
+
         #region Static Helpers
 
         /// <summary>
@@ -18,7 +21,7 @@ namespace Gem.Network.Builders
         /// <param name="types">The types of property info</param>
         /// <param name="propertyPrefix">The prefix of the type's names</param>
         /// <returns>A list of <see cref="DynamicPropertyInfo"/></returns>
-        public static List<DynamicPropertyInfo> GetPropertyInfo(Type[] types, string propertyPrefix = "pprefix")
+        public static List<DynamicPropertyInfo> GetPropertyInfo(Type[] types)
         {
             var propertyInfo = new List<DynamicPropertyInfo>();
 
@@ -26,7 +29,7 @@ namespace Gem.Network.Builders
             {
                 propertyInfo.Add(new DynamicPropertyInfo
                 {
-                    PropertyName = propertyPrefix + i,
+                    PropertyName = PropertyPrefix + i,
                     PropertyType = types[i]
                 });
             }
@@ -34,11 +37,24 @@ namespace Gem.Network.Builders
             return propertyInfo;
         }
 
-        public static DynamicPropertyInfo GetPropertyInfo(Type types, int order, string propertyPrefix = "pprefix")
+
+        public static IEnumerable<DynamicPropertyInfo> GetPropertyTypesAndNames<T>()
+            where T : new()
+        {
+            return new T().GetType()
+                      .GetProperties()
+                      .Select(x => new DynamicPropertyInfo
+                      {
+                          PropertyName = x.Name,
+                          PropertyType = x.PropertyType
+                      });
+        }
+
+        public static DynamicPropertyInfo GetPropertyInfo(Type types, int order)
         {
                 return new DynamicPropertyInfo
                 {
-                    PropertyName = propertyPrefix + order,
+                    PropertyName = PropertyPrefix + order,
                     PropertyType = types
                 };
         }

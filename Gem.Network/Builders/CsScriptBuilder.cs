@@ -39,7 +39,7 @@ namespace Gem.Network.Builders
         /// <returns>The type of the message handler</returns>
         public Type Build(List<string> propertyTypes, string classname, string functionName)
         {
-            var str = String.Format(@"using Microsoft.CSharp;
+            var str = String.Format(@"using Microsoft.CSharp;using Gem.Network.Extensions;
                                             namespace Gem.Network.Builders
                                             {{
                                             public class {0} : Gem.Network.Handlers.IMessageHandler
@@ -49,7 +49,11 @@ namespace Gem.Network.Builders
                                                  {{
                                                      this.element = element;
                                                  }}
-                                                 public void Handle(params object[] args)
+                                                 public void Handle(object args)
+                                                 {{
+                                                     Invoke(args.ReadAllProperties());
+                                                 }}   
+                                                 public void Invoke(params object[] args)
                                                  {{
                                                      element.{1}({2});
                                                  }}   

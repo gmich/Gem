@@ -10,6 +10,7 @@ namespace Gem.Network.Tests.NetworkProtocol
 {
     using Extensions;
     using Gem.Network.Messages;
+    using Gem.Network.Client;
 
     [NetworkPackage("Test")]
     public class Package
@@ -72,27 +73,26 @@ namespace Gem.Network.Tests.NetworkProtocol
               "SameTest"
             };
             CollectionAssert.AreEqual(expectedProfiles, attributeProfiles);
-
         }
 
         [TestMethod]
-        public void ProtocolManagerSuccessfulyCreatesMessageFlow()
+        public void ProtocolManagerSuccessfulyCachesType()
         {
-
-            var typeAndAttributeForTest = ProtocolManager.Provider["Test",1];
-            var typeAndAttributeForSameTest = ProtocolManager.Provider["SameTest", 1];
+            var typeAndAttributeForTest = ProtocolManager.Provider["Test", 4];
+            var typeAndAttributeForSameTest = ProtocolManager.Provider["SameTest", 4];
 
             Assert.AreEqual(typeAndAttributeForTest.Type, typeof(Package));
             Assert.AreEqual(typeAndAttributeForSameTest.Type, typeof(AnotherPackage));
-                       
         }
 
         [TestMethod]
-        public void MessageHandlerForObjectsRaisesEvents()
+        public void ProtocolHandlerInvokesAction()
         {
-            //
-            // TODO: Add test logic here
-            //
+            string expectedPackage = string.Empty;
+
+            var protocolInvocation = GemClient.Profile("Test")
+                                     .CreateNetworkProtocolEvent<Package>()
+                                     .HandleIncoming(package => expectedPackage = package.Name);
         }
 
         [TestMethod]
@@ -106,9 +106,12 @@ namespace Gem.Network.Tests.NetworkProtocol
         [TestMethod]
         public void ProtocolMessageIsSendViaClient()
         {
-            //
-            // TODO: Add test logic here
-            //
+            var protocolInvocation =  GemClient.Profile("Test")
+                                     .CreateNetworkProtocolEvent<Package>()
+                                     .GenerateSendEvent();
+
+            //Cant send for now, need server connection
+            //protocolInvocation.Send(new Package { Name = "troll", Depth = 1.0f });
         }
 
         [TestMethod]
