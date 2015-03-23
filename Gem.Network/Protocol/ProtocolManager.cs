@@ -18,8 +18,7 @@ namespace Gem.Network.Protocol
     {
 
         private readonly static ProtocolProviderManager protocolProvider;
-
-        public static void Init() { }
+        private static int ProtocolObjectsFound = 0; 
 
         static ProtocolManager()
         {
@@ -40,6 +39,7 @@ namespace Gem.Network.Protocol
             var messageFlowArgs = new MessageFlowArguments();
             messageFlowArgs.MessageHandler = new DummyHandler();
             messageFlowArgs.MessagePoco = Dependencies.Container.Resolve<IPocoFactory>().Create(properties, "poco" + id);
+            messageFlowArgs.ID = (byte)(GemNetwork.InitialId + ProtocolObjectsFound++);
 
             GemClient.MessageFlow[profile, MessageType.Data].Add(messageFlowArgs);
             GemServer.MessageFlow[profile, MessageType.Data].Add(new MessageArguments

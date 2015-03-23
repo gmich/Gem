@@ -73,7 +73,7 @@ namespace Gem.Network.Chat.Client
             Console.WriteLine("{0} : {1}", Name, message);
 
             onEvent.Send(formattedMessage);
-            //protocolExample.Send(new Package { Name = "invoked protocol " + Name });
+            protocolExample.Send(new Package { Name = "invoked protocol " + Name });
         }
 
         public void ChangeName(string newName)

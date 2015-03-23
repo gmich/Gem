@@ -23,9 +23,15 @@ namespace Gem.Network.Managers
             {
                 clientInfo.ID = GetUniqueByte();
             }
+            //if a repository already has that key, replace
+            else if (dataRepository.HasKey(clientInfo.ID))
+            {
+                dataRepository.GetById(clientInfo.ID).ID = GetUniqueByte();
+            }
+
             return dataRepository.Add(clientInfo.ID, clientInfo);
         }
-        
+
         public void SubscribeEvent(byte id)
         {
             this[id].EventRaisingclass.SubscribeEvent(GemNetwork.Client);
@@ -48,9 +54,9 @@ namespace Gem.Network.Managers
 
         private byte GetUniqueByte()
         {
-            byte uniqueByte = (byte)(GemNetwork.InitialId +  dataRepository.TotalElements);
+            byte uniqueByte = (byte)(GemNetwork.InitialId + dataRepository.TotalElements);
             do
-            {} while (dataRepository.HasKey(++uniqueByte));
+            { } while (dataRepository.HasKey(++uniqueByte));
 
             return uniqueByte;
         }
