@@ -5,29 +5,46 @@ using Gem.Network.Extensions;
 
 namespace Gem.Network.Builders
 {
-    public class DynamicPropertyInfo
+    /// <summary>
+    /// Holds information that are passed to IPocoBuilder to build runtime types
+    /// </summary>
+    public class RuntimePropertyInfo
     {
-        public Type PropertyType { get; set; }
+        #region Fields
 
+        /// <summary>
+        /// The runtime type
+        /// </summary>
+        public Type PropertyType { get; set; }
+        
+        /// <summary>
+        /// Its invocation name
+        /// </summary>
         public string PropertyName { get; set; }
 
-        public const string PropertyPrefix = "pprefix";
+        /// <summary>
+        /// The prefix of the property name.
+        /// This is used for identifying runtime created types
+        /// </summary>
+        internal const string PropertyPrefix = "pprefix";
+
+        #endregion
 
         #region Static Helpers
 
         /// <summary>
-        /// Sets up a generic list of <see cref="DynamicPropertyInfo"/>
+        /// Sets up a generic list of <see cref="RuntimePropertyInfo"/>
         /// </summary>
         /// <param name="types">The types of property info</param>
         /// <param name="propertyPrefix">The prefix of the type's names</param>
-        /// <returns>A list of <see cref="DynamicPropertyInfo"/></returns>
-        public static List<DynamicPropertyInfo> GetPropertyInfo(Type[] types)
+        /// <returns>A list of <see cref="RuntimePropertyInfo"/></returns>
+        public static List<RuntimePropertyInfo> GetPropertyInfo(Type[] types)
         {
-            var propertyInfo = new List<DynamicPropertyInfo>();
+            var propertyInfo = new List<RuntimePropertyInfo>();
 
             for (int i = 0; i < types.Count(); i++)
             {
-                propertyInfo.Add(new DynamicPropertyInfo
+                propertyInfo.Add(new RuntimePropertyInfo
                 {
                     PropertyName = PropertyPrefix + i,
                     PropertyType = types[i]
@@ -38,21 +55,33 @@ namespace Gem.Network.Builders
         }
 
 
-        public static IEnumerable<DynamicPropertyInfo> GetPropertyTypesAndNames<T>()
+        /// <summary>
+        /// Uses reflection to retrieve an object's fields types and nammes as 
+        /// dynamic property info
+        /// </summary>
+        /// <typeparam name="T">The object to reflect</typeparam>
+        /// <returns>An inenumerable holding the propety names and types</returns>
+        public static IEnumerable<RuntimePropertyInfo> GetPropertyTypesAndNames<T>()
             where T : new()
         {
             return new T().GetType()
                       .GetProperties()
-                      .Select(x => new DynamicPropertyInfo
+                      .Select(x => new RuntimePropertyInfo
                       {
                           PropertyName = x.Name,
                           PropertyType = x.PropertyType
                       });
         }
 
-        public static DynamicPropertyInfo GetPropertyInfo(Type types, int order)
+        /// <summary>
+        /// Factory method that uses the PropertyPrefeix to return a dynamic property info
+        /// </summary>
+        /// <param name="types">The type</param>
+        /// <param name="order">The index of the property prefix</param>
+        /// <returns>A dynamic property info</returns>
+        public static RuntimePropertyInfo GetPropertyInfo(Type types, int order)
         {
-                return new DynamicPropertyInfo
+                return new RuntimePropertyInfo
                 {
                     PropertyName = PropertyPrefix + order,
                     PropertyType = types
@@ -101,6 +130,13 @@ namespace Gem.Network.Builders
                 //{typeof(Decimal),"decimal"}
             };
 
+        /// <summary>
+        /// Returns the primitive type's string representation that's used to declare it
+        /// e.g. a System.Single is represented as float.
+        /// NOTICE: only primitive types
+        /// </summary>
+        /// <param name="primitiveType">The type</param>
+        /// <returns>A string of the type's declaration</returns>
         public static string GetPrimitiveTypeAlias(Type primitiveType)
         {
             if (PrimitiveTypesAndAliases.ContainsKey(primitiveType))
@@ -113,6 +149,13 @@ namespace Gem.Network.Builders
             }
         }
 
+        /// <summary>
+        /// Returns the lidgren decoding invocation for network incoming message
+        /// as a string, according to the primitive type
+        /// NOTICE: only primitive types
+        /// </summary>
+        /// <param name="primitiveType">The primitive type</param>
+        /// <returns>A string representing the decoding invocation</returns>
         public static string GetDecodePrefix(Type primitiveType)
         {
             if (DecodeInfo.ContainsKey(primitiveType))

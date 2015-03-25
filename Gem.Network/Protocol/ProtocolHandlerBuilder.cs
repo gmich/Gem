@@ -14,12 +14,12 @@ namespace Gem.Network.Protocol
     /// </summary>
     public class ProtocolHandlerBuilder
     {
-        private string GetMapper(List<DynamicPropertyInfo> propertyFields)
+        private string GetMapper(List<RuntimePropertyInfo> propertyFields)
         {
             var sb = new StringBuilder();
             for (int i = 0; i < propertyFields.Count; i++)
             {
-                sb.Append(string.Format("{0} =({1})props[{2}],",propertyFields[i].PropertyName, DynamicPropertyInfo.GetPrimitiveTypeAlias(propertyFields[i].PropertyType),i));
+                sb.Append(string.Format("{0} =({1})props[{2}],",propertyFields[i].PropertyName, RuntimePropertyInfo.GetPrimitiveTypeAlias(propertyFields[i].PropertyType),i));
             }
             sb.Length--;
             return sb.ToString();
@@ -46,7 +46,7 @@ namespace Gem.Network.Protocol
                                                  }}                                           
                                                 }}                                                                                        
                                              }}", classname,
-                                                GetMapper(DynamicPropertyInfo.GetPropertyTypesAndNames<TPackage>().ToList()),
+                                                GetMapper(RuntimePropertyInfo.GetPropertyTypesAndNames<TPackage>().ToList()),
                                                 packageType,
                                                 assembly);
 

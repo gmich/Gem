@@ -1,29 +1,31 @@
-﻿﻿using System;
-using Lidgren.Network;
+﻿﻿using Lidgren.Network;
 using Gem.Network.Messages;
-using System.Net;
-using System.Collections.Generic;
-using Gem.Network.Utilities;
-using Gem.Network.Containers;
 using Gem.Network.Utilities.Loggers;
 using Gem.Network.Extensions;
-using Gem.Network.Events;
 using Gem.Network.Client;
 
 namespace Gem.Network
 {
-    public class ClientMessageProcessor : IMessageProcessor
+    /// <summary>
+    /// Processes the client's network incoming messages
+    /// </summary>
+    internal class ClientMessageProcessor : IMessageProcessor
     {
 
         #region Declarations
 
+        /// <summary>
+        /// The client
+        /// </summary>
         private readonly IClient client;
 
+        /// <summary>
+        /// The information appending
+        /// </summary>
         private readonly IAppender Write;
 
         #endregion
-
-
+        
         #region Constructor
 
         public ClientMessageProcessor(IClient client)
@@ -33,13 +35,14 @@ namespace Gem.Network
         }
 
         #endregion
-
-
-        #region Messages
+        
+        #region Message Processing
 
         public void ProcessNetworkMessages()
         {
             NetIncomingMessage im;
+
+            //Holds the message receiving thread until an event fires
             client.Wait();
 
             while ((im = this.client.ReadMessage()) != null)
@@ -91,9 +94,18 @@ namespace Gem.Network
 
     }
 
+    /// <summary>
+    /// Helper class for handling the incoming messages
+    /// </summary>
     internal static class MessageTypeExtensions
     {
-        public static void Handle(this MessageType messageType, NetIncomingMessage im, IClient client)
+        /// <summary>
+        /// A messagetype extension for the GemClient. Invokes all the client related actions
+        /// </summary>
+        /// <param name="messageType">The incoming message's type</param>
+        /// <param name="im">The incoming message</param>
+        /// <param name="client">The client</param>
+        internal static void Handle(this MessageType messageType, NetIncomingMessage im, IClient client)
         {
             byte id = im.ReadByte();
 

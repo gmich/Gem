@@ -1,11 +1,6 @@
 ﻿using Gem.Network.Server;
-using Gem.Network.Utilities.Loggers;
 using Lidgren.Network;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gem.Network.Commands
 {
@@ -15,9 +10,9 @@ namespace Gem.Network.Commands
     /// <param name="host">Host who will execute the command</param>
     /// <param name="command">Command name</param>
     /// <param name="arguments">Command arguments</param>
-    public delegate void CommandExecute(IServer server,NetConnection connection, string command, IList<string> arguments);
+    public delegate void CommandExecute(IServer server, NetConnection connection, string command, IList<string> arguments);
 
-    public interface ICommandExecutioner
+    internal interface ICommandExecutioner
     {
         void ExecuteCommand(NetConnection sender, string command);
     }
@@ -25,7 +20,7 @@ namespace Gem.Network.Commands
     /// <summary>
     /// Ccontains information to run the command
     /// </summary>
-    public class CommandInfo
+    internal class CommandInfo
     {
         public CommandInfo(
             string command, bool requiresAuthentication, string description, CommandExecute callback)

@@ -10,30 +10,50 @@ using System.Net;
 
 namespace Gem.Network.Commands
 {
-    public class ServerCommandHost : ICommandHost
+    /// <summary>
+    /// Executes server-side commands
+    /// </summary>
+    internal class ServerCommandHost : ICommandHost
     {    
 
         #region Private Fields
 
-        /// Maximum command history entries
+        /// <summary>
+        ///  Maximum command history entries
+        /// </summary>
         const int MaxCommandHistory = 32;
 
-        // Registered command executioners
+        /// <summary>
+        /// Registered command executioners
+        /// </summary>
         private Stack<ICommandExecutioner> executioners;
 
-        // Registered commands
+        /// <summary>
+        /// Registered commands
+        /// </summary>
         private Dictionary<string, CommandInfo> commandTable;
         
+        /// <summary>
+        /// Notifies only the NetConnection
+        /// </summary>
         public Action<string, NetConnection> Echo;
 
+        /// <summary>
+        /// Notifies everyone
+        /// </summary>
         private readonly IDebugHost EchoToAll;
 
+        /// <summary>
+        /// The server the commands are executed at
+        /// </summary>
         private readonly IServer commandHost;
 
-        private string password;
-
+        /// <summary>
+        /// The command's password
+        /// </summary>
+        internal string Password { get; private set; }
+        
         #endregion
-
 
         #region Constructor
 
@@ -48,6 +68,7 @@ namespace Gem.Network.Commands
             EchoToAll = new DebugListener();
             EchoToAll.RegisterAppender(new ServerCommandAppender(commandHost));
             
+            //Setup echo to respond only to the defined connection
             Echo = (msg, connection) =>
             {
                 var om = commandHost.CreateMessage();
@@ -63,22 +84,21 @@ namespace Gem.Network.Commands
             RegisterKickCommand();
             RegisterViewClientsCommand();
 
-            password = "gem";
-
+            //the default password
+            Password = "gem";
         }
 
         #endregion
 
-
         #region Commands
 
-        public void SetPassword(string newPassword)
-        {
-            this.password = newPassword;
-        }
-
-
-
+        /// <summary>
+        /// Registers a command to the executioner's command table
+        /// </summary>
+        /// <param name="command">The command</param>
+        /// <param name="requiresAuthorization">Shows if a password is required to execute the command</param>
+        /// <param name="description">The commands' description that's shown in the help command</param>
+        /// <param name="callback">The command's callback</param>
         public void RegisterCommand(string command, bool requiresAuthorization, string description, CommandExecute callback)
         {
             string lowerCommand = command.ToLower();
@@ -91,6 +111,10 @@ namespace Gem.Network.Commands
             commandTable.Add(lowerCommand, new CommandInfo(command,requiresAuthorization, description, callback));
         }
 
+        /// <summary>
+        /// Deregisters a command
+        /// </summary>
+        /// <param name="command">The command</param>
         public void DeregisterCommand(string command)
         {
             string lowerCommand = command.ToLower();
@@ -102,6 +126,11 @@ namespace Gem.Network.Commands
             commandTable.Remove(command);
         }
 
+        /// <summary>
+        /// Executes a command
+        /// </summary>
+        /// <param name="sender">The command sender</param>
+        /// <param name="command">The commmand</param>
         public void ExecuteCommand(NetConnection sender, string command)
         {
             if (executioners.Count != 0)
@@ -109,14 +138,14 @@ namespace Gem.Network.Commands
                 executioners.Peek().ExecuteCommand(sender, command);
                 return;
             }
+            //if the sender is not the host, echo the command localy
             if (sender != null)
             {
                 GemNetworkDebugger.Echo(sender + " sent: " + command);
             }
 
+            //Setup the command and arguments
             char[] spaceChars = new char[] { ' ' };
-
-            //EchoToAll.Write(command);
 
             command = command.TrimStart(spaceChars);
 
@@ -129,11 +158,12 @@ namespace Gem.Network.Commands
             {
                 try
                 {
-                    if (cmd.requiresAuthentication && sender!=null)
+                    //The host skip's authentication
+                    if (cmd.requiresAuthentication && sender != null)
                     {
                         if (args.Count > 0)
                         {
-                            if (args[0] == password)
+                            if (args[0] == Password)
                             {
                                 args.RemoveAt(0);
                                 cmd.callback(commandHost, sender, command, args);
@@ -166,24 +196,21 @@ namespace Gem.Network.Commands
 
         #endregion
 
-
         #region Helpers
+
+        public void SetPassword(string newPassword)
+        {
+            this.Password = newPassword;
+        }
 
         private string GetConnectionInfo(NetConnection connection)
         {
-            if (connection == null)
-            {
-                return "Server";
-            }
-            else
-            {
-                return connection.ToString();
-            }
+            return (connection == null) ?
+                "Server" : connection.ToString();
         }
 
         #endregion
-
-
+        
         #region Register / Deregister
 
         public void PushExecutioner(ICommandExecutioner executioner)
@@ -207,7 +234,6 @@ namespace Gem.Network.Commands
         }
 
         #endregion
-
 
         #region Common Commands
 
@@ -293,9 +319,9 @@ namespace Gem.Network.Commands
             {
                 if (args.Count > 0)
                 {
-                    SetPassword(args[0]);
-                    host.NotifyOnly("New password: " + password, netConnection);
-                    GemNetworkDebugger.Echo(String.Format("New password: [ {0} ] by {1}", password, GetConnectionInfo(netConnection)));
+                    Password = args[0];
+                    host.NotifyOnly("New password: " + Password, netConnection);
+                    GemNetworkDebugger.Echo(String.Format("New password: [ {0} ] by {1}", Password, GetConnectionInfo(netConnection)));
                 }
                 else
                 {

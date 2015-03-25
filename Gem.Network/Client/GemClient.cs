@@ -9,23 +9,41 @@ using System;
 
 namespace Gem.Network.Client
 {
+    /// <summary>
+    /// The class that handles the client side connection , message processing and configuration
+    /// </summary>
     public class GemClient
     {
 
         #region Fields
 
+        /// <summary>
+        /// The client
+        /// </summary>
         private readonly IClient client;
 
+        /// <summary>
+        /// Shows if the client has an active connection to a server
+        /// </summary>
         public bool IsConnected { get { return client.IsConnected; } }
 
+        /// <summary>
+        /// The append
+        /// </summary>
         private readonly IAppender Write;
 
         private readonly IMessageProcessor messageProcessor;
 
         private ConnectionConfig connectionDetails;
 
+        /// <summary>
+        /// This is used to process incoming messages asynchronously and not in the program's main thread
+        /// </summary>
         private ParallelTaskStarter asyncMessageProcessor;
 
+        /// <summary>
+        /// The outgoing messages configuration
+        /// </summary>
         public PackageConfig PackageConfig
         {
             get;
@@ -36,6 +54,12 @@ namespace Gem.Network.Client
         
         #region Constructor
 
+        /// <summary>
+        /// Initializes a new instance of GemClient.
+        /// </summary>
+        /// <param name="profile">The profile the client's configuration is set</param>
+        /// <param name="connectionConfig">The configuration for the connection</param>
+        /// <param name="packageConfig">The configuration for the outgoing messages</param>
         public GemClient(string profile, ConnectionConfig connectionConfig, PackageConfig packageConfig )
         {            
             Guard.That(connectionConfig).IsNotNull();
@@ -61,6 +85,11 @@ namespace Gem.Network.Client
 
         #region Private Helpers
 
+        /// <summary>
+        /// Registers the notification messages.
+        /// This is preserved to be the GemNetwork.NotificationByte and is an essential part of GemNetwork
+        /// </summary>
+        /// <param name="profile">The active profile</param>
         private void RegisterServerNotificationPackages(string profile)
         {
             if (!GemClient.MessageFlow[profile, MessageType.Data].HasKey(GemNetwork.NotificationByte))
@@ -89,6 +118,10 @@ namespace Gem.Network.Client
             Disconnect();
         }
 
+        /// <summary>
+        /// Tries to connect and starts receiving / sending messages
+        /// </summary>
+        /// <param name="ApprovalMessageDelegate">A delegate that returns a connection approval message thats handled by the server</param>
         public void RunAsync(Func<ConnectionApprovalMessage> ApprovalMessageDelegate)
         {
             try
@@ -106,6 +139,9 @@ namespace Gem.Network.Client
 
         #region Settings
 
+        /// <summary>
+        /// This handles the runtime created messages using the .HandleWithExtension 
+        /// </summary>
         private static ClientMessageFlowManager clientMessageFlowManager;
         internal static ClientMessageFlowManager MessageFlow
         {
@@ -116,6 +152,10 @@ namespace Gem.Network.Client
             }
         }
 
+        /// <summary>
+        /// This handles all the actions for various events
+        /// e.g. OnConnected, OnDisconnected
+        /// </summary>
         private static ClientNetworkActionManager clientActionManager;
         internal static ClientNetworkActionManager ActionManager
         {
@@ -126,11 +166,20 @@ namespace Gem.Network.Client
             }
         }
 
+        /// <summary>
+        /// This starts a chain to setup actions or message flow
+        /// </summary>
+        /// <param name="profileName">The profile of the message setup</param>
+        /// <returns>The chain to begin the configuration</returns>
         public static IClientMessageRouter Profile(string profileName)
         {
             return new ClientMessageRouter(profileName);
         }
 
+        /// <summary>
+        /// Sends a command to be executed server-side
+        /// </summary>
+        /// <param name="command">The command</param>
         public static void SendCommand(string command)
         {
             var om = GemNetwork.Client.CreateMessage();
@@ -139,6 +188,10 @@ namespace Gem.Network.Client
             GemNetwork.Client.SendMessage(msg);
         }
 
+        /// <summary>
+        /// Sends a notification to the server
+        /// </summary>
+        /// <param name="message">The notification message</param>
         public static void NotifyServer(string message)
         {
             var om = GemNetwork.Client.CreateMessage();

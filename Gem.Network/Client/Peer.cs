@@ -1,11 +1,6 @@
 ﻿using System;
 using Lidgren.Network;
 using Gem.Network.Messages;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using Gem.Network.Utilities.Loggers;
-using Gem.Network.Fluent;
 
 namespace Gem.Network
 {
@@ -15,8 +10,14 @@ namespace Gem.Network
 
         #region Declarations
 
+        /// <summary>
+        /// The lidgren's netclient
+        /// </summary>
         private NetClient client;
 
+        /// <summary>
+        /// Shows if the object's members have been garbage collected 
+        /// </summary>
         private bool isDisposed;
 
         private ConnectionConfig connectionDetails;
@@ -90,8 +91,11 @@ namespace Gem.Network
             client = new NetClient(config);
             client.Start();
 
-            //INetEncryption algo = new NetTripleDESEncryption("gem");
+            //encrypt passwords ? 
+            //INetEncryption algo = new NetTripleDESEncryption(encryptionKey);
             //handshake.Encrypt(algo);
+
+            //Create the approval message
             var handshake = CreateMessage();
             approvalMessage.Encode(handshake);
 

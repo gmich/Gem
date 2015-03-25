@@ -72,7 +72,7 @@
   <ItemGroup>
     <Compile Include="Async\AsyncIncomingMessageHandler.cs" />
     <Compile Include="Async\ParallelTask.cs" />
-    <Compile Include="Builders\API\IMessageHandlerBuilder.cs" />
+    <Compile Include="Builders\IMessageHandlerBuilder.cs" />
     <Compile Include="Factories\ServerProtocolEventFactory.cs" />
     <Compile Include="Server\MessageArguments.cs" />
     <Compile Include="Server\IProtocolServerEvent.cs" />
@@ -145,11 +145,11 @@
     <Compile Include="Client\Peer.cs" />
     <Compile Include="Client\ClientMessageProcessor.cs" />
     <Compile Include="Client\IClient.cs" />
-    <Compile Include="Builders\API\IPocoBuilder.cs" />
+    <Compile Include="Builders\IPocoBuilder.cs" />
     <Compile Include="Builders\ReflectionEmitBuilder.cs" />
     <Compile Include="Builders\DelegateBuilder.cs" />
     <Compile Include="Factories\ClientEventFactory.cs" />
-    <Compile Include="Builders\DynamicPropertyInfo.cs" />
+    <Compile Include="Builders\RuntimePropertyInfo.cs" />
     <Compile Include="Builders\CsScriptBuilder.cs" />
     <Compile Include="Messages\MessageSerializer.cs" />
     <Compile Include="Protocol\NetworkPackageAttribute.cs" />

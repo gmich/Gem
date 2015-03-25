@@ -97,9 +97,9 @@ namespace Gem.Network.Example
         {
             #region Dynamic Type
 
-            var propertyList = new List<DynamicPropertyInfo>
+            var propertyList = new List<RuntimePropertyInfo>
             {
-                new DynamicPropertyInfo{
+                new RuntimePropertyInfo{
                         PropertyName = "Name",
                         PropertyType = typeof(string)
                 }

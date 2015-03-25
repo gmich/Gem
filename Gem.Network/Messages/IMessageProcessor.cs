@@ -2,7 +2,7 @@
 
 namespace Gem.Network.Messages
 {
-    public interface IMessageProcessor 
+    internal interface IMessageProcessor 
     {
         void ProcessNetworkMessages();
     }

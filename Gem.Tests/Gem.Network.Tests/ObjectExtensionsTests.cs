@@ -18,13 +18,13 @@ namespace Gem.Network.Tests
         [TestMethod]
         public void SetDynamicObjectValueTest()
         {
-            var propertyList = new List<DynamicPropertyInfo>
+            var propertyList = new List<RuntimePropertyInfo>
             {
-                new DynamicPropertyInfo{
+                new RuntimePropertyInfo{
                         PropertyName = "StringParameter",
                         PropertyType = typeof(string)
                 },      
-                new DynamicPropertyInfo{
+                new RuntimePropertyInfo{
                         PropertyName = "IntParameter",
                         PropertyType = typeof(Byte)
                 }
@@ -40,13 +40,13 @@ namespace Gem.Network.Tests
         [TestMethod]
         public void SetDynamicObjectValueTest_CsScript()
         {
-            var propertyList = new List<DynamicPropertyInfo>
+            var propertyList = new List<RuntimePropertyInfo>
             {
-                new DynamicPropertyInfo{
+                new RuntimePropertyInfo{
                         PropertyName = "StringParameter",
                         PropertyType = typeof(string)
                 },      
-                new DynamicPropertyInfo{
+                new RuntimePropertyInfo{
                         PropertyName = "IntParameter",
                         PropertyType = typeof(Byte)
                 }
@@ -63,9 +63,9 @@ namespace Gem.Network.Tests
         [TestMethod]
         public void GetSetDynamicObjectValueTest()
         {
-            var propertyList = new List<DynamicPropertyInfo>
+            var propertyList = new List<RuntimePropertyInfo>
             {
-                new DynamicPropertyInfo{
+                new RuntimePropertyInfo{
                         PropertyName = "Name",
                         PropertyType = typeof(string)
                 }

@@ -1,13 +1,8 @@
 ﻿using Gem.Network.Utilities.Loggers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gem.Network.Commands
 {
-    public interface ICommandHost : ICommandExecutioner , IDebugListener
+    internal interface ICommandHost : ICommandExecutioner , IDebugListener
     {
         /// <summary>
         /// Register new command

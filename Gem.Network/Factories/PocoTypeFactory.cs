@@ -33,7 +33,7 @@ namespace Gem.Network.Factories
 
         #region IPocoFactory Implementation
 
-        public Type Create(List<DynamicPropertyInfo> propertyInfo, string classname)
+        public Type Create(List<RuntimePropertyInfo> propertyInfo, string classname)
         {
             Guard.That(propertyInfo.All(x => x.PropertyType.IsPrimitive
                 || x.PropertyType == typeof(string)

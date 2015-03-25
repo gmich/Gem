@@ -17,7 +17,7 @@ namespace Gem.Network.Builders
         /// <param name="className">The POCO's name</param>
         /// <param name="propertyFields">The property names and types <see cref="PropertyInfo"/></param>
         /// <returns>The new type</returns>
-        public Type Build(string className, List<DynamicPropertyInfo> propertyFields)
+        public Type Build(string className, List<RuntimePropertyInfo> propertyFields)
         {
             return CompileResultType(className, propertyFields);
         }
@@ -25,7 +25,7 @@ namespace Gem.Network.Builders
 
         #region Private Helper Methods
 
-        private Type CompileResultType(string className, List<DynamicPropertyInfo> propertyFields)
+        private Type CompileResultType(string className, List<RuntimePropertyInfo> propertyFields)
         {
             TypeBuilder tb = GetTypeBuilder(className);
             ConstructorBuilder constructorDefault = tb.DefineDefaultConstructor(MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName);

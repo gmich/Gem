@@ -12,7 +12,7 @@ namespace Gem.Network.Async
     /// <summary>
     /// Handles incoming messages async
     /// </summary>
-    public class AsyncIncomingMessageHandler
+    internal class AsyncIncomingMessageHandler
     {
         /// <summary>
         /// The Task
@@ -31,7 +31,7 @@ namespace Gem.Network.Async
             public MessageFlowArguments Arguments { get; set; }
         }
 
-        public AsyncIncomingMessageHandler()
+        internal AsyncIncomingMessageHandler()
         {
             //Initialize an actionblock that decodes a message and handles it
             actionBlock = new ActionBlock<NetworkIncomingPackage>(package =>
@@ -47,7 +47,7 @@ namespace Gem.Network.Async
         /// </summary>
         /// <param name="message">The incoming message</param>
         /// <param name="arguments">The delegate to handle the message</param>
-        public void Post(NetIncomingMessage message, MessageFlowArguments arguments)
+        internal void Post(NetIncomingMessage message, MessageFlowArguments arguments)
         {
             actionBlock.Post(new NetworkIncomingPackage
             {

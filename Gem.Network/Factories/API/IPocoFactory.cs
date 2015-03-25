@@ -6,6 +6,6 @@ namespace Gem.Network.Factories
 {
     public interface IPocoFactory
     {
-        Type Create(List<DynamicPropertyInfo> propertyInfo, string classname);
+        Type Create(List<RuntimePropertyInfo> propertyInfo, string classname);
     }
 }

@@ -14,9 +14,9 @@ namespace Gem.Network.Tests
         [TestMethod]
         public void CreateNewPOCOClassTest()
         {
-            var propertyList = new List<DynamicPropertyInfo>
+            var propertyList = new List<RuntimePropertyInfo>
             {
-                new DynamicPropertyInfo{
+                new RuntimePropertyInfo{
                         PropertyName = "Name",
                         PropertyType = typeof(string)
                 }
@@ -38,9 +38,9 @@ namespace Gem.Network.Tests
         [TestMethod]
         public void CreateNewPOCOClassConstructorTest()
         {
-            var propertyList = new List<DynamicPropertyInfo>
+            var propertyList = new List<RuntimePropertyInfo>
             {
-                new DynamicPropertyInfo{
+                new RuntimePropertyInfo{
                         PropertyName = "Name",
                         PropertyType = typeof(string)
                 }
@@ -60,21 +60,21 @@ namespace Gem.Network.Tests
         [TestMethod]
         public void CreateComplexPOCOClassTest()
         {
-            var propertyList = new List<DynamicPropertyInfo>
+            var propertyList = new List<RuntimePropertyInfo>
             {
-                new DynamicPropertyInfo{
+                new RuntimePropertyInfo{
                         PropertyName = "StringProperty",
                         PropertyType = typeof(string)
                 },
-                                new DynamicPropertyInfo{
+                                new RuntimePropertyInfo{
                         PropertyName = "IntProperty",
                         PropertyType = typeof(int)
                 },
-                                new DynamicPropertyInfo{
+                                new RuntimePropertyInfo{
                         PropertyName = "DoubleProperty",
                         PropertyType = typeof(double)
                 },
-                                new DynamicPropertyInfo{
+                                new RuntimePropertyInfo{
                         PropertyName = "FloatProperty",
                         PropertyType = typeof(float)
                 }                                
@@ -106,21 +106,21 @@ namespace Gem.Network.Tests
         [TestMethod]
         public void CreateComplexPOCOClassConstructorTest()
         {
-            var propertyList = new List<DynamicPropertyInfo>
+            var propertyList = new List<RuntimePropertyInfo>
             {
-                new DynamicPropertyInfo{
+                new RuntimePropertyInfo{
                         PropertyName = "StringProperty",
                         PropertyType = typeof(string)
                 },
-                                new DynamicPropertyInfo{
+                                new RuntimePropertyInfo{
                         PropertyName = "IntProperty",
                         PropertyType = typeof(int)
                 },
-                                new DynamicPropertyInfo{
+                                new RuntimePropertyInfo{
                         PropertyName = "DoubleProperty",
                         PropertyType = typeof(double)
                 },
-                                new DynamicPropertyInfo{
+                                new RuntimePropertyInfo{
                         PropertyName = "FloatProperty",
                         PropertyType = typeof(float)
                 }                                

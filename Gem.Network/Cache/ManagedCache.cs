@@ -33,7 +33,6 @@ namespace Gem.Network.Cache
 
         #endregion
 
-
         #region Construct / Dispose
 
         /// <summary>
@@ -63,8 +62,7 @@ namespace Gem.Network.Cache
         }
 
         #endregion
-
-
+        
         #region Memory Management
 
         protected override void ManageSize() { return; }

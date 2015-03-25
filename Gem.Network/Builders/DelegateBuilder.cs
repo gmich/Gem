@@ -6,9 +6,19 @@ using System.Reflection;
 
 namespace Gem.Network.Builders
 {
-    public class DelegateBuilder
+    /// <summary>
+    /// Helper class for runtime delegate building
+    /// </summary>
+    internal class DelegateBuilder
     {
-        public static T BuildDelegate<T>(MethodInfo method, params object[] missingParamValues)
+        /// <summary>
+        /// Builds a delegate
+        /// </summary>
+        /// <typeparam name="T">The class that the delegate is a member of</typeparam>
+        /// <param name="method">The method info</param>
+        /// <param name="missingParamValues">The parameters</param>
+        /// <returns>The class' new delegate</returns>
+        internal static T BuildDelegate<T>(MethodInfo method, params object[] missingParamValues)
         {
             var queueMissingParams = new Queue<object>(missingParamValues);
 
@@ -50,6 +60,14 @@ namespace Gem.Network.Builders
             }
         }
 
+        /// <summary>
+        /// Helper class that creates runtime parameters for delegates
+        /// </summary>
+        /// <param name="paramsOfDelegate">The parameters</param>
+        /// <param name="i">The index</param>
+        /// <param name="callParamType">The type</param>
+        /// <param name="queueMissingParams">The rest parameters</param>
+        /// <returns>An expression thats used for runtime delegate creation</returns>
         private static Expression CreateParam(ParameterExpression[] paramsOfDelegate, int i, ParameterInfo callParamType, Queue<object> queueMissingParams)
         {
             if (i < paramsOfDelegate.Length)

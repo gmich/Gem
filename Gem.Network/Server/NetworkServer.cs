@@ -39,7 +39,7 @@ namespace Gem.Network.Server
         {
             get
             {
-                return this.netServer.Configuration.LocalAddress;
+                return this.netServer.Configuration.BroadcastAddress;
             }
         }
 
@@ -327,8 +327,6 @@ namespace Gem.Network.Server
         }
 
         #endregion
-
-
 
     }
 }

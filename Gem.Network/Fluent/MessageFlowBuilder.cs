@@ -54,10 +54,10 @@ namespace Gem.Network.Fluent
 
             Guard.That(types.All(x => x.IsPrimitive || x == typeof(string)), "All types should be primitive");
 
-            var properties = DynamicPropertyInfo.GetPropertyInfo(types.ToArray());
+            var properties = RuntimePropertyInfo.GetPropertyInfo(types.ToArray());
             
             SetDynamicPoco(properties);
-            SetMessageHandler(properties.Select(x => DynamicPropertyInfo.GetPrimitiveTypeAlias(x.PropertyType)).ToList(), objectToHandle, methodInfo.Name);
+            SetMessageHandler(properties.Select(x => RuntimePropertyInfo.GetPrimitiveTypeAlias(x.PropertyType)).ToList(), objectToHandle, methodInfo.Name);
             var argumentsDisposable = GemClient.MessageFlow[profile,messageType].Add(messageFlowArgs);
             SetDynamicEvent(argumentsDisposable);
 
@@ -80,7 +80,7 @@ namespace Gem.Network.Fluent
             messageFlowArgs.MessageHandler = Activator.CreateInstance(handlerType, invoker) as IMessageHandler;
         }
 
-        private void SetDynamicPoco(List<DynamicPropertyInfo> properties)
+        private void SetDynamicPoco(List<RuntimePropertyInfo> properties)
         {
             var newType = Dependencies.Container.Resolve<IPocoFactory>().Create(properties, "poco" + Id);
 

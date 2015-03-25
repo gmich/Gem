@@ -16,9 +16,9 @@ namespace Gem.Network.Tests.Flow
         private Process server;
         private IClient client;
         private NetIncomingMessage msg;
-        private List<DynamicPropertyInfo> propertyList = new List<DynamicPropertyInfo>
+        private List<RuntimePropertyInfo> propertyList = new List<RuntimePropertyInfo>
             {
-                new DynamicPropertyInfo{
+                new RuntimePropertyInfo{
                         PropertyName = "Name",
                         PropertyType = typeof(string)
                 }

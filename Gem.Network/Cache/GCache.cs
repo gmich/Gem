@@ -63,7 +63,6 @@ namespace Gem.Network.Cache
 
         #endregion
 
-
         #region Public Events
 
         public EventAggregator<TKey, TCached> Events
@@ -73,7 +72,6 @@ namespace Gem.Network.Cache
         }
 
         #endregion
-
 
         #region Construct / Dispose
 
@@ -107,7 +105,6 @@ namespace Gem.Network.Cache
         }
 
         #endregion
-
 
         #region Public Methods
 
@@ -176,7 +173,6 @@ namespace Gem.Network.Cache
         }
 
         #endregion
-
 
         #region Memory Management
 
