@@ -17,7 +17,7 @@ namespace Gem.Network.Fluent
     using Extensions;
     using Gem.Network.Protocol;
 
-    public class MessageFlowNetworkProtocol<Target> : IProtocolMessageBuilder<Target>
+    public class MessageFlowNetworkProtocol<Target> : IClientProtocolMessageBuilder<Target>
         where Target: new()
     {
 
@@ -58,7 +58,7 @@ namespace Gem.Network.Fluent
             return networkArgs.EventRaisingclass;
         }
 
-        public IProtocolMessageBuilder<Target> HandleIncoming(Action<Target> action)
+        public IClientProtocolMessageBuilder<Target> HandleIncoming(Action<Target> action)
         {
             var networkArgs = GemClient.MessageFlow[profile, MessageType.Data, id];
 

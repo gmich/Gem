@@ -1,17 +1,14 @@
 ﻿using Gem.Network.Builders;
-using Gem.Network.Cache;
-using Gem.Network.Handlers;
-using Gem.Network.Repositories;
 using Seterlund.CodeGuard;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gem.Network.Factories
 {
+    /// <summary>
+    /// Creates types that are aligned to IMessageHandler, to handle incoming network messages
+    /// </summary>
     public sealed class MessageHandlerFactory : IMessageHandlerFactory
     {
 
@@ -32,6 +29,13 @@ namespace Gem.Network.Factories
 
         #region IMessageHandlerFactorys Implementation
 
+        /// <summary>
+        /// Creates the type that handles incoming message
+        /// </summary>
+        /// <param name="propertyTypeNames">The property names that are being handled </param>
+        /// <param name="classname">The handler's class name</param>
+        /// <param name="functionName">The function that's being handled</param>
+        /// <returns>A type to be used by activator and create the IMessageHandler instance</returns>
         public Type Create(List<string> propertyTypeNames, string classname, string functionName)
         {
             Guard.That(propertyTypeNames.All(x => x != null), "The propertyTypeNames should not be null");
@@ -43,29 +47,6 @@ namespace Gem.Network.Factories
             return newHandler;
         }
        
-        #endregion
-
-        #region Equality Comparer for Type[]
-
-        internal class ArrayTypeEquality : EqualityComparer<List<string>>
-        {
-            public override int GetHashCode(List<string> strings)
-            {
-                int hash = 17;
-                foreach (var str in strings)
-                {
-                    hash = hash * 31 + str.GetHashCode();
-                }
-                return hash;
-            }
-
-            public override bool Equals(List<string> strings1, List<string> strings2)
-            {
-                return strings1.SequenceEqual(strings2);
-            }
-        }
-
-        #endregion
-        
+        #endregion        
     }
 }

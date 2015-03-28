@@ -111,7 +111,6 @@
     <Compile Include="Server\ServerMessageFlowProvider.cs" />
     <Compile Include="Server\ServerMessageProcessor.cs" />
     <Compile Include="Client\GemClient.cs" />
-    <Compile Include="Extensions\MessageFlowExtensions.cs" />
     <Compile Include="Fluent\API\IServerMessageRouter.cs" />
     <Compile Include="Fluent\API\IMessageFlowBuilder.cs" />
     <Compile Include="Fluent\API\IClientMessageRouter.cs" />

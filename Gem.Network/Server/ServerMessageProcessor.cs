@@ -103,7 +103,20 @@ namespace Gem.Network.Server
         }
 
         #endregion
-
-
+        
     }
+        internal static class MessageArgumentsExtensions
+        {
+            /// <summary>
+            /// Decodes and handles incoming messages
+            /// </summary>
+            /// <param name="args">The message arguments</param>
+            /// <param name="message">The net incoming message to decode and handle</param>
+            internal static void HandleIncomingMessage(this MessageArguments args, NetIncomingMessage message)
+            {
+                var readableMessage = MessageSerializer.Decode(message, args.MessagePoco);
+                args.MessageHandler.Handle(readableMessage);//.ReadAllProperties());
+            }
+        }
+
 }

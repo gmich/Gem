@@ -65,7 +65,7 @@ namespace Gem.Network.Fluent
             }
         }
 
-        public IProtocolMessageBuilder<T> CreateNetworkProtocolEvent<T>()
+        public IClientProtocolMessageBuilder<T> CreateNetworkProtocolEvent<T>()
         where T : new()
         {
             return new MessageFlowNetworkProtocol<T>(profile, MessageType.Data);
