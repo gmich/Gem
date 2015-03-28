@@ -12,8 +12,8 @@ namespace Gem.Network.Server
         IPAddress IP { get; }
 
         int Port { get; }
- 
-        bool Connect(ServerConfig config,PackageConfig packageConfig);
+
+        bool Connect(ServerConfig config, PackageConfig packageConfig);
 
         List<IPEndPoint> ClientsIP { get; }
 
@@ -23,15 +23,17 @@ namespace Gem.Network.Server
 
         void Wait();
 
-        bool Kick(IPAddress clientIp,string reason);
+        bool Kick(IPAddress clientIp, string reason);
 
         bool Kick(IPEndPoint clientIp, string reason);
 
-        void NotifyAll(string message,string type=NotificationType.Message);
+        void NotifyAll(string message);
+
+        void SendNotification(Notification notification);
 
         void NotifyAllExcept(string message, NetConnection client, string type = NotificationType.Message);
 
-        void NotifyOnly(string message,NetConnection client,string type=NotificationType.Message);
+        void NotifyOnly(string message, NetConnection client, string type = NotificationType.Message);
 
         void SendToAll(NetOutgoingMessage message);
 
@@ -41,6 +43,6 @@ namespace Gem.Network.Server
 
         void SendMessage(NetOutgoingMessage message, List<NetConnection> clients);
 
-        void SendMessage<T>(NetConnection sender,T message, byte id);
+        void SendMessage<T>(NetConnection sender, T message, byte id);
     }
 }

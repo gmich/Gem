@@ -15,7 +15,7 @@ namespace Gem.Network.Fluent
 
         void HandleWarnings(Action<IClient, NetIncomingMessage> action, bool append = false);
 
-        void WhenConnected(Action<IClient, NetIncomingMessage> action, bool append = false);
+        void OnConnected(Action<IClient, NetIncomingMessage> action, bool append = false);
 
         void OnConnecting(Action<IClient, NetIncomingMessage> action, bool append = false);
 

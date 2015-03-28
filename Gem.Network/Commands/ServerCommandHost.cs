@@ -66,7 +66,7 @@ namespace Gem.Network.Commands
             commandTable = new Dictionary<string, CommandInfo>();
 
             EchoToAll = new DebugListener();
-            EchoToAll.RegisterAppender(new ServerCommandAppender(commandHost));
+            EchoToAll.RegisterAppender(new ActionAppender(commandHost.NotifyAll));
             
             //Setup echo to respond only to the defined connection
             Echo = (msg, connection) =>

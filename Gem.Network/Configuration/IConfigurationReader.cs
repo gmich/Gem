@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gem.Network.Configuration
+﻿namespace Gem.Network.Configuration
 {
-    public interface IConfigurationReader
+    /// <summary>
+    /// Returns the <see cref="GemConfiguration"></see>
+    /// </summary>
+    internal interface IConfigurationReader
     {
-        void Load(string path);
-
-        DependencyArgs Dependencies { get; }
+        GemConfiguration Load(string path);
     }
 }

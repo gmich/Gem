@@ -39,7 +39,7 @@ namespace Gem.Network.Shooter.Server
                     GemServer.ExecuteCommand(connection, msg.Message);
                 }
                 if (msg.Type == NotificationType.Message)
-                {  }
+                { }
             });
 
             GemServer.Profile(ActiveProfile).OnClientDisconnect((server, connection, msg) =>
@@ -83,7 +83,7 @@ namespace Gem.Network.Shooter.Server
                                      {
                                          server.NotifyOnly("newplayer " + peer.Value, sender, NotificationType.Command);
                                      }
-                                     server.NotifyAllExcept("newplayer " + message.Sender,sender, NotificationType.Command);
+                                     server.NotifyAllExcept("newplayer " + message.Sender, sender, NotificationType.Command);
                                      ConnectedPeers.Add(sender, message.Sender);
                                  },
                                  append: true);
@@ -91,7 +91,11 @@ namespace Gem.Network.Shooter.Server
             GemServer.Profile(ActiveProfile).OnClientDisconnect(
                                  (server, connection, message) =>
                                  {
-                                     server.NotifyAll("removeplayer " + ConnectedPeers[connection], NotificationType.Command);
+                                     server.SendNotification(new Notification
+                                     (
+                                         message: "removeplayer " + ConnectedPeers[connection],
+                                         type: NotificationType.Command
+                                     ));
                                      ConnectedPeers.Remove(connection);
                                  },
                                  append: true);

@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Shooter.Server"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.ShooterGame.Client", "Examples\Gem.Network.ShooterGame.Client\Gem.Network.ShooterGame.Client.csproj", "{699E4A5F-F006-4EAC-8D6B-283A01E398CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Chat.Protocol", "Gem.Network.Chat.Protocol\Gem.Network.Chat.Protocol.csproj", "{9A06EEC7-6275-4D27-BC98-0B7DBCDE5342}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Network.Chat.Protocol", "Examples\Gem.Network.Chat.Protocol\Gem.Network.Chat.Protocol.csproj", "{9A06EEC7-6275-4D27-BC98-0B7DBCDE5342}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

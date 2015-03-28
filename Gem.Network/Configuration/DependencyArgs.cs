@@ -1,9 +1,12 @@
 ﻿namespace Gem.Network.Configuration
 {
-    public class DependencyArgs
+    /// <summary>
+    /// Holds the configuration information for gem network's factories and builders
+    /// </summary>
+    public class GemConfiguration
     {
-        public string Factory { get; set; }
-        public string RuntimeBuilder { get; set; }
+        internal string Factory { get; set; }
+        internal string RuntimeBuilder { get; set; }
     }
 }
 

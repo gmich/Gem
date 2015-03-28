@@ -13,10 +13,8 @@ namespace Gem.Network
             GemNetworkDebugger.Append = new DebugListener();
             GemNetworkDebugger.Append.RegisterAppender(new Log4NetWrapper("DebugLogger"));
 
-            var config = new ConfigurationReaderXML();
-            config.Load("gem.config");
-
-            Dependencies.Setup(config.Dependencies);
+            //Setup the default configuration for now
+            Dependencies.Setup(new DefaultConfiguration().Load("gem.config"));
         }
 
     }

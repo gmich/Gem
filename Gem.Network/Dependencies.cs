@@ -1,16 +1,18 @@
 ﻿using Autofac;
+using Castle.DynamicProxy;
 using Gem.Network.Builders;
 using Gem.Network.Configuration;
 using Gem.Network.Factories;
+using Gem.Network.Utilities.Loggers;
 using System;
 
 namespace Gem.Network
 {
-    public sealed class Dependencies
+    internal sealed class Dependencies
     {
-        public static IContainer Container { get; private set; }
+        internal static IContainer Container { get; private set; }
 
-        public static void Setup(DependencyArgs dependencies)
+        internal static void Setup(GemConfiguration dependencies)
         {
             var builder = new ContainerBuilder();
 
@@ -18,10 +20,19 @@ namespace Gem.Network
 
             RegisterBuilders(builder, dependencies.RuntimeBuilder);
 
+            RegisterInterceptors(builder);
+
             Dependencies.Container = builder.Build();
         }
 
-        private static void RegisterFactories(ContainerBuilder builder,string factory)
+        private static void RegisterInterceptors(ContainerBuilder builder)
+        {
+            builder.Register(c => new LogInterceptor(
+                                  new ActionAppender(GemNetworkDebugger.Echo)))
+                            .Named<IInterceptor>("Log");
+        }
+
+        private static void RegisterFactories(ContainerBuilder builder, string factory)
         {
             switch (factory)
             {

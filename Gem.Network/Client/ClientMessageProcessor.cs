@@ -76,7 +76,7 @@ namespace Gem.Network
                     case NetIncomingMessageType.VerboseDebugMessage:
                     case NetIncomingMessageType.DebugMessage:
                     case NetIncomingMessageType.WarningMessage:
-                        Write.Warning(im.ReadString());
+                        Write.Warn(im.ReadString());
                         //MessageType.Warning.ClientHandle(im); 
                         break;
                     case NetIncomingMessageType.ErrorMessage:

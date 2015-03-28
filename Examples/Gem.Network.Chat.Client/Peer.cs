@@ -73,7 +73,7 @@ namespace Gem.Network.Chat.Client
             Console.WriteLine("{0} : {1}", Name, message);
 
             onEvent.Send(formattedMessage);
-            protocolExample.Send(new Package { Name = "invoked protocol " + Name });
+            //protocolExample.Send(new Package { Name = "invoked protocol " + Name });
         }
 
         public void ChangeName(string newName)
@@ -103,12 +103,8 @@ namespace Gem.Network.Chat.Client
                 Thread.Sleep(10);
                 foreach (var msg in IncomingMessages)
                 {
-                    bool success = false;
                     string message = string.Empty;
-                    while (!success)
-                    {
-                        success = IncomingMessages.TryDequeue(out message);
-                    }
+                    while (IncomingMessages.TryDequeue(out message))
                     Console.WriteLine(message);
                 }
             }

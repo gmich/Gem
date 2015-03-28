@@ -6,12 +6,14 @@ namespace Gem.Network.Utilities.Loggers
 {
     public class DebugListener : IDebugHost
     {
-        private List<IAppender> appenders;
+        private readonly List<IAppender> appenders;
 
         public DebugListener()
         {
             appenders = new List<IAppender>();
         }
+
+        #region Register / Deregister
 
         public void RegisterAppender(IAppender appender)
         {
@@ -22,41 +24,62 @@ namespace Gem.Network.Utilities.Loggers
         {
             appenders.Remove(appender);
         }
-        
-        public void Write(string message)
-        {
-            AppendAll(x => x.Write(message));
-        }
 
-        public void Debug(string message, params object[] args)
-        {
-            AppendAll(x => x.Debug(message, args));
-        }
+        #endregion
 
-        public void Error(string message, params object[] args)
-        {
-            AppendAll(x => x.Error(message, args));
-        }
+        #region Appending
 
-        public void Fatal(string message, params object[] args)
+        public void Info(string message)
         {
-            AppendAll(x => x.Fatal(message, args));
+            appenders.ForEach(x => x.Info(message));
         }
 
         public void Info(string message, params object[] args)
         {
-            AppendAll(x => x.Info(message, args));
+            appenders.ForEach(x => x.Info(message, args));
         }
 
-        public void Warning(string message, params object[] args)
+        public void Debug(string message)
         {
-            AppendAll(x => x.Warning(message, args));
+            appenders.ForEach(x => x.Debug(message));
         }
 
-        private void AppendAll(Action<IAppender> appendAction)
+        public void Debug(string message, params object[] args)
         {
-            appenders.ForEach(x => appendAction(x));
+            appenders.ForEach(x => x.Debug(message, args));
         }
+
+        public void Warn(string message)
+        {
+            appenders.ForEach(x => x.Warn(message));
+        }
+
+        public void Warn(string message, params object[] args)
+        {
+            appenders.ForEach(x => x.Warn(message, args));
+        }
+
+        public void Error(string message)
+        {
+            appenders.ForEach(x => x.Error(message));
+        }
+
+        public void Error(string message, params object[] args)
+        {
+            appenders.ForEach(x => x.Error(message, args));
+        }
+
+        public void Fatal(string message)
+        {
+            appenders.ForEach(x => x.Fatal(message));
+        }
+
+        public void Fatal(string message, params object[] args)
+        {
+            appenders.ForEach(x => x.Fatal(message, args));
+        }
+
+        #endregion
 
     }
 }

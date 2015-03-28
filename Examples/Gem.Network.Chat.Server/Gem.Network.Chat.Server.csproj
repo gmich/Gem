@@ -52,7 +52,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Gem.Network.Chat.Protocol\Gem.Network.Chat.Protocol.csproj">
+    <ProjectReference Include="..\Gem.Network.Chat.Protocol\Gem.Network.Chat.Protocol.csproj">
       <Project>{9a06eec7-6275-4d27-bc98-0b7dbcde5342}</Project>
       <Name>Gem.Network.Chat.Protocol</Name>
     </ProjectReference>

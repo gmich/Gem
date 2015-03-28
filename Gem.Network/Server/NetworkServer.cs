@@ -292,10 +292,18 @@ namespace Gem.Network.Server
 
         #region Notifications
 
-        public void NotifyAll(string message, string type = NotificationType.Message)
+        public void SendNotification(Notification notification)
+        {
+            GemNetworkDebugger.Echo(String.Format("Sent to all :  {0}  of type {1}", notification.Message, notification.Type));
+            var om = netServer.CreateMessage();
+            MessageSerializer.Encode(notification, ref om);
+            SendToAll(om);
+        }
+
+        public void NotifyAll(string message)
         {
             GemNetworkDebugger.Echo(String.Format("Sent to all :  {0}", message));
-            var serverNotification = new Notification(message, type);
+            var serverNotification = new Notification(message, NotificationType.Message);
             var om = netServer.CreateMessage();
             MessageSerializer.Encode(serverNotification, ref om);
             SendToAll(om);
@@ -307,7 +315,7 @@ namespace Gem.Network.Server
             var serverNotification = new Notification(message, type);
             var om = netServer.CreateMessage();
             MessageSerializer.Encode(serverNotification, ref om);
-            SendAndExclude(om,client);
+            SendAndExclude(om, client);
         }
 
         public void NotifyOnly(string message, NetConnection client, string type = NotificationType.Message)
@@ -327,6 +335,7 @@ namespace Gem.Network.Server
         }
 
         #endregion
+
 
     }
 }

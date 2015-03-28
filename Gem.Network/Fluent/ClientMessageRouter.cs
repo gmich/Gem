@@ -32,7 +32,7 @@ namespace Gem.Network.Fluent
             Do(action, MessageType.Connecting, append);
 
         }
-        public void WhenConnected(Action<IClient, NetIncomingMessage> action, bool append = false)
+        public void OnConnected(Action<IClient, NetIncomingMessage> action, bool append = false)
         {
             Do(action, MessageType.Connected, append);
         }

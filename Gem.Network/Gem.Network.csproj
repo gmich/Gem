@@ -35,9 +35,15 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+    <Reference Include="Autofac, Version=3.3.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Third Party\Autofac.dll</HintPath>
+      <HintPath>..\packages\Autofac.3.3.1\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Extras.DynamicProxy2">
+      <HintPath>..\packages\Autofac.Extras.DynamicProxy2.3.0.5\lib\net40\Autofac.Extras.DynamicProxy2.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.3.2.2\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="CSScriptLibrary, Version=3.9.2.0, Culture=neutral, PublicKeyToken=70fcc3d18c749033, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -73,6 +79,7 @@
     <Compile Include="Async\AsyncIncomingMessageHandler.cs" />
     <Compile Include="Async\ParallelTask.cs" />
     <Compile Include="Builders\IMessageHandlerBuilder.cs" />
+    <Compile Include="Configuration\DefaultConfiguration.cs" />
     <Compile Include="Factories\ServerProtocolEventFactory.cs" />
     <Compile Include="Server\MessageArguments.cs" />
     <Compile Include="Server\IProtocolServerEvent.cs" />
@@ -101,7 +108,6 @@
     <Compile Include="Server\InfoProvider.cs" />
     <Compile Include="Server\MessageProtocol.cs" />
     <Compile Include="Server\ServerMessageFlowManager.cs" />
-    <Compile Include="Server\ServerCommandAppender.cs" />
     <Compile Include="Server\ServerMessageFlowProvider.cs" />
     <Compile Include="Server\ServerMessageProcessor.cs" />
     <Compile Include="Client\GemClient.cs" />
@@ -167,6 +173,7 @@
     <Compile Include="Utilities\Loggers\IDebugHost.cs" />
     <Compile Include="Utilities\Loggers\IDebugListener.cs" />
     <Compile Include="Utilities\Loggers\Log4NetWrapper.cs" />
+    <Compile Include="Utilities\Loggers\LogInterceptor.cs" />
     <Compile Include="Utilities\RandomGenerator.cs" />
     <Compile Include="Utilities\RuntimeCompiler.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />

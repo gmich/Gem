@@ -89,7 +89,7 @@ namespace Gem.Network.Server
                     case NetIncomingMessageType.VerboseDebugMessage:
                     case NetIncomingMessageType.DebugMessage:
                     case NetIncomingMessageType.WarningMessage:
-                        Write.Warning(im.ReadString());
+                        Write.Warn(im.ReadString());
                         break;
                     case NetIncomingMessageType.ErrorMessage:
                         Write.Error(im.ReadString());
