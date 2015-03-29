@@ -29,7 +29,14 @@ namespace Gem.Network.Chat.Client
             CanAppend = true;
             IncomingMessages = new ConcurrentQueue<string>();
             this.Name = name;
-
+            
+            protocolExample = GemClient.Profile("GemChat")
+                  .CreateNetworkProtocolEvent<Package>()
+                  .HandleIncoming((sender, package) =>
+                   {
+                       QueueMessage(String.Format("Server sent {0} {1}", sender.Statistics.SentBytes, package.Name));
+                   })
+                  .GenerateSendEvent();
 
             onEvent = GemClient.Profile("GemChat")
                   .CreateNetworkEvent
@@ -38,15 +45,7 @@ namespace Gem.Network.Chat.Client
             onCommandExecute = GemClient.Profile("GemChat")
                   .CreateNetworkEvent
                   .AndHandleWith(this, x => new Action<string>(x.ExecuteCommand));
-
-            protocolExample = GemClient.Profile("GemChat")
-                  .CreateNetworkProtocolEvent<Package>()
-                  .HandleIncoming(package =>
-                   {
-                       QueueMessage("Protocol: " + package.Name);
-                   })
-                  .GenerateSendEvent();
-
+            
             onEvent.Send(name + " has joined");
             messageAppender = new ParallelTaskStarter(TimeSpan.Zero);
             messageAppender.Start(DequeueIncomingMessages);
@@ -91,7 +90,6 @@ namespace Gem.Network.Chat.Client
         public void QueueMessage(string message)
         {
             IncomingMessages.Enqueue(message);
-            //Console.WriteLine(message);
         }
 
         public bool CanAppend { get; set; }

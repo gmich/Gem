@@ -28,6 +28,7 @@ namespace Gem.Network.Shooter.Server
                 MaxConnections = 10,
                 Password = "gem",
                 ConnectionTimeout = 5.0f,
+                MaxConnectionAttempts = 5,
                 RequireAuthentication = false
             },
             PackageConfig.UDPSequenced);

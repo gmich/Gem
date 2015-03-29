@@ -1,57 +1,54 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using Gem.Network.Other;
-//using Lidgren.Network;
-//using System.Diagnostics;
-//using Gem.Network.Configuration;
-//using System.Net;
-//using Gem.Network.Messages;
-//using Moq;
-//using Gem.Network.Builders;
-//using Gem.Network.Factories;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Gem.Network.Other;
+using Lidgren.Network;
+using System.Diagnostics;
+using Gem.Network.Configuration;
+using System.Net;
+using Gem.Network.Messages;
+using Moq;
+using Gem.Network.Builders;
+using Gem.Network.Factories;
+using Gem.Network.Client;
 
-//namespace Gem.Network.Tests
-//{
-//    [TestClass]
-//    public class ClientEventTests
-//    {
+namespace Gem.Network.Tests
+{
+    [TestClass]
+    public class ClientEventTests
+    {
 
-//        [TestMethod]
-//        public void SendMessageThroughDynamicPeerEventTest()
-//        {
-//            Mock<Client> mockClient = new Mock<Client>();
+        [TestMethod]
+        public void SendMessageThroughDynamicPeerEventTest()
+        {
+            var mockClient = new Mock<INetworkPeer>();
+            byte id = 1;
+            IDisposable argsDisposable = null;
+            //create a new dynamic type
+            var propertyList = new List<RuntimePropertyInfo>
+            {
+                new RuntimePropertyInfo{
+                        PropertyName = "Name",
+                        PropertyType = typeof(string)
+                }
+            };
+            IPocoBuilder PocoBuilder = new CsScriptPocoBuilder();
+            Type myNewType = PocoBuilder.Build("POCO", propertyList);
+            var myNewObject = Activator.CreateInstance(myNewType);
 
-//            var client = new Client();
-//            client.Connect(new ConnectionDetails
-//            {
-//                ServerIP = new IPEndPoint(NetUtility.Resolve("127.0.0.1"), 14241),
-//                ServerName = "local"
-//            });
+            //create a dynamic event raising class
+            var EventFactory = new ClientEventFactory();
+            var eventRaisingclass = EventFactory.Create(myNewType, argsDisposable, id);
 
-//            //create a new dynamic type
-//            var propertyList = new List<DynamicPropertyInfo>
-//            {
-//                new DynamicPropertyInfo{
-//                        PropertyName = "Name",
-//                        PropertyType = typeof(string)
-//                }
-//            };
-//            IPocoBuilder PocoBuilder = new ReflectionEmitBuilder();
-//            Type myNewType = PocoBuilder.Build("POCO", propertyList);
-//            var myNewObject = Activator.CreateInstance(myNewType);
+            // eventRaisingclass.Event += peerEvent;
+            eventRaisingclass.SubscribeEvent(mockClient.Object);
 
-//            //create a dynamic event raising class
-//            var EventFactory = new ClientEventFactory();
-//            dynamic eventRaisingclass = EventFactory.Create(myNewType);
+            string message = "hello";
+            eventRaisingclass.Send(message);
 
-//            // eventRaisingclass.Event += peerEvent;
-//            eventRaisingclass.SubscribeEvent(mockClient.Object);
-//            eventRaisingclass.OnEvent(myNewObject);
+            //verify that the message was sent
+            //mockClient.Verify(c => c.SendMessage(message, id), Times.Once);
+        }
 
-//            //verify that the message was sent
-//            // mockClient.Verify(c => c.SendMessage(myNewObject), Times.Once);
-//        }     
-             
-//    }
-//}
+    }
+}

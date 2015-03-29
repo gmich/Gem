@@ -9,7 +9,7 @@ namespace Gem.Network.Utilities.Loggers
     /// </summary>
     public class DebugHost : IDebugHost
     {
-        private readonly List<IAppender> appenders;
+        private List<IAppender> appenders;
 
         public DebugHost()
         {
@@ -17,6 +17,11 @@ namespace Gem.Network.Utilities.Loggers
         }
 
         #region Register / Deregister
+
+        public void RemoveAll()
+        {
+            appenders = new List<IAppender>();
+        }
 
         public void RegisterAppender(IAppender appender)
         {

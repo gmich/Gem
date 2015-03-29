@@ -4,6 +4,7 @@ using System.Linq;
 using Gem.Network.Messages;
 using Gem.Network.Protocol;
 using Gem.Network.Fluent;
+using Lidgren.Network;
 
 namespace Gem.Network.Server
 {
@@ -51,7 +52,7 @@ namespace Gem.Network.Server
             return networkArgs.EventRaisingclass;
         }
 
-        public IServerProtocolMessageBuilder<Target> HandleIncoming(Action<Target> action)
+        public IServerProtocolMessageBuilder<Target> HandleIncoming(Action<NetConnection,Target> action)
         {
             var networkArgs = GemServer.MessageFlow[profile, MessageType.Data, id];
 

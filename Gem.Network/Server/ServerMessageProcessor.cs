@@ -14,8 +14,6 @@ namespace Gem.Network.Server
 
         private readonly IServer server;
 
-        private readonly IAppender Write;
-
         #endregion
 
         #region Constructor
@@ -23,7 +21,6 @@ namespace Gem.Network.Server
         public ServerMessageProcessor(IServer server)
         {
             this.server = server;
-            Write = new ActionAppender(GemNetworkDebugger.Echo);
         }
 
         #endregion
@@ -44,7 +41,7 @@ namespace Gem.Network.Server
                 {
                     case NetIncomingMessageType.ConnectionApproval:
                         var approvalMsg = new ConnectionApprovalMessage(im);
-                        Write.Info("Incoming Connection");
+                        GemNetworkDebugger.Append.Info("Incoming Connection");
                         GemServer.ServerConfiguration[GemNetwork.ActiveProfile].OnIncomingConnection(server, im.SenderConnection, approvalMsg);
                         break;
                     case NetIncomingMessageType.StatusChanged:
@@ -52,14 +49,14 @@ namespace Gem.Network.Server
                         {
                             case NetConnectionStatus.Connected:
                                 //im.SenderConnection.Approve();
-                                Write.Info("{0} Connected", im.SenderConnection);
+                                GemNetworkDebugger.Append.Info("{0} Connected", im.SenderConnection);
                                 break;
                             case NetConnectionStatus.Disconnected:
-                                Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
+                                GemNetworkDebugger.Append.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
                                 GemServer.ServerConfiguration[GemNetwork.ActiveProfile].OnClientDisconnect(server, im.SenderConnection, im.ReadString());
                                 break;
                             case NetConnectionStatus.RespondedConnect:
-                                Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
+                                GemNetworkDebugger.Append.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
                                 break;
                         }
                         break;
@@ -85,10 +82,10 @@ namespace Gem.Network.Server
                     case NetIncomingMessageType.VerboseDebugMessage:
                     case NetIncomingMessageType.DebugMessage:
                     case NetIncomingMessageType.WarningMessage:
-                        Write.Warn(im.ReadString());
+                        GemNetworkDebugger.Append.Warn(im.ReadString());
                         break;
                     case NetIncomingMessageType.ErrorMessage:
-                        Write.Error(im.ReadString());
+                        GemNetworkDebugger.Append.Error(im.ReadString());
                         break;
                     case NetIncomingMessageType.DiscoveryRequest:
                         //notify the client 
@@ -114,7 +111,7 @@ namespace Gem.Network.Server
         internal static void HandleIncomingMessage(this MessageArguments args, NetIncomingMessage message)
         {
             var readableMessage = MessageSerializer.Decode(message, args.MessagePoco);
-            args.MessageHandler.Handle(readableMessage);
+            args.MessageHandler.Handle(message.SenderConnection,readableMessage);
         }
     }
 

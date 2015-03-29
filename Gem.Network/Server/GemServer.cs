@@ -39,11 +39,6 @@ namespace Gem.Network.Server
         /// </summary>
         private ParallelTaskStarter asyncMessageProcessor;
 
-        /// <summary>
-        /// Appends messages
-        /// </summary>
-        private IAppender Write;
-
         #endregion
 
         #region Properties
@@ -74,6 +69,7 @@ namespace Gem.Network.Server
 
         public GemServer(string profileName, ServerConfig serverConfig, PackageConfig packageConfig)
         {
+            //validate server config
             Guard.That(serverConfig).IsNotNull();
             Guard.That(packageConfig).IsNotNull();
 
@@ -89,7 +85,7 @@ namespace Gem.Network.Server
                 Profile(GemNetwork.ActiveProfile).OnIncomingConnection((srvr, netconnection, msg) =>
                 {
                     netconnection.Approve();
-                    GemNetworkDebugger.Echo(String.Format("Approved {0} {3} Sender: {1}{3} Message: {2}",
+                    GemNetworkDebugger.Append.Info(String.Format("Approved {0} {3} Sender: {1}{3} Message: {2}",
                                             netconnection, msg.Sender, msg.Message, Environment.NewLine));
                 });
             }
@@ -101,8 +97,6 @@ namespace Gem.Network.Server
 
             messageProcessor = new ServerMessageProcessor(server);
             asyncMessageProcessor = new ParallelTaskStarter(TimeSpan.Zero);
-
-            Write = new ActionAppender(GemNetworkDebugger.Echo);
         }
 
         #endregion
@@ -153,7 +147,7 @@ namespace Gem.Network.Server
             }
             catch (Exception ex)
             {
-                Write.Error("Unable to start the server. Reason: {0}", ex.Message);
+                GemNetworkDebugger.Append.Error("Unable to start the server. Reason: {0}", ex.Message);
             }
         }
 

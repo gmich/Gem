@@ -1,5 +1,6 @@
 ﻿using Gem.Network.Events;
 using Gem.Network.Server;
+using Lidgren.Network;
 using System;
 using System.Linq.Expressions;
 
@@ -36,7 +37,7 @@ namespace Gem.Network.Fluent
         /// </summary>
         /// <param name="action">The action to invoke</param>
         /// <returns>The same object for chaining</returns>
-        IClientProtocolMessageBuilder<Target> HandleIncoming(Action<Target> action);
+        IClientProtocolMessageBuilder<Target> HandleIncoming(Action<NetConnection,Target> action);
 
         /// <summary>
         /// Creates an event that sends messages of type Target
@@ -57,7 +58,7 @@ namespace Gem.Network.Fluent
         /// </summary>
         /// <param name="action">The action to invoke</param>
         /// <returns>The same object for chaining</returns>
-        IServerProtocolMessageBuilder<Target> HandleIncoming(Action<Target> action);
+        IServerProtocolMessageBuilder<Target> HandleIncoming(Action<NetConnection,Target> action);
 
         /// <summary>
         /// Creates an event that sends messages of type Target

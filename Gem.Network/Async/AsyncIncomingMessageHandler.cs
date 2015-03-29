@@ -37,7 +37,7 @@ namespace Gem.Network.Async
             actionBlock = new ActionBlock<NetworkIncomingPackage>(package =>
                 {
                     var readableMessage = MessageSerializer.Decode(package.Message, package.Arguments.MessagePoco);
-                    package.Arguments.MessageHandler.Handle(readableMessage.ReadAllProperties());
+                    package.Arguments.MessageHandler.Handle(null,readableMessage.ReadAllProperties());
                 });
       
         }

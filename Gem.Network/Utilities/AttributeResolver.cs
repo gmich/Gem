@@ -60,7 +60,7 @@ namespace Gem.Network.Utilities
                 }
                 catch (Exception ex)
                 {
-                    GemNetworkDebugger.Append.Error("Failed to load assembly {0}. Reason: {1}",assembly, ex.Message);
+                    new ActionAppender(GemNetworkDebugger.Echo).Error("Failed to load assembly {0}. Reason: {1}", assembly, ex.Message);
                 }
             }
         }

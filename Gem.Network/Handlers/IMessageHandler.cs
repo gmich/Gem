@@ -1,4 +1,5 @@
-﻿﻿using System;
+﻿﻿using Lidgren.Network;
+using System;
 
 namespace Gem.Network.Handlers
 {
@@ -7,6 +8,6 @@ namespace Gem.Network.Handlers
     /// </summary>
     public interface IMessageHandler
     {
-        void Handle(object args);
+        void Handle(NetConnection sender, object args);
     }
 }

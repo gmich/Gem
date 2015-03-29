@@ -22,14 +22,13 @@ namespace Gem.Network.Chat.Server
 
         static void Main(string[] args)
         {
-
             GemNetworkDebugger.Echo = Console.WriteLine;
 
             onProtocolEvent = GemServer.Profile("GemChat")
                   .CreateNetworkProtocolEvent<Package>()
-                  .HandleIncoming(package =>
+                  .HandleIncoming((sender, package) =>
                    {
-                       GemServer.ExecuteCommand("echo received package");
+                       GemServer.ExecuteCommand("echo received package and broadcasted it");
                    })
                   .GenerateSendEvent();
 
@@ -40,11 +39,11 @@ namespace Gem.Network.Chat.Server
                 EnableUPnP = false,
                 MaxConnections = 10,
                 Password = "gem",
-                ConnectionTimeout = 25.0f,
+                ConnectionTimeout = 5.0f,
+                MaxConnectionAttempts = 5,
                 RequireAuthentication = true
             },
             PackageConfig.TCP);
-
 
             GemServer.Profile(ActiveProfile).HandleNotifications((server, connection, msg) =>
             {
@@ -74,11 +73,11 @@ namespace Gem.Network.Chat.Server
                 server.NotifyAll("[Disconnected client]" + msg);
             });
 
+
             GemServer.RegisterCommand("whoison", "Show the connected clients by name", false,
                 (server, sender, command, arguments) =>
                 {
-                    server.NotifyOnly(String.Join(Environment.NewLine, ConnectedPeers.Select(x => x.Value)),sender);
-                    onProtocolEvent.Send(sender, new Package { Name = "troll" });
+                    server.NotifyOnly(String.Join(Environment.NewLine, ConnectedPeers.Select(x => x.Value)), sender);
                 });
 
             GemServer.RegisterCommand("kickbyname", "Kick client by his name", true,
@@ -104,15 +103,15 @@ namespace Gem.Network.Chat.Server
                 }
             });
 
-           GemServer.Profile(ActiveProfile).OnIncomingConnection(
-                                (server, connection, message) =>
-                                ConnectedPeers.Add(connection, message.Sender),
-                                append: true);
+            GemServer.Profile(ActiveProfile).OnIncomingConnection(
+                                 (server, connection, message) =>
+                                 ConnectedPeers.Add(connection, message.Sender),
+                                 append: true);
 
-           GemServer.Profile(ActiveProfile).OnClientDisconnect(
-                                (server, connection, message) =>
-                                ConnectedPeers.Remove(connection),
-                                append: true);
+            GemServer.Profile(ActiveProfile).OnClientDisconnect(
+                                 (server, connection, message) =>
+                                 ConnectedPeers.Remove(connection),
+                                 append: true);
 
             GemServer.SetConsolePassword("gem");
 

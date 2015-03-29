@@ -277,8 +277,7 @@ namespace Gem.Network.Commands
                         commmandMessage += " -pwd";
                     }
                     Echo(String.Format(fmt, commmandMessage, cmd.description), netConnection);
-                }
-                Echo(Environment.NewLine, netConnection);
+                }               
             });
         }
 

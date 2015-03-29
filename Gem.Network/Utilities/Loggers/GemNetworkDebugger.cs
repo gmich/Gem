@@ -10,10 +10,8 @@ namespace Gem.Network.Utilities.Loggers
 
         static GemNetworkDebugger()
         {
-            Echo = x => { };
-
             Append = new DebugHost();
-            Append.RegisterAppender(new ActionAppender(Echo));
+            Echo = x => { };
         }
 
         /// <summary>
@@ -24,7 +22,21 @@ namespace Gem.Network.Utilities.Loggers
         /// <summary>
         /// The global echo
         /// </summary>
-        public static Action<string> Echo { get; set; }
+        private static Action<string> echo;
+        public static Action<string> Echo
+        {
+            get
+            {
+                return echo;
+            }
+            set
+            {
+                echo = value;
+                Append.RemoveAll();
+                Append.RegisterAppender(new ActionAppender(echo));
+            }
+
+        }
 
     }
-}                                                                                                                                                                                                                                                                                                                                                        
+}

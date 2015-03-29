@@ -23,6 +23,7 @@ namespace Gem.Network.Configuration
         public GemConfiguration Load(string path)
         {
             XDocument doc = new XDocument();
+            var Write = new ActionAppender(GemNetworkDebugger.Echo);
 
             try
             {

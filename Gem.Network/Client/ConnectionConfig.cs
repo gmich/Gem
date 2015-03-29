@@ -17,7 +17,7 @@ namespace Gem.Network.Client
 
         [Required]
         public int Port { get; set;  }
-
+        
         [Required]
         public string DisconnectMessage { get; set; }
 

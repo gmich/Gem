@@ -14,6 +14,8 @@
 
         public int MaxConnections { get; set; }
 
+        public int MaxConnectionAttempts { get; set; }
+
         public bool RequireAuthentication { get; set; }
 
         public float ConnectionTimeout { get; set; }

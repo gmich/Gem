@@ -28,11 +28,6 @@ namespace Gem.Network.Client
         /// </summary>
         public bool IsConnected { get { return client.IsConnected; } }
 
-        /// <summary>
-        /// The append
-        /// </summary>
-        private readonly IAppender Write;
-
         private readonly IMessageProcessor messageProcessor;
 
         private ConnectionConfig connectionDetails;
@@ -79,7 +74,6 @@ namespace Gem.Network.Client
             messageProcessor = new ClientMessageProcessor(client);
             asyncMessageProcessor = new ParallelTaskStarter(TimeSpan.Zero);
             
-            Write = new ActionAppender(GemNetworkDebugger.Echo);
         }
 
         #endregion
@@ -132,7 +126,7 @@ namespace Gem.Network.Client
             }
             catch (Exception ex)
             {
-                Write.Error("Unable to connect to {0} . Reason: {1}", connectionDetails.ServerIP, ex.Message);
+                GemNetworkDebugger.Append.Error("Unable to connect to {0} . Reason: {1}", connectionDetails.ServerIP, ex.Message);
             }
         }
 
@@ -183,10 +177,8 @@ namespace Gem.Network.Client
         /// <param name="command">The command</param>
         public static void SendCommand(string command)
         {
-            var om = GemNetwork.Client.CreateMessage();
-            var msg = new Notification(command, NotificationType.Command);
-            MessageSerializer.Encode(msg, ref om);
-            GemNetwork.Client.SendMessage(msg);
+            GemNetwork.Client.SendNotification(
+                new Notification(command, NotificationType.Command));
         }
 
         /// <summary>
@@ -195,10 +187,8 @@ namespace Gem.Network.Client
         /// <param name="message">The notification message</param>
         public static void NotifyServer(string message)
         {
-            var om = GemNetwork.Client.CreateMessage();
-            var msg = new Notification(message, NotificationType.Message);
-            MessageSerializer.Encode(msg, ref om);
-            GemNetwork.Client.SendMessage(msg);
+            GemNetwork.Client.SendNotification(
+                new Notification(message, NotificationType.Message));
         }
 
         #endregion

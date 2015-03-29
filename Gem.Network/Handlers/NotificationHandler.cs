@@ -3,6 +3,7 @@ using Gem.Network.Messages;
 using Gem.Network.Utilities.Loggers;
 using System;
 using Gem.Network.Extensions;
+using Lidgren.Network;
 
 namespace Gem.Network.Handlers
 {
@@ -11,19 +12,11 @@ namespace Gem.Network.Handlers
     /// </summary>
     public class NotificationHandler : IMessageHandler
     {
-        public void Handle(object obj)
+        public void Handle(NetConnection sender, object obj)
         {
-            try
-            {
-                var args = obj.ReadAllProperties();
-                var notificaton = new Notification((string)args[1], (string)args[2]);
-                GemClient.ActionManager[GemNetwork.ActiveProfile].OnReceivedNotification(notificaton);
-            }
-            catch (Exception ex)
-            {
-                //If an exception occurs, log and move on
-                GemNetworkDebugger.Append.Error("Received unhandled notification " + ex.Message);
-            }
+            var args = obj.ReadAllProperties();
+            var notificaton = new Notification((string)args[1], (string)args[2]);
+            GemClient.ActionManager[GemNetwork.ActiveProfile].OnReceivedNotification(notificaton);
         }
     }
 

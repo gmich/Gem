@@ -16,39 +16,39 @@ namespace Gem.Network.Protocol
     /// </summary>
     public class ProtocolHandlerBuilder
     {
-        private string GetMapper(List<RuntimePropertyInfo> propertyFields)
+        private string GetMapping(List<RuntimePropertyInfo> propertyFields)
         {
             var sb = new StringBuilder();
             for (int i = 0; i < propertyFields.Count; i++)
             {
-                sb.Append(string.Format("{0} =({1})props[{2}],",propertyFields[i].PropertyName, RuntimePropertyInfo.GetPrimitiveTypeAlias(propertyFields[i].PropertyType),i));
+                sb.Append(string.Format("{0} =({1})props[{2}],", propertyFields[i].PropertyName, RuntimePropertyInfo.GetPrimitiveTypeAlias(propertyFields[i].PropertyType), i));
             }
             sb.Length--;
             return sb.ToString();
         }
 
         public Type Build<TPackage>(string assembly, string classname, string packageType)
-            where TPackage:new()
+            where TPackage : new()
         {
-            var str = String.Format(@"using System; using Gem.Network.Extensions; using {3};
+            var str = String.Format(@"using System; using Lidgren.Network; using Gem.Network.Extensions; using {3};
                                             namespace Gem.Network.Builders
                                             {{
                                             public class {0} : Gem.Network.Handlers.IMessageHandler
-                                             {{ private readonly Action<{2}> action;
+                                             {{ private readonly Action<NetConnection,{2}> action;
                                               public {0}() {{}}                                                                                               
-                                                 public {0}(Action<{2}> action)
+                                                 public {0}(Action<NetConnection,{2}> action)
                                                  {{
                                                      this.action = action;
                                                  }}
-                                                  public void Handle(object args)
+                                                  public void Handle(NetConnection sender, object args)
                                                  {{
                                                       var props = args.ReadAllProperties();
                                                       {2} package = new {2} {{ {1} }};
-                                                      action(package);
+                                                      action(sender, package);
                                                  }}                                           
                                                 }}                                                                                        
                                              }}", classname,
-                                                GetMapper(RuntimePropertyInfo.GetPropertyTypesAndNames<TPackage>().ToList()),
+                                                GetMapping(RuntimePropertyInfo.GetPropertyTypesAndNames<TPackage>().ToList()),
                                                 packageType,
                                                 assembly);
 
@@ -56,7 +56,7 @@ namespace Gem.Network.Protocol
                            .CreateObject("*")
                            .AlignToInterface<IMessageHandler>()
                            .GetType();
-        }          
+        }
 
     }
 }

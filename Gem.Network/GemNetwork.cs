@@ -32,7 +32,7 @@ namespace Gem.Network
             Dependencies.Setup(new DefaultConfiguration().Load("gem.config"));
 
             Client = new Peer();
-            Server = new NetworkServer(GemNetworkDebugger.Echo);
+            Server = new NetworkServer();
             commander = new ServerCommandHost(Server);
             MessageCounter = new Dictionary<string, byte>();
         }

@@ -9,6 +9,13 @@ using System.Diagnostics;
 using System.Net;
 using TechTalk.SpecFlow;
 
+//@client
+//Scenario: ClientSuccessfulConnect
+//    Given  A server is running
+//    And I connect to the server
+//    When I send a greeding message
+//    Then I should get a response message and connection approval
+
 namespace Gem.Network.Tests.Flow
 {
     [Binding]

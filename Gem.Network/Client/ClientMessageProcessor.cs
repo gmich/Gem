@@ -19,11 +19,6 @@ namespace Gem.Network
         /// </summary>
         private readonly IClient client;
 
-        /// <summary>
-        /// The information appending
-        /// </summary>
-        private readonly IAppender Write;
-
         #endregion
         
         #region Constructor
@@ -31,7 +26,6 @@ namespace Gem.Network
         public ClientMessageProcessor(IClient client)
         {
             this.client = client;
-            Write = new ActionAppender(GemNetworkDebugger.Echo);
         }
 
         #endregion
@@ -53,19 +47,19 @@ namespace Gem.Network
                         switch ((NetConnectionStatus)im.ReadByte())
                         {
                             case NetConnectionStatus.InitiatedConnect:
-                                Write.Info("Connected to {0}", im.SenderConnection);
+                                GemNetworkDebugger.Append.Info("Connected to {0}", im.SenderConnection);
                                 MessageType.Connecting.Handle(im,client);
                                 break;
                             case NetConnectionStatus.Connected:
-                                Write.Info("Connected to {0}", im.SenderConnection);
+                                GemNetworkDebugger.Append.Info("Connected to {0}", im.SenderConnection);
                                 MessageType.Connected.Handle(im, client);
                                 break;
                             case NetConnectionStatus.Disconnecting:
-                                Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
+                                GemNetworkDebugger.Append.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
                                 MessageType.Disconnecting.Handle(im, client);
                                 break;
                             case NetConnectionStatus.Disconnected:
-                                Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
+                                GemNetworkDebugger.Append.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
                                 MessageType.Disconnected.Handle(im, client);
                                 break;
                         }
@@ -76,11 +70,11 @@ namespace Gem.Network
                     case NetIncomingMessageType.VerboseDebugMessage:
                     case NetIncomingMessageType.DebugMessage:
                     case NetIncomingMessageType.WarningMessage:
-                        Write.Warn(im.ReadString());
+                        GemNetworkDebugger.Append.Warn(im.ReadString());
                         //MessageType.Warning.ClientHandle(im); 
                         break;
                     case NetIncomingMessageType.ErrorMessage:
-                        Write.Error(im.ReadString());
+                        GemNetworkDebugger.Append.Error(im.ReadString());
                         //MessageType.Error.ClientHandle(im); 
                         break;
                 }
@@ -132,7 +126,7 @@ namespace Gem.Network
         internal static void HandleIncomingMessage(this MessageFlowArguments args, NetIncomingMessage message)
         {
             var readableMessage = MessageSerializer.Decode(message, args.MessagePoco);
-            args.MessageHandler.Handle(readableMessage);//.ReadAllProperties());
+            args.MessageHandler.Handle(message.SenderConnection,readableMessage);//.ReadAllProperties());
         }
 
     }

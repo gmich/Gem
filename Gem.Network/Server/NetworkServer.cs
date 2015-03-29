@@ -25,8 +25,6 @@ namespace Gem.Network.Server
 
         private NetServer netServer;
 
-        private readonly IAppender appender;
-
         private PackageConfig packageConfig;
 
         #endregion
@@ -97,10 +95,8 @@ namespace Gem.Network.Server
         
         #region Construct / Dispose
 
-        public NetworkServer(Action<string> DebugListener)
-        {
-            this.appender = new ActionAppender(DebugListener);
-        }
+        public NetworkServer()
+        { }
 
         private void Dispose(bool disposing)
         {
@@ -129,7 +125,7 @@ namespace Gem.Network.Server
             this.serverConfig = serverConfig;
             if (netServer != null)
             {
-                appender.Error("Server already started");
+                GemNetworkDebugger.Append.Error("Server already started");
                 return false;
             }
             var config = new NetPeerConfiguration(serverConfig.Name)
@@ -137,7 +133,8 @@ namespace Gem.Network.Server
                     Port = serverConfig.Port,
                     MaximumConnections = serverConfig.MaxConnections,
                     EnableUPnP = serverConfig.EnableUPnP,
-                    ConnectionTimeout = serverConfig.ConnectionTimeout
+                    ConnectionTimeout = serverConfig.ConnectionTimeout,
+                    MaximumHandshakeAttempts = serverConfig.MaxConnectionAttempts
                 };
             config.EnableMessageType(NetIncomingMessageType.Data);
             config.EnableMessageType(NetIncomingMessageType.WarningMessage);
@@ -153,12 +150,12 @@ namespace Gem.Network.Server
             try
             {
                 this.netServer.Start();
-                appender.Info("Server started");
+                GemNetworkDebugger.Append.Info("Server started");
                 return true;
             }
             catch (Exception ex)
             {
-                appender.Error("Failed to start the server. Reason {0}", ex.Message);
+                GemNetworkDebugger.Append.Error("Failed to start the server. Reason {0}", ex.Message);
                 return false;
             }
 
@@ -198,6 +195,7 @@ namespace Gem.Network.Server
             var msg = netServer.CreateMessage();
             MessageSerializer.Encode(message, ref msg);
             msg.Write(id);
+
             netServer.SendToAll(msg,
                                 sender,
                                 packageConfig.DeliveryMethod,

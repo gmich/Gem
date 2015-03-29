@@ -34,14 +34,7 @@ namespace Gem.Network.Utilities.Loggers
 
         public ActionAppender(Action<string> echo)
         {
-            if (echo != null)
-            {
-                Echo = echo;
-            }
-            else
-            {
-                Echo = x => { };
-            }
+            Echo = echo;
         }
 
         #endregion
@@ -102,7 +95,7 @@ namespace Gem.Network.Utilities.Loggers
         {
             Echo(FormatMessage(Verbosity.Fatal, message, args));
         }
-        
+
         #endregion
 
         #region Formatting Helpers
