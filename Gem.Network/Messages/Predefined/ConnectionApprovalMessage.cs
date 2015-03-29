@@ -1,13 +1,17 @@
-﻿using Gem.Network.Events;
-using Gem.Network.Messages;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using Seterlund.CodeGuard;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gem.Network.Messages
 {
+    /// <summary>
+    /// This message is sent from the client to the server when requesting connection approval
+    /// </summary>
     public partial class ConnectionApprovalMessage
     {
+
+        #region Ctor
+
         public ConnectionApprovalMessage(NetIncomingMessage im)
         {
             Message = im.ReadString();
@@ -18,6 +22,10 @@ namespace Gem.Network.Messages
         public ConnectionApprovalMessage()
         {}
 
+        #endregion
+
+        #region Properties
+        
         [Required]
         public string Message { get; set; }
 
@@ -38,6 +46,8 @@ namespace Gem.Network.Messages
             { }
         }
 
+        #endregion
+
         public virtual void Encode(NetOutgoingMessage om)
         {
             Guard.That(Message).IsNotNull();
@@ -49,5 +59,6 @@ namespace Gem.Network.Messages
             om.Write(Password);
             om.Write(Id);
         }
+
     }
 }

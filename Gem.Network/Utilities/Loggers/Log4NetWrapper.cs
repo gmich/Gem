@@ -1,5 +1,8 @@
 ﻿namespace Gem.Network.Utilities.Loggers
 {
+    /// <summary>
+    /// A log4net wrapper
+    /// </summary>
     public class Log4NetWrapper : IAppender
     {
         #region Ctor

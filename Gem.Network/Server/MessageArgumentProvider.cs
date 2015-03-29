@@ -1,6 +1,4 @@
 ﻿using Gem.Network.Containers;
-using Gem.Network.Messages;
-using Gem.Network.Other;
 using Gem.Network.Repositories;
 using Gem.Network.Server;
 using Seterlund.CodeGuard;
@@ -8,10 +6,13 @@ using System;
 
 namespace Gem.Network.Managers
 {
-    public class InfoProvider
+    /// <summary>
+    /// Readonly provider for <see cref=">Gem.Network.Server.MessageArguments"/> that are accessed by byte
+    /// </summary>
+    public class MessageArgumentProvider
              : AbstractContainer<MessageArguments, byte>
     {
-        public InfoProvider()
+        public MessageArgumentProvider()
             : base(new FlyweightRepository<MessageArguments, byte>())
         { }
 

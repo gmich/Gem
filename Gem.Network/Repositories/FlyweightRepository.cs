@@ -3,20 +3,30 @@ using Seterlund.CodeGuard;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gem.Network.Repositories
 {
+    /// <summary>
+    /// A repository for storing objects and accessing them by id using the flyweight pattern
+    /// </summary>
+    /// <typeparam name="Titem">The object to store</typeparam>
+    /// <typeparam name="Tid">It's id</typeparam>
     public class FlyweightRepository<Titem, Tid> : IDataProvider<Titem, Tid>
         where Titem : class
     {
-        private Dictionary<Tid,Titem> items;
+
+        #region Ctor
+
+        private readonly Dictionary<Tid,Titem> items;
 
         public FlyweightRepository()
         {
             items = new Dictionary<Tid,Titem>();
         }
+
+        #endregion
+
+        #region Properties
 
         public int TotalElements
         {
@@ -26,10 +36,14 @@ namespace Gem.Network.Repositories
             }
         }
 
+        #endregion
+
         public bool HasKey(Tid key)
         {
             return items.ContainsKey(key);
         }
+
+        #region Get
 
         public List<Titem> GetAll()
         {
@@ -50,6 +64,10 @@ namespace Gem.Network.Repositories
             return items.Where(x => expression(x.Value)).Select(x => x.Value).FirstOrDefault();
         }
 
+        #endregion
+
+        #region Update
+
         public bool Update(Tid id, Titem item)
         {
             Guard.That(item).IsNotDefault();
@@ -62,6 +80,10 @@ namespace Gem.Network.Repositories
             return false;
         }
 
+        #endregion
+
+        #region Delete
+
         public bool Delete(Tid id)
         {
             if(items.ContainsKey(id))
@@ -71,6 +93,17 @@ namespace Gem.Network.Repositories
             return false;
         }
 
+        #endregion
+
+        #region Add
+
+        /// <summary>
+        /// Add and return the entry as IDisposable.
+        /// By disposing, the entry is removed
+        /// </summary>
+        /// <param name="id">The objects' id</param>
+        /// <param name="item">The object to store</param>
+        /// <returns>The entry's disposable</returns>
         public IDisposable Add(Tid id, Titem item)
         {          
             Guard.That(item).IsNotNull();
@@ -82,6 +115,7 @@ namespace Gem.Network.Repositories
             return null;
         }
 
-     
+        #endregion
+
     }
 }

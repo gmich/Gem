@@ -1,4 +1,5 @@
 ﻿using Gem.Network.Builders;
+using Gem.Network.Client;
 using Gem.Network.Messages;
 using Lidgren.Network;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

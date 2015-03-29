@@ -5,15 +5,19 @@ using System.Net;
 
 namespace Gem.Network.Server
 {
+    /// <summary>
+    /// The base interface for servers
+    /// Shows info, starts server and sends messages
+    /// </summary>
     public interface IServer : INetworkPeer
     {
+        #region Info
+
         bool IsConnected { get; }
 
         IPAddress IP { get; }
 
         int Port { get; }
-
-        bool Connect(ServerConfig config, PackageConfig packageConfig);
 
         List<IPEndPoint> ClientsIP { get; }
 
@@ -21,11 +25,32 @@ namespace Gem.Network.Server
 
         string Password { get; }
 
+        #endregion
+
+        #region Start
+
+        bool Connect(ServerConfig config, PackageConfig packageConfig);
+
+        #endregion
+
+        #region Stall Thread
+
+        /// <summary>
+        /// Stalls the running thread until an event is raised
+        /// </summary>
         void Wait();
+
+        #endregion
+
+        #region Management
 
         bool Kick(IPAddress clientIp, string reason);
 
         bool Kick(IPEndPoint clientIp, string reason);
+
+        #endregion
+
+        #region Send Messages
 
         void NotifyAll(string message);
 
@@ -44,5 +69,7 @@ namespace Gem.Network.Server
         void SendMessage(NetOutgoingMessage message, List<NetConnection> clients);
 
         void SendMessage<T>(NetConnection sender, T message, byte id);
+
+        #endregion
     }
 }

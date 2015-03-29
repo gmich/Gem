@@ -1,8 +1,9 @@
 ﻿using System;
 using Lidgren.Network;
 using Gem.Network.Messages;
+using Gem.Network.Server;
 
-namespace Gem.Network
+namespace Gem.Network.Client
 {
 
     public class Peer : IClient

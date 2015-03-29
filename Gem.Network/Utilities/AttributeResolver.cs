@@ -1,5 +1,4 @@
-﻿using Gem.Network.Protocol;
-using Gem.Network.Utilities.Loggers;
+﻿using Gem.Network.Utilities.Loggers;
 using System;
 using System.Linq;
 

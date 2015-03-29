@@ -2,6 +2,9 @@
 
 namespace Gem.Network.Utilities.Loggers
 {
+    /// <summary>
+    /// Logging facade
+    /// </summary>
     public interface IAppender
     {
         void Info(string message);

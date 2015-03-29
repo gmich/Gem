@@ -65,7 +65,7 @@ namespace Gem.Network.Commands
             executioners = new Stack<ICommandExecutioner>();
             commandTable = new Dictionary<string, CommandInfo>();
 
-            EchoToAll = new DebugListener();
+            EchoToAll = new DebugHost();
             EchoToAll.RegisterAppender(new ActionAppender(commandHost.NotifyAll));
             
             //Setup echo to respond only to the defined connection
@@ -74,7 +74,7 @@ namespace Gem.Network.Commands
                 var om = commandHost.CreateMessage();
                 var serverNotification = new Notification(msg, NotificationType.Message);
                 MessageSerializer.Encode(serverNotification, ref om);
-                GemNetworkDebugger.Echo(msg);
+                GemNetworkDebugger.Append.Info(msg);
                 commandHost.SendOnlyTo(om, connection);
             };
 
@@ -141,7 +141,7 @@ namespace Gem.Network.Commands
             //if the sender is not the host, echo the command localy
             if (sender != null)
             {
-                GemNetworkDebugger.Echo(sender + " sent: " + command);
+                GemNetworkDebugger.Append.Info(sender + " sent: " + command);
             }
 
             //Setup the command and arguments
@@ -302,7 +302,7 @@ namespace Gem.Network.Commands
                         if (host.Kick(new IPEndPoint(NetUtility.Resolve(ipAndPort[0]), port), reason))
                         {
                             host.NotifyOnly("Successfully kicked: " + args[1], netConnection);
-                            GemNetworkDebugger.Echo(String.Format(" {0} was kicked by {1}", args[1], GetConnectionInfo(netConnection)));
+                            GemNetworkDebugger.Append.Info(String.Format(" {0} was kicked by {1}", args[1], GetConnectionInfo(netConnection)));
                             return;
                         }
                     }
@@ -321,7 +321,7 @@ namespace Gem.Network.Commands
                 {
                     Password = args[0];
                     host.NotifyOnly("New password: " + Password, netConnection);
-                    GemNetworkDebugger.Echo(String.Format("New password: [ {0} ] by {1}", Password, GetConnectionInfo(netConnection)));
+                    GemNetworkDebugger.Append.Info(String.Format("New password: [ {0} ] by {1}", Password, GetConnectionInfo(netConnection)));
                 }
                 else
                 {

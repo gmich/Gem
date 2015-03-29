@@ -1,6 +1,4 @@
-﻿using Gem.Network.Utilities;
-using Lidgren.Network;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Gem.Network

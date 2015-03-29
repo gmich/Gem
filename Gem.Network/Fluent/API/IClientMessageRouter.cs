@@ -1,4 +1,5 @@
-﻿using Gem.Network.Commands;
+﻿using Gem.Network.Client;
+using Gem.Network.Commands;
 using Gem.Network.Messages;
 using Gem.Network.Protocol;
 using Lidgren.Network;

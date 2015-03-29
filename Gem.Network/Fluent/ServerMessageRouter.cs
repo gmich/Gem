@@ -6,7 +6,9 @@ using System;
 
 namespace Gem.Network.Fluent
 {
-
+    /// <summary>
+    /// The API for configuring GemServer's behavior and message flow
+    /// </summary>
     public class ServerMessageRouter : IServerMessageRouter
     {
         private readonly string profile;

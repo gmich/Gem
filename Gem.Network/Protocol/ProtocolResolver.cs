@@ -4,6 +4,7 @@ using Gem.Network.Factories;
 using Gem.Network.Handlers;
 using Gem.Network.Messages;
 using Gem.Network.Utilities;
+using Gem.Network.Server;
 using System;
 using System.Linq;
 using Autofac;
@@ -11,19 +12,30 @@ using Autofac;
 namespace Gem.Network.Protocol
 {
     using Extensions;
-    using System.Collections.Generic;
-    using Gem.Network.Server;
+    using Gem.Network.Managers;
 
-    public static class ProtocolManager
+    /// <summary>
+    /// Upon initialization, protocol manager scans the assemblies and finds all the classes that
+    /// are annotated with NetworkPackageAttribute, gets their properties and registers their types as 
+    /// messageflow POCOs
+    /// </summary>
+    public static class ProtocolResolver
     {
 
-        private readonly static ProtocolProviderManager protocolProvider;
-        private static int ProtocolObjectsFound = 0; 
+        #region Fields
 
-        static ProtocolManager()
+        private readonly static ProtocolManager protocolProvider;
+        private static int ProtocolObjectsFound = 0;
+
+        #endregion
+
+        #region Ctor
+
+        static ProtocolResolver()
         {
-            protocolProvider = new ProtocolProviderManager();
+            protocolProvider = new ProtocolManager();
 
+            //find NetworkPackages and cache their types
             AttributeResolver.DoWithAllTypesWithAttribute<NetworkPackageAttribute>(
                               (type, attribute) =>
                               {
@@ -32,6 +44,10 @@ namespace Gem.Network.Protocol
                                   protocolProvider[attribute.Profile].Add(id, new TypeAndAttribute { Type = type, Attribute = attribute } );
                               });
         }
+
+        #endregion
+
+        #region Private Helpers
 
         private static byte CreateMessageFlowArguments(byte id, Type type, string profile)
         {
@@ -51,8 +67,13 @@ namespace Gem.Network.Protocol
 
             return messageFlowArgs.ID;
         }
-                     
-        public static ProtocolProviderManager Provider
+
+        #endregion
+
+        /// <summary>
+        /// Stores the NetworkPackageAttribute annotated objects
+        /// </summary>
+        public static ProtocolManager Provider
         {
             get
             {

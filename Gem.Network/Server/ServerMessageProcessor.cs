@@ -1,16 +1,12 @@
-﻿﻿using System;
-using Lidgren.Network;
+﻿﻿using Lidgren.Network;
 using Gem.Network.Messages;
-using System.Net;
-using System.Collections.Generic;
-using Gem.Network.Utilities;
-using Gem.Network.Containers;
 using Gem.Network.Utilities.Loggers;
-using Gem.Network.Extensions;
-using Gem.Network.Events;
 
 namespace Gem.Network.Server
 {
+    /// <summary>
+    /// Processes the server incoming messages.
+    /// </summary>
     public class ServerMessageProcessor : IMessageProcessor
     {
 
@@ -19,24 +15,24 @@ namespace Gem.Network.Server
         private readonly IServer server;
 
         private readonly IAppender Write;
-       
-        #endregion
 
+        #endregion
 
         #region Constructor
 
         public ServerMessageProcessor(IServer server)
         {
             this.server = server;
-
             Write = new ActionAppender(GemNetworkDebugger.Echo);
         }
 
         #endregion
 
-
         #region Messages
 
+        /// <summary>
+        /// Processes the server incoming messages by using the GemServer's active configuration
+        /// </summary>
         public void ProcessNetworkMessages()
         {
             NetIncomingMessage im;
@@ -60,7 +56,7 @@ namespace Gem.Network.Server
                                 break;
                             case NetConnectionStatus.Disconnected:
                                 Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
-                                GemServer.ServerConfiguration[GemNetwork.ActiveProfile].OnClientDisconnect(server, im.SenderConnection,im.ReadString());
+                                GemServer.ServerConfiguration[GemNetwork.ActiveProfile].OnClientDisconnect(server, im.SenderConnection, im.ReadString());
                                 break;
                             case NetConnectionStatus.RespondedConnect:
                                 Write.Info(im.SenderConnection + " status changed. " + (NetConnectionStatus)im.SenderConnection.Status);
@@ -103,20 +99,23 @@ namespace Gem.Network.Server
         }
 
         #endregion
-        
+
     }
-        internal static class MessageArgumentsExtensions
+    /// <summary>
+    /// Helper class for handling MessageArguments
+    /// </summary>
+    internal static class MessageArgumentsExtensions
+    {
+        /// <summary>
+        /// Decodes and handles incoming messages
+        /// </summary>
+        /// <param name="args">The message arguments</param>
+        /// <param name="message">The net incoming message to decode and handle</param>
+        internal static void HandleIncomingMessage(this MessageArguments args, NetIncomingMessage message)
         {
-            /// <summary>
-            /// Decodes and handles incoming messages
-            /// </summary>
-            /// <param name="args">The message arguments</param>
-            /// <param name="message">The net incoming message to decode and handle</param>
-            internal static void HandleIncomingMessage(this MessageArguments args, NetIncomingMessage message)
-            {
-                var readableMessage = MessageSerializer.Decode(message, args.MessagePoco);
-                args.MessageHandler.Handle(readableMessage);//.ReadAllProperties());
-            }
+            var readableMessage = MessageSerializer.Decode(message, args.MessagePoco);
+            args.MessageHandler.Handle(readableMessage);
         }
+    }
 
 }

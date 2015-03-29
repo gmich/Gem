@@ -1,6 +1,4 @@
 ﻿
-using Gem.Network.Messages;
-using Lidgren.Network;
 using System;
 using System.Linq;
 
@@ -8,6 +6,11 @@ namespace Gem.Network.Events
 {
     using Extensions;
 
+    /// <summary>
+    /// Raises events by serializing and sending packages.
+    /// Works for classes that are annotated with the NetworkPackageAttribute
+    /// via socket
+    /// </summary>
     public class ProtocolEvent<T> : INetworkEvent
     {
 
@@ -15,6 +18,10 @@ namespace Gem.Network.Events
 
         private event EventHandler<T> Event;
 
+        /// <summary>
+        /// The MessageFlowArgument's disposable.
+        /// By disposing the MessageFlowArguments are removed from the cache
+        /// </summary>
         private readonly IDisposable clientConfig;
 
         private bool isDisposed;
@@ -55,9 +62,15 @@ namespace Gem.Network.Events
             Event = (sender, e) => client.SendMessage<T>(e, Id);
         }
 
+        /// <summary>
+        /// Sends objects that are annotated with NetworkPackageAttribute
+        /// </summary>
+        /// <param name="networkargs">The object to send</param>
         public void Send(params object[] networkargs)
         {
-            var package = (INetworkPackage)Activator.CreateInstance(typeof(T), networkargs.First().ReadAllProperties());
+            var package = (INetworkPackage)Activator.CreateInstance(
+                           typeof(T),
+                           networkargs.First().ReadAllProperties());
             package.Id = Id;
             OnEvent(package);
         }

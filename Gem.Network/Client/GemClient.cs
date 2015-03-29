@@ -3,6 +3,7 @@ using Gem.Network.Fluent;
 using Gem.Network.Handlers;
 using Gem.Network.Managers;
 using Gem.Network.Messages;
+using Gem.Network.Server;
 using Gem.Network.Utilities.Loggers;
 using Seterlund.CodeGuard;
 using System;

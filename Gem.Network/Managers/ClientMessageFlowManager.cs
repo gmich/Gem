@@ -4,16 +4,21 @@ using Gem.Network.Repositories;
 using System;
 
 namespace Gem.Network.Managers
-{   
-    
+{       
+    /// <summary>
+    /// Manager class for accessing <see cref=">Gem.Network.Providers.ClientConfigurationProvider"/>
+    /// by index [string,MessageType,byte]
+    /// </summary>
     public class ClientMessageFlowManager
     {
-        private ClientConfigurationProvider configurationManager;
+        private readonly ClientConfigurationProvider configurationManager;
 
         public ClientMessageFlowManager()
         {
             configurationManager = new ClientConfigurationProvider();
         }
+
+        #region Get by Index
 
         public MessageFlowArguments this[string tag,MessageType messagetype,byte configID]
         {
@@ -38,6 +43,8 @@ namespace Gem.Network.Managers
                 return configurationManager[tag];
             }
         }
+
+        #endregion
     }
 
 }

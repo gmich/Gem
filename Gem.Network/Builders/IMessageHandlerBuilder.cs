@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Gem.Network.Builders
 {
     /// <summary>
-    /// Builds an runtime object of IMessageHandler and returns its type.
+    /// Builds a runtime object of IMessageHandler and returns its type.
     /// Instantiate it with reference of the object to handle.
     /// </summary>
     public interface IMessageHandlerBuilder

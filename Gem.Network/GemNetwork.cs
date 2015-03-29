@@ -1,42 +1,71 @@
 ﻿using Gem.Network.Client;
 using Gem.Network.Commands;
-using Gem.Network.Fluent;
+using Gem.Network.Configuration;
 using Gem.Network.Server;
 using Gem.Network.Utilities.Loggers;
-using System;
 using System.Collections.Generic;
 
 namespace Gem.Network
 {
+    /// <summary>
+    /// Startup class that initializes dependencies, server , client and holds the active profile reference
+    /// </summary>
     public static class GemNetwork
     {
 
-        //Predefined package types
-        internal static readonly byte InitialId = (byte)4;
-        internal static readonly byte DisconnectByte = (byte)3;
-        internal static readonly byte NotificationByte = (byte)2;
+        #region Predefined Package Types
+
         internal static readonly byte ConnectionApprovalByte = (byte)1;
+        internal static readonly byte NotificationByte = (byte)2;
+        internal static readonly byte DisconnectByte = (byte)3;
+        internal static readonly byte InitialId = (byte)4;
+
+        #endregion
+
+        #region Ctor
 
         static GemNetwork()
         {
-            Startup.Setup();
+            GemNetworkDebugger.Append.RegisterAppender(new Log4NetWrapper("DebugLogger"));
+
+            //Setup the default configuration for now
+            Dependencies.Setup(new DefaultConfiguration().Load("gem.config"));
+
             Client = new Peer();
             Server = new NetworkServer(GemNetworkDebugger.Echo);
             commander = new ServerCommandHost(Server);
             MessageCounter = new Dictionary<string, byte>();
-
         }
-  
+
+        #endregion
+
         #region Fields
-                
+
+        /// <summary>
+        /// The terminal
+        /// </summary>
         internal static ICommandHost commander;
 
+        /// <summary>
+        /// The base client
+        /// </summary>
         internal static IClient Client;
 
+        /// <summary>
+        /// The base server
+        /// </summary>
         internal static IServer Server;
 
+        /// <summary>
+        /// Holds how many configurations are initialized by profile
+        /// </summary>
         private static Dictionary<string, byte> MessageCounter;
 
+        /// <summary>
+        /// Gets a unique id by profile
+        /// </summary>
+        /// <param name="profile">The profile</param>
+        /// <returns>The id</returns>
         internal static byte GetMesssageId(string profile) 
         {
                if(MessageCounter.ContainsKey(profile))
@@ -51,8 +80,7 @@ namespace Gem.Network
         }
 
         #endregion
-
-
+        
         #region Properties
 
         public static string ActiveProfile
@@ -69,7 +97,6 @@ namespace Gem.Network
             }
         }
                
-
         #endregion
 
     }

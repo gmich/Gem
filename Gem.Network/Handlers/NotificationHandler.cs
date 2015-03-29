@@ -6,6 +6,9 @@ using Gem.Network.Extensions;
 
 namespace Gem.Network.Handlers
 {
+    /// <summary>
+    /// Handles incoming messages of <see cref="> Gem.Network.Messages.Notification"/>
+    /// </summary>
     public class NotificationHandler : IMessageHandler
     {
         public void Handle(object obj)
@@ -18,7 +21,8 @@ namespace Gem.Network.Handlers
             }
             catch (Exception ex)
             {
-                GemNetworkDebugger.Echo("Received unhandled notification " + ex.Message);
+                //If an exception occurs, log and move on
+                GemNetworkDebugger.Append.Error("Received unhandled notification " + ex.Message);
             }
         }
     }

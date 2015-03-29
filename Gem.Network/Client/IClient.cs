@@ -1,7 +1,7 @@
 ﻿using Gem.Network.Messages;
 using Lidgren.Network;
 
-namespace Gem.Network
+namespace Gem.Network.Client
 {
     /// <summary>
     /// The base interface for network clients. Handle connection / send messages

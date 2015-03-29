@@ -1,12 +1,11 @@
 ﻿using Gem.Network.Events;
-using Gem.Network.Factories;
 using System;
-using System.Reflection;
 
-namespace Gem.Network.Protocol
+namespace Gem.Network.Factories
 {
     /// <summary>
-    /// Creates a class of type PeerEvent that registers events to the NetworkProvider.Send method
+    /// Creates an event that's used to raise events that send a message using the NetworkPackage protocol by the client
+    /// This factory is bounded to ProtocolEvent<>
     /// </summary>
     public sealed class ProtocolEventFactory : IEventFactory
     {

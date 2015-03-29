@@ -1,13 +1,16 @@
-﻿using Gem.Network.Containers;
+﻿using Gem.Network.Client;
+using Gem.Network.Containers;
 using Gem.Network.Messages;
 using Gem.Network.Repositories;
 using Lidgren.Network;
-using Seterlund.CodeGuard;
 using System;
-using System.Collections.Generic;
 
 namespace Gem.Network.Providers
 {
+    /// <summary>
+    /// Readonly provider for ActionProviderArguments that are accessed first by string
+    /// and by messagetype through ActionMessageTypeProvider
+    /// </summary>
     internal class NetworkActionProvider
            : AbstractContainer<ActionMessageTypeProvider, string>
     {
@@ -45,7 +48,7 @@ namespace Gem.Network.Providers
         public Action<Notification> OnReceivedNotification { get; set; }
 
     }
-
+    
     public class ActionProviderArguments
     {
         public ActionProviderArguments()

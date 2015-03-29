@@ -4,7 +4,6 @@ using Gem.Network.Builders;
 using Gem.Network.Configuration;
 using Gem.Network.Factories;
 using Gem.Network.Utilities.Loggers;
-using System;
 
 namespace Gem.Network
 {

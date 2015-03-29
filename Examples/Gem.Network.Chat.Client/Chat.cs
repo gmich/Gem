@@ -312,7 +312,7 @@ namespace Gem.Network.Chat.Client
 
             Console.ReadLine();
         }
-
+              
         #region Override closing event
 
         [DllImport("Kernel32")]

@@ -1,21 +1,29 @@
 ﻿
-using Gem.Network.Messages;
 using Lidgren.Network;
+using Gem.Network.Server;
 using System;
-using System.Linq;
 
 namespace Gem.Network.Events
 {
     using Extensions;
-    using Gem.Network.Server;
 
-    public class ProtocolServerEvent<T> : Gem.Network.Server.IProtocolServerEvent
+    /// <summary>
+    /// Invokes server-side events that serialize and send packages to the connected peers
+    /// </summary>
+    /// <typeparam name="TNetworkPackage">The type of the outgoing message</typeparam>
+    public class ProtocolServerEvent<TNetworkPackage> : IProtocolServerEvent
     {
 
         #region Private Fields
 
-        private event EventHandler<T> Event;
+        /// <summary>
+        /// The event handler
+        /// </summary>
+        private event EventHandler<TNetworkPackage> Event;
 
+        /// <summary>
+        /// The <see cref=">MessageArguments"/> disposable
+        /// </summary>
         private readonly IDisposable clientConfig;
 
         private bool isDisposed;
@@ -23,7 +31,6 @@ namespace Gem.Network.Events
         private readonly byte Id;
 
         #endregion
-
 
         #region Construct / Dispose
 
@@ -49,26 +56,31 @@ namespace Gem.Network.Events
         }
 
         #endregion
-
-
+        
         public void SubscribeEvent(INetworkPeer server)
         {
-            Event = (sender, e) => (server as IServer).SendMessage<T>(sender as NetConnection, e, Id);
+            Event = (sender, e) => (server as IServer)
+                                   .SendMessage<TNetworkPackage>(sender as NetConnection, e, Id);
         }
 
+        /// <summary>
+        /// Raise the event that sends a message and excludes a connection
+        /// </summary>
+        /// <param name="excluded">The excluded connection</param>
+        /// <param name="netpackage">The message to serialize and send</param>
         public void Send(NetConnection sender,object netpackage)
         {
-            var package = (INetworkPackage)Activator.CreateInstance(typeof(T), netpackage.ReadAllProperties());
+            var package = (INetworkPackage)Activator.CreateInstance(typeof(TNetworkPackage), netpackage.ReadAllProperties());
             package.Id = Id;
             OnEvent(sender,package);
         }
         
         private void OnEvent(NetConnection sender, object message)
         {
-            EventHandler<T> newPeerEvent = Event;
+            EventHandler<TNetworkPackage> newPeerEvent = Event;
             if (newPeerEvent != null)
             {
-                newPeerEvent(sender, (T)message);
+                newPeerEvent(sender, (TNetworkPackage)message);
             }
         }
              

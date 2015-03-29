@@ -4,11 +4,14 @@ using System.Linq;
 
 namespace Gem.Network.Utilities.Loggers
 {
-    public class DebugListener : IDebugHost
+    /// <summary>
+    /// Registers / Deregisters / Invokes appenders 
+    /// </summary>
+    public class DebugHost : IDebugHost
     {
         private readonly List<IAppender> appenders;
 
-        public DebugListener()
+        public DebugHost()
         {
             appenders = new List<IAppender>();
         }

@@ -2,11 +2,12 @@
 using Gem.Network.Managers;
 using Gem.Network.Messages;
 using Gem.Network.Repositories;
-using Lidgren.Network;
-using System;
 
 namespace Gem.Network.Providers
 {
+    /// <summary>
+    /// Readonly provider for MessageFlowInfoProvider accessed by string and MessageType
+    /// </summary>
     internal class ClientConfigurationProvider
     : AbstractContainer<ClientMessageTypeProvider, string>
     {

@@ -12,12 +12,12 @@ namespace Gem.Network.Server
 {
 
     /// <summary>
-    /// The server class. Sends and recieves messages
+    /// The server class. Shows info, starts the server and reads / sends messages
     /// </summary>
     public class NetworkServer : IServer
     {
 
-        #region Fields
+        #region Private Fields
 
         private ServerConfig serverConfig;
 
@@ -26,6 +26,12 @@ namespace Gem.Network.Server
         private NetServer netServer;
 
         private readonly IAppender appender;
+
+        private PackageConfig packageConfig;
+
+        #endregion
+
+        #region Public Readonly Info
 
         public string Password
         {
@@ -59,7 +65,6 @@ namespace Gem.Network.Server
             }
         }
 
-        private PackageConfig packageConfig;
         public PackageConfig PackageConfig
         {
             get
@@ -72,9 +77,24 @@ namespace Gem.Network.Server
             }
         }
 
+        public List<IPEndPoint> ClientsIP
+        {
+            get
+            {
+                return netServer.Connections.Select(x => x.RemoteEndpoint).ToList();
+            }
+        }
+
+        public int ClientsCount
+        {
+            get
+            {
+                return netServer.ConnectionsCount;
+            }
+        }
+
         #endregion
-
-
+        
         #region Construct / Dispose
 
         public NetworkServer(Action<string> DebugListener)
@@ -100,7 +120,6 @@ namespace Gem.Network.Server
         }
 
         #endregion
-
 
         #region Connect / Disconnect
 
@@ -156,8 +175,7 @@ namespace Gem.Network.Server
         }
 
         #endregion
-
-
+        
         #region Message Related
 
         public NetOutgoingMessage CreateMessage()
@@ -246,26 +264,9 @@ namespace Gem.Network.Server
             }
         }
         #endregion
-
-
+        
         #region Server Management
-
-        public List<IPEndPoint> ClientsIP
-        {
-            get
-            {
-                return netServer.Connections.Select(x => x.RemoteEndpoint).ToList();
-            }
-        }
-
-        public int ClientsCount
-        {
-            get
-            {
-                return netServer.ConnectionsCount;
-            }
-        }
-
+        
         public bool Kick(IPAddress clientIp, string reason)
         {
             var netconnection = netServer.Connections.Where(x => x.RemoteEndpoint.Address == clientIp).Select(x => x.RemoteEndpoint).FirstOrDefault();
@@ -294,7 +295,7 @@ namespace Gem.Network.Server
 
         public void SendNotification(Notification notification)
         {
-            GemNetworkDebugger.Echo(String.Format("Sent to all :  {0}  of type {1}", notification.Message, notification.Type));
+            GemNetworkDebugger.Append.Info(String.Format("Sent to all :  {0}  of type {1}", notification.Message, notification.Type));
             var om = netServer.CreateMessage();
             MessageSerializer.Encode(notification, ref om);
             SendToAll(om);
@@ -302,7 +303,7 @@ namespace Gem.Network.Server
 
         public void NotifyAll(string message)
         {
-            GemNetworkDebugger.Echo(String.Format("Sent to all :  {0}", message));
+            GemNetworkDebugger.Append.Info(String.Format("Sent to all :  {0}", message));
             var serverNotification = new Notification(message, NotificationType.Message);
             var om = netServer.CreateMessage();
             MessageSerializer.Encode(serverNotification, ref om);
@@ -311,7 +312,7 @@ namespace Gem.Network.Server
 
         public void NotifyAllExcept(string message, NetConnection client, string type = NotificationType.Message)
         {
-            GemNetworkDebugger.Echo(String.Format("Sent to all :  {0}", message));
+            GemNetworkDebugger.Append.Info(String.Format("Sent to all :  {0}", message));
             var serverNotification = new Notification(message, type);
             var om = netServer.CreateMessage();
             MessageSerializer.Encode(serverNotification, ref om);
@@ -322,7 +323,7 @@ namespace Gem.Network.Server
         {
             if (client != null)
             {
-                GemNetworkDebugger.Echo(String.Format("{0}  :  {1}", client, message));
+                GemNetworkDebugger.Append.Info(String.Format("{0}  :  {1}", client, message));
                 var serverNotification = new Notification(message, type);
                 var om = netServer.CreateMessage();
                 MessageSerializer.Encode(serverNotification, ref om);
@@ -330,7 +331,7 @@ namespace Gem.Network.Server
             }
             else
             {
-                GemNetworkDebugger.Echo(String.Format("Server  :  {0}", message));
+                GemNetworkDebugger.Append.Info(String.Format("Server  :  {0}", message));
             }
         }
 

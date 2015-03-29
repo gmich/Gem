@@ -2,6 +2,9 @@
 
 namespace Gem.Network.Utilities.Loggers
 {
+    /// <summary>
+    /// Appends information using an Action<string> method
+    /// </summary>
     public class ActionAppender : IAppender
     {
 

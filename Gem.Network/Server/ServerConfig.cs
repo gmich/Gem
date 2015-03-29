@@ -1,12 +1,8 @@
-﻿using Lidgren.Network;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gem.Network.Server
+﻿namespace Gem.Network.Server
 {
+    /// <summary>
+    /// The server configuration. 
+    /// </summary>
     public class ServerConfig
     {
 

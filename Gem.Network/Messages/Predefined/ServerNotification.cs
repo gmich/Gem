@@ -4,6 +4,9 @@ using Lidgren.Network;
 
 namespace Gem.Network.Messages
 {
+    /// <summary>
+    /// This is used to notify a server or a client
+    /// </summary>
     public partial class Notification 
     {
         public Notification(NetIncomingMessage im)

@@ -2,11 +2,12 @@
 using Gem.Network.Managers;
 using Gem.Network.Messages;
 using Gem.Network.Repositories;
-using Lidgren.Network;
-using System;
 
 namespace Gem.Network.Providers
 {
+    /// <summary>
+    /// Readonly provider for MessageArgumentProvider that are accessed by index[string,MessageType]
+    /// </summary>
     internal class ServerConfigurationProvider
     : AbstractContainer<ServerMessageTypeProvider, string>
     {
@@ -16,10 +17,10 @@ namespace Gem.Network.Providers
     }
 
     public class ServerMessageTypeProvider
-    : AbstractContainer<InfoProvider, MessageType>
+    : AbstractContainer<MessageArgumentProvider, MessageType>
     {
         public ServerMessageTypeProvider()
-            : base(new FlyweightRepository<InfoProvider, MessageType>())
+            : base(new FlyweightRepository<MessageArgumentProvider, MessageType>())
         { }
     }
     

@@ -5,16 +5,21 @@ using Lidgren.Network;
 using System;
 
 namespace Gem.Network.Managers
-{   
-    
+{
+    /// <summary>
+    /// Manager class for accessing <see cref=">Gem.Network.Providers.NetworkActionProvider"/>
+    /// by index [string,MessageType]
+    /// </summary>
     public class ClientNetworkActionManager
     {
-        private NetworkActionProvider actionProvider;
+        private readonly NetworkActionProvider actionProvider;
 
         public ClientNetworkActionManager()
         {
             actionProvider = new NetworkActionProvider();
         }
+
+        #region Get by Index
 
         public ActionProviderArguments this[string tag, MessageType messagetype]
         {
@@ -31,6 +36,9 @@ namespace Gem.Network.Managers
                 return actionProvider[tag];
             }
         }
+
+        #endregion
+
     }
 
 }

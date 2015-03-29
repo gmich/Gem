@@ -1,11 +1,15 @@
 ﻿using Gem.Network.Client;
 using Gem.Network.Commands;
 using Gem.Network.Messages;
+using Gem.Network.Protocol;
 using Lidgren.Network;
 using System;
 
 namespace Gem.Network.Fluent
 {
+    /// <summary>
+    /// The default implementation of IClientMessageRouter
+    /// </summary>
     public class ClientMessageRouter : IClientMessageRouter
     {
         private readonly string profile;
@@ -79,6 +83,12 @@ namespace Gem.Network.Fluent
             }
         }
 
+        /// <summary>
+        /// Helper function that appends or overrides the behaviors
+        /// </summary>
+        /// <param name="action">The action</param>
+        /// <param name="messageType">The messagetype</param>
+        /// <param name="append">If it's appended</param>
         private void Do(Action<IClient, NetIncomingMessage> action, MessageType messageType, bool append)
         {
             if (append)

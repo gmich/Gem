@@ -1,13 +1,13 @@
 ﻿using Seterlund.CodeGuard;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gem.Network.Other
 {
-    public class RandomGenerator
+    /// <summary>
+    /// Utility class for random byte generation
+    /// </summary>
+    public class RandomByteGenerator
     {
 
         /// <summary>

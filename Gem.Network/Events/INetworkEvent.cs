@@ -3,8 +3,7 @@
 namespace Gem.Network.Events
 {
     /// <summary>
-    /// Raises events by serializing and sending packages
-    /// via socket
+    /// Raises events by serializing and sending packages via socket
     /// </summary>
     public interface INetworkEvent : IDisposable
     {

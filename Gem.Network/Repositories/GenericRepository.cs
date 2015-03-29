@@ -14,14 +14,30 @@ namespace Gem.Network.Repositories
     public class GenericRepository<Titem, Tid> : IDataProvider<Titem, Tid>
         where Titem : class
     {
-        private List<Titem> items;
-        private Func<Titem, Tid> idProperty;
 
+        #region Fields
+
+        private readonly List<Titem> items;
+
+        private readonly Func<Titem, Tid> idProperty;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Initialize a new instance of GenericRepository
+        /// </summary>
+        /// <param name="idProperty">Specify how the id is accessed by delegate</param>
         public GenericRepository(Func<Titem, Tid> idProperty)
         {
             this.idProperty = idProperty;
             items = new List<Titem>();
         }
+
+        #endregion
+
+        #region Properties
 
         public int TotalElements
         {
@@ -31,10 +47,14 @@ namespace Gem.Network.Repositories
             }
         }
 
+        #endregion
+
         public bool HasKey(Tid key)
         {
             return items.Any(x => idProperty(x).Equals(key));
         }
+
+        #region Get
 
         public List<Titem> GetAll()
         {
@@ -51,6 +71,10 @@ namespace Gem.Network.Repositories
             return items.Where(x => expression(x)).Select(x => x).FirstOrDefault();
         }
 
+        #endregion
+
+        #region Update
+
         public bool Update(Tid id, Titem item)
         {
             Guard.That(item).IsNotDefault();
@@ -65,6 +89,10 @@ namespace Gem.Network.Repositories
             return false;
         }
 
+        #endregion
+
+        #region Delete
+
         public bool Delete(Tid id)
         {
             var entryToRemove = GetById(id);
@@ -76,6 +104,17 @@ namespace Gem.Network.Repositories
             return false;
         }
 
+        #endregion
+
+        #region Add
+
+        /// <summary>
+        /// Add and return the entry as IDisposable.
+        /// By disposing, the entry is removed
+        /// </summary>
+        /// <param name="id">The objects' id</param>
+        /// <param name="item">The object to store</param>
+        /// <returns>The entry's disposable</returns>
         public IDisposable Add(Tid id,Titem item)
         {          
             Guard.That(item).IsNotNull();
@@ -88,10 +127,14 @@ namespace Gem.Network.Repositories
             return null;
         }
 
+        #endregion
+
+        #region Disposable Object
+
         internal class DeregisterDisposable<T> : IDisposable
         {
-            private List<T> registered;
-            private T current;
+            private readonly List<T> registered;
+            private readonly T current;
 
             internal DeregisterDisposable(List<T> registered, T current)
             {
@@ -105,5 +148,8 @@ namespace Gem.Network.Repositories
                     registered.Remove(current);
             }
         }
+
+        #endregion
+
     }
 }

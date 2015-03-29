@@ -28,9 +28,9 @@ namespace Gem.Network.Fluent
         private MessageFlowArguments messageFlowArgs;
 
         private readonly byte Id; 
+
         #endregion
-
-
+        
         #region Constructor
         
         public MessageFlowBuilder(string profile,MessageType messageType)
@@ -41,9 +41,7 @@ namespace Gem.Network.Fluent
             this.messageFlowArgs = new MessageFlowArguments();
         }
 
-
         #endregion
-
 
         #region IMessageFlowBuilder Implementation
 
@@ -68,8 +66,7 @@ namespace Gem.Network.Fluent
         }
 
         #endregion
-
-
+        
         #region MessageFlow Setup
 
         private void SetMessageHandler(List<string> propertyNames, object invoker, string functionName)

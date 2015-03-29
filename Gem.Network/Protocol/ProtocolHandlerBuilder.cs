@@ -10,7 +10,9 @@ using Gem.Network.Builders;
 namespace Gem.Network.Protocol
 {
     /// <summary>
-    /// Creates a type that handles the server incoming messages
+    /// Builds a runtime object of IMessageHandler that handles incoming objects
+    /// that are annotated with the NetworkPackageAttribute and returns its type.
+    /// Instantiate it with reference of the object to handle.
     /// </summary>
     public class ProtocolHandlerBuilder
     {

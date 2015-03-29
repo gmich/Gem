@@ -6,6 +6,9 @@ using System.ComponentModel;
 
 namespace Gem.Network.Utilities.Loggers
 {
+    /// <summary>
+    /// Intercepts methods to log prior-invocation , post invocation and on exception
+    /// </summary>
     public class LogInterceptor : IInterceptor
     {
 
@@ -18,15 +21,19 @@ namespace Gem.Network.Utilities.Loggers
 
         public void Intercept(IInvocation invocation)
         {
+            //prior invocation
             auditor.Debug("Calling {0}", GetMethodInformation(invocation));
 
             try
             {
                 invocation.Proceed();
+                
+                //post invocation
                 auditor.Debug("Done: result was {0}.", invocation.ReturnValue);
             }
             catch (Exception ex)
             {
+                //on exception
                 auditor.Error("Threw exception {0} . {1} ", ex.Message, GetMethodInformation(invocation));
                 throw ex;
             }

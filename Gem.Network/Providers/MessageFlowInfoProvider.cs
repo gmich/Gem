@@ -1,12 +1,14 @@
 ﻿using Gem.Network.Containers;
 using Gem.Network.Messages;
-using Gem.Network.Other;
 using Gem.Network.Repositories;
 using Seterlund.CodeGuard;
 using System;
 
 namespace Gem.Network.Managers
 {
+    /// <summary>
+    /// Readonly provider for MessageFlowArguments that are accessed by index[byte id]
+    /// </summary>
     public class MessageFlowInfoProvider
              : AbstractContainer<MessageFlowArguments, byte>
     {

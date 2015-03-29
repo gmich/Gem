@@ -1,10 +1,12 @@
-﻿using Gem.Network.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace Gem.Network.Containers
 {
+    /// <summary>
+    /// Readonly container for storing objects and retreiving them by key
+    /// </summary>
+    /// <typeparam name="TData">The object to store</typeparam>
+    /// <typeparam name="TKey">The key</typeparam>
     public abstract class AbstractContainer<TData, TKey>
         where TData : class,new()
     {

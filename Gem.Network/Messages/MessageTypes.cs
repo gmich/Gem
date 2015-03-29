@@ -1,13 +1,8 @@
-﻿using Lidgren.Network;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Gem.Network.Extensions;
-
-namespace Gem.Network.Messages
+﻿namespace Gem.Network.Messages
 {
+    /// <summary>
+    /// Outgoing / Incoming message types
+    /// </summary>
     public enum MessageType
     {
         ServerNotification,

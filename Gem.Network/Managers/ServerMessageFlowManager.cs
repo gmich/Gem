@@ -1,12 +1,13 @@
 ﻿using Gem.Network.Messages;
 using Gem.Network.Providers;
-using Gem.Network.Repositories;
 using Gem.Network.Server;
-using System;
 
 namespace Gem.Network.Managers
 {
-
+    /// <summary>
+    /// Manager class for accessing <see cref=">Gem.Network.Providers.ServerConfigurationProvider"/>
+    /// by index [string,MessageType,byte]
+    /// </summary>
     public class ServerMessageFlowManager
     {
         private ServerConfigurationProvider configurationManager;
@@ -24,7 +25,7 @@ namespace Gem.Network.Managers
             }
         }
 
-        public InfoProvider this[string tag, MessageType messagetype]
+        public MessageArgumentProvider this[string tag, MessageType messagetype]
         {
             get
             {

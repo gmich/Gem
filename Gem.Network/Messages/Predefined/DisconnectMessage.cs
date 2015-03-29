@@ -6,6 +6,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Gem.Network.Messages
 {
+    /// <summary>
+    /// This message is sent when a peer (server or client) disconnects
+    /// </summary>
     public partial class DisconnectMessage
     {
         public DisconnectMessage(NetIncomingMessage im)

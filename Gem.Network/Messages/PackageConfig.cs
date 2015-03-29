@@ -1,13 +1,26 @@
 ﻿using Lidgren.Network;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gem.Network
 {
+    /// <summary>
+    /// How a message is sent
+    /// </summary>
     public class PackageConfig
     {
+
+        #region Required Fields
+
+        [Required]
         public int SequenceChannel { get; set; }
 
+        [Required]
         public NetDeliveryMethod DeliveryMethod { get; set; }
+
+        #endregion
+
+        #region Predefined PackagesConfigs
 
         public static PackageConfig TCP
         {
@@ -44,6 +57,9 @@ namespace Gem.Network
                 };
             }
         }
+
+        #endregion
+
     }
 
 }

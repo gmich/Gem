@@ -1,15 +1,12 @@
 ﻿using Gem.Network.Events;
-using Gem.Network.Factories;
 using System;
-using System.Reflection;
 using Gem.Network.Server;
 
 namespace Gem.Network.Protocol
 {
     /// <summary>
-    /// Creates an event that's used to raise events that send a message using 
+    /// Creates an event that's used to raise events that send a message using  the NetworkPackage protocol by the server.
     /// This factory is bounded to ProtocolServerEvent<>
-    /// the NetworkPackage protocol by the server
     /// </summary>
     public sealed class ServerProtocolEventFactory
     {

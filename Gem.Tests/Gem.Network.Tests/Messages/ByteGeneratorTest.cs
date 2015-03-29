@@ -13,7 +13,7 @@ namespace Gem.Network.Tests
         public void UniqueByteArrayInitializationTest()
         {
             int arraylength = byte.MaxValue;
-            var uniqueByteArray = RandomGenerator.GetRandomBytesArray(arraylength);
+            var uniqueByteArray = RandomByteGenerator.GetRandomBytesArray(arraylength);
 
             //check if all elements are unique
             Assert.IsTrue(uniqueByteArray.Distinct().Count() == arraylength);
@@ -25,7 +25,7 @@ namespace Gem.Network.Tests
         public void InvalidLengthForByteArrayThrowsExceptionTest()
         {
             int arraylength = byte.MaxValue + 1;
-            var uniqueByteArray = RandomGenerator.GetRandomBytesArray(arraylength);
+            var uniqueByteArray = RandomByteGenerator.GetRandomBytesArray(arraylength);
 
             Assert.IsTrue(uniqueByteArray.Distinct().Count() == arraylength);
         }

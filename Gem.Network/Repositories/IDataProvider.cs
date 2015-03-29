@@ -25,6 +25,13 @@ namespace Gem.Network
  
         bool Delete(TKey id);
 
+        /// <summary>
+        /// Add and return the entry as IDisposable.
+        /// By disposing, the entry is removed
+        /// </summary>
+        /// <param name="id">The objects' id</param>
+        /// <param name="item">The object to store</param>
+        /// <returns>The entry's disposable</returns>
         IDisposable Add(TKey id, TData item);
     }
 }
