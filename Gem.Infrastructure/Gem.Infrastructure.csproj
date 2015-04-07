@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractEventHandler.cs" />
     <Compile Include="Aspects\ExceptionInterceptor.cs" />
     <Compile Include="Aspects\LogicalOperationInterceptor.cs" />
     <Compile Include="Aspects\LogInterceptor.cs" />
