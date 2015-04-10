@@ -70,7 +70,12 @@
     <Compile Include="Aspects\ExceptionInterceptor.cs" />
     <Compile Include="Aspects\LogicalOperationInterceptor.cs" />
     <Compile Include="Aspects\LogInterceptor.cs" />
+    <Compile Include="Dynamic\DynamicMapper.cs" />
+    <Compile Include="Dynamic\DynamicXElement.cs" />
     <Compile Include="Dependencies.cs" />
+    <Compile Include="Dynamic\DynamicDictionary.cs" />
+    <Compile Include="Dynamic\PropertyNotifyExtensions.cs" />
+    <Compile Include="Exceptions\ExceptionUtilities.cs" />
     <Compile Include="Logging\ActionAppender.cs" />
     <Compile Include="Logging\DebugHost.cs" />
     <Compile Include="Logging\IAppender.cs" />
