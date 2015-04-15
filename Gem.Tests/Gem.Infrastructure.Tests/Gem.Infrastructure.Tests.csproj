@@ -57,7 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Gem.Infrastructure\Gem.Infrastructure.csproj">
+    <ProjectReference Include="..\..\Gem.Infrastructure\Gem.Infrastructure.csproj">
       <Project>{dab38678-499f-4565-9db8-434a5c66a093}</Project>
       <Name>Gem.Infrastructure</Name>
     </ProjectReference>

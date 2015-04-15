@@ -1,4 +1,6 @@
-﻿namespace Gem.Infrastructure.Logging
+﻿[assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config", Watch = true)]
+
+namespace Gem.Infrastructure.Logging
 {
     /// <summary>
     /// A log4net wrapper
