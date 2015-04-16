@@ -8,6 +8,8 @@ namespace Gem.Gui.Elements
 {
     interface IGuiElement 
     {
+        int Order { get; }
+
         RenderTemplate RenderTemplate { get; }
 
         LayoutStyle LayoutStyle { get;  }
@@ -26,6 +28,6 @@ namespace Gem.Gui.Elements
         
         void Update();
 
-        void Draw(DrawManager manager);
+        void Draw(IDrawManager manager);
     }
 }

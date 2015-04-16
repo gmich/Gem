@@ -75,7 +75,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Actions\" />
+    <Folder Include="Screens\" />
     <Folder Include="Styles\" />
     <Folder Include="Text\" />
   </ItemGroup>

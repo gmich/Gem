@@ -77,8 +77,11 @@
     <Compile Include="Dynamic\PropertyNotifyExtensions.cs" />
     <Compile Include="Exceptions\ExceptionUtilities.cs" />
     <Compile Include="Logging\ActionAppender.cs" />
+    <Compile Include="Logging\ConfigurableAppender.cs" />
     <Compile Include="Logging\DebugHost.cs" />
+    <Compile Include="Logging\AppenderOptions.cs" />
     <Compile Include="Logging\IAppender.cs" />
+    <Compile Include="Logging\IConfigurableAppender.cs" />
     <Compile Include="Logging\IDebugHost.cs" />
     <Compile Include="Logging\IDebugListener.cs" />
     <Compile Include="Logging\Log4NetWrapper.cs" />

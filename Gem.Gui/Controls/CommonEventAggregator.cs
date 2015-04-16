@@ -31,7 +31,7 @@ namespace Gem.Gui.Controls
 
         internal void OnLostFocus(TEventArgs args)
         {
-            var handler = HasFocus;
+            var handler = LostFocus;
             if (handler != null)
             {
                 handler(this, args);
@@ -40,7 +40,7 @@ namespace Gem.Gui.Controls
 
         internal void OnClicked(TEventArgs args)
         {
-            var handler = HasFocus;
+            var handler = Clicked;
             if (handler != null)
             {
                 handler(this, args);
@@ -49,7 +49,7 @@ namespace Gem.Gui.Controls
 
         internal void OnReleased(TEventArgs args)
         {
-            var handler = HasFocus;
+            var handler = Released;
             if (handler != null)
             {
                 handler(this, args);
