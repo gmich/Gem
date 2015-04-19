@@ -49,8 +49,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\DesktopEvents.cs" />
     <Compile Include="Controls\CommonEventAggregator.cs" />
     <Compile Include="Controls\ControlEventArgs.cs" />
+    <Compile Include="Input\TouchInputHelper.cs" />
+    <Compile Include="Input\ControllerInputHelper.cs" />
+    <Compile Include="Input\DesktopInputHelper.cs" />
+    <Compile Include="Input\KeyboardUtils.cs" />
     <Compile Include="Layout\LayoutOptions.cs" />
     <Compile Include="Layout\VerticalAlignment.cs" />
     <Compile Include="Layout\HorizontalAlignment.cs" />
