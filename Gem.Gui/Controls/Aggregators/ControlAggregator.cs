@@ -1,28 +1,27 @@
-﻿using System;
+﻿using Gem.Gui.Elements;
+using System;
 
 namespace Gem.Gui.Controls
 {
-    public class CommonEventAggregator<TEventArgs> : ICommonGuiEvent<TEventArgs>
+    public class ControlAggregator<TEventArgs> : IControl<TEventArgs>
         where TEventArgs : EventArgs
     {
 
         #region Events
-
-        public event EventHandler<TEventArgs> HasFocus;
-
+        
         public event EventHandler<TEventArgs> LostFocus;
 
+        public event EventHandler<TEventArgs> GotFocus;
+
         public event EventHandler<TEventArgs> Clicked;
-
-        public event EventHandler<TEventArgs> Released;
-
+        
         #endregion
 
         #region Aggregation
 
-        internal void OnFocus(TEventArgs args)
+        internal void OnGotFocus(TEventArgs args)
         {
-            var handler = HasFocus;
+            var handler = GotFocus;
             if (handler != null)
             {
                 handler(this, args);
@@ -47,15 +46,7 @@ namespace Gem.Gui.Controls
             }
         }
 
-        internal void OnReleased(TEventArgs args)
-        {
-            var handler = Released;
-            if (handler != null)
-            {
-                handler(this, args);
-            }
-        }
-
         #endregion
+
     }
 }

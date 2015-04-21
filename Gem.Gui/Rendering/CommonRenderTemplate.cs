@@ -1,28 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gem.Gui.Rendering
 {
     public class RenderTemplate
     {
-        private readonly RenderStyle common;
-        private readonly RenderStyle focus;
-        private readonly RenderStyle clicked;
+        private readonly RenderStyle style;
+        private readonly GuiSprite focused;
+        private readonly GuiSprite common;
+        private readonly GuiSprite clicked;
 
-        public RenderTemplate(RenderStyle common, RenderStyle focus, RenderStyle clicked)
+        private Dictionary<string, GuiSprite> guiSprites = new Dictionary<string, GuiSprite>();
+
+        public RenderTemplate(RenderStyle style, GuiSprite common, GuiSprite focused, GuiSprite clicked)
         {
+            this.style = style;
             this.common = common;
-            this.focus = focus;
+            this.focused = focused;
             this.clicked = clicked;
         }
 
-        RenderStyle Common { get { return common; } }
+        public GuiSprite Common { get { return common; } }
 
-        RenderStyle Focus { get { return focus; } }
+        public GuiSprite Focused { get { return focused; } }
 
-        RenderStyle Clicked { get { return clicked; } }
+        public GuiSprite Clicked { get { return clicked; } }
+
+        public GuiSprite this[string spriteId]
+        {
+            get
+            {
+                return guiSprites.ContainsKey(spriteId) ?
+                       guiSprites[spriteId] : null;
+            }
+        }
+
+        public RenderTemplate AddGuiSprite(string key, GuiSprite guiSprite)
+        {
+            if (guiSprites.ContainsKey(key))
+            {
+                throw new ArgumentException("This key is already registered in the guisprite dictionary");
+            }
+
+            guiSprites.Add(key, guiSprite);
+            return this;
+        }
+
     }
 }
