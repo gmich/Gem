@@ -49,15 +49,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\AssetContainer.cs" />
     <Compile Include="Builders\GuiElementBuilder.cs" />
+    <Compile Include="Controls\Aggregators\IControlAggregator.cs" />
     <Compile Include="Controls\Aggregators\MouseControlAggregator.cs" />
-    <Compile Include="Controls\Handlers\MouseControlHandler.cs" />
-    <Compile Include="Controls\Aggregators\ControlAggregator.cs" />
-    <Compile Include="Controls\Handlers\IControlHandler.cs" />
-    <Compile Include="Controls\IDesktopControl.cs" />
-    <Compile Include="Controls\ISliderControl.cs" />
-    <Compile Include="Elements\CommonElement.cs" />
-    <Compile Include="Elements\IControllableElement.cs" />
+    <Compile Include="Controls\Control.cs" />
+    <Compile Include="Elements\DesktopElement.cs" />
+    <Compile Include="Elements\GuiElement.cs" />
+    <Compile Include="Elements\Areas\DesktopGuiArea.cs" />
+    <Compile Include="Elements\Areas\IGuiArea.cs" />
+    <Compile Include="GuiHost.cs" />
+    <Compile Include="GemGui.cs" />
+    <Compile Include="Input\InputScript.cs" />
     <Compile Include="Input\TouchInputHelper.cs" />
     <Compile Include="Input\ControllerInputHelper.cs" />
     <Compile Include="Input\DesktopInputHelper.cs" />

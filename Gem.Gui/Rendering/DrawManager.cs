@@ -3,20 +3,28 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Gem.Gui.Rendering
 {    
-    public interface IDrawManager
+    public abstract class ADrawManager
     {
-        void Draw(SpriteBatch batch, IGuiElement element);
+        protected readonly SpriteBatch batch;
+
+        public ADrawManager(SpriteBatch batch)
+        {
+            this.batch = batch;
+        }
+
+        public abstract void Draw(IGuiElement element);
     }
-    
-    //internal class DrawByRectangle : IDrawManager
-    //{
-    //    public void Draw(SpriteBatch batch, Region region, RenderStyle renderStyle)
-    //    {
-    //        batch.Draw(renderStyle.Texture, 
-    //                   region.Frame, 
-    //                   renderStyle.Color);
-    //    }
-    //}
+
+    internal class DrawByRectangle : ADrawManager
+    {
+        public DrawByRectangle(SpriteBatch batch) : base(batch) { }
+        public override void Draw(IGuiElement element)
+        {
+            batch.Draw(element.Sprite.Texture,
+                       element.Region.Frame,
+                       element.RenderStyle.Color);
+        }
+    }
 
     //internal class DrawByPosition : IDrawManager
     //{

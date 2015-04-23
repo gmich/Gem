@@ -1,26 +1,24 @@
 ﻿using Gem.Gui.Configuration;
 using Gem.Gui.Controls;
+using Gem.Gui.Controls.Aggregators;
 using Gem.Gui.Layout;
 using Gem.Gui.Rendering;
 using Gem.Gui.Transformation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gem.Gui.Elements
 {
-    public abstract class CommonElement<TControl, TEventArgs> : IGuiElement
-        where TControl : IControl<TEventArgs>
+    public abstract class GuiElement<TEventArgs> : IGuiElement
         where TEventArgs : EventArgs
     {
 
         #region Fields
 
         private readonly LayoutStyle layoutStyle;
+        private readonly RenderTemplate renderTemplate;
 
-        private RenderTemplate renderTemplate;
         private Options options;
         private Region region;
         private int order;
@@ -28,14 +26,17 @@ namespace Gem.Gui.Elements
         private IList<ITransformation> transformations = new List<ITransformation>();
         private GuiSprite currentGuiSprite;
 
+        protected IControlAggregator aggregator;
+
+        protected Control<TEventArgs> control;
+
         #endregion
 
         #region Properties
 
-        public TControl Events
+        public IControl<TEventArgs> Events
         {
-            get;
-            set;
+            get { return control as IControl<TEventArgs>; }
         }
 
         public int Order
@@ -44,10 +45,15 @@ namespace Gem.Gui.Elements
             set { order = value; }
         }
 
-        public RenderTemplate RenderTemplate
+        public RenderStyle RenderStyle
         {
-            get { return renderTemplate; }
-            set { renderTemplate = value; }
+            get { return renderTemplate.Style; }
+        }
+
+        public GuiSprite Sprite
+        {
+            get { return currentGuiSprite; }
+            protected set { currentGuiSprite = value; }
         }
 
         public LayoutStyle LayoutStyle
@@ -77,12 +83,12 @@ namespace Gem.Gui.Elements
 
         #region Ctor
 
-        public CommonElement(RenderTemplate renderTemplate,
-                             LayoutStyle layoutStyle,
-                             Region region,
-                             int order = 0,
-                             IGuiElement parent = null)
-        {
+        public GuiElement(RenderTemplate renderTemplate,
+                          LayoutStyle layoutStyle,
+                          Region region,
+                          int order = 0,
+                          IGuiElement parent = null)
+        {           
 
             this.renderTemplate = renderTemplate;
             this.layoutStyle = layoutStyle;
@@ -105,8 +111,10 @@ namespace Gem.Gui.Elements
             transformations.Add(transformation);
         }
 
-        public void Update(double deltaTime)
+        public virtual void Update(double deltaTime)
         {
+            aggregator.Aggregate(this);
+
             for (int index = 0; index < transformations.Count(); index++)
             {
                 if (transformations[index].Enabled)
@@ -118,9 +126,9 @@ namespace Gem.Gui.Elements
             }
         }
 
-        public void Draw(IDrawManager manager)
+        public virtual void Draw(ADrawManager manager)
         {
-            throw new NotImplementedException();
+            manager.Draw(this);
         }
 
         #endregion

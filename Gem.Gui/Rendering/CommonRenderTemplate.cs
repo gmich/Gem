@@ -20,6 +20,8 @@ namespace Gem.Gui.Rendering
             this.clicked = clicked;
         }
 
+        public RenderStyle Style { get { return style; } }
+
         public GuiSprite Common { get { return common; } }
 
         public GuiSprite Focused { get { return focused; } }

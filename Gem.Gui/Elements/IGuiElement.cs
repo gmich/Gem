@@ -9,20 +9,20 @@ namespace Gem.Gui.Elements
     {
         int Order { get; }
 
-        RenderTemplate RenderTemplate { get; }
+        RenderStyle RenderStyle { get; }
+
+        GuiSprite Sprite { get;  }
 
         LayoutStyle LayoutStyle { get; }
 
         Options Options { get; set; }
 
         Region Region { get; }
-        
-        void AddTransformation(ITransformation transformation);
 
-        IGuiElement Parent { get; set; }
+        IGuiElement Parent { get; }
 
         void Update(double deltaTime);
 
-        void Draw(IDrawManager manager);
+        void Draw(ADrawManager manager);
     }
 }
