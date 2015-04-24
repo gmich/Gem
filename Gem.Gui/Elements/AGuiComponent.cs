@@ -6,43 +6,35 @@ using Gem.Gui.Rendering;
 using Gem.Gui.Transformation;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Gem.Gui.Elements
 {
-    public abstract class GuiElement<TEventArgs> : IGuiElement
-        where TEventArgs : EventArgs
+    public abstract class AGuiComponent : IGuiComponent
     {
 
         #region Fields
 
-        private readonly LayoutStyle layoutStyle;
+        private readonly Alignment layoutStyle;
         private readonly RenderTemplate renderTemplate;
+        private readonly IControlAggregator aggregator;
+        private readonly Control<ElementEventArgs> control;
 
         private Options options;
         private Region region;
-        private int order;
-        private IGuiElement parent;
+        private IGuiComponent parent;
         private IList<ITransformation> transformations = new List<ITransformation>();
         private GuiSprite currentGuiSprite;
 
-        protected IControlAggregator aggregator;
-
-        protected Control<TEventArgs> control;
 
         #endregion
 
         #region Properties
 
-        public IControl<TEventArgs> Events
+        public IControl<ElementEventArgs> Events
         {
-            get { return control as IControl<TEventArgs>; }
-        }
-
-        public int Order
-        {
-            get { return order; }
-            set { order = value; }
+            get { return control as IControl<ElementEventArgs>; }
         }
 
         public RenderStyle RenderStyle
@@ -56,7 +48,7 @@ namespace Gem.Gui.Elements
             protected set { currentGuiSprite = value; }
         }
 
-        public LayoutStyle LayoutStyle
+        public Alignment LayoutStyle
         {
             get { return layoutStyle; }
         }
@@ -73,7 +65,7 @@ namespace Gem.Gui.Elements
             set { region = value; }
         }
 
-        public IGuiElement Parent
+        public IGuiComponent Parent
         {
             get { return parent; }
             set { parent = value; }
@@ -83,23 +75,37 @@ namespace Gem.Gui.Elements
 
         #region Ctor
 
-        public GuiElement(RenderTemplate renderTemplate,
-                          LayoutStyle layoutStyle,
-                          Region region,
-                          int order = 0,
-                          IGuiElement parent = null)
-        {           
-
+        public AGuiComponent(RenderTemplate renderTemplate,
+                             Alignment layoutStyle,
+                             Region region,
+                             ControlTarget target,
+                             IGuiComponent parent = null)
+        {
+            
             this.renderTemplate = renderTemplate;
             this.layoutStyle = layoutStyle;
             this.region = region;
-            this.order = order;
             this.parent = parent;
             this.currentGuiSprite = renderTemplate.Common;
 
             this.Events.GotFocus += (sender, args) => this.currentGuiSprite = renderTemplate.Focused;
             this.Events.LostFocus += (sender, args) => this.currentGuiSprite = renderTemplate.Common;
             this.Events.Clicked += (sender, args) => this.currentGuiSprite = renderTemplate.Common;
+
+            UseMouse();
+        }
+
+        [Conditional("MouseEnabled")]
+        public void UseMouse()
+        {
+            var mouseCaptureTemplate = renderTemplate["MouseCapture"];
+            if (mouseCaptureTemplate == null)
+            {
+                throw new ArgumentNullException("No appropriate sprite for mouse capture was found");
+            }
+
+            this.Events.GotMouseCapture += (sender, args) => this.Sprite = mouseCaptureTemplate;
+            this.Events.LostMouseCapture += (sender, args) => this.Sprite = renderTemplate.Common;
         }
 
         #endregion
@@ -111,9 +117,10 @@ namespace Gem.Gui.Elements
             transformations.Add(transformation);
         }
 
-        public virtual void Update(double deltaTime)
+
+        public virtual void Update(AggregationToken context, double deltaTime)
         {
-            aggregator.Aggregate(this);
+            aggregator.Aggregate(this, context);
 
             for (int index = 0; index < transformations.Count(); index++)
             {
@@ -133,5 +140,11 @@ namespace Gem.Gui.Elements
 
         #endregion
 
+
+
+        public Alignment Alignment
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

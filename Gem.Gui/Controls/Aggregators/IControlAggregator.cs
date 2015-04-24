@@ -4,6 +4,6 @@ namespace Gem.Gui.Controls.Aggregators
 {
     public interface IControlAggregator
     {
-        void Aggregate(IGuiElement element);
+        void Aggregate(IGuiComponent element, AggregationToken context);
     }
 }

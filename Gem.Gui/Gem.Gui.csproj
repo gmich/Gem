@@ -51,16 +51,20 @@
   <ItemGroup>
     <Compile Include="Assets\AssetContainer.cs" />
     <Compile Include="Builders\GuiElementBuilder.cs" />
+    <Compile Include="Controls\Aggregators\IAggregation.cs" />
     <Compile Include="Controls\Aggregators\IControlAggregator.cs" />
+    <Compile Include="Controls\Aggregators\AreaEnumeratorAggregator.cs" />
     <Compile Include="Controls\Aggregators\MouseControlAggregator.cs" />
     <Compile Include="Controls\Control.cs" />
-    <Compile Include="Elements\DesktopElement.cs" />
-    <Compile Include="Elements\GuiElement.cs" />
-    <Compile Include="Elements\Areas\DesktopGuiArea.cs" />
+    <Compile Include="Controls\ControlTarget.cs" />
+    <Compile Include="Controls\AggregationToken.cs" />
+    <Compile Include="Elements\AGuiComponent.cs" />
+    <Compile Include="Elements\Areas\GuiArea.cs" />
     <Compile Include="Elements\Areas\IGuiArea.cs" />
+    <Compile Include="Factories\ControlFactory.cs" />
     <Compile Include="GuiHost.cs" />
     <Compile Include="GemGui.cs" />
-    <Compile Include="Input\InputScript.cs" />
+    <Compile Include="Controls\ComponentEnumerator.cs" />
     <Compile Include="Input\TouchInputHelper.cs" />
     <Compile Include="Input\ControllerInputHelper.cs" />
     <Compile Include="Input\DesktopInputHelper.cs" />
@@ -70,7 +74,7 @@
     <Compile Include="Layout\HorizontalAlignment.cs" />
     <Compile Include="Layout\IAlignable.cs" />
     <Compile Include="Controls\IControl.cs" />
-    <Compile Include="Elements\IGuiElement.cs" />
+    <Compile Include="Elements\IGuiComponent.cs" />
     <Compile Include="Configuration\Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\CommonRenderTemplate.cs" />

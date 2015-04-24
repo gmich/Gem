@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace Gem.Gui.Rendering
 {
-    public class RenderTemplate
+    public struct RenderTemplate
     {
         private readonly RenderStyle style;
         private readonly GuiSprite focused;
         private readonly GuiSprite common;
         private readonly GuiSprite clicked;
 
-        private Dictionary<string, GuiSprite> guiSprites = new Dictionary<string, GuiSprite>();
+        private Dictionary<string, GuiSprite> guiSprites;
 
         public RenderTemplate(RenderStyle style, GuiSprite common, GuiSprite focused, GuiSprite clicked)
         {
@@ -18,6 +18,7 @@ namespace Gem.Gui.Rendering
             this.common = common;
             this.focused = focused;
             this.clicked = clicked;
+            guiSprites = new Dictionary<string, GuiSprite>();
         }
 
         public RenderStyle Style { get { return style; } }

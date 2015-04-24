@@ -3,19 +3,19 @@ using System;
 
 namespace Gem.Gui.Layout
 {
-    public class LayoutStyle
+    public class Alignment
     {
         public IHorizontalAlignable HorizontalAlignment { get; set; }
         public IVerticalAlignable VerticalAlignment { get; set; }
 
-        private static Lazy<LayoutStyle> defaultOptions = new Lazy<LayoutStyle>(() =>
-            new LayoutStyle
+        private static Lazy<Alignment> defaultOptions = new Lazy<Alignment>(() =>
+            new Alignment
             {
                 HorizontalAlignment = Layout.HorizontalAlignment.None,
-                VerticalAlignment = Layout.VerticallAlignment.None
+                VerticalAlignment = Layout.VerticalAlignment.None
             });
 
-        public static LayoutStyle Default
+        public static Alignment Default
         {
             get { return defaultOptions.Value; }
         }

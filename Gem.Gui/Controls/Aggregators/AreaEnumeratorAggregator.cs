@@ -6,7 +6,7 @@ using Gem.Gui.Controls.Aggregators;
 
 namespace Gem.Gui.Aggregators
 {
-    internal class MouseControlAggregator<TEventArgs> : IControlAggregator
+    internal class AreaEnumeratorAggregator<TEventArgs> : IControlAggregator
     where TEventArgs : EventArgs
     {
 
@@ -15,21 +15,16 @@ namespace Gem.Gui.Aggregators
         private readonly Control<TEventArgs> control;
         private readonly Func<IGuiComponent, TEventArgs> eventArgsProvider;
         private readonly DesktopInputHelper inputHandler;
-        
-        #endregion
 
-        public event EventHandler OnActivated;
-        public event EventHandler OnDeactivated;
+        #endregion
 
         #region Ctor
 
-        public MouseControlAggregator(Func<IGuiComponent, TEventArgs> eventArgsProvider,
-                                      Control<TEventArgs> control,
-                                      DesktopInputHelper inputHandler)
+        public AreaEnumeratorAggregator(Func<IGuiComponent, TEventArgs> eventArgsProvider,
+                                        Control<TEventArgs> control)
         {
             this.eventArgsProvider = eventArgsProvider;
             this.control = control;
-            this.inputHandler = inputHandler;
         }
 
         #endregion
@@ -86,9 +81,9 @@ namespace Gem.Gui.Aggregators
 
         #region Aggregation
 
-        public void Aggregate(IGuiComponent element, AggregationToken context)
+        public void Aggregate(IGuiComponent element)
         {
-            if (!element.Options.IsEnabled && !context.Captured)
+            if (!element.Options.IsEnabled)
             {
                 return;
             }
@@ -104,5 +99,10 @@ namespace Gem.Gui.Aggregators
 
         #endregion
 
+
+        public void Aggregate(IGuiComponent element, AggregationToken context)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -5,7 +5,7 @@ namespace Gem.Gui.Layout
 {
 
     public interface IVerticalAlignable : IAlignable { }
-    public class VerticallAlignment
+    public class VerticalAlignment
     {
         #region Top
 

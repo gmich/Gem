@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gem.Gui.Input;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,14 +8,16 @@ using System.Threading.Tasks;
 
 namespace Gem.Gui.Elements
 {
-    interface IGuiArea : IGuiElement
+    public interface IGuiArea : IGuiComponent
     {
-        int AddElement(IGuiElement element);
+        int ComponentCount { get; }
 
-        bool RemoveElement(int id);
+        int AddComponent(IGuiComponent component);
 
-        IEnumerable<IGuiElement> Elements();
+        bool RemoveComponent(int id);
 
-        IGuiElement this[int id] { get; }
+        IEnumerable<IGuiComponent> Components();
+
+        IGuiComponent this[int id] { get; }
     }
 }

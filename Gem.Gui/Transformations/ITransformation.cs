@@ -6,7 +6,7 @@ namespace Gem.Gui.Transformation
     {
         bool Enabled { get; }
 
-        void Transform(IGuiElement element, double deltaTime);
+        void Transform(IGuiComponent element, double deltaTime);
     }
 
 }

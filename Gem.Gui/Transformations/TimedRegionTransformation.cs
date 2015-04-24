@@ -28,7 +28,7 @@ namespace Gem.Gui.Transformations
             get { return (timePassed < duration); }
         }
 
-        public void Transform(IGuiElement element, double deltaTime)
+        public void Transform(IGuiComponent element, double deltaTime)
         {
             timePassed += deltaTime;
 

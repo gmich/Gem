@@ -12,13 +12,13 @@ namespace Gem.Gui.Rendering
             this.batch = batch;
         }
 
-        public abstract void Draw(IGuiElement element);
+        public abstract void Draw(IGuiComponent element);
     }
 
     internal class DrawByRectangle : ADrawManager
     {
         public DrawByRectangle(SpriteBatch batch) : base(batch) { }
-        public override void Draw(IGuiElement element)
+        public override void Draw(IGuiComponent element)
         {
             batch.Draw(element.Sprite.Texture,
                        element.Region.Frame,
