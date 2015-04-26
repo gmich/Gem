@@ -90,7 +90,7 @@ namespace Gem.Gui.Layout
 
         #region None
 
-        public static IVerticalAlignable None
+        public static IVerticalAlignable Manual
         {
             get
             {

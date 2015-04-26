@@ -3,13 +3,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Gem.Gui.Input
 {
-    public class DesktopInputHelper
+    public class MouseInputHelper : IInputHelper
     {
 
         #region Fields
-
-        private KeyboardState keyboardState = Keyboard.GetState();
-        private KeyboardState previousKeyboardState;
 
         private MouseState mouseState = Mouse.GetState();
         private MouseState previousMouseState;
@@ -169,48 +166,15 @@ namespace Gem.Gui.Input
 
         #endregion
 
-        #region Keyboard
+        #region Flush
 
-        public Keys[] GetPressedKeys()
+        public void Flush()
         {
-            return keyboardState.GetPressedKeys();
-        }
-
-        public bool IsKeyPressed(Keys keyToTest)
-        {
-            return keyboardState.IsKeyDown(keyToTest);
-        }
-
-        public bool IsKeyReleased(Keys keyToTest)
-        {
-            return (keyboardState.IsKeyUp(keyToTest)
-                   && previousKeyboardState.IsKeyDown(keyToTest));
-        }
-
-        public bool IsKeyClicked(Keys keyToTest)
-        {
-            return (keyboardState.IsKeyDown(keyToTest)
-                   && previousKeyboardState.IsKeyUp(keyToTest));
-        }
-        
-        #endregion
-
-        #region Update
-
-        public void Update()
-        {
-            Flush();
-
-            keyboardState = Keyboard.GetState();
-            mouseState = Mouse.GetState();
-            scrollWheelValue = mouseState.ScrollWheelValue;
-        }
-
-        private void Flush()
-        {
-            previousKeyboardState = keyboardState;
             previousMouseState = mouseState;
             previousScrollWheelValue = scrollWheelValue;
+
+            mouseState = Mouse.GetState();
+            scrollWheelValue = mouseState.ScrollWheelValue;
         }
 
         #endregion

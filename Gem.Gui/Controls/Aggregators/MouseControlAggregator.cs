@@ -14,7 +14,7 @@ namespace Gem.Gui.Aggregators
 
         private readonly Control<TEventArgs> control;
         private readonly Func<IGuiComponent, TEventArgs> eventArgsProvider;
-        private readonly DesktopInputHelper inputHandler;
+        private readonly MouseInputHelper inputHandler;
         
         #endregion
 
@@ -25,7 +25,7 @@ namespace Gem.Gui.Aggregators
 
         public MouseControlAggregator(Func<IGuiComponent, TEventArgs> eventArgsProvider,
                                       Control<TEventArgs> control,
-                                      DesktopInputHelper inputHandler)
+                                      MouseInputHelper inputHandler)
         {
             this.eventArgsProvider = eventArgsProvider;
             this.control = control;

@@ -10,7 +10,7 @@ namespace Gem.Gui
         SpriteBatch spriteBatch;
         AssetContainer<Texture2D> textureContainer;
         AssetContainer<SpriteFont> fontContainer;
-
+       
         public GemGui()
             : base()
         {

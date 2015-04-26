@@ -14,7 +14,7 @@ namespace Gem.Gui.Aggregators
 
         private readonly Control<TEventArgs> control;
         private readonly Func<IGuiComponent, TEventArgs> eventArgsProvider;
-        private readonly DesktopInputHelper inputHandler;
+        private readonly MouseInputHelper inputHandler;
 
         #endregion
 

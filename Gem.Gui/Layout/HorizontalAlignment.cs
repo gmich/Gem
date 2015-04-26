@@ -91,7 +91,7 @@ namespace Gem.Gui.Layout
 
         #region None
 
-        public static IHorizontalAlignable None
+        public static IHorizontalAlignable Manual
         {
             get
             {

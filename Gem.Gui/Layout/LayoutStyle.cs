@@ -11,8 +11,8 @@ namespace Gem.Gui.Layout
         private static Lazy<Alignment> defaultOptions = new Lazy<Alignment>(() =>
             new Alignment
             {
-                HorizontalAlignment = Layout.HorizontalAlignment.None,
-                VerticalAlignment = Layout.VerticalAlignment.None
+                HorizontalAlignment = Layout.HorizontalAlignment.Manual,
+                VerticalAlignment = Layout.VerticalAlignment.Manual
             });
 
         public static Alignment Default
