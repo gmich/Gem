@@ -9,7 +9,7 @@ namespace Gem.Gui.Input
 
         #region Fields
 
-        private static PlayerIndex defaultGamePad;
+        private static PlayerIndex defaultGamePad = PlayerIndex.One;
         private static InputCapabilities inputCaps;
 
         #endregion

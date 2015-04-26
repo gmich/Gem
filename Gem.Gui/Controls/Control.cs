@@ -6,6 +6,15 @@ namespace Gem.Gui.Controls
         where TEventArgs : EventArgs
     {
 
+        private readonly object sender;
+        private readonly Func<TEventArgs> eventArgsProvider;
+
+        public Control(object sender, Func<TEventArgs> eventArgsProvider)
+        {
+            this.sender = sender;
+            this.eventArgsProvider = eventArgsProvider;
+        }
+
         #region Events
 
         public event EventHandler<TEventArgs> LostFocus;
@@ -26,48 +35,48 @@ namespace Gem.Gui.Controls
 
         #region Aggregation
 
-        internal void OnMouseCapture(TEventArgs args)
+        internal void OnMouseCapture()
         {
             var handler = GotMouseCapture;
             if (handler != null)
             {
-                handler(this, args);
+                handler(sender, eventArgsProvider());
             }
         }
 
-        internal void OnLostMouseCapture(TEventArgs args)
+        internal void OnLostMouseCapture()
         {
             var handler = LostMouseCapture;
             if (handler != null)
             {
-                handler(this, args);
+                handler(sender, eventArgsProvider());
             }
         }
 
-        internal void OnGotFocus(TEventArgs args)
+        internal void OnGotFocus()
         {
             var handler = GotFocus;
             if (handler != null)
             {
-                handler(this, args);
+                handler(sender, eventArgsProvider());
             }
         }
 
-        internal void OnLostFocus(TEventArgs args)
+        internal void OnLostFocus()
         {
             var handler = LostFocus;
             if (handler != null)
             {
-                handler(this, args);
+                handler(sender, eventArgsProvider());
             }
         }
 
-        internal void OnClicked(TEventArgs args)
+        internal void OnClicked()
         {
             var handler = Clicked;
             if (handler != null)
             {
-                handler(this, args);
+                handler(sender, eventArgsProvider());
             }
         }
 

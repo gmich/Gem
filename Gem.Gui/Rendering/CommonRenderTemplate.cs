@@ -6,28 +6,21 @@ namespace Gem.Gui.Rendering
     public struct RenderTemplate
     {
         private readonly RenderStyle style;
-        private readonly GuiSprite focused;
-        private readonly GuiSprite common;
-        private readonly GuiSprite clicked;
+        private readonly GuiSprite sprite;
 
         private Dictionary<string, GuiSprite> guiSprites;
 
-        public RenderTemplate(RenderStyle style, GuiSprite common, GuiSprite focused, GuiSprite clicked)
+        public RenderTemplate(RenderStyle style, GuiSprite sprite)
         {
             this.style = style;
-            this.common = common;
-            this.focused = focused;
-            this.clicked = clicked;
+            this.sprite = sprite;
             guiSprites = new Dictionary<string, GuiSprite>();
+            guiSprites.Add("Default", sprite);
         }
 
         public RenderStyle Style { get { return style; } }
 
-        public GuiSprite Common { get { return common; } }
-
-        public GuiSprite Focused { get { return focused; } }
-
-        public GuiSprite Clicked { get { return clicked; } }
+        public GuiSprite Sprite { get { return sprite; } }
 
         public GuiSprite this[string spriteId]
         {

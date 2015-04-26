@@ -19,21 +19,21 @@ namespace Gem.Gui.Rendering
                            float transparency = 1.0f,
                            float scale = 1.0f,
                            float rotation = 1.0f,
-                           SpriteEffects spriteEffects= SpriteEffects.None)
+                           SpriteEffects spriteEffect= SpriteEffects.None)
         {
             this.Layer = layer;
             this.Color = color ?? Color.White;
             this.Transparency = transparency;
             this.Scale = scale;
             this.Rotation = rotation;
-            this.SpriteEffects = spriteEffects;
+            this.SpriteEffect = spriteEffect;
         }
         public float Transparency { get; set; }
         public float Scale { get; set; }
         public float Layer { get; set; }
         public float Rotation { get; set; }
         public Color Color { get; set; }
-        public SpriteEffects SpriteEffects { get; set; }
+        public SpriteEffects SpriteEffect { get; set; }
     }
 
 }

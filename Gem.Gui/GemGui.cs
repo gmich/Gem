@@ -20,7 +20,6 @@ namespace Gem.Gui
 
         protected override void Initialize()
         {
-
             base.Initialize();
         }
 
@@ -30,11 +29,7 @@ namespace Gem.Gui
             textureContainer = new AssetContainer<Texture2D>(Content);
             fontContainer = new AssetContainer<SpriteFont>(Content);
         }
-
-        protected override void UnloadContent()
-        {
-        }
-
+        
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);

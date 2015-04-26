@@ -1,12 +1,9 @@
 ﻿using Gem.Gui.Configuration;
 using Gem.Gui.Controls;
-using Gem.Gui.Controls.Aggregators;
 using Gem.Gui.Layout;
 using Gem.Gui.Rendering;
 using Gem.Gui.Transformation;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Gem.Gui.Elements
@@ -18,7 +15,6 @@ namespace Gem.Gui.Elements
 
         private readonly Alignment layoutStyle;
         private readonly RenderTemplate renderTemplate;
-        private readonly IControlAggregator aggregator;
         private readonly Control<ElementEventArgs> control;
 
         private Options options;
@@ -26,15 +22,14 @@ namespace Gem.Gui.Elements
         private IGuiComponent parent;
         private IList<ITransformation> transformations = new List<ITransformation>();
         private GuiSprite currentGuiSprite;
-
-
+        
         #endregion
 
         #region Properties
 
-        public IControl<ElementEventArgs> Events
+        public Control<ElementEventArgs> Events
         {
-            get { return control as IControl<ElementEventArgs>; }
+            get { return control; }
         }
 
         public RenderStyle RenderStyle
@@ -48,7 +43,7 @@ namespace Gem.Gui.Elements
             protected set { currentGuiSprite = value; }
         }
 
-        public Alignment LayoutStyle
+        public Alignment Alignment
         {
             get { return layoutStyle; }
         }
@@ -86,27 +81,9 @@ namespace Gem.Gui.Elements
             this.layoutStyle = layoutStyle;
             this.region = region;
             this.parent = parent;
-            this.currentGuiSprite = renderTemplate.Common;
-
-            this.Events.GotFocus += (sender, args) => this.currentGuiSprite = renderTemplate.Focused;
-            this.Events.LostFocus += (sender, args) => this.currentGuiSprite = renderTemplate.Common;
-            this.Events.Clicked += (sender, args) => this.currentGuiSprite = renderTemplate.Common;
-
-            UseMouse();
+            this.currentGuiSprite = renderTemplate["Default"];
         }
 
-        [Conditional("MouseEnabled")]
-        public void UseMouse()
-        {
-            var mouseCaptureTemplate = renderTemplate["MouseCapture"];
-            if (mouseCaptureTemplate == null)
-            {
-                throw new ArgumentNullException("No appropriate sprite for mouse capture was found");
-            }
-
-            this.Events.GotMouseCapture += (sender, args) => this.Sprite = mouseCaptureTemplate;
-            this.Events.LostMouseCapture += (sender, args) => this.Sprite = renderTemplate.Common;
-        }
 
         #endregion
 
@@ -116,12 +93,9 @@ namespace Gem.Gui.Elements
         {
             transformations.Add(transformation);
         }
-
-
-        public virtual void Update(AggregationToken context, double deltaTime)
+        
+        public virtual void Update(double deltaTime)
         {
-            aggregator.Aggregate(this, context);
-
             for (int index = 0; index < transformations.Count(); index++)
             {
                 if (transformations[index].Enabled)
@@ -133,18 +107,13 @@ namespace Gem.Gui.Elements
             }
         }
 
-        public virtual void Draw(ADrawManager manager)
+        public virtual void Draw(ABatchDrawable manager)
         {
             manager.Draw(this);
         }
 
         #endregion
+      
 
-
-
-        public Alignment Alignment
-        {
-            get { throw new NotImplementedException(); }
-        }
     }
 }

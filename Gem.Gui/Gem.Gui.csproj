@@ -49,23 +49,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aggregation\AggregationContext.cs" />
+    <Compile Include="Aggregation\ComponentIndex.cs" />
     <Compile Include="Assets\AssetContainer.cs" />
     <Compile Include="Builders\GuiElementBuilder.cs" />
-    <Compile Include="Controls\Aggregators\IAggregation.cs" />
-    <Compile Include="Controls\Aggregators\IControlAggregator.cs" />
-    <Compile Include="Controls\Aggregators\AreaEnumeratorAggregator.cs" />
-    <Compile Include="Controls\Aggregators\MouseControlAggregator.cs" />
+    <Compile Include="Aggregation\IAggregation.cs" />
+    <Compile Include="Aggregation\MouseControlAggregator.cs" />
     <Compile Include="Controls\Control.cs" />
     <Compile Include="Controls\ControlTarget.cs" />
-    <Compile Include="Controls\AggregationToken.cs" />
+    <Compile Include="Aggregation\AggregationToken.cs" />
     <Compile Include="Elements\AGuiComponent.cs" />
     <Compile Include="Elements\Areas\GuiArea.cs" />
+    <Compile Include="Elements\Areas\GuiAreaEntry.cs" />
     <Compile Include="Elements\Areas\IGuiArea.cs" />
-    <Compile Include="Factories\AggregatorFactory.cs" />
-    <Compile Include="Factories\ControlFactory.cs" />
-    <Compile Include="GuiHost.cs" />
     <Compile Include="GemGui.cs" />
-    <Compile Include="Controls\ComponentEnumerator.cs" />
+    <Compile Include="Aggregation\AggregationEnumerator.cs" />
+    <Compile Include="GuiHost.cs" />
     <Compile Include="Input\Helpers\IInputHelper.cs" />
     <Compile Include="Input\Helpers\KeyboardInputHelper.cs" />
     <Compile Include="Input\Helpers\TouchInputHelper.cs" />
@@ -82,9 +81,10 @@
     <Compile Include="Configuration\Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\CommonRenderTemplate.cs" />
+    <Compile Include="Rendering\DrawManager.cs" />
     <Compile Include="Rendering\ImmutableRegion.cs" />
     <Compile Include="Rendering\Region.cs" />
-    <Compile Include="Rendering\DrawManager.cs" />
+    <Compile Include="Rendering\ABatchDrawable.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Styles\TextureStyle.cs" />
     <Compile Include="Rendering\Sprite.cs" />

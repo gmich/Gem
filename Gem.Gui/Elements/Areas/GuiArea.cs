@@ -1,5 +1,5 @@
 ﻿using Gem.Gui.Controls;
-using Gem.Gui.Controls.Aggregators;
+using Gem.Gui.Elements.Areas;
 using Gem.Gui.Layout;
 using Gem.Gui.Rendering;
 using System;
@@ -10,7 +10,7 @@ namespace Gem.Gui.Elements
 
     public class GuiArea : AGuiComponent, IGuiArea
     {
-        private readonly IDictionary<int, IGuiComponent> elements = new Dictionary<int, IGuiComponent>();
+        private readonly IDictionary<int, GuiAreaEntry> elements = new Dictionary<int, GuiAreaEntry>();
 
 
         public GuiArea(RenderTemplate renderTemplate,
@@ -24,7 +24,7 @@ namespace Gem.Gui.Elements
         public int AddComponent(IGuiComponent element)
         {
             int id = elements.Count;
-            elements.Add(id, element);
+            elements.Add(id, new GuiAreaEntry(element));
 
             return id;
         }
@@ -39,7 +39,7 @@ namespace Gem.Gui.Elements
             get
             {
                 return elements.ContainsKey(id) ?
-                elements[id] : null;
+                elements[id].Component : null;
             }
         }
 
@@ -47,7 +47,8 @@ namespace Gem.Gui.Elements
         {
             get { return elements.Count; }
         }
-        public IEnumerable<IGuiComponent> Components()
+
+        public IEnumerable<GuiAreaEntry> Entries()
         {
             foreach (var element in elements.Values)
             {
@@ -55,6 +56,22 @@ namespace Gem.Gui.Elements
             }
         }
 
+        public event EventHandler<ElementEventArgs> OnAddComponent;
+
+        public event EventHandler<ElementEventArgs> OnRemoveComponent;
+
+
+        public Aggregation.ComponentIndex FocusIndex
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 
 }

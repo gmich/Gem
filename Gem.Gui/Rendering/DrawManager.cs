@@ -1,66 +1,18 @@
-﻿using Gem.Gui.Elements;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Gem.Gui.Rendering
-{    
-    public abstract class ADrawManager
+{
+    public class DrawManager
     {
-        protected readonly SpriteBatch batch;
+        private readonly ABatchDrawable renderer;
+        private readonly GraphicsDevice device;
+        private readonly ABatchDrawable drawManager;
 
-        public ADrawManager(SpriteBatch batch)
-        {
-            this.batch = batch;
-        }
-
-        public abstract void Draw(IGuiComponent element);
+        public GraphicsDevice Device { get { return device; } }
     }
-
-    internal class DrawByRectangle : ADrawManager
-    {
-        public DrawByRectangle(SpriteBatch batch) : base(batch) { }
-        public override void Draw(IGuiComponent element)
-        {
-            batch.Draw(element.Sprite.Texture,
-                       element.Region.Frame,
-                       element.RenderStyle.Color);
-        }
-    }
-
-    //internal class DrawByPosition : IDrawManager
-    //{
-    //    public void Draw(SpriteBatch batch, Region region, RenderStyle renderStyle)
-    //    {
-    //        batch.Draw(renderStyle.Texture, 
-    //                   region.Position, 
-    //                   renderStyle.Color);
-    //    }
-    //}
-
-    //internal class DrawBySourceRectangle : IDrawManager
-    //{
-    //    public void Draw(SpriteBatch batch, Region region, RenderStyle renderStyle)
-    //    {
-    //        batch.Draw(renderStyle.Texture, 
-    //                   region.Position,
-    //                   renderStyle.SourceRectangle,
-    //                   renderStyle.Color);
-    //    }
-    //}
-
-    //internal class DrawDetailed : IDrawManager
-    //{
-    //    public void Draw(SpriteBatch batch, Region region, RenderStyle renderStyle)
-    //    {
-    //        batch.Draw(renderStyle.Texture, 
-    //                   region.Frame, 
-    //                   renderStyle.SourceRectangle,
-    //                   renderStyle.Color,
-    //                   renderStyle.Rotation,
-    //                   region.Origin,
-    //                   renderStyle.SpriteEffects,
-    //                   renderStyle.Layer);
-    //    }
-    //}
-
-    //TODO: implement spritebatch's overloads ( + 4) and rename
 }

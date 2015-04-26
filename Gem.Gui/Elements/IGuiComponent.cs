@@ -14,7 +14,7 @@ namespace Gem.Gui.Elements
 
     public interface IGuiComponent
     {
-        IControl<ElementEventArgs> Events { get; }
+        Control<ElementEventArgs> Events { get; }
 
         RenderStyle RenderStyle { get; }
 
@@ -28,8 +28,8 @@ namespace Gem.Gui.Elements
 
         IGuiComponent Parent { get; }
 
-        void Update(AggregationToken context,double deltaTime);
+        void Update(double deltaTime);
 
-        void Draw(ADrawManager manager);
+        void Draw(ABatchDrawable manager);
     }
 }
