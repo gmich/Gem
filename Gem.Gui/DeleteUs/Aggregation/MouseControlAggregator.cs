@@ -13,13 +13,18 @@ namespace Gem.Gui.Aggregation
         #region  Fields
 
         private readonly Func<IGuiComponent, ElementEventArgs> eventArgsProvider;
-        private readonly MouseInputHelper input = InputManager.Mouse;
+        private readonly MouseInputHelper input;
 
         //this is used to spot new mouse locations
         private Point mouseLocation;
 
         #endregion
         
+        public MouseControlAggregator(MouseInputHelper inputHelper)
+        {
+            this.input = inputHelper;
+        }
+
         private bool _isActive = true;
         public bool IsActive
         {

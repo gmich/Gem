@@ -1,6 +1,6 @@
-﻿using Gem.Gui.Configuration;
+﻿using Gem.Gui.Alignment;
+using Gem.Gui.Configuration;
 using Gem.Gui.Controls;
-using Gem.Gui.Layout;
 using Gem.Gui.Rendering;
 using Gem.Gui.Transformation;
 using System.Collections.Generic;
@@ -8,12 +8,12 @@ using System.Linq;
 
 namespace Gem.Gui.Elements
 {
-    public abstract class AGuiComponent : IGuiComponent
+    public class AGuiComponent : IGuiComponent
     {
 
         #region Fields
 
-        private readonly Alignment layoutStyle;
+        private readonly AlignmentContext alignment;
         private readonly RenderTemplate renderTemplate;
         private readonly Control<ElementEventArgs> control;
 
@@ -43,9 +43,9 @@ namespace Gem.Gui.Elements
             protected set { currentGuiSprite = value; }
         }
 
-        public Alignment Alignment
+        public AlignmentContext Alignment
         {
-            get { return layoutStyle; }
+            get { return alignment; }
         }
 
         public Options Options
@@ -71,17 +71,19 @@ namespace Gem.Gui.Elements
         #region Ctor
 
         public AGuiComponent(RenderTemplate renderTemplate,
-                             Alignment layoutStyle,
+                             AlignmentContext layoutStyle,
                              Region region,
                              ControlTarget target,
-                             IGuiComponent parent = null)
-        {
-            
+                             IGuiComponent parent)
+        {            
             this.renderTemplate = renderTemplate;
-            this.layoutStyle = layoutStyle;
+            this.alignment = layoutStyle;
             this.region = region;
             this.parent = parent;
             this.currentGuiSprite = renderTemplate["Default"];
+
+            //this.parent.Region.onPositionChange += (sender,newRegion) => Alignment.AdjustLocation(parent.Region, this.Region);
+            //this.parent.Region.onSizeChange += (sender, newRegion) => Alignment.AdjustLocation(parent.Region, this.Region);
         }
 
 

@@ -1,6 +1,6 @@
-﻿using Gem.Gui.Controls;
+﻿using Gem.Gui.Alignment;
+using Gem.Gui.Controls;
 using Gem.Gui.Elements.Areas;
-using Gem.Gui.Layout;
 using Gem.Gui.Rendering;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace Gem.Gui.Elements
 
 
         public GuiArea(RenderTemplate renderTemplate,
-                             Alignment layoutStyle,
+                             AlignmentContext layoutStyle,
                              Region region,
                              ControlTarget target,
                              IGuiComponent parent = null)

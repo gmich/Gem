@@ -1,4 +1,5 @@
 ﻿using Gem.Gui.Aggregation;
+using Gem.Gui.Alignment;
 using System;
 using System.Collections.Generic;
 
@@ -11,6 +12,8 @@ namespace Gem.Gui.Elements.Areas
 
         int ComponentCount { get; }
 
+        AlignmentContext Alignment { get; }
+        
         int AddComponent(IGuiComponent component);
 
         bool RemoveComponent(int id);

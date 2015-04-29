@@ -49,48 +49,62 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Aggregation\AggregationContext.cs" />
-    <Compile Include="Aggregation\ComponentIndex.cs" />
-    <Compile Include="Assets\AssetContainer.cs" />
-    <Compile Include="Builders\GuiElementBuilder.cs" />
-    <Compile Include="Aggregation\IAggregation.cs" />
-    <Compile Include="Aggregation\MouseControlAggregator.cs" />
-    <Compile Include="Controls\Control.cs" />
-    <Compile Include="Controls\ControlTarget.cs" />
-    <Compile Include="Aggregation\AggregationToken.cs" />
-    <Compile Include="Elements\AGuiComponent.cs" />
-    <Compile Include="Elements\Areas\GuiArea.cs" />
-    <Compile Include="Elements\Areas\GuiAreaEntry.cs" />
-    <Compile Include="Elements\Areas\IGuiArea.cs" />
-    <Compile Include="GemGui.cs" />
-    <Compile Include="Aggregation\AggregationEnumerator.cs" />
-    <Compile Include="GuiHost.cs" />
-    <Compile Include="Input\Helpers\IInputHelper.cs" />
-    <Compile Include="Input\Helpers\KeyboardInputHelper.cs" />
-    <Compile Include="Input\Helpers\TouchInputHelper.cs" />
-    <Compile Include="Input\Helpers\GamePadInputHelper.cs" />
-    <Compile Include="Input\Helpers\MouseInputHelper.cs" />
-    <Compile Include="Input\InputManager.cs" />
-    <Compile Include="Input\KeyboardUtils.cs" />
-    <Compile Include="Layout\LayoutStyle.cs" />
-    <Compile Include="Layout\VerticalAlignment.cs" />
-    <Compile Include="Layout\HorizontalAlignment.cs" />
-    <Compile Include="Layout\IAlignable.cs" />
-    <Compile Include="Controls\IControl.cs" />
-    <Compile Include="Elements\IGuiComponent.cs" />
-    <Compile Include="Configuration\Options.cs" />
+    <Compile Include="Core\Controls\TextField.cs" />
+    <Compile Include="Core\Controls\Label.cs" />
+    <Compile Include="Core\Controls\ImageButton.cs" />
+    <Compile Include="Core\Controls\Button.cs" />
+    <Compile Include="Core\Layout\GridView.cs" />
+    <Compile Include="Core\Layout\ListView.cs" />
+    <Compile Include="Core\Layout\Linear.cs" />
+    <Compile Include="Core\View\Component.cs" />
+    <Compile Include="Core\View\ComponentGroup.cs" />
+    <Compile Include="DeleteUs\Aggregation\AggregationContext.cs" />
+    <Compile Include="DeleteUs\Aggregation\ComponentIndex.cs" />
+    <Compile Include="DeleteUs\Alignment\AlignmentContext.cs" />
+    <Compile Include="DeleteUs\Alignment\AlignmentMovement.cs" />
+    <Compile Include="DeleteUs\Alignment\VerticalAlignment.cs" />
+    <Compile Include="DeleteUs\Alignment\HorizontalAlignment.cs" />
+    <Compile Include="DeleteUs\Containers\AssetContainer.cs" />
+    <Compile Include="DeleteUs\Builders\GuiElementBuilder.cs" />
+    <Compile Include="DeleteUs\Aggregation\IAggregation.cs" />
+    <Compile Include="DeleteUs\Aggregation\MouseControlAggregator.cs" />
+    <Compile Include="DeleteUs\Controls\Control.cs" />
+    <Compile Include="DeleteUs\Controls\ControlTarget.cs" />
+    <Compile Include="DeleteUs\Aggregation\AggregationToken.cs" />
+    <Compile Include="DeleteUs\Elements\AGuiComponent.cs" />
+    <Compile Include="DeleteUs\Elements\Areas\GuiArea.cs" />
+    <Compile Include="DeleteUs\Elements\Areas\GuiAreaEntry.cs" />
+    <Compile Include="DeleteUs\Elements\Areas\IGuiArea.cs" />
+    <Compile Include="DeleteUs\Containers\AContainer.cs" />
+    <Compile Include="DeleteUs\GemGui.cs" />
+    <Compile Include="DeleteUs\Aggregation\AggregationEnumerator.cs" />
+    <Compile Include="DeleteUs\GuiHost.cs" />
+    <Compile Include="DeleteUs\Input\Helpers\IInputHelper.cs" />
+    <Compile Include="DeleteUs\Input\Helpers\KeyboardInputHelper.cs" />
+    <Compile Include="DeleteUs\Input\Helpers\TouchInputHelper.cs" />
+    <Compile Include="DeleteUs\Input\Helpers\GamePadInputHelper.cs" />
+    <Compile Include="DeleteUs\Input\Helpers\MouseInputHelper.cs" />
+    <Compile Include="DeleteUs\Input\InputManager.cs" />
+    <Compile Include="DeleteUs\Input\KeyboardUtils.cs" />
+    <Compile Include="DeleteUs\Layout\LayoutStyle.cs" />
+    <Compile Include="DeleteUs\Layout\VerticalAlignment.cs" />
+    <Compile Include="DeleteUs\Layout\HorizontalAlignment.cs" />
+    <Compile Include="DeleteUs\Layout\IAlignable.cs" />
+    <Compile Include="DeleteUs\Controls\IControl.cs" />
+    <Compile Include="DeleteUs\Elements\IGuiComponent.cs" />
+    <Compile Include="DeleteUs\Configuration\Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rendering\CommonRenderTemplate.cs" />
-    <Compile Include="Rendering\DrawManager.cs" />
-    <Compile Include="Rendering\ImmutableRegion.cs" />
-    <Compile Include="Rendering\Region.cs" />
-    <Compile Include="Rendering\ABatchDrawable.cs" />
-    <Compile Include="Settings\Settings.cs" />
-    <Compile Include="Styles\TextureStyle.cs" />
-    <Compile Include="Rendering\Sprite.cs" />
-    <Compile Include="Styles\FontStyle.cs" />
-    <Compile Include="Transformations\ITransformation.cs" />
-    <Compile Include="Transformations\TimedRegionTransformation.cs" />
+    <Compile Include="DeleteUs\Rendering\CommonRenderTemplate.cs" />
+    <Compile Include="DeleteUs\Rendering\DrawManager.cs" />
+    <Compile Include="DeleteUs\Rendering\ImmutableRegion.cs" />
+    <Compile Include="DeleteUs\Rendering\Region.cs" />
+    <Compile Include="DeleteUs\Rendering\ABatchDrawable.cs" />
+    <Compile Include="DeleteUs\Settings\Settings.cs" />
+    <Compile Include="DeleteUs\Styles\TextureStyle.cs" />
+    <Compile Include="DeleteUs\Rendering\Sprite.cs" />
+    <Compile Include="DeleteUs\Styles\FontStyle.cs" />
+    <Compile Include="DeleteUs\Transformations\ITransformation.cs" />
+    <Compile Include="DeleteUs\Transformations\TimedRegionTransformation.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="SDL.dll">
@@ -101,8 +115,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Screens\" />
-    <Folder Include="Text\" />
+    <Folder Include="Core\Events\" />
+    <Folder Include="Core\Styles\" />
+    <Folder Include="DeleteUs\Screens\" />
+    <Folder Include="DeleteUs\Text\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

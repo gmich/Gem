@@ -7,10 +7,34 @@ namespace Gem.Gui.Rendering
 
     public class Region
     {
+
+        #region Fields
+
         /// <summary>
         /// In case the origin is not the center of the element, provide a different calculation method
         /// </summary>
         private readonly Func<Region, Vector2> OriginCalculator;
+
+        /// <summary>
+        /// Raised when the region changes position.
+        /// The event argumentss contain the new region as the sender and the old state as an immutable region.
+        /// </summary>
+        public event EventHandler<ImmutableRegion> onPositionChange;
+
+        /// <summary>
+        /// Raised when the region changes size. 
+        /// The event argumentss contain the new region as the sender and the old state as an immutable region.
+        /// </summary>
+        public event EventHandler<ImmutableRegion> onSizeChange;
+
+        private Vector2 position;
+        private Vector2 size;
+        private Vector2 origin;
+        private Rectangle frame;
+
+        #endregion
+
+        #region Ctor
 
         public Region(Vector2 position, Vector2 size, Func<Region, Vector2> originCalculator = null)
         {
@@ -23,7 +47,10 @@ namespace Gem.Gui.Rendering
             AdjustFrameBoundaries();
         }
 
-        private Vector2 position;
+        #endregion
+
+        #region Public Properties
+
         public Vector2 Position
         {
             get
@@ -32,12 +59,14 @@ namespace Gem.Gui.Rendering
             }
             set
             {
+                var previousState = new ImmutableRegion(this);
                 position = value;
                 AdjustFrameBoundaries();
+
+                OnPositionChange(previousState);
             }
         }
 
-        private Vector2 size;
         public Vector2 Size
         {
             get
@@ -46,13 +75,15 @@ namespace Gem.Gui.Rendering
             }
             set
             {
+                var previousState = new ImmutableRegion(this);
                 size = value;
                 AdjustFrameBoundaries();
                 origin = OriginCalculator(this);
+
+                OnSizeChange(previousState);
             }
         }
 
-        private Vector2 origin;
         public Vector2 Origin
         {
             get
@@ -61,7 +92,6 @@ namespace Gem.Gui.Rendering
             }
         }
 
-        private Rectangle frame;
         public Rectangle Frame
         {
             get
@@ -69,6 +99,10 @@ namespace Gem.Gui.Rendering
                 return frame;
             }
         }
+
+        #endregion
+
+        #region Private Helpers
 
         /// <summary>
         /// This is invoked when the size or the position change
@@ -78,8 +112,26 @@ namespace Gem.Gui.Rendering
             frame = new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
         }
 
+        private void OnSizeChange(ImmutableRegion previousState)
+        {
+            var handler = onSizeChange;
+            if (handler != null)
+            {
+                handler(this, previousState);
+            }
+        }
+
+        private void OnPositionChange(ImmutableRegion previousState)
+        {
+            var handler = onPositionChange;
+            if (handler != null)
+            {
+                handler(this, previousState);
+            }
+        }
+
+        #endregion
 
     }
-
 
 }
