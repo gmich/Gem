@@ -12,9 +12,9 @@ A cross-platform game engine for developing 2D games using Monogame, Farseer phy
 
 ##Developement Progress
 
-Gem Network is not fully tested and not ready to use. 
-Gem Gui API is likely to change.
-Gem Engine is still in early development.
+* Gem Network is not fully tested and not ready to use. 
+* Gem Gui API is likely to change.
+* Gem Engine is still in early development.
 
 ##Description
 
