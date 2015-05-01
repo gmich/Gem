@@ -5,14 +5,14 @@ using System.Collections.Generic;
 
 namespace Gem.Gui.Elements.Areas
 {
-    public interface IGuiArea : IGuiComponent
+    public interface IGuiArea
     {
         event EventHandler<ElementEventArgs> OnAddComponent;
         event EventHandler<ElementEventArgs> OnRemoveComponent;
 
         int ComponentCount { get; }
 
-        AlignmentContext Alignment { get; }
+        //AlignmentContext Alignment { get; }
         
         int AddComponent(IGuiComponent component);
 

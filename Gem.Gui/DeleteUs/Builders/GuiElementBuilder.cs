@@ -16,7 +16,7 @@ namespace Gem.Gui.Builders
     interface RenderTemplateBuilder<IBuilder>
         where IBuilder : IComponentBuilder
     {
-        RenderTemplateBuilder<IBuilder> BuildRenderStyle(Func<RenderStyle> style);
+        RenderTemplateBuilder<IBuilder> BuildRenderStyle(Func<RenderParameters> style);
         RenderTemplateBuilder<IBuilder> AddGuiSprite(string id, GuiSprite sprite);
         IBuilder End();
     }

@@ -1,4 +1,5 @@
-﻿using Gem.Gui.Elements;
+﻿using Gem.Gui.Controls;
+using Gem.Gui.Elements;
 using Gem.Gui.Rendering;
 using Gem.Gui.Transformation;
 using System;
@@ -28,7 +29,7 @@ namespace Gem.Gui.Transformations
             get { return (timePassed < duration); }
         }
 
-        public void Transform(IGuiComponent element, double deltaTime)
+        public void Transform(AControl element, double deltaTime)
         {
             timePassed += deltaTime;
 

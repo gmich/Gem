@@ -1,4 +1,5 @@
-﻿using Gem.Gui.Elements;
+﻿using Gem.Gui.Controls;
+using Gem.Gui.Elements;
 
 namespace Gem.Gui.Transformation
 {
@@ -6,7 +7,7 @@ namespace Gem.Gui.Transformation
     {
         bool Enabled { get; }
 
-        void Transform(IGuiComponent element, double deltaTime);
+        void Transform(AControl element, double deltaTime);
     }
 
 }

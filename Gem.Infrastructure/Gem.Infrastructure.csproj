@@ -72,7 +72,8 @@
     <Compile Include="Aspects\ExceptionInterceptor.cs" />
     <Compile Include="Aspects\LogicalOperationInterceptor.cs" />
     <Compile Include="Aspects\LogInterceptor.cs" />
-    <Compile Include="Configuration\Attributes\AttributeResolver.cs" />
+    <Compile Include="Attributes\AttributeResolver.cs" />
+    <Compile Include="Attributes\DefaultValueHelper.cs" />
     <Compile Include="Configuration\ConfigurationItemCreator.cs" />
     <Compile Include="Configuration\ConfigurationItemFactory.cs" />
     <Compile Include="Configuration\Factory.cs" />

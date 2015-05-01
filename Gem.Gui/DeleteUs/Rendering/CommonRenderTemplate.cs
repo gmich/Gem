@@ -5,12 +5,12 @@ namespace Gem.Gui.Rendering
 {
     public struct RenderTemplate
     {
-        private readonly RenderStyle style;
+        private readonly RenderParameters style;
         private readonly GuiSprite sprite;
 
         private Dictionary<string, GuiSprite> guiSprites;
 
-        public RenderTemplate(RenderStyle style, GuiSprite sprite)
+        public RenderTemplate(RenderParameters style, GuiSprite sprite)
         {
             this.style = style;
             this.sprite = sprite;
@@ -18,7 +18,7 @@ namespace Gem.Gui.Rendering
             guiSprites.Add("Default", sprite);
         }
 
-        public RenderStyle Style { get { return style; } }
+        public RenderParameters Style { get { return style; } }
 
         public GuiSprite Sprite { get { return sprite; } }
 

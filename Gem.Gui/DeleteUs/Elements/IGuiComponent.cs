@@ -4,6 +4,7 @@ using Gem.Gui.Alignment;
 using Gem.Gui.Rendering;
 using Gem.Gui.Transformation;
 using System;
+using Gem.Gui.Events;
 
 namespace Gem.Gui.Elements
 {
@@ -14,17 +15,13 @@ namespace Gem.Gui.Elements
 
     public interface IGuiComponent
     {
-        Control<ElementEventArgs> Events { get; }
+        ViewEvents<ElementEventArgs> Events { get; }
 
-        RenderStyle RenderStyle { get; }
-
-        GuiSprite Sprite { get;  }
-        
+        RenderParameters RenderStyle { get; }
+               
         Options Options { get; set; }
 
         Region Region { get; }
-
-        IGuiComponent Parent { get; }
 
         void Update(double deltaTime);
 

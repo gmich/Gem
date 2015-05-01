@@ -8,7 +8,8 @@ using System.Collections.Generic;
 namespace Gem.Gui.Elements
 {
 
-    public class GuiArea : AGuiComponent, IGuiArea
+    [Obsolete("Use Gem.Gui.Layout")]
+    public class GuiArea : AControl, IGuiArea
     {
         private readonly IDictionary<int, GuiAreaEntry> elements = new Dictionary<int, GuiAreaEntry>();
 
@@ -18,7 +19,7 @@ namespace Gem.Gui.Elements
                              Region region,
                              ControlTarget target,
                              IGuiComponent parent = null)
-            : base(renderTemplate, layoutStyle, region, target, parent)
+            : base(region)
         { }
 
         public int AddComponent(IGuiComponent element)

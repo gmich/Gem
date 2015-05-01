@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace Gem.Infrastructure.Configuration.Attributes
+namespace Gem.Infrastructure.Attributes
 {
     /// <summary>
     /// Helper class for attribute resolving 

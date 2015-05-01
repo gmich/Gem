@@ -1,15 +1,15 @@
 ﻿using System;
 
-namespace Gem.Gui.Controls
+namespace Gem.Gui.Events
 {
-    public class Control<TEventArgs> : IControl<TEventArgs> 
+    public class ViewEvents<TEventArgs>
         where TEventArgs : EventArgs
     {
 
         private readonly object sender;
         private readonly Func<TEventArgs> eventArgsProvider;
 
-        public Control(object sender, Func<TEventArgs> eventArgsProvider)
+        public ViewEvents(object sender, Func<TEventArgs> eventArgsProvider)
         {
             this.sender = sender;
             this.eventArgsProvider = eventArgsProvider;

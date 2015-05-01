@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Gem.Gui.Layout
 {
-    class GridView
+    class GridView 
     {
     }
 }

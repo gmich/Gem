@@ -51,11 +51,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Events\ControlEventArgs.cs" />
     <Compile Include="Core\Controls\TextField.cs" />
     <Compile Include="Core\Controls\Label.cs" />
     <Compile Include="Core\Controls\ImageButton.cs" />
     <Compile Include="Core\Controls\Button.cs" />
     <Compile Include="Core\Layout\GridView.cs" />
+    <Compile Include="Core\Layout\ILayout.cs" />
     <Compile Include="Core\Layout\ListView.cs" />
     <Compile Include="Core\Layout\Linear.cs" />
     <Compile Include="Core\View\Component.cs" />
@@ -70,10 +72,10 @@
     <Compile Include="DeleteUs\Builders\GuiElementBuilder.cs" />
     <Compile Include="DeleteUs\Aggregation\IAggregation.cs" />
     <Compile Include="DeleteUs\Aggregation\MouseControlAggregator.cs" />
-    <Compile Include="DeleteUs\Controls\Control.cs" />
+    <Compile Include="Core\Events\ViewEvents.cs" />
     <Compile Include="DeleteUs\Controls\ControlTarget.cs" />
     <Compile Include="DeleteUs\Aggregation\AggregationToken.cs" />
-    <Compile Include="DeleteUs\Elements\AGuiComponent.cs" />
+    <Compile Include="Core\Controls\AControl.cs" />
     <Compile Include="DeleteUs\Elements\Areas\GuiArea.cs" />
     <Compile Include="DeleteUs\Elements\Areas\GuiAreaEntry.cs" />
     <Compile Include="DeleteUs\Elements\Areas\IGuiArea.cs" />
@@ -92,7 +94,6 @@
     <Compile Include="DeleteUs\Layout\VerticalAlignment.cs" />
     <Compile Include="DeleteUs\Layout\HorizontalAlignment.cs" />
     <Compile Include="DeleteUs\Layout\IAlignable.cs" />
-    <Compile Include="DeleteUs\Controls\IControl.cs" />
     <Compile Include="DeleteUs\Elements\IGuiComponent.cs" />
     <Compile Include="DeleteUs\Configuration\Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -102,7 +103,7 @@
     <Compile Include="DeleteUs\Rendering\Region.cs" />
     <Compile Include="DeleteUs\Rendering\ABatchDrawable.cs" />
     <Compile Include="DeleteUs\Settings\Settings.cs" />
-    <Compile Include="DeleteUs\Styles\TextureStyle.cs" />
+    <Compile Include="Core\Styles\RenderParameters.cs" />
     <Compile Include="DeleteUs\Rendering\Sprite.cs" />
     <Compile Include="DeleteUs\Styles\FontStyle.cs" />
     <Compile Include="DeleteUs\Transformations\ITransformation.cs" />
@@ -117,10 +118,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Core\Events\" />
-    <Folder Include="Core\Styles\" />
     <Folder Include="DeleteUs\Screens\" />
     <Folder Include="DeleteUs\Text\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gem.Infrastructure\Gem.Infrastructure.csproj">
+      <Project>{dab38678-499f-4565-9db8-434a5c66a093}</Project>
+      <Name>Gem.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

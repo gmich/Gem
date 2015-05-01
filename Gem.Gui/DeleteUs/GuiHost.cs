@@ -19,7 +19,7 @@ namespace Gem.Gui
             this.area = area;
             this.token = new AggregationToken();
             this.drawManager = drawManager;
-            renderTarget = new RenderTarget2D(drawManager.Device, area.Region.Frame.Width, area.Region.Frame.Height);
+            //renderTarget = new RenderTarget2D(drawManager.Device, area.Region.Frame.Width, area.Region.Frame.Height);
         }
 
     }
