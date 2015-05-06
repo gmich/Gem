@@ -1,23 +1,27 @@
 ﻿using Gem.Gui.Controls;
+using Gem.Gui.Core.Styles;
 using Gem.Gui.Rendering;
 using Gem.Gui.Transformation;
 using System;
 
 namespace Gem.Gui.Transformations
 {
-    public class TimedRegionTransformation : ITransformation
+    /// <summary>
+    /// A transformation that expires after a period of time
+    /// </summary>
+    public class TimedTransformation : ITransformation
     {
 
         #region Fields
 
-        private readonly Action<Region> regionTransformer;
+        private readonly Action<double, RenderParameters> regionTransformer;
         private readonly double duration;
         private double timePassed = 0D;
         private bool enabled = false;
 
         #endregion
 
-        public TimedRegionTransformation(double duration, Action<Region> regionTransformer)
+        public TimedTransformation(double duration, Action<double, RenderParameters> regionTransformer)
         {
             this.regionTransformer = regionTransformer;
             this.duration = duration;
@@ -28,11 +32,11 @@ namespace Gem.Gui.Transformations
             get { return (timePassed < duration); }
         }
 
-        public void Transform(AControl element, double deltaTime)
+        public void Transform(AControl control, double deltaTime)
         {
             timePassed += deltaTime;
 
-            regionTransformer(element.Region);
+            regionTransformer(deltaTime, control.RenderParameters);
         }
     }
 }

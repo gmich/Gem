@@ -2,12 +2,12 @@
 using Gem.Gui.Controls;
 using Gem.Gui.Rendering;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace Gem.Gui
+namespace Gem.Gui.ScreenSystem
 {
-    public class GuiHost : DrawableGameComponent
+    public class GuiHost : AnimatedGuiScreen
     {
         private readonly AggregationContext aggregationContext;
 
@@ -15,13 +15,14 @@ namespace Gem.Gui
 
         private readonly AGuiRenderer renderer;
 
-        public GuiHost(Game game):base(game)
-        {  }
-
-        public override void Initialize()
+        public GuiHost(List<AControl> controls):base()
         {
-            base.Initialize();
+            this.controls = controls;
+        }
 
+        public static GuiHost Create(AControl[] controls)
+        {
+            return new GuiHost(controls.ToList());
         }
 
         public AControl this[int id]
@@ -45,17 +46,22 @@ namespace Gem.Gui
             }
         }
 
-        public override void Update(GameTime gameTime)
+        public override void HandleInput()
         {
             aggregationContext.Aggregate();
+        }
 
-            foreach(var control in controls)
+         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        {
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+
+            foreach (var control in controls)
             {
                 control.Update(gameTime.ElapsedGameTime.TotalSeconds);
             }
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             foreach (var control in controls)
             {
@@ -63,5 +69,5 @@ namespace Gem.Gui
             }
         }
     }
-    
+
 }

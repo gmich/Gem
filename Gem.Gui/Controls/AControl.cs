@@ -64,9 +64,11 @@ namespace Gem.Gui.Controls
 
         #region Public Members
 
-        public void AddTransformation(ITransformation transformation)
+        public System.IDisposable AddTransformation(ITransformation transformation)
         {
             transformations.Add(transformation);
+
+            return Gem.Infrastructure.Disposable.Create(transformations, transformation);
         }
         
         public virtual void Update(double deltaTime)

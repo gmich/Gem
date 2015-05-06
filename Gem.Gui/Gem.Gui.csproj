@@ -51,18 +51,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Events\ControlEventArgs.cs" />
-    <Compile Include="Core\Controls\TextField.cs" />
-    <Compile Include="Core\Controls\Label.cs" />
-    <Compile Include="Core\Controls\ImageButton.cs" />
-    <Compile Include="Core\Controls\Button.cs" />
-    <Compile Include="Core\Layout\GridView.cs" />
-    <Compile Include="Core\Layout\ILayout.cs" />
-    <Compile Include="Core\Layout\ListView.cs" />
-    <Compile Include="Core\Layout\Linear.cs" />
-    <Compile Include="Core\Styles\IRenderStyle.cs" />
+    <Compile Include="Events\ControlEventArgs.cs" />
+    <Compile Include="Controls\TextField.cs" />
+    <Compile Include="Controls\Label.cs" />
+    <Compile Include="Controls\ImageButton.cs" />
+    <Compile Include="Controls\Button.cs" />
+    <Compile Include="ScreenSystem\AnimatedGuiScreen.cs" />
+    <Compile Include="Layout\GridView.cs" />
+    <Compile Include="Layout\ILayout.cs" />
+    <Compile Include="Layout\ListView.cs" />
+    <Compile Include="Layout\Linear.cs" />
+    <Compile Include="ScreenSystem\IGuiHost.cs" />
+    <Compile Include="ScreenSystem\GemGui.cs" />
+    <Compile Include="Styles\IRenderStyle.cs" />
     <Compile Include="Aggregation\AggregationContext.cs" />
-    <Compile Include="Core\Layout\ComponentIndex.cs" />
+    <Compile Include="Layout\ComponentIndex.cs" />
+    <Compile Include="Styles\PlainButtonStyle.cs" />
     <Compile Include="DeleteUs\Alignment\AlignmentContext.cs" />
     <Compile Include="DeleteUs\Alignment\AlignmentMovement.cs" />
     <Compile Include="DeleteUs\Alignment\VerticalAlignment.cs" />
@@ -70,16 +74,16 @@
     <Compile Include="Containers\AssetContainer.cs" />
     <Compile Include="Aggregation\IAggregator.cs" />
     <Compile Include="Aggregation\MouseControlAggregator.cs" />
-    <Compile Include="Core\Events\ViewEvents.cs" />
+    <Compile Include="Events\ViewEvents.cs" />
     <Compile Include="Aggregation\AggregationToken.cs" />
-    <Compile Include="Core\Controls\AControl.cs" />
+    <Compile Include="Controls\AControl.cs" />
     <Compile Include="Aggregation\GuiEntry.cs" />
     <Compile Include="Containers\AContainer.cs" />
     <Compile Include="Aggregation\ScriptAggregator.cs" />
     <Compile Include="Factories\ControlFactory.cs" />
     <Compile Include="Factories\PcControlFactory.cs" />
     <Compile Include="GemGui.cs" />
-    <Compile Include="GuiHost.cs" />
+    <Compile Include="ScreenSystem\ScreenManager.cs" />
     <Compile Include="Input\Helpers\IInputHelper.cs" />
     <Compile Include="Input\Helpers\KeyboardInputHelper.cs" />
     <Compile Include="Input\Helpers\TouchInputHelper.cs" />
@@ -94,14 +98,14 @@
     <Compile Include="DeleteUs\Configuration\Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\DrawManager.cs" />
-    <Compile Include="Core\ImmutableRegion.cs" />
-    <Compile Include="Core\Region.cs" />
+    <Compile Include="ImmutableRegion.cs" />
+    <Compile Include="Region.cs" />
     <Compile Include="Rendering\AGuiRenderer.cs" />
     <Compile Include="DeleteUs\Settings\Settings.cs" />
-    <Compile Include="Core\Styles\RenderParameters.cs" />
-    <Compile Include="DeleteUs\Styles\FontStyle.cs" />
-    <Compile Include="DeleteUs\Transformations\ITransformation.cs" />
-    <Compile Include="DeleteUs\Transformations\TimedRegionTransformation.cs" />
+    <Compile Include="Styles\RenderParameters.cs" />
+    <Compile Include="Transformations\ITransformation.cs" />
+    <Compile Include="Transformations\PredicateTransformation.cs" />
+    <Compile Include="Transformations\TimedTransformation.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="SDL.dll">
@@ -113,7 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DeleteUs\Screens\" />
-    <Folder Include="DeleteUs\Text\" />
+    <Folder Include="Text\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gem.Infrastructure\Gem.Infrastructure.csproj">

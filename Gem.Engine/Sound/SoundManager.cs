@@ -46,7 +46,6 @@ namespace Gem.Sound
             try
             {
                 sfx.Add(sfxTag, soundfx);
-
             }
             catch (Exception ex)
             {
