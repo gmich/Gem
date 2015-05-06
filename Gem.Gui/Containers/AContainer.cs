@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gem.Gui.Factories
+namespace Gem.Gui.Containers
 {
     public class AContainer<TContainerItem>
     {

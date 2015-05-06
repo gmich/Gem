@@ -1,4 +1,4 @@
-﻿namespace Gem.Gui.Aggregation
+﻿namespace Gem.Gui.Core.Layout
 {
     public class ComponentIndex
     {

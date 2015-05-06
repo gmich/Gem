@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace Gem.Gui.Assets
+namespace Gem.Gui.Containers
 {
     public class AssetContainer<TAsset>
         where TAsset : class

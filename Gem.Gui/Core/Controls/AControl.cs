@@ -1,7 +1,6 @@
-﻿using Gem.Gui.Alignment;
-using Gem.Gui.Configuration;
-using Gem.Gui.Controls;
+﻿using Gem.Gui.Configuration;
 using Gem.Gui.Core.Controls;
+using Gem.Gui.Core.Styles;
 using Gem.Gui.Events;
 using Gem.Gui.Rendering;
 using Gem.Gui.Transformation;
@@ -18,9 +17,7 @@ namespace Gem.Gui.Controls
 
         #region Fields
 
-        private readonly RenderTemplate renderTemplate;
-        private readonly ViewEvents<ControlEventArgs> control;
-        private IList<ITransformation> transformations = new List<ITransformation>();
+        private readonly IList<ITransformation> transformations = new List<ITransformation>();
         
         #endregion
 
@@ -28,17 +25,17 @@ namespace Gem.Gui.Controls
 
         public ViewEvents<ControlEventArgs> Events
         {
-            get { return control; }
+            get;
+            set;
         }
 
-        public bool HasHover { get; private set; }
-        public bool HasFocus { get; set; }
-
-        public RenderParameters RenderStyle
+        public RenderParameters RenderParameters
         {
-            get { return renderTemplate.Style; }
+            get;
+            set;
         }
 
+        public IRenderStyle RenderStyle  { get; set; }
 
         public Options Options
         {
@@ -62,8 +59,7 @@ namespace Gem.Gui.Controls
             this.Region = region;
             //rendertemplate ?
         }
-
-
+        
         #endregion
 
         #region Public Members
@@ -86,10 +82,6 @@ namespace Gem.Gui.Controls
             }
         }
 
-        public virtual void Draw(ABatchDrawable manager)
-        {
-            manager.Draw(this);
-        }
 
         #endregion
       

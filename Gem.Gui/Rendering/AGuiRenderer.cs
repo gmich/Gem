@@ -1,19 +1,18 @@
 ﻿using Gem.Gui.Controls;
-using Gem.Gui.Elements;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Gem.Gui.Rendering
 {    
-    public abstract class ABatchDrawable
+    public abstract class AGuiRenderer
     {
         protected readonly SpriteBatch batch;
 
-        public ABatchDrawable(SpriteBatch batch)
+        public AGuiRenderer(SpriteBatch batch)
         {
             this.batch = batch;
         }
 
-        public abstract void Draw(AControl component);
+        public abstract void Render(AControl component);
     }
 
     //internal class DrawByRectangle : ABatchDrawable

@@ -9,9 +9,9 @@ namespace Gem.Gui.Rendering
 {
     public class DrawManager
     {
-        private readonly ABatchDrawable renderer;
+        private readonly AGuiRenderer renderer;
         private readonly GraphicsDevice device;
-        private readonly ABatchDrawable drawManager;
+        private readonly AGuiRenderer drawManager;
 
         public GraphicsDevice Device { get { return device; } }
     }

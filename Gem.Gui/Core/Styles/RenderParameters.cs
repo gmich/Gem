@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.ComponentModel;
 using Gem.Infrastructure.Attributes;
 
-namespace Gem.Gui.Rendering
+namespace Gem.Gui.Core.Styles
 {
     /// <summary>
     /// A class that contains all the info the spritebatch needs to render something on the screen.

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Gem.Gui.Controls
 {
-    class Button
+    public class Label
     {
     }
 }

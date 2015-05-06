@@ -83,6 +83,7 @@
     <Compile Include="Configuration\MethodFactory.cs" />
     <Compile Include="Configuration\NameBaseAttribute.cs" />
     <Compile Include="Configuration\ReflectionHelper.cs" />
+    <Compile Include="DisposableEntry.cs" />
     <Compile Include="Dynamic\DynamicMapper.cs" />
     <Compile Include="Dynamic\DynamicXElement.cs" />
     <Compile Include="Dependencies.cs" />
