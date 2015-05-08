@@ -9,7 +9,7 @@ namespace Gem.Network.Utilities
     /// </summary>
     /// <typeparam name="TKey">The dictionary's key</typeparam>
     /// <typeparam name="TValue">Te dictionary's value</typeparam>
-    public class DeregisterDictionary<TKey, TValue> : IDisposable
+    public sealed class DeregisterDictionary<TKey, TValue> : IDisposable
     {
         private Dictionary<TKey, TValue> registered;
         private TValue current;
@@ -22,10 +22,22 @@ namespace Gem.Network.Utilities
 
         public void Dispose()
         {
-            foreach (var item in registered.Where(kvp => kvp.Value.Equals(current)).ToList())
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool isDisposed = false;
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !isDisposed)
             {
-                registered.Remove(item.Key);
+                foreach (var item in registered.Where(kvp => kvp.Value.Equals(current)).ToList())
+                {
+                    registered.Remove(item.Key);
+                }
+                isDisposed = true;
             }
         }
+
     }
 }

@@ -35,7 +35,6 @@
     <ApplicationIcon>gem.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Animations\AnimationStrip.cs" />
     <Compile Include="Animations\Events\AnimationEventAggregator.cs" />
     <Compile Include="Animations\Events\IAnimationEvent.cs" />
     <Compile Include="Cache\ACachingProvider.cs" />

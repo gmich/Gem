@@ -19,8 +19,25 @@ using TechTalk.SpecFlow;
 namespace Gem.Network.Tests.Flow
 {
     [Binding]
-    public class ClientCasesSteps
+    public class ClientCasesSteps : IDisposable
     {
+         public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool isDisposed = false;
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !isDisposed)
+            {
+                client.Dispose();
+                server.Dispose();
+                isDisposed = true;
+            }
+        }
+
         private Process server;
         private IClient client;
         private NetIncomingMessage msg;
@@ -88,5 +105,7 @@ namespace Gem.Network.Tests.Flow
             server.Close();
 
         }
+
+
     }
 }

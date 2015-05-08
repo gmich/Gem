@@ -2,10 +2,11 @@
 using Microsoft.Xna.Framework;
 using System;
 
-namespace Gem.Gui.Layout
+namespace Gem.Gui.Alignment
 {
 
     public interface IVerticalAlignable : IAlignable { }
+
     public class VerticalAlignment
     {
         #region Top
@@ -89,16 +90,24 @@ namespace Gem.Gui.Layout
 
         #endregion
 
-        #region None
+        #region Manual
 
+        private static Lazy<ManualAlignment> manual = new Lazy<ManualAlignment>();
         public static IVerticalAlignable Manual
         {
             get
             {
-                throw new NotImplementedException();
+                return manual.Value;
             }
         }
+        private class ManualAlignment : IVerticalAlignable
+        {
+            public void Align(Region parent, Region region)
+            {
+                return;
+            }
 
+        }
         #endregion
     }
 }

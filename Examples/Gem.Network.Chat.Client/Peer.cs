@@ -15,14 +15,19 @@ using Gem.Network.Chat.Protocol;
 namespace Gem.Network.Chat.Client
 {
 
-    public class Peer
+    public class Peer : IDisposable
     {
-        public string Name { get; set; }
+        #region Fields
+
         public ConcurrentQueue<string> IncomingMessages;
         private readonly ParallelTaskStarter messageAppender;
         private readonly INetworkEvent onEvent;
         private readonly INetworkEvent onCommandExecute;
         private readonly INetworkEvent protocolExample;
+
+        #endregion
+
+        #region Construct / Dispose
 
         public Peer(string name)
         {
@@ -50,6 +55,37 @@ namespace Gem.Network.Chat.Client
             messageAppender = new ParallelTaskStarter(TimeSpan.Zero);
             messageAppender.Start(DequeueIncomingMessages);
         }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool isDisposed = false;
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !isDisposed)
+            {
+                onEvent.Dispose();
+                onCommandExecute.Dispose();
+                protocolExample.Dispose();
+                messageAppender.Dispose();
+                isDisposed = true;
+            }
+        }
+
+        #endregion
+
+        #region Properties
+
+        public bool CanAppend { get; set; }
+
+        public string Name { get; set; }
+
+        #endregion
+
+        #region Public Helper Methods
 
         public void Send(string message)
         {
@@ -92,7 +128,13 @@ namespace Gem.Network.Chat.Client
             IncomingMessages.Enqueue(message);
         }
 
-        public bool CanAppend { get; set; }
+        public void SayGoodBye()
+        {
+            messageAppender.Stop();
+            onEvent.Send(" >> " + Name + " has left ");
+        }
+
+        #endregion
 
         private void DequeueIncomingMessages()
         {
@@ -107,12 +149,5 @@ namespace Gem.Network.Chat.Client
                 }
             }
         }
-        
-        public void SayGoodBye()
-        {
-            messageAppender.Stop();
-            onEvent.Send(" >> " + Name + " has left ");
-        }
-
     }
 }

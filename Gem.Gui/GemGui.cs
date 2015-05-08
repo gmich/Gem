@@ -7,11 +7,13 @@ using System.Collections.Generic;
 
 namespace Gem.Gui
 {
-    public class GemGui
+    public class GemGui : IDisposable
     {
 
         private readonly Dictionary<string, GuiHost> hosts = new Dictionary<string, GuiHost>();
         private readonly ScreenManager screenManager;
+
+        #region Construct / Dispose
 
         public GemGui(Game game)
         {
@@ -19,9 +21,27 @@ namespace Gem.Gui
             game.Components.Add(screenManager);
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool isDisposed = false;
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !isDisposed)
+            {
+                screenManager.Dispose();
+                isDisposed = true;
+            }
+        }
+
+        #endregion
+
         #region Control Factory
 
-        private static IControlFactory controlFactory; //resolve control factory using ioc container
+        private static IControlFactory controlFactory = null; ////TODO: provide from ioc container
 
         public static Button Button
         {

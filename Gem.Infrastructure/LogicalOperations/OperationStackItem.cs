@@ -2,7 +2,7 @@
 
 namespace Gem.Infrastructure.LogicalOperations
 {
-    public class OperationStackItem : IDisposable
+    public sealed class OperationStackItem : IDisposable
     {
         #region Fields
 
@@ -42,11 +42,20 @@ namespace Gem.Infrastructure.LogicalOperations
 
         public void Dispose()
         {
-            if (disposed) return;
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            OperationStack.Pop();
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !disposed)
+            {
+                if (disposed) return;
 
-            disposed = true;
+                OperationStack.Pop();
+
+                disposed = true;
+            }
         }
 
         #endregion

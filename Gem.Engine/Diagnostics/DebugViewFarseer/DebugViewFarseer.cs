@@ -61,7 +61,7 @@ namespace Gem.Diagnostics.DebugViewFarseer
         public float MaximumValue = 10;
         private List<float> graphValues = new List<float>(500);
         public Rectangle PerformancePanelBounds = new Rectangle(330, 100, 200, 100);
-        private Vector2[]_background = new Vector2[4];
+        private Vector2[] _background = new Vector2[4];
         public bool Enabled = true;
 
 #if XBOX || WINDOWS_PHONE
@@ -85,7 +85,20 @@ namespace Gem.Diagnostics.DebugViewFarseer
 
         public void Dispose()
         {
-            World.ContactManager.PreSolve -= PreSolve;
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool isDisposed = false;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "batch"), 
+        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "primitiveBatch")]
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing && !isDisposed)
+            {
+                World.ContactManager.PreSolve -= PreSolve;
+                isDisposed = true;
+            }
         }
 
         #endregion

@@ -12,7 +12,7 @@ namespace Gem.Infrastructure.Configuration
     /// </summary>
     public class ConfigurationItemFactory
     {
-        private readonly IList<object> allFactories;
+        private readonly IList<object> allFactories = new List<object>();
 
         /// <summary>
         /// Initializes static members of the <see cref="ConfigurationItemFactory"/> class.

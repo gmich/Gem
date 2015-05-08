@@ -10,7 +10,7 @@ namespace Gem.Infrastructure.Dynamic
     /// <summary>
     /// A dictionary for dynamic invocation
     /// </summary>
-    public class DynamicDictionary : IDynamicMetaObjectProvider
+    public sealed class DynamicDictionary : IDynamicMetaObjectProvider
     {
         #region IDynamicMetaObjectProvider Members
 

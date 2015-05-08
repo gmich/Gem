@@ -14,7 +14,7 @@ using Google.Apis.YouTube.v3.Data;
 
 namespace Gem.Network.Chat.Client
 {
-    internal class YoutubeSearch
+    internal class YoutubeSearch : IDisposable
     {
         private readonly Action<string> Appender;
         private readonly YouTubeService youtubeService;
@@ -26,6 +26,8 @@ namespace Gem.Network.Chat.Client
             public string URL { get; set; }
         }
 
+        #region Construct / Dispose
+
         public YoutubeSearch(Action<string> appender)
         {
             this.Appender = appender;
@@ -36,6 +38,24 @@ namespace Gem.Network.Chat.Client
             });
             IndexAndVideo = new Dictionary<int, VideoInfo>();
         }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool isDisposed = false;
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !isDisposed)
+            {
+                youtubeService.Dispose();
+                isDisposed = true;
+            }
+        }
+
+        #endregion
 
         public async Task Run(string key, int entries)
         {

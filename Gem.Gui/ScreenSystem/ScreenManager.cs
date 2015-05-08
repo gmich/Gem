@@ -9,15 +9,21 @@ namespace Gem.Gui.ScreenSystem
 {
     public class GuiHost : AnimatedGuiScreen
     {
-        private readonly AggregationContext aggregationContext;
+        private readonly AggregationContext aggregationContext; 
 
         private readonly List<AControl> controls = new List<AControl>();
 
-        private readonly AGuiRenderer renderer;
+        private readonly AGuiRenderer renderer; 
 
         public GuiHost(List<AControl> controls):base()
         {
             this.controls = controls;
+
+            //TODO: provide from ioc container
+            this.aggregationContext = null;
+
+            //TODO: provide from ioc container
+            this.renderer = null;
         }
 
         public static GuiHost Create(AControl[] controls)

@@ -226,7 +226,7 @@ namespace Gem.Network.Cache
         /// <summary>
         /// Calculates an object's size in bytes
         /// </summary>
-        protected class MemoryCalculator
+        protected class MemoryCalculator : IDisposable
         {
             private Stream ms;
             private BinaryFormatter formatter;
@@ -235,6 +235,22 @@ namespace Gem.Network.Cache
             {
                 ms = new MemoryStream();
                 formatter = new BinaryFormatter();
+            }
+
+            public void Dispose()
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+            private bool isDisposed = false;
+            private void Dispose(bool disposing)
+            {
+                if (disposing && !isDisposed)
+                {
+                    ms.Dispose();
+                    isDisposed = true;
+                }
             }
 
             public long GetSizeInBytes(object obj)

@@ -315,7 +315,7 @@ namespace Gem.Network.Chat.Client
               
         #region Override closing event
 
-        [DllImport("Kernel32")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1060:MovePInvokesToNativeMethodsClass"), DllImport("Kernel32")]
         private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
 
         private delegate bool EventHandler(CtrlType sig);

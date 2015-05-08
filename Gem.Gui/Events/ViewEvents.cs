@@ -27,10 +27,6 @@ namespace Gem.Gui.Events
 
         public event EventHandler<TEventArgs> LostMouseCapture;
         
-        public event EventHandler<TEventArgs> DragEnter;
-
-        public event EventHandler<TEventArgs> DragLeave;
-
         #endregion
 
         #region Aggregation

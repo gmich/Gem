@@ -9,7 +9,7 @@ namespace Gem.Network.Async
     /// <summary>
     /// Starts a task that runs in a separate thread
     /// </summary>
-    public class ParallelTaskStarter
+    public sealed class ParallelTaskStarter : IDisposable
     {
 
         #region Fields
@@ -32,9 +32,8 @@ namespace Gem.Network.Async
         private readonly TimeSpan repostDelay;
 
         #endregion
-
-
-        #region Constructor
+        
+        #region Constuct / Dispose
 
         /// <summary>
         /// The task restart delay
@@ -45,9 +44,24 @@ namespace Gem.Network.Async
             this.repostDelay = repostDelay;
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool isDisposed = false;
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !isDisposed)
+            {
+                wtoken.Dispose();
+                isDisposed = true;
+            }
+        }
+
         #endregion
-
-
+        
         #region Task Creator
 
         /// <summary>

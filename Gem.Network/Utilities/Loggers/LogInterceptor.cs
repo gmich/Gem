@@ -27,7 +27,7 @@ namespace Gem.Network.Utilities.Loggers
             try
             {
                 invocation.Proceed();
-                
+
                 //post invocation
                 auditor.Debug("Done: result was {0}.", invocation.ReturnValue);
             }
@@ -35,7 +35,7 @@ namespace Gem.Network.Utilities.Loggers
             {
                 //on exception
                 auditor.Error("Threw exception {0} . {1} ", ex.Message, GetMethodInformation(invocation));
-                throw ex;
+                throw;
             }
         }
 

@@ -9,7 +9,7 @@ namespace Gem.Infrastructure
     /// <remarks>Not thread safe</remarks>
     /// </summary>
     /// <typeparam name="TEntry">The IList's generic type</typeparam>
-    public class DisposableEntry<TEntry> : IDisposable
+    public sealed class DisposableEntry<TEntry> : IDisposable
     {
         private IList<TEntry> registered;
         private TEntry current;
@@ -20,11 +20,21 @@ namespace Gem.Infrastructure
             this.current = current;
         }
 
-
         public void Dispose()
         {
-            if (registered.Contains(current))
-                registered.Remove(current);
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool isDisposed = false;
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !isDisposed)
+            {
+                if (registered.Contains(current))
+                    registered.Remove(current);
+                isDisposed = true;
+            }
         }
     }
 

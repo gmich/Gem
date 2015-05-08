@@ -56,7 +56,7 @@ namespace Gem.Cache
             return base.GetItem(key, true);
         }
 
-        public void RemoveItem(string key)
+        public new void RemoveItem(string key)
         {
             base.RemoveItem(key);
         }

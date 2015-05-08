@@ -1,7 +1,7 @@
 ﻿using Gem.Gui.Rendering;
 using System;
 
-namespace Gem.Gui.Layout
+namespace Gem.Gui.Alignment
 {
     //For type safety
     public interface IHorizontalAlignable : IAlignable {  }
@@ -89,13 +89,21 @@ namespace Gem.Gui.Layout
 
         #endregion
 
-        #region None
+        #region Manual
 
+        private static Lazy<ManualAlignent> manual = new Lazy<ManualAlignent>();
         public static IHorizontalAlignable Manual
         {
             get
             {
-                throw new NotImplementedException();
+                return manual.Value;
+            }
+        }
+        private class ManualAlignent : IHorizontalAlignable
+        {
+            public void Align(Region parent, Region region)
+            {
+                return;
             }
         }
 

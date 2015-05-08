@@ -21,7 +21,7 @@ namespace Gem.DrawingSystem
         Pavement
     }
 
-    public class AssetCreator
+    public sealed class AssetCreator : IDisposable
     {
         private const int CircleSegments = 32;
 
@@ -29,11 +29,31 @@ namespace Gem.DrawingSystem
         private BasicEffect effect;
         private Dictionary<MaterialType, Texture2D> materials = new Dictionary<MaterialType, Texture2D>();
 
+        #region Construct / Dispose
+
         public AssetCreator(GraphicsDevice device)
         {
             this.device = device;
             this.effect = new BasicEffect(device);
         }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool isDisposed = false;
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !isDisposed)
+            {
+                effect.Dispose();
+                isDisposed = true;
+            }
+        }
+
+        #endregion
 
         public static Vector2 CalculateOrigin(Body b)
         {

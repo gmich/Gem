@@ -14,6 +14,7 @@ namespace Gem.Network.Server
     /// <summary>
     /// The class that handles server side connection , message processing and configuration
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     public class GemServer
     {
 
@@ -98,7 +99,7 @@ namespace Gem.Network.Server
             messageProcessor = new ServerMessageProcessor(server);
             asyncMessageProcessor = new ParallelTaskStarter(TimeSpan.Zero);
         }
-
+                
         #endregion
         
         #region Settings Helpers

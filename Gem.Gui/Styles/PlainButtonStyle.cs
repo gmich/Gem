@@ -13,7 +13,7 @@ namespace Gem.Gui.Core.Styles
 
         private readonly Button button;
         private readonly float transparencyTransition = 0.1f;
-        private readonly List<IDisposable> activeTransformations;
+        private readonly List<IDisposable> activeTransformations = new List<IDisposable>();
 
         #endregion
 

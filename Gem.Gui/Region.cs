@@ -8,6 +8,15 @@ namespace Gem.Gui.Rendering
     public class Region
     {
 
+        #region EventArgs
+
+        public class RegionEventArgs : EventArgs
+        {
+            public ImmutableRegion PreviousState { get; set; }
+        }
+
+        #endregion
+
         #region Fields
 
         /// <summary>
@@ -19,13 +28,13 @@ namespace Gem.Gui.Rendering
         /// Raised when the region changes position.
         /// The event argumentss contain the new region as the sender and the old state as an immutable region.
         /// </summary>
-        public event EventHandler<ImmutableRegion> onPositionChange;
+        public event EventHandler<RegionEventArgs> onPositionChange;
 
         /// <summary>
         /// Raised when the region changes size. 
         /// The event argumentss contain the new region as the sender and the old state as an immutable region.
         /// </summary>
-        public event EventHandler<ImmutableRegion> onSizeChange;
+        public event EventHandler<RegionEventArgs> onSizeChange;
 
         private Vector2 position;
         private Vector2 size;
@@ -63,7 +72,7 @@ namespace Gem.Gui.Rendering
                 position = value;
                 AdjustFrameBoundaries();
 
-                OnPositionChange(previousState);
+                OnPositionChange(new RegionEventArgs { PreviousState = previousState });
             }
         }
 
@@ -80,7 +89,7 @@ namespace Gem.Gui.Rendering
                 AdjustFrameBoundaries();
                 origin = OriginCalculator(this);
 
-                OnSizeChange(previousState);
+                OnPositionChange(new RegionEventArgs { PreviousState = previousState });
             }
         }
 
@@ -112,7 +121,7 @@ namespace Gem.Gui.Rendering
             frame = new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
         }
 
-        private void OnSizeChange(ImmutableRegion previousState)
+        private void OnSizeChange(RegionEventArgs previousState)
         {
             var handler = onSizeChange;
             if (handler != null)
@@ -121,7 +130,7 @@ namespace Gem.Gui.Rendering
             }
         }
 
-        private void OnPositionChange(ImmutableRegion previousState)
+        private void OnPositionChange(RegionEventArgs previousState)
         {
             var handler = onPositionChange;
             if (handler != null)

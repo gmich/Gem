@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Gem.Infrastructure.Configuration
 {
-    
+
     /// <summary>
     /// Factory for class-based items.
     /// </summary>
@@ -36,9 +36,9 @@ namespace Gem.Infrastructure.Configuration
                 {
                     this.RegisterType(t, prefix);
                 }
-                catch (Exception exception)
+                catch (Exception ex)
                 {
-                    //TODO: handle somehow
+                    Gem.Infrastructure.Logging.Auditor.Logger.Error("Failed to register types {0} with prefix {1}. {2}", types, prefix, ex);
                 }
             }
         }
@@ -111,8 +111,7 @@ namespace Gem.Infrastructure.Configuration
             }
             catch (Exception ex)
             {
-                //TODO: handle somehow
-
+                Gem.Infrastructure.Logging.Auditor.Logger.Error("Unable to get definition for item {0}. {1}", itemName, ex);
                 result = null;
                 return false;
             }

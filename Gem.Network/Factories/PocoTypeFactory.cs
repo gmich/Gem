@@ -10,7 +10,7 @@ namespace Gem.Network.Factories
     /// <summary>
     /// A factory for creating runtime POCOs
     /// </summary>
-    public sealed class PocoTypeFactory : IPocoFactory
+    public sealed class PocoTypeFactory : IPocoFactory, IDisposable
     {
 
         #region Private Properties
@@ -22,7 +22,7 @@ namespace Gem.Network.Factories
            
         #endregion
 
-        #region Constructor
+        #region Construct / Dispose
 
         public PocoTypeFactory(IPocoBuilder pocoBuilder)
         {
@@ -31,6 +31,21 @@ namespace Gem.Network.Factories
             cache = new GCache<Type[], Type>(GC.GetTotalMemory(true) / 10, new ArrayTypeEquality());
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool isDisposed = false;
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !isDisposed)
+            {
+                cache.Dispose();
+                isDisposed = true;
+            }
+        }
         #endregion
 
         #region IPocoFactory Implementation

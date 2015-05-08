@@ -17,7 +17,6 @@ namespace Gem.Gui.Transformations
         private readonly Action<double, RenderParameters> regionTransformer;
         private readonly double duration;
         private double timePassed = 0D;
-        private bool enabled = false;
 
         #endregion
 

@@ -91,6 +91,7 @@
     <Compile Include="Dynamic\PropertyNotifyExtensions.cs" />
     <Compile Include="Exceptions\ExceptionUtilities.cs" />
     <Compile Include="Logging\ActionAppender.cs" />
+    <Compile Include="Logging\Auditor.cs" />
     <Compile Include="Logging\ConfigurableAppender.cs" />
     <Compile Include="Logging\DebugHost.cs" />
     <Compile Include="Logging\AppenderOptions.cs" />

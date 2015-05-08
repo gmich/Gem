@@ -13,6 +13,7 @@ namespace Gem.Network.Client
     /// <summary>
     /// The class that handles the client side connection , message processing and configuration
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     public class GemClient
     {
 

@@ -16,6 +16,7 @@ namespace Gem.Gui.Aggregation
         {
             this.next = next;
             this.previous = previous;
+            this.trigger = trigger;
         }
 
         private bool _isEnabled = true;
@@ -29,8 +30,8 @@ namespace Gem.Gui.Aggregation
         {
             if (next())
             {
-                //area[area.FocusIndex.Current].Events.OnLostFocus();
-                //area[area.FocusIndex.Next].Events.OnGotFocus();
+                //context.FocusedControl.Events.OnLostFocus();
+                //entry.Events.OnGotFocus();
             }
             if (previous())
             {

@@ -43,7 +43,6 @@ namespace Gem.Gui.ScreenSystem
             get { return 1f - TransitionPosition; }
         }
 
-        private ScreenState screenstate = ScreenState.TransitionOn;
         public ScreenState ScreenState { get; protected set; }
 
         public bool IsExiting { get; protected internal set; }

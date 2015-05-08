@@ -1,21 +1,21 @@
 ﻿using Gem.Gui.Rendering;
 using System;
 
-namespace Gem.Gui.Layout
+namespace Gem.Gui.Alignment
 {
-    public class Alignment
+    public class AlignmentContext
     {
         public IHorizontalAlignable HorizontalAlignment { get; set; }
         public IVerticalAlignable VerticalAlignment { get; set; }
 
-        private static Lazy<Alignment> defaultOptions = new Lazy<Alignment>(() =>
-            new Alignment
+        private static Lazy<AlignmentContext> defaultOptions = new Lazy<AlignmentContext>(() =>
+            new AlignmentContext
             {
-                HorizontalAlignment = Layout.HorizontalAlignment.Manual,
-                VerticalAlignment = Layout.VerticalAlignment.Manual
+                HorizontalAlignment = Alignment.HorizontalAlignment.Manual,
+                VerticalAlignment = Alignment.VerticalAlignment.Manual
             });
 
-        public static Alignment Default
+        public static AlignmentContext Default
         {
             get { return defaultOptions.Value; }
         }

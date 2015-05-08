@@ -91,7 +91,7 @@ namespace Gem.Infrastructure.Attributes
                 }
                 catch (Exception ex)
                 {
-                    //TODO: log failed assembly
+                    Gem.Infrastructure.Logging.Auditor.Logger.Error("Unable to scan assembly: {0}. {1}", assembly, ex);
                 }
             }
         }

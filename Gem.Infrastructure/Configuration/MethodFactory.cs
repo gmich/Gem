@@ -44,9 +44,9 @@ namespace Gem.Infrastructure.Configuration
                 {
                     this.RegisterType(t, prefix);
                 }
-                catch (Exception exception)
+                catch (Exception ex)
                 {
-                    //TODO: handle exception
+                    Gem.Infrastructure.Logging.Auditor.Logger.Error("Failed to scan types: {0}. {1}",types,ex);
                 }
             }
         }

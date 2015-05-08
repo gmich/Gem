@@ -105,12 +105,12 @@ namespace Gem.Network
             return false;
         }
 
-        internal class DeregisterDisposable<T> : IDisposable
+        internal class DeregisterDisposable<TEntry> : IDisposable
         {
-            private List<T> registered;
-            private T current;
+            private List<TEntry> registered;
+            private TEntry current;
 
-            internal DeregisterDisposable(List<T> registered, T current)
+            internal DeregisterDisposable(List<TEntry> registered, TEntry current)
             {
                 this.registered = registered;
                 this.current = current;

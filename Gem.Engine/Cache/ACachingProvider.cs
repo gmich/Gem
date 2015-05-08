@@ -10,7 +10,7 @@ namespace Gem.Cache
     /// <summary>
     /// A memory cache wrapper
     /// </summary>
-    public abstract class ACachingProvider
+    public abstract class ACachingProvider : IDisposable
     {
 
         #region Fields
@@ -19,14 +19,31 @@ namespace Gem.Cache
 
         protected MemoryCache cache;      
 
+        private bool isDisposed = false;
+
         #endregion
 
 
-        #region Constructor
+        #region Construct / Dispose
 
         public ACachingProvider(string cacheName)
         {
             cache = new MemoryCache(cacheName);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing && !isDisposed)
+            {
+                cache.Dispose();
+                isDisposed = true;
+            }
         }
 
         #endregion

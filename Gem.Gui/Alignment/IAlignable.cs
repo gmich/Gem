@@ -1,7 +1,6 @@
 ﻿using Gem.Gui.Rendering;
-using Microsoft.Xna.Framework;
 
-namespace Gem.Gui.Layout
+namespace Gem.Gui.Alignment
 {
     public interface IAlignable
     {

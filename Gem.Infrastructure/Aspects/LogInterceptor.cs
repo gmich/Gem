@@ -35,7 +35,7 @@ namespace Gem.Infrastructure.Aspects
             {
                 //On exception
                 appender.Error("Threw exception {0} . {1} ", ex.Message, GetMethodInformation(invocation));
-                throw ex;
+                throw;
             }
         }
 

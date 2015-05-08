@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Alignment\AlignmentContext.cs" />
     <Compile Include="Events\ControlEventArgs.cs" />
     <Compile Include="Controls\TextField.cs" />
     <Compile Include="Controls\Label.cs" />
@@ -67,10 +68,6 @@
     <Compile Include="Aggregation\AggregationContext.cs" />
     <Compile Include="Layout\ComponentIndex.cs" />
     <Compile Include="Styles\PlainButtonStyle.cs" />
-    <Compile Include="DeleteUs\Alignment\AlignmentContext.cs" />
-    <Compile Include="DeleteUs\Alignment\AlignmentMovement.cs" />
-    <Compile Include="DeleteUs\Alignment\VerticalAlignment.cs" />
-    <Compile Include="DeleteUs\Alignment\HorizontalAlignment.cs" />
     <Compile Include="Containers\AssetContainer.cs" />
     <Compile Include="Aggregation\IAggregator.cs" />
     <Compile Include="Aggregation\MouseControlAggregator.cs" />
@@ -91,18 +88,18 @@
     <Compile Include="Input\Helpers\MouseInputHelper.cs" />
     <Compile Include="Input\InputManager.cs" />
     <Compile Include="Input\KeyboardUtils.cs" />
-    <Compile Include="DeleteUs\Layout\LayoutStyle.cs" />
-    <Compile Include="DeleteUs\Layout\VerticalAlignment.cs" />
-    <Compile Include="DeleteUs\Layout\HorizontalAlignment.cs" />
-    <Compile Include="DeleteUs\Layout\IAlignable.cs" />
-    <Compile Include="DeleteUs\Configuration\Options.cs" />
+    <Compile Include="Alignment\VerticalAlignment.cs" />
+    <Compile Include="Alignment\HorizontalAlignment.cs" />
+    <Compile Include="Alignment\IAlignable.cs" />
+    <Compile Include="RefactorUs\Configuration\Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rendering\DrawManager.cs" />
     <Compile Include="ImmutableRegion.cs" />
     <Compile Include="Region.cs" />
     <Compile Include="Rendering\AGuiRenderer.cs" />
-    <Compile Include="DeleteUs\Settings\Settings.cs" />
     <Compile Include="Styles\RenderParameters.cs" />
+    <Compile Include="Text\IText.cs" />
+    <Compile Include="Text\StandardText.cs" />
+    <Compile Include="Text\TextEventArgs.cs" />
     <Compile Include="Transformations\ITransformation.cs" />
     <Compile Include="Transformations\PredicateTransformation.cs" />
     <Compile Include="Transformations\TimedTransformation.cs" />
@@ -115,10 +112,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DeleteUs\Screens\" />
-    <Folder Include="Text\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Gem.Infrastructure\Gem.Infrastructure.csproj">
       <Project>{dab38678-499f-4565-9db8-434a5c66a093}</Project>
