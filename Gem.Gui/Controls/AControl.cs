@@ -25,17 +25,9 @@ namespace Gem.Gui.Controls
 
         #region Properties
 
-        public ViewEvents<ControlEventArgs> Events
-        {
-            get;
-            set;
-        }
+        public ViewEvents<ControlEventArgs> Events { get; set; }
 
-        public RenderParameters RenderParameters
-        {
-            get;
-            set;
-        }
+        public RenderParameters RenderParameters { get; set; }
 
         public Sprite Sprite { get; set; }
 
@@ -43,19 +35,10 @@ namespace Gem.Gui.Controls
 
         public IText Text { get; set; }
 
-        public Options Options
-        {
-            get;
-            set;
-        }
+        public Options Options { get; set; }
 
-        public Region Region
-        {
-            get;
-            set;
-        }
-
-
+        public Region Region { get; set; }
+        
         #endregion
 
         #region Ctor
@@ -64,6 +47,10 @@ namespace Gem.Gui.Controls
         {
             this.Region = region;
             this.Sprite = new Sprite(texture);
+            this.RenderStyle = new PlainControlStyle(this);
+            this.RenderParameters = new RenderParameters();
+            this.Options = new Options();
+            this.Events = new ViewEvents<ControlEventArgs>(this, () => new ControlEventArgs());
         }
 
         #endregion

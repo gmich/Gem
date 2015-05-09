@@ -2,6 +2,7 @@
 using Gem.Gui.Controls;
 using Gem.Gui.Rendering;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,8 +14,8 @@ namespace Gem.Gui.ScreenSystem
 
         private readonly List<AControl> controls = new List<AControl>();
 
-        private readonly AControlDrawable controlRenderer;
-        private readonly ATextDrawable textRenderer; 
+        private readonly IControlDrawable controlRenderer;
+        private readonly ITextDrawable textRenderer; 
 
         public GuiHost(List<AControl> controls):base()
         {
@@ -67,12 +68,12 @@ namespace Gem.Gui.ScreenSystem
             }
         }
 
-        public override void Draw()
+        public override void Draw(SpriteBatch batch)
         {
             foreach (var control in controls)
             {
-                controlRenderer.Render(control);
-                textRenderer.Render(control.Text);
+                controlRenderer.Render(batch,control);
+                textRenderer.Render(batch,control.Text);
             }
         }
     }

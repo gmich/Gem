@@ -7,7 +7,7 @@ namespace Gem.Gui.Configuration
 {
     public interface IConfigurationResolver
     {
-        IList<IAggregator> Aggregators(Aggregation.AggregationTarget target);
+        IList<IAggregator> GetAggregators(Aggregation.AggregationTarget target);
         IControlFactory GetControlFactory(ControlTarget target);
     }
 }

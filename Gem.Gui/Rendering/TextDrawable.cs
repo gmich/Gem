@@ -1,23 +1,22 @@
 ﻿using Gem.Gui.Text;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gem.Gui.Rendering
 {
-    public class TextDrawable : ATextDrawable
+    public class TextDrawable : ITextDrawable
     {
-        public TextDrawable(SpriteBatch batch) : base(batch) { }
-
-        public override void Render(IText text)
+        public void Render(SpriteBatch batch, IText text)
         {
             batch.DrawString(text.Font,
                              text.Value,
                              text.Region.Position,
-                             text.RenderParameters.Color);
+                             text.RenderParameters.Color,
+                             text.RenderParameters.Rotation,
+                             text.Region.Origin,
+                             text.RenderParameters.Scale,
+                             text.RenderParameters.SpriteEffect,
+                             text.RenderParameters.Layer);
+
         }
     }
 }

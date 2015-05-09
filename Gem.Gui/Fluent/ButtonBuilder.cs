@@ -1,22 +1,40 @@
 ﻿using Gem.Gui.Controls;
+using Gem.Gui.Core.Controls;
+using Gem.Gui.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics.Contracts;
 
 namespace Gem.Gui.Fluent
 {
-    public static class ButtonBuilder
+    public static class ControlFluentBuilder
     {
-        public static Button Text(this Button button,string text)
+        public static AControl Text(this AControl control, string text,SpriteFont font)
         {
-            return button;
+            control.Text = new StandardText(font, text);
+            return control;
         }
 
-        public static Button TextColor(this Button button, string text)
+        public static AControl Color(this AControl control, Color color)
         {
-            return button;
+            control.RenderParameters.Color = color;
+            return control;
         }
+
+        public static AControl TextColor(this AControl control, Color color)
+        {
+            Contract.Requires(control.Text != null, "Use SetText() before setting the text's color");
+
+            control.Text.RenderParameters.Color = color;
+            return control;
+        }
+
+        public static AControl OnClick(this AControl control, EventHandler<ControlEventArgs> handler)
+        {
+            control.Events.Clicked += handler;
+            return control;
+        }
+
     }
 }

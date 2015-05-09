@@ -2,6 +2,8 @@
 {
     public class AggregationToken
     {
+        public int Index { get; set; }
+
         public bool HasHover { get; set; }
 
         public bool HasFocus { get; set; }

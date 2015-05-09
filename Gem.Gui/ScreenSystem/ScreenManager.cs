@@ -136,7 +136,7 @@ namespace Gem.Gui.ScreenSystem
                     }
                     GraphicsDevice.SetRenderTarget(transitions[transitionCount - 1]);
                     GraphicsDevice.Clear(Color.Transparent);
-                    screen.Draw();
+                    screen.Draw(this.SpriteBatch);
                     GraphicsDevice.SetRenderTarget(null);
                 }
             }
@@ -158,7 +158,7 @@ namespace Gem.Gui.ScreenSystem
                     ++transitionCount;
                 }
                 else
-                    screen.Draw();
+                    screen.Draw(this.SpriteBatch);
             }
         }
 

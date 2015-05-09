@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Gem.Gui.Input;
+using Gem.Gui.Controls;
+using Gem.Gui.Aggregation;
 
 namespace Gem.Gui.Configuration
 {

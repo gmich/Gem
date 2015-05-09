@@ -17,14 +17,29 @@ namespace Gem.Gui.Containers
             this.content = content;
         }
 
-        public void AddAsset(string id, Func<ContentManager, TAsset> assetRetriever)
+        public bool Add(string id, Func<ContentManager, TAsset> assetRetriever)
         {
+            if (assets.ContainsKey(id))
+            {
+                return false;
+            }
             assets.Add(id, assetRetriever(content));
+            return true;
         }
 
-        public void AddAsset(string id, string assetPath)
+        public bool Add(string id, string path)
         {
-            assets.Add(id, content.Load<TAsset>(assetPath));
+            if (assets.ContainsKey(id))
+            {
+                return false;
+            }
+            assets.Add(id, content.Load<TAsset>(path));
+            return true;
+        }
+
+        public bool Remove(string id)
+        {
+            return assets.Remove(id);
         }
 
         public TAsset this[string id]

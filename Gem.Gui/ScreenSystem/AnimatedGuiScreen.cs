@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Gem.Gui.ScreenSystem
 {
@@ -115,7 +116,7 @@ namespace Gem.Gui.ScreenSystem
         /// <summary>
         /// This is called when the screen should draw itself.
         /// </summary>
-        public virtual void Draw()
+        public virtual void Draw(SpriteBatch batch)
         {
         }
 

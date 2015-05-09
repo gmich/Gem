@@ -63,9 +63,12 @@
     <Compile Include="Controls\ImageButton.cs" />
     <Compile Include="Controls\Button.cs" />
     <Compile Include="Fluent\ButtonBuilder.cs" />
+    <Compile Include="Fluent\RenderTextBy.cs" />
     <Compile Include="Input\KeyboardMenuScript.cs" />
-    <Compile Include="Rendering\ATextDrawable.cs" />
-    <Compile Include="Rendering\ControlDrawable.cs" />
+    <Compile Include="Rendering\ITextDrawable.cs" />
+    <Compile Include="Rendering\ControlFrameDrawable.cs" />
+    <Compile Include="Rendering\ControlPositionDrawable.cs" />
+    <Compile Include="Fluent\RenderControlBy.cs" />
     <Compile Include="Rendering\Sprite.cs" />
     <Compile Include="Rendering\TextDrawable.cs" />
     <Compile Include="ScreenSystem\AnimatedGuiScreen.cs" />
@@ -107,7 +110,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\ImmutableRegion.cs" />
     <Compile Include="Rendering\Region.cs" />
-    <Compile Include="Rendering\AControlDrawable.cs" />
+    <Compile Include="Rendering\IControlDrawable.cs" />
     <Compile Include="Styles\RenderParameters.cs" />
     <Compile Include="Text\IText.cs" />
     <Compile Include="Text\StandardText.cs" />
