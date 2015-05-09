@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 namespace Gem.Gui
 {
@@ -51,7 +52,7 @@ namespace Gem.Gui
 
         #endregion
 
-        #region Control Factory
+        #region Static Control Factory
 
         private static IControlFactory controlFactory = null; ////TODO: provide from ioc container
 
@@ -76,13 +77,9 @@ namespace Gem.Gui
 
         public void AddGuiHost(string guiHostId, GuiHost host)
         {
-            if (hosts.ContainsKey(guiHostId))
-            {
-                throw new ArgumentException("A GuiHost with the same id is already registered");
-            }
+            Contract.Requires(!hosts.ContainsKey(guiHostId), "A GuiHost with the same id is already registered");
 
             this.hosts.Add(guiHostId, host);
-
         }
 
         public void Disable()
@@ -90,12 +87,10 @@ namespace Gem.Gui
             screenManager.Enabled = false;
         }
 
-        public void SwicthTo(string guiHostId)
+        public void SwitchTo(string guiHostId)
         {
-            if (!hosts.ContainsKey(guiHostId))
-            {
-                throw new ArgumentException("GuiHost was not found");
-            }
+            Contract.Requires(hosts.ContainsKey(guiHostId), "GuiHost was not found");
+
             screenManager.Enabled = true;
             screenManager.AddScreen(hosts[guiHostId]);
         }

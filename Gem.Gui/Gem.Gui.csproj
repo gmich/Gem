@@ -51,24 +51,35 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aggregation\AggregationTarget.cs" />
     <Compile Include="Alignment\AlignmentContext.cs" />
+    <Compile Include="Configuration\DefaultConfiguration.cs" />
+    <Compile Include="Configuration\IConfigurationResolver.cs" />
     <Compile Include="Configuration\Settings.cs" />
+    <Compile Include="Controls\ControlTarget.cs" />
     <Compile Include="Events\ControlEventArgs.cs" />
     <Compile Include="Controls\TextField.cs" />
     <Compile Include="Controls\Label.cs" />
     <Compile Include="Controls\ImageButton.cs" />
     <Compile Include="Controls\Button.cs" />
+    <Compile Include="Fluent\ButtonBuilder.cs" />
+    <Compile Include="Input\KeyboardMenuScript.cs" />
+    <Compile Include="Rendering\ATextDrawable.cs" />
+    <Compile Include="Rendering\ControlDrawable.cs" />
+    <Compile Include="Rendering\Sprite.cs" />
+    <Compile Include="Rendering\TextDrawable.cs" />
     <Compile Include="ScreenSystem\AnimatedGuiScreen.cs" />
     <Compile Include="Layout\GridView.cs" />
     <Compile Include="Layout\ILayout.cs" />
     <Compile Include="Layout\ListView.cs" />
     <Compile Include="Layout\Linear.cs" />
     <Compile Include="ScreenSystem\IGuiHost.cs" />
-    <Compile Include="ScreenSystem\GemGui.cs" />
+    <Compile Include="ScreenSystem\ScreenManager.cs" />
     <Compile Include="Styles\IRenderStyle.cs" />
     <Compile Include="Aggregation\AggregationContext.cs" />
     <Compile Include="Layout\ComponentIndex.cs" />
-    <Compile Include="Styles\PlainButtonStyle.cs" />
+    <Compile Include="Styles\PlainTextStyle.cs" />
+    <Compile Include="Styles\PlainControlStyle.cs" />
     <Compile Include="Containers\AssetContainer.cs" />
     <Compile Include="Aggregation\IAggregator.cs" />
     <Compile Include="Aggregation\MouseControlAggregator.cs" />
@@ -79,9 +90,9 @@
     <Compile Include="Containers\AContainer.cs" />
     <Compile Include="Aggregation\ScriptAggregator.cs" />
     <Compile Include="Factories\ControlFactory.cs" />
-    <Compile Include="Factories\PcControlFactory.cs" />
+    <Compile Include="Factories\GeneralControlFactory.cs" />
     <Compile Include="GemGui.cs" />
-    <Compile Include="ScreenSystem\ScreenManager.cs" />
+    <Compile Include="ScreenSystem\GuiHost.cs" />
     <Compile Include="Input\Helpers\IInputHelper.cs" />
     <Compile Include="Input\Helpers\KeyboardInputHelper.cs" />
     <Compile Include="Input\Helpers\TouchInputHelper.cs" />
@@ -94,9 +105,9 @@
     <Compile Include="Alignment\IAlignable.cs" />
     <Compile Include="Configuration\Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ImmutableRegion.cs" />
-    <Compile Include="Region.cs" />
-    <Compile Include="Rendering\AGuiRenderer.cs" />
+    <Compile Include="Rendering\ImmutableRegion.cs" />
+    <Compile Include="Rendering\Region.cs" />
+    <Compile Include="Rendering\AControlDrawable.cs" />
     <Compile Include="Styles\RenderParameters.cs" />
     <Compile Include="Text\IText.cs" />
     <Compile Include="Text\StandardText.cs" />

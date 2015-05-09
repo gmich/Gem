@@ -62,6 +62,7 @@ namespace Gem.Gui.Configuration
 
         public Vector2 Resolution { get { return resolution; } }
 
+
         #endregion
 
     }

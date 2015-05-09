@@ -23,6 +23,12 @@ namespace Gem.Gui.Input
 
         #endregion
 
+        #region Scripts
+
+        public static KeyboardMenuScript KeyboardMenuScript { get; set; }
+
+        #endregion
+
         #region Input Capabilities
 
         public struct InputCapabilities

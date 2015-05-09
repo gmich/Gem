@@ -6,25 +6,25 @@ using System.Collections.Generic;
 
 namespace Gem.Gui.Core.Styles
 {
-    public class PlainButtonStyle : IRenderStyle
+    public class PlainControlStyle : IRenderStyle
     {
 
         #region Fields
 
-        private readonly Button button;
+        private readonly AControl control;
         private readonly float transparencyTransition = 0.1f;
         private readonly List<IDisposable> activeTransformations = new List<IDisposable>();
 
         #endregion
 
-        public PlainButtonStyle(Button button)
+        public PlainControlStyle(AControl control)
         {
-            if (button == null)
+            if (control == null)
             {
-                throw new ArgumentNullException("button");
+                throw new ArgumentNullException("control");
             }
 
-            this.button = button;
+            this.control = control;
         }
 
         private void Flush()
@@ -43,7 +43,7 @@ namespace Gem.Gui.Core.Styles
             float focusTransparency = 1.0f;
 
             activeTransformations.Add(
-                this.button.AddTransformation(new PredicateTransformation(
+                this.control.AddTransformation(new PredicateTransformation(
                     expirationPredicate: control =>
                         control.RenderParameters.Transparency == focusTransparency,
                     regionTransformer: (timeDelta, renderParams) =>
@@ -57,7 +57,7 @@ namespace Gem.Gui.Core.Styles
             float defaultTransparency = 0.5f;
 
             activeTransformations.Add(
-            this.button.AddTransformation(new PredicateTransformation(
+            this.control.AddTransformation(new PredicateTransformation(
                 expirationPredicate: control =>
                     control.RenderParameters.Transparency == defaultTransparency,
                 regionTransformer: (timeDelta, renderParams) =>
@@ -71,7 +71,7 @@ namespace Gem.Gui.Core.Styles
             float hoverTransparency = 0.7f;
 
             activeTransformations.Add(
-            this.button.AddTransformation(new PredicateTransformation(
+            this.control.AddTransformation(new PredicateTransformation(
                 expirationPredicate: control =>
                     control.RenderParameters.Transparency == hoverTransparency,
                 regionTransformer: (timeDelta, renderParams) =>

@@ -3,7 +3,9 @@ using Gem.Gui.Core.Controls;
 using Gem.Gui.Core.Styles;
 using Gem.Gui.Events;
 using Gem.Gui.Rendering;
+using Gem.Gui.Text;
 using Gem.Gui.Transformation;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,7 +20,7 @@ namespace Gem.Gui.Controls
         #region Fields
 
         private readonly IList<ITransformation> transformations = new List<ITransformation>();
-        
+
         #endregion
 
         #region Properties
@@ -35,7 +37,11 @@ namespace Gem.Gui.Controls
             set;
         }
 
-        public IRenderStyle RenderStyle  { get; set; }
+        public Sprite Sprite { get; set; }
+
+        public IRenderStyle RenderStyle { get; set; }
+
+        public IText Text { get; set; }
 
         public Options Options
         {
@@ -54,12 +60,12 @@ namespace Gem.Gui.Controls
 
         #region Ctor
 
-        public AControl(Region region)
-        {            
+        public AControl(Texture2D texture, Region region)
+        {
             this.Region = region;
-            //rendertemplate ?
+            this.Sprite = new Sprite(texture);
         }
-        
+
         #endregion
 
         #region Public Members
@@ -70,7 +76,7 @@ namespace Gem.Gui.Controls
 
             return Gem.Infrastructure.Disposable.Create(transformations, transformation);
         }
-        
+
         public virtual void Update(double deltaTime)
         {
             for (int index = 0; index < transformations.Count(); index++)
@@ -84,9 +90,8 @@ namespace Gem.Gui.Controls
             }
         }
 
-
         #endregion
-      
+
 
     }
 }

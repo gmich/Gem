@@ -2,7 +2,7 @@
 
 namespace Gem.Gui.Factories
 {
-    public class PcControlFactory :IControlFactory
+    public class GeneralControlFactory : IControlFactory
     {
         public Controls.ImageButton CreateImageButton()
         {

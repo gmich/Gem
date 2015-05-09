@@ -3,11 +3,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Gem.Gui.Rendering
 {    
-    public abstract class AGuiRenderer
+    public abstract class AControlDrawable
     {
         protected readonly SpriteBatch batch;
 
-        public AGuiRenderer(SpriteBatch batch)
+        public AControlDrawable(SpriteBatch batch)
         {
             this.batch = batch;
         }
