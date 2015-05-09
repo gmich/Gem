@@ -18,7 +18,7 @@ namespace Gem.Gui.Input
 
         static InputManager()
         {
-            GetInputCapabilities(true);
+            //GetInputCapabilities(true);
         }
 
         #endregion

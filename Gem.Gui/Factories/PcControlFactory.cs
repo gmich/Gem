@@ -8,18 +8,18 @@ namespace Gem.Gui.Factories
         {
             throw new NotImplementedException();
         }
-
-        public Controls.Button CreateButton()
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public Controls.Label CreateLabel()
         {
             throw new NotImplementedException();
         }
 
         public Controls.TextField CreateTextBox()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Controls.Button CreateButton(Rendering.Region region, Func<Rendering.Region, Microsoft.Xna.Framework.Vector2> originCalculator, Microsoft.Xna.Framework.Graphics.Texture2D texture)
         {
             throw new NotImplementedException();
         }

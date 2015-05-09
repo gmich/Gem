@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Alignment\AlignmentContext.cs" />
+    <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Events\ControlEventArgs.cs" />
     <Compile Include="Controls\TextField.cs" />
     <Compile Include="Controls\Label.cs" />
@@ -91,7 +92,7 @@
     <Compile Include="Alignment\VerticalAlignment.cs" />
     <Compile Include="Alignment\HorizontalAlignment.cs" />
     <Compile Include="Alignment\IAlignable.cs" />
-    <Compile Include="RefactorUs\Configuration\Options.cs" />
+    <Compile Include="Configuration\Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ImmutableRegion.cs" />
     <Compile Include="Region.cs" />
