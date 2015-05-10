@@ -46,9 +46,9 @@ namespace Gem.Gui.Core.Styles
                 this.control.AddTransformation(new PredicateTransformation(
                     expirationPredicate: control =>
                         control.RenderParameters.Transparency == focusTransparency,
-                    regionTransformer: (timeDelta, renderParams) =>
-                        renderParams.Transparency = MathHelper.Min(focusTransparency,
-                                                                   renderParams.Transparency += (float)timeDelta * transparencyTransition))));
+                        transformer: (timeDelta, control) =>
+                        control.RenderParameters.Transparency = MathHelper.Min(focusTransparency,
+                                                                   control.RenderParameters.Transparency += (float)timeDelta * transparencyTransition))));
         }
 
         public void Default()
@@ -60,9 +60,9 @@ namespace Gem.Gui.Core.Styles
             this.control.AddTransformation(new PredicateTransformation(
                 expirationPredicate: control =>
                     control.RenderParameters.Transparency == defaultTransparency,
-                regionTransformer: (timeDelta, renderParams) =>
-                    renderParams.Transparency = MathHelper.Min(defaultTransparency,
-                                                               renderParams.Transparency += (float)timeDelta * transparencyTransition))));
+                    transformer: (timeDelta, control) =>
+                    control.RenderParameters.Transparency = MathHelper.Min(defaultTransparency,
+                                                               control.RenderParameters.Transparency += (float)timeDelta * transparencyTransition))));
         }
 
         public void Hover()
@@ -74,9 +74,9 @@ namespace Gem.Gui.Core.Styles
             this.control.AddTransformation(new PredicateTransformation(
                 expirationPredicate: control =>
                     control.RenderParameters.Transparency == hoverTransparency,
-                regionTransformer: (timeDelta, renderParams) =>
-                    renderParams.Transparency = MathHelper.Min(hoverTransparency,
-                                                               renderParams.Transparency -= (float)timeDelta * transparencyTransition))));
+                    transformer: (timeDelta, control) =>
+                    control.RenderParameters.Transparency = MathHelper.Min(hoverTransparency,
+                                                               control.RenderParameters.Transparency -= (float)timeDelta * transparencyTransition))));
         }
         
         public void Clicked()

@@ -5,7 +5,7 @@ using System;
 namespace Gem.Gui.Rendering
 {
 
-    public class Region
+    public class Region : IEquatable<Region>
     {
 
         #region EventArgs
@@ -141,6 +141,50 @@ namespace Gem.Gui.Rendering
 
         #endregion
 
+        #region Equality Comparison
+
+        public override bool Equals(object right)
+        {
+            if (Object.ReferenceEquals(right, null))
+            {
+                return false;
+            }
+            if (Object.ReferenceEquals(this, right))
+            {
+                return true;
+            }
+            if (this.GetType() != right.GetType())
+            {
+                return false;
+            }
+            return this.Equals(right as Region);
+        }
+
+        public bool Equals(Region other)
+        {
+            return ((this.position == other.position)
+                   && (this.size == other.size));
+        }
+
+        public override int GetHashCode()
+        {
+            return position.GetHashCode()
+                 ^ size.GetHashCode()
+                 ^ origin.GetHashCode();
+        }
+
+        public static bool operator ==(Region left, Region right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Region left, Region right)
+        {
+            return ((left.position != right.position)
+                   || (left.size != right.size));
+        }
+
+        #endregion
     }
 
 }

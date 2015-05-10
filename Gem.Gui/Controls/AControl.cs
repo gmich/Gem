@@ -4,7 +4,7 @@ using Gem.Gui.Core.Styles;
 using Gem.Gui.Events;
 using Gem.Gui.Rendering;
 using Gem.Gui.Text;
-using Gem.Gui.Transformation;
+using Gem.Gui.Transformations;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;

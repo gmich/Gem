@@ -1,7 +1,6 @@
 ﻿using Gem.Gui.Controls;
 using Gem.Gui.Core.Styles;
 using Gem.Gui.Rendering;
-using Gem.Gui.Transformation;
 using System;
 
 namespace Gem.Gui.Transformations
@@ -14,15 +13,15 @@ namespace Gem.Gui.Transformations
 
         #region Fields
 
-        private readonly Action<double, RenderParameters> regionTransformer;
+        private readonly Action<double, AControl> transformer;
         private readonly double duration;
         private double timePassed = 0D;
 
         #endregion
 
-        public TimedTransformation(double duration, Action<double, RenderParameters> regionTransformer)
+        public TimedTransformation(double duration, Action<double, AControl> transformer)
         {
-            this.regionTransformer = regionTransformer;
+            this.transformer = transformer;
             this.duration = duration;
         }
 
@@ -35,7 +34,7 @@ namespace Gem.Gui.Transformations
         {
             timePassed += deltaTime;
 
-            regionTransformer(deltaTime, control.RenderParameters);
+            transformer(deltaTime, control);
         }
     }
 }

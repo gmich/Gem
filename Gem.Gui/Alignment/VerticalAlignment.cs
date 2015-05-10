@@ -22,7 +22,7 @@ namespace Gem.Gui.Alignment
 
         private class TopAlignment : IVerticalAlignable
         {
-            public void Align(Region parent, Region region)
+            public Region Align(Region parent, Region region)
             {
                 throw new NotImplementedException();
             }
@@ -42,7 +42,7 @@ namespace Gem.Gui.Alignment
         }
         private class CenterAlignment : IVerticalAlignable
         {
-            public void Align(Region parent, Region region)
+            public Region Align(Region parent, Region region)
             {
                 throw new NotImplementedException();
             }
@@ -62,7 +62,7 @@ namespace Gem.Gui.Alignment
         }
         private class BottomAlignment : IVerticalAlignable
         {
-            public void Align(Region parent, Region region)
+            public Region Align(Region parent, Region region)
             {
                 throw new NotImplementedException();
             }
@@ -82,7 +82,7 @@ namespace Gem.Gui.Alignment
         }
         private class StretchAlignment : IVerticalAlignable
         {
-            public void Align(Region parent, Region region)
+            public Region Align(Region parent, Region region)
             {
                 throw new NotImplementedException();
             }
@@ -102,9 +102,9 @@ namespace Gem.Gui.Alignment
         }
         private class ManualAlignment : IVerticalAlignable
         {
-            public void Align(Region parent, Region region)
+            public Region Align(Region parent, Region child)
             {
-                return;
+                return child;
             }
 
         }

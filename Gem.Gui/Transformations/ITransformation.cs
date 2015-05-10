@@ -1,6 +1,6 @@
 ﻿using Gem.Gui.Controls;
 
-namespace Gem.Gui.Transformation
+namespace Gem.Gui.Transformations
 {
     public interface ITransformation
     {
