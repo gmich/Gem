@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Gem.Gui.Fluent;
+using Gem.Gui.Alignment;
 
 namespace Gem.Gui.Example
 {
@@ -43,14 +44,27 @@ namespace Gem.Gui.Example
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            gui.Fonts.Add("Segoe-10", 
-                          container => container.Load<SpriteFont>("Fonts/Segoe-10"));
+            gui.Fonts.Add("segoe-10",
+                          container => container.Load<SpriteFont>(@"segoe-10"));
 
-            gui.Button(1, 1, 10, 10)
-               .Color(Color.Black)
-               .Text("Test", gui.Fonts["segoe-10"])
-               .TextColor(Color.White)
+            var smallButton =
+               gui.Button(50, 50, 10, 10)
+               .Color(Color.Yellow)
+               .Text("Test", 2, 2, gui.Fonts["segoe-10"])
+               .TextColor(Color.Red)
                .OnClick((sender, args) => System.Diagnostics.Trace.Write("i clicked a button"));
+
+            var largeButton =
+               gui.Button(200, 200, 100, 100)
+               .Color(Color.Violet)
+               .Text("Test", 2, 2, gui.Fonts["segoe-10"])
+               .TextColor(Color.Blue)
+               .TextHorizontalAlignment(HorizontalAlignment.Center)
+               .TextVerticalAlignment(VerticalAlignment.Center)
+               .OnClick((sender, args) => System.Diagnostics.Trace.Write("i clicked a button"));
+
+            gui.AddGuiHost("Main", smallButton, largeButton);
+            gui.SwitchTo("Main");
 
         }
 

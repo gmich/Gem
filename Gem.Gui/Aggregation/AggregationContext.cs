@@ -6,19 +6,25 @@ namespace Gem.Gui.Aggregation
 {
     public class AggregationContext
     {
-        private readonly List<IAggregator> aggregators = new List<IAggregator>();
+        private readonly IList<IAggregator> aggregators;
+        private readonly List<GuiEntry> entries = new List<GuiEntry>();
 
         public AControl FocusedControl { get; set; }
 
-        private readonly List<GuiEntry> entries = new List<GuiEntry>();
 
-        public IDisposable AddAggregator(IAggregator aggregator)
+        public AggregationContext(IList<IAggregator> aggregators, params AControl[] controls)
+        {
+            this.aggregators = aggregators;
+            AddControlRange(controls);
+        }
+
+        private IDisposable AddAggregator(IAggregator aggregator)
         {
             aggregators.Add(aggregator);
             return Gem.Infrastructure.Disposable.Create(aggregators, aggregator);
         }
 
-        public void AddControlRange(params AControl[] controls)
+        private void AddControlRange(params AControl[] controls)
         {
             foreach (var control in controls)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Gem.Gui.Rendering;
 
 namespace Gem.Gui.ScreenSystem
 {
@@ -15,7 +16,7 @@ namespace Gem.Gui.ScreenSystem
         Hidden,
     }
 
-    public abstract class AnimatedGuiScreen : IGuiHost
+    internal abstract class AnimatedGuiScreen : IGuiHost
     {
         private bool otherScreenHasFocus;
 

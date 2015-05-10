@@ -12,7 +12,7 @@ namespace Gem.Gui.Rendering
                        control.Sprite.SourceRectangle,
                        control.RenderParameters.Color,
                        control.RenderParameters.Rotation,
-                       control.Region.Origin,
+                       control.Sprite.Origin,
                        control.RenderParameters.SpriteEffect,
                        control.RenderParameters.Layer);
         }

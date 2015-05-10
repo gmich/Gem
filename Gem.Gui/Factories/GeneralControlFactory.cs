@@ -1,27 +1,42 @@
-﻿using System;
+﻿using Gem.Gui.Alignment;
+using Gem.Gui.Controls;
+using Gem.Gui.Layout;
+using Gem.Gui.Rendering;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.ObjectModel;
 
 namespace Gem.Gui.Factories
 {
     public class GeneralControlFactory : IControlFactory
     {
-        public Controls.ImageButton CreateImageButton()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public Controls.Label CreateLabel()
+        public ImageButton CreateImageButton()
         {
             throw new NotImplementedException();
         }
 
-        public Controls.TextField CreateTextBox()
+        public Label CreateLabel()
         {
             throw new NotImplementedException();
         }
 
-        public Controls.Button CreateButton(Rendering.Region region, Func<Rendering.Region, Microsoft.Xna.Framework.Vector2> originCalculator, Microsoft.Xna.Framework.Graphics.Texture2D texture)
+        public TextField CreateTextBox()
         {
             throw new NotImplementedException();
+        }
+
+        public Button CreateButton(Region region, Texture2D texture)
+        {
+            return new Button(texture, region);
+        }
+
+        public ListView CreateListView(Texture2D texture,
+                                       Region region,
+                                       Orientation orientation, 
+                                       AlignmentContext alignment,
+                                       ReadOnlyCollection<AControl> controls)
+        {
+            return new ListView(texture, alignment, orientation, region, controls);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input.Touch;
+using System;
 using System.Diagnostics;
 
 namespace Gem.Gui.Input
@@ -54,25 +55,25 @@ namespace Gem.Gui.Input
 
         private static void EvaluateInputDevices()
         {
-            keyboardHelper =
-                inputCaps.IsKeyboardEnabled ?
-                keyboardHelper ?? new KeyboardInputHelper()
-                : null;
+            //keyboardHelper =
+            //    inputCaps.IsKeyboardEnabled ?
+            //    keyboardHelper ?? new KeyboardInputHelper()
+            //    : null;
 
-            mouseHelper =
-                inputCaps.IsMouseEnabled ?
-                mouseHelper ?? new MouseInputHelper()
-                : null;
+            //mouseHelper =
+            //    inputCaps.IsMouseEnabled ?
+            //    mouseHelper ?? new MouseInputHelper()
+            //    : null;
 
-            touchHelper =
-                inputCaps.IsTouchEnabled ?
-                touchHelper ?? new TouchInputHelper()
-                : null;
+            //touchHelper =
+            //    inputCaps.IsTouchEnabled ?
+            //    touchHelper ?? new TouchInputHelper()
+            //    : null;
 
-            gamePadHelper =
-                inputCaps.IsGamePadEnabled ?
-                gamePadHelper ?? new GamePadInputHelper()
-                : null;
+            //gamePadHelper =
+            //    inputCaps.IsGamePadEnabled ?
+            //    gamePadHelper ?? new GamePadInputHelper()
+            //    : null;
         }
 
         [Conditional("ANDROID"), Conditional("WINDOWS_PHONE")]
@@ -95,39 +96,39 @@ namespace Gem.Gui.Input
 
         #region Public Properties
 
-        private static KeyboardInputHelper keyboardHelper;
+        private static Lazy<KeyboardInputHelper> keyboardHelper = new Lazy<KeyboardInputHelper>();
         public static KeyboardInputHelper Keyboard
         {
             get
             {
-                return keyboardHelper;
+                return keyboardHelper.Value;
             }
         }
 
-        private static MouseInputHelper mouseHelper;
+        private static Lazy<MouseInputHelper> mouseHelper = new Lazy<MouseInputHelper>();
         public static MouseInputHelper Mouse
         {
             get
             {
-                return mouseHelper;
+                return mouseHelper.Value;
             }
         }
 
-        private static TouchInputHelper touchHelper;
+        private static Lazy<TouchInputHelper> touchHelper = new Lazy<TouchInputHelper>();
         public static TouchInputHelper Touch
         {
             get
             {
-                return touchHelper;
+                return touchHelper.Value;
             }
         }
 
-        private static GamePadInputHelper gamePadHelper;
+        private static Lazy<GamePadInputHelper> gamePadHelper = new Lazy<GamePadInputHelper>();
         public static GamePadInputHelper GamePad
         {
             get
             {
-                return gamePadHelper;
+                return gamePadHelper.Value;
             }
         }
 
@@ -138,15 +139,15 @@ namespace Gem.Gui.Input
         public static void Update()
         {
             FlushDesktop();
-            Flush(touchHelper);
+            Flush(Touch);
         }
 
         [Conditional("WINDOWS"), Conditional("LINUX")]
         private static void FlushDesktop()
         {
-            Flush(keyboardHelper);
-            Flush(mouseHelper);
-            Flush(gamePadHelper);
+            Flush(Keyboard);
+            Flush(Mouse);
+            Flush(GamePad);
         }
 
         private static void Flush(IInputHelper inputHelper)

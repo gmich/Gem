@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
+using Gem.Gui.Rendering;
 
 namespace Gem.Gui.ScreenSystem
 {
@@ -19,13 +20,11 @@ namespace Gem.Gui.ScreenSystem
         private List<IGuiHost> screensToUpdate = new List<IGuiHost>();
         private List<RenderTarget2D> transitions = new List<RenderTarget2D>();
 
+        private SpriteBatch spriteBatch { get; set; }
 
         public ScreenManager(Game game)
             : base(game)
-        {
-            Content = game.Content;
-            Content.RootDirectory = "Content";
-        }
+        { }
 
         public IGuiHost ActiveHost
         {
@@ -42,24 +41,13 @@ namespace Gem.Gui.ScreenSystem
             }
         }
 
-        public SpriteBatch SpriteBatch { get; private set; }
-
-        public ContentManager Content { get; private set; }
-
-        /// <summary>
-        /// Initializes the screen manager component.
-        /// </summary>
         public override void Initialize()
         {
-
+            spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
-        /// <summary>
-        /// Load your graphics content.
-        /// </summary>
         protected override void LoadContent()
         {
-            SpriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
         public void Reload()
@@ -71,18 +59,9 @@ namespace Gem.Gui.ScreenSystem
         {
             base.UnloadContent();
         }
-        
 
-        /// <summary>
-        /// Allows each screen to run logic.
-        /// </summary>
         public override void Update(GameTime gameTime)
         {
-            // Read the keyboard and gamepad.
-            //input.Update(gameTime);
-
-            // Make a copy of the master screen list, to avoid confusion if
-            // the process of updating one screen adds or removes others.
             screensToUpdate.Clear();
 
             foreach (var screen in screens)
@@ -93,7 +72,6 @@ namespace Gem.Gui.ScreenSystem
             bool otherScreenHasFocus = !Game.IsActive;
             bool coveredByOtherScreen = false;
 
-            // Loop as long as there are screens waiting to be updated.
             while (screensToUpdate.Count > 0)
             {
                 var screen = screensToUpdate[screensToUpdate.Count - 1];
@@ -117,10 +95,7 @@ namespace Gem.Gui.ScreenSystem
 
         }
 
-        /// <summary>
-        /// Tells each screen to draw itself.
-        /// </summary>
-        public override void Draw(GameTime gameTime)
+        private void DrawScreensWithTransition()
         {
             int transitionCount = 0;
             foreach (var screen in screens)
@@ -136,14 +111,17 @@ namespace Gem.Gui.ScreenSystem
                     }
                     GraphicsDevice.SetRenderTarget(transitions[transitionCount - 1]);
                     GraphicsDevice.Clear(Color.Transparent);
-                    screen.Draw(this.SpriteBatch);
+
+                    DrawHost(screen);
+
                     GraphicsDevice.SetRenderTarget(null);
                 }
             }
+        }
 
-            GraphicsDevice.Clear(Color.Black);
-
-            transitionCount = 0;
+        private void DrawActiveScreen()
+        {
+            int transitionCount = 0;
             foreach (var screen in screens)
             {
                 if (screen.ScreenState == ScreenState.Hidden)
@@ -151,15 +129,35 @@ namespace Gem.Gui.ScreenSystem
 
                 if (screen.ScreenState == ScreenState.TransitionOn || screen.ScreenState == ScreenState.TransitionOff)
                 {
-                    SpriteBatch.Begin(0, BlendState.AlphaBlend);
-                    SpriteBatch.Draw(transitions[transitionCount], Vector2.Zero, Color.White * screen.TransitionAlpha);
-                    SpriteBatch.End();
+                    spriteBatch.Begin(0, BlendState.AlphaBlend);
+                    spriteBatch.Draw(transitions[transitionCount], Vector2.Zero, Color.White * screen.TransitionAlpha);
+                    spriteBatch.End();
 
                     ++transitionCount;
                 }
                 else
-                    screen.Draw(this.SpriteBatch);
+                {
+                    DrawHost(screen);
+                }
             }
+        }
+        /// <summary>
+        /// Tells each screen to draw itself.
+        /// </summary>
+        public override void Draw(GameTime gameTime)
+        {
+            DrawScreensWithTransition();
+
+            GraphicsDevice.Clear(Color.Black);
+
+            DrawActiveScreen();
+        }
+
+        private void DrawHost(IGuiHost host)
+        {
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+            host.Draw(spriteBatch);
+            spriteBatch.End();
         }
 
         /// <summary>

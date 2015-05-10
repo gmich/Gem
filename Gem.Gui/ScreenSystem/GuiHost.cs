@@ -1,5 +1,6 @@
 ﻿using Gem.Gui.Aggregation;
 using Gem.Gui.Controls;
+using Gem.Gui.Layout;
 using Gem.Gui.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,28 +9,18 @@ using System.Linq;
 
 namespace Gem.Gui.ScreenSystem
 {
-    public class GuiHost : AnimatedGuiScreen
+    internal class GuiHost : AnimatedGuiScreen
     {
-        private readonly AggregationContext aggregationContext; 
+        private readonly AggregationContext aggregationContext;
+        private readonly IList<AControl> controls = new List<AControl>();
+        private readonly IControlDrawable controlDrawable = Fluent.RenderControlBy.Frame;
+        private readonly ITextDrawable textDrawable = Fluent.RenderTextBy.Position;
 
-        private readonly List<AControl> controls = new List<AControl>();
-
-        private readonly IControlDrawable controlRenderer;
-        private readonly ITextDrawable textRenderer; 
-
-        public GuiHost(List<AControl> controls):base()
+        public GuiHost(List<AControl> controls, AggregationContext aggregationContext)
+            : base()
         {
             this.controls = controls;
-
-            //TODO: provide from ioc container
-            this.aggregationContext = null;
-            this.controlRenderer = null;
-            this.textRenderer = null;
-        }
-
-        public static GuiHost Create(AControl[] controls)
-        {
-            return new GuiHost(controls.ToList());
+            this.aggregationContext = aggregationContext;
         }
 
         public AControl this[int id]
@@ -58,7 +49,7 @@ namespace Gem.Gui.ScreenSystem
             aggregationContext.Aggregate();
         }
 
-         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
@@ -72,8 +63,12 @@ namespace Gem.Gui.ScreenSystem
         {
             foreach (var control in controls)
             {
-                controlRenderer.Render(batch,control);
-                textRenderer.Render(batch,control.Text);
+                controlDrawable.Render(batch, control);
+
+                if (control.Text != null)
+                {
+                    textDrawable.Render(batch, control.Text);
+                }
             }
         }
     }

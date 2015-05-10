@@ -8,8 +8,11 @@ using Gem.Gui.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using Gem.Gui.Layout;
+using Gem.Gui.Alignment;
 
 namespace Gem.Gui
 {
@@ -19,15 +22,14 @@ namespace Gem.Gui
         #region Fields
 
         private readonly IConfigurationResolver configuration;
-        private readonly IControlDrawable controlDrawable = Fluent.RenderControlBy.Frame;
-        private readonly ITextDrawable textDrawable = Fluent.RenderTextBy.Position;
         private readonly IControlFactory controlFactory;
+        private readonly AggregationTarget aggregationTarget;
 
         private readonly AssetContainer<SpriteFont> _fontContainer;
         private readonly AssetContainer<Texture2D> _textureContainer;
 
         private readonly Settings settings;
-        private readonly Dictionary<string, GuiHost> hosts = new Dictionary<string, GuiHost>();
+        private readonly Dictionary<string, IGuiHost> hosts = new Dictionary<string, IGuiHost>();
         private ScreenManager screenManager;
 
         #endregion
@@ -40,12 +42,14 @@ namespace Gem.Gui
                       IConfigurationResolver configuration = null)
         {
             this.configuration = configuration ?? new DefaultConfiguration();
+            this.aggregationTarget = aggregationTarget;
             this.settings = new Settings(game);
             this.controlFactory = this.configuration.GetControlFactory(controlTarget);
             screenManager = new ScreenManager(game);
+            game.Components.Add(screenManager);
+
             _fontContainer = new AssetContainer<SpriteFont>(game.Content);
             _textureContainer = new AssetContainer<Texture2D>(game.Content);
-            game.Components.Add(screenManager);
         }
 
         public void Dispose()
@@ -68,13 +72,33 @@ namespace Gem.Gui
 
         #region Control Factory
 
+        private Texture2D CreateDummyTexture()
+        {
+            var texture = new Texture2D(screenManager.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            texture.SetData(new[] { Color.White });
+
+            return texture;
+        }
 
         public Button Button(int x, int y, int sizeX, int sizeY, Func<Region, Vector2> originCalculator = null)
         {
             return controlFactory.CreateButton(new Region(new Vector2(x, y),
-                                                           new Vector2(sizeX, sizeY)),
-                                                           originCalculator,
-                                                           new Texture2D(screenManager.GraphicsDevice, 1, 1));
+                                                           new Vector2(sizeX, sizeY),
+                                                           originCalculator),
+                                                           CreateDummyTexture());
+        }
+
+        public ListView ListView(int x, int y, int sizeX, int sizeY,
+                                 Orientation orientation,
+                                 AlignmentContext alignmentContext = null,
+                                 params AControl[] controls)
+        {
+            return controlFactory.CreateListView(CreateDummyTexture(),
+                                                 new Region(new Vector2(x, y),
+                                                            new Vector2(sizeX, sizeY)),
+                                                 orientation,
+                                                 alignmentContext ?? AlignmentContext.Default,
+                                                 controls.ToList().AsReadOnly());
         }
 
         //TODO: add the rest
@@ -91,10 +115,23 @@ namespace Gem.Gui
 
         #region Public Helper Methods
 
-        public void AddGuiHost(string guiHostId, GuiHost host)
+        public void AddGuiHost(string guiHostId, params AControl[] controls)
+        {
+            foreach (var control in controls)
+            {
+                control.Align(new Region(Vector2.Zero, settings.Resolution));
+                settings.OnResolutionChange((sender, args) =>
+                                            control.Align(new Region(Vector2.Zero, settings.Resolution)));
+            }
+            AddGuiHost(guiHostId,
+                       new GuiHost(controls.ToList(),
+                                   new AggregationContext(configuration.GetAggregators(aggregationTarget), controls)));
+        }
+
+        public void AddGuiHost(string guiHostId, IGuiHost guiHost)
         {
             Contract.Requires(!hosts.ContainsKey(guiHostId), "A GuiHost with the same id is already registered");
-            this.hosts.Add(guiHostId, host);
+            this.hosts.Add(guiHostId, guiHost);
         }
 
         public void Disable()

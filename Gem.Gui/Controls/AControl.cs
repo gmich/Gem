@@ -38,7 +38,9 @@ namespace Gem.Gui.Controls
         public Options Options { get; set; }
 
         public Region Region { get; set; }
-        
+
+        public Padding Padding { get; set; }
+
         #endregion
 
         #region Ctor
@@ -56,6 +58,17 @@ namespace Gem.Gui.Controls
         #endregion
 
         #region Public Members
+
+        public virtual void Align(Region viewPort)
+        {
+            if(Text!=null)
+            {
+                foreach(var transformation in Text.Alignment.AlignementTransformations(this.Region,Text.Region,Text.Padding))
+                {
+                    Text.Alignment.ActiveTransformations(this.AddTransformation(transformation));
+                }
+            }
+        }
 
         public System.IDisposable AddTransformation(ITransformation transformation)
         {
@@ -75,6 +88,12 @@ namespace Gem.Gui.Controls
                 }
                 transformations[index].Transform(this, deltaTime);
             }
+        }
+
+        public override string ToString()
+        {
+            //TODO: implement
+            return base.ToString();
         }
 
         #endregion

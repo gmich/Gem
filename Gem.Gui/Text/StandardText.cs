@@ -20,15 +20,18 @@ namespace Gem.Gui.Text
 
         #region Ctor
 
-        public StandardText(SpriteFont font, string value)
-            : this(font, value, AlignmentContext.Default)
+        public StandardText(SpriteFont font, Vector2 position, string value)
+            : this(font,position, value, AlignmentContext.Default)
         { }
 
-        public StandardText(SpriteFont font, string value, AlignmentContext alignment)
+        public StandardText(SpriteFont font,Vector2 position, string value, AlignmentContext alignment = null)
         {
             this.font = font;
             this.Value = value;
             this.Alignment = alignment;
+            this.RenderParameters = new RenderParameters();
+            this.Alignment = alignment ?? AlignmentContext.Default;
+            this.Region = new Region(position, Font.MeasureString(value));
         }
 
         #endregion
@@ -64,6 +67,14 @@ namespace Gem.Gui.Text
             get { return _region; }
             set { _region = value; }
         }
+
+        private Padding _padding;
+        public Padding Padding
+        {
+            get { return _padding; }
+            set { _padding = value; }
+        }
+
         private RenderParameters _renderParameters;
         public RenderParameters RenderParameters 
         {

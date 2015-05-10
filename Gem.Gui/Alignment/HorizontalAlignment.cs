@@ -22,9 +22,9 @@ namespace Gem.Gui.Alignment
 
         private class LeftAlignment : IHorizontalAlignable
         {
-            public Region Align(Region parent, Region child)
+            public Region Align(Region parent, Region child, Padding padding)
             {
-                return new Region(new Vector2(parent.Position.X, child.Position.Y), child.Size);
+                return new Region(new Vector2(parent.Position.X + padding.Left, child.Position.Y), child.Size);
             }
         }
 
@@ -42,9 +42,10 @@ namespace Gem.Gui.Alignment
         }
         private class CenterAlignent : IHorizontalAlignable
         {
-            public Region Align(Region parent, Region region)
+            public Region Align(Region parent, Region child, Padding padding)
             {
-                throw new NotImplementedException();
+                float centerX = parent.Position.X + parent.Size.X / 2;
+                return new Region(new Vector2(centerX - child.Size.X / 2, child.Position.Y), child.Size);
             }
         }
 
@@ -62,9 +63,9 @@ namespace Gem.Gui.Alignment
         }
         private class RightAlignment : IAlignable
         {
-            public Region Align(Region parent, Region region)
+            public Region Align(Region parent, Region child, Padding padding)
             {
-                throw new NotImplementedException();
+                return new Region(new Vector2(parent.Position.X - child.Size.X - padding.Right, child.Position.Y), child.Size);
             }
         }
 
@@ -82,9 +83,10 @@ namespace Gem.Gui.Alignment
         }
         private class StretchAlignent : IHorizontalAlignable
         {
-            public Region Align(Region parent, Region region)
+            public Region Align(Region parent, Region child, Padding padding)
             {
-                throw new NotImplementedException();
+                return new Region(new Vector2(parent.Position.X + padding.Left, child.Position.Y),
+                                  new Vector2(parent.Size.X - padding.Right, child.Size.Y));
             }
         }
 
@@ -102,7 +104,7 @@ namespace Gem.Gui.Alignment
         }
         private class ManualAlignent : IHorizontalAlignable
         {
-            public Region Align(Region parent, Region child)
+            public Region Align(Region parent, Region child, Padding padding)
             {
                 return child;
             }

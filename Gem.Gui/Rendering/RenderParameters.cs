@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.ComponentModel;
 using Gem.Infrastructure.Attributes;
 
-namespace Gem.Gui.Core.Styles
+namespace Gem.Gui.Rendering
 {
     /// <summary>
     /// A class that contains all the info the spritebatch needs to render something on the screen.
@@ -28,7 +28,7 @@ namespace Gem.Gui.Core.Styles
         [DefaultValue(1.0f)]
         public float Layer { get; set; }
 
-        [DefaultValue(1.0f)]
+        [DefaultValue(0.0f)]
         public float Rotation { get; set; }
 
         [DefaultValue(SpriteEffects.None)]

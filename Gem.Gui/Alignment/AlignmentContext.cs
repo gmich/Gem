@@ -34,18 +34,22 @@ namespace Gem.Gui.Alignment
             }
         }
 
+        public void ActiveTransformations(IDisposable transformation)
+        {
+            this.activeTransformations.Add(transformation);
+        }
+
         /// <summary>
         /// Returns a list of transformations that adjusts a child region to its parent
         /// </summary>
         /// <remarks>AdjustLocation uses Horizontal and Vertical alignment.
         /// Invoke with Foreach to get both the ITransformation instances</remarks>
         /// <returns>An IEnumerable of Transformations</returns>
-        internal IEnumerable<ITransformation> AdjustLocation(Region parent, Region child)
+        internal IEnumerable<ITransformation> AlignementTransformations(Region parent, Region child, Padding padding)
         {
             Flush();
-
-            yield return Transition.CreateTransition(child, HorizontalAlignment.Align(parent, child));
-            yield return Transition.CreateTransition(child, VerticalAlignment.Align(parent, child));
+            yield return Transition.CreateTransition(child, HorizontalAlignment.Align(parent, child, padding));
+            yield return Transition.CreateTransition(child, VerticalAlignment.Align(parent, child, padding));
         }
 
     }

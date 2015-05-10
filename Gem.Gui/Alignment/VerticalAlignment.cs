@@ -22,9 +22,9 @@ namespace Gem.Gui.Alignment
 
         private class TopAlignment : IVerticalAlignable
         {
-            public Region Align(Region parent, Region region)
+            public Region Align(Region parent, Region child, Padding padding)
             {
-                throw new NotImplementedException();
+                return new Region(new Vector2(child.Position.X, parent.Position.Y + padding.Top), child.Size);
             }
         }
 
@@ -40,11 +40,13 @@ namespace Gem.Gui.Alignment
                 return center.Value;
             }
         }
+
         private class CenterAlignment : IVerticalAlignable
         {
-            public Region Align(Region parent, Region region)
+            public Region Align(Region parent, Region child, Padding padding)
             {
-                throw new NotImplementedException();
+                float centerY = parent.Position.Y + parent.Size.Y / 2;
+                return new Region(new Vector2(child.Position.Y, centerY - child.Size.Y / 2), child.Size);
             }
         }
 
@@ -60,11 +62,13 @@ namespace Gem.Gui.Alignment
                 return bottom.Value;
             }
         }
+
         private class BottomAlignment : IVerticalAlignable
         {
-            public Region Align(Region parent, Region region)
+            public Region Align(Region parent, Region child, Padding padding)
             {
-                throw new NotImplementedException();
+                return new Region(new Vector2(child.Position.X, parent.Position.Y - child.Size.Y - padding.Bottom), child.Size);
+
             }
         }
 
@@ -80,11 +84,13 @@ namespace Gem.Gui.Alignment
                 return stretch.Value;
             }
         }
+
         private class StretchAlignment : IVerticalAlignable
         {
-            public Region Align(Region parent, Region region)
+            public Region Align(Region parent, Region child, Padding padding)
             {
-                throw new NotImplementedException();
+                return new Region(new Vector2(child.Position.X, parent.Position.Y + padding.Top),
+                                  new Vector2(child.Size.X, parent.Size.Y - padding.Right));
             }
         }
 
@@ -100,9 +106,10 @@ namespace Gem.Gui.Alignment
                 return manual.Value;
             }
         }
+
         private class ManualAlignment : IVerticalAlignable
         {
-            public Region Align(Region parent, Region child)
+            public Region Align(Region parent, Region child, Padding padding)
             {
                 return child;
             }

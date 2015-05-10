@@ -1,10 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Gem.Gui.Rendering;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Gem.Gui.ScreenSystem
 {
     public interface IGuiHost
     {
+
         ScreenState ScreenState { get; }
 
         float TransitionAlpha { get;  }

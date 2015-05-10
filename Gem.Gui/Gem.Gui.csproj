@@ -72,13 +72,11 @@
     <Compile Include="Rendering\ControlFrameDrawable.cs" />
     <Compile Include="Rendering\ControlPositionDrawable.cs" />
     <Compile Include="Fluent\RenderControlBy.cs" />
+    <Compile Include="Rendering\Padding.cs" />
     <Compile Include="Rendering\Sprite.cs" />
     <Compile Include="Rendering\TextDrawable.cs" />
     <Compile Include="ScreenSystem\AnimatedGuiScreen.cs" />
-    <Compile Include="Layout\GridView.cs" />
-    <Compile Include="Layout\ILayout.cs" />
     <Compile Include="Layout\ListView.cs" />
-    <Compile Include="Layout\Linear.cs" />
     <Compile Include="ScreenSystem\IGuiHost.cs" />
     <Compile Include="ScreenSystem\ScreenManager.cs" />
     <Compile Include="Styles\IRenderStyle.cs" />
@@ -114,7 +112,7 @@
     <Compile Include="Rendering\ImmutableRegion.cs" />
     <Compile Include="Rendering\Region.cs" />
     <Compile Include="Rendering\IControlDrawable.cs" />
-    <Compile Include="Styles\RenderParameters.cs" />
+    <Compile Include="Rendering\RenderParameters.cs" />
     <Compile Include="Text\IText.cs" />
     <Compile Include="Text\StandardText.cs" />
     <Compile Include="Text\TextEventArgs.cs" />

@@ -12,6 +12,8 @@ namespace Gem.Gui.Text
 
         Region Region { get; set;  }
 
+        Padding Padding { get; set; }
+
         SpriteFont Font { get;  }
 
         string Value { get; set; }
