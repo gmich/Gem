@@ -16,7 +16,10 @@ namespace Gem.Gui.Rendering
             this.AssignDefaultValues();
             this.Color = Color.White;
             this.Scale = Vector2.One;
+            this.Origin = Vector2.Zero;
         }
+
+        public Vector2 Origin { get; set; }
 
         public Color Color { get; set; }
 

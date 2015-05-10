@@ -55,6 +55,7 @@
     <Compile Include="Alignment\AlignmentContext.cs" />
     <Compile Include="Alignment\AlignmentTransition.cs" />
     <Compile Include="Alignment\FixedTransition.cs" />
+    <Compile Include="Alignment\AlignmentResult.cs" />
     <Compile Include="Alignment\IAlignmentTransition.cs" />
     <Compile Include="Configuration\DefaultConfiguration.cs" />
     <Compile Include="Configuration\IConfigurationResolver.cs" />

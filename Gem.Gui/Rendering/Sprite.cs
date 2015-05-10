@@ -19,16 +19,12 @@ namespace Gem.Gui.Rendering
         {
             private readonly Texture2D texture;
             private readonly Rectangle? sourceRectangle;
-            private readonly Vector2 origin;
 
-            public SpriteItem(Texture2D texture, Vector2? origin = null, Rectangle? sourceRectangle = null)
+            public SpriteItem(Texture2D texture, Rectangle? sourceRectangle = null)
             {
                 this.texture = texture;
                 this.sourceRectangle = sourceRectangle;
-                this.origin = origin ?? Vector2.Zero;
             }
-
-            public Vector2 Origin { get { return origin; } }
 
             public Texture2D Texture { get { return texture; } }
 
@@ -39,10 +35,10 @@ namespace Gem.Gui.Rendering
 
         #region Ctor
 
-        public Sprite(Texture2D texture, Vector2? origin = null, Rectangle? sourceRectangle = null)
+        public Sprite(Texture2D texture, Rectangle? sourceRectangle = null)
         {
             this.spriteContainer = new AContainer<SpriteItem>();
-            this.Add(target, texture,origin, sourceRectangle);
+            this.Add(target, texture, sourceRectangle);
         }
 
         #endregion
@@ -52,11 +48,6 @@ namespace Gem.Gui.Rendering
         public Texture2D Texture
         {
             get { return spriteContainer[target].Texture; }
-        }
-
-        public Vector2 Origin
-        {
-            get { return spriteContainer[target].Origin; }
         }
 
         public Rectangle? SourceRectangle
@@ -77,9 +68,9 @@ namespace Gem.Gui.Rendering
             return false;
         }
 
-        public bool Add(string spriteId, Texture2D texture, Vector2? origin = null, Rectangle? sourceRectangle = null)
+        public bool Add(string spriteId, Texture2D texture, Rectangle? sourceRectangle = null)
         {
-            return spriteContainer.Add(spriteId, new SpriteItem(texture, origin, sourceRectangle));
+            return spriteContainer.Add(spriteId, new SpriteItem(texture, sourceRectangle));
         }
 
         #endregion

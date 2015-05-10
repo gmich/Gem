@@ -15,7 +15,7 @@ namespace Gem.Gui.Transformations
 
         private readonly Action<double, AControl> transformer;
         private readonly Predicate<AControl> expirationPredicate;
-        private bool enabled = false;
+        private bool enabled = true;
 
         #endregion
 
@@ -32,7 +32,7 @@ namespace Gem.Gui.Transformations
 
         public void Transform(AControl control, double deltaTime)
         {
-            if (enabled = expirationPredicate(control))
+            if (enabled = !expirationPredicate(control))
             {
                 transformer(deltaTime, control);
             }

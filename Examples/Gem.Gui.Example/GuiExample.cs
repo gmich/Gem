@@ -20,6 +20,7 @@ namespace Gem.Gui.Example
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            this.IsMouseVisible = true;
         }
 
         /// <summary>
@@ -48,23 +49,25 @@ namespace Gem.Gui.Example
                           container => container.Load<SpriteFont>(@"segoe-10"));
 
             var smallButton =
-               gui.Button(50, 50, 10, 10)
-               .Color(Color.Yellow)
-               .Text("Test", 2, 2, gui.Fonts["segoe-10"])
-               .TextColor(Color.Red)
+               gui.Button(50, 50, 100, 100)
+               .Color(Color.White)
+               .Text("Test", 0, 0, gui.Fonts["segoe-10"])
+               .TextColor(Color.Black)
+               .TextHorizontalAlignment(HorizontalAlignment.Center)
+               .TextVerticalAlignment(VerticalAlignment.Bottom)
                .OnClick((sender, args) => System.Diagnostics.Trace.Write("i clicked a button"));
 
             var largeButton =
-               gui.Button(200, 200, 100, 100)
+                gui.Button(x: 200, y: 200, sizeX: 100, sizeY: 100)
                .Color(Color.Violet)
-               .Text("Test", 2, 2, gui.Fonts["segoe-10"])
+               .Text("Tester", 20, 20, gui.Fonts["segoe-10"])
                .TextColor(Color.Blue)
                .TextHorizontalAlignment(HorizontalAlignment.Center)
                .TextVerticalAlignment(VerticalAlignment.Center)
                .OnClick((sender, args) => System.Diagnostics.Trace.Write("i clicked a button"));
 
             gui.AddGuiHost("Main", smallButton, largeButton);
-            gui.SwitchTo("Main");
+            gui.Show("Main");
 
         }
 

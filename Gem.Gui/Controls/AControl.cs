@@ -61,19 +61,16 @@ namespace Gem.Gui.Controls
 
         public virtual void Align(Region viewPort)
         {
-            if(Text!=null)
+            if (Text != null)
             {
-                foreach(var transformation in Text.Alignment.AlignementTransformations(this.Region,Text.Region,Text.Padding))
-                {
-                    Text.Alignment.ActiveTransformations(this.AddTransformation(transformation));
-                }
+                var transformation = Text.Alignment.GetAlignementTransformation(this.Region, Text.Region, Text.Padding);
+                Text.Alignment.ActiveTransformations(this.AddTransformation(transformation));
             }
         }
 
         public System.IDisposable AddTransformation(ITransformation transformation)
         {
             transformations.Add(transformation);
-
             return Gem.Infrastructure.Disposable.Create(transformations, transformation);
         }
 
@@ -81,7 +78,7 @@ namespace Gem.Gui.Controls
         {
             for (int index = 0; index < transformations.Count(); index++)
             {
-                if (transformations[index].Enabled)
+                if (!transformations[index].Enabled)
                 {
                     transformations.RemoveAt(index);
                     continue;

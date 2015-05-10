@@ -25,7 +25,7 @@ namespace Gem.Gui.Fluent
 
         public static AControl TextColor(this AControl control, Color color)
         {
-            Contract.Requires(control.Text != null, "Use SetText() before setting the text's color");
+            Contract.Requires(control.Text != null, "Use Text() before setting the text's color");
 
             control.Text.RenderParameters.Color = color;
             return control;
@@ -33,7 +33,7 @@ namespace Gem.Gui.Fluent
 
         public static AControl TextHorizontalAlignment(this AControl control, IHorizontalAlignable horizontalAignment)
         {
-            Contract.Requires(control.Text != null, "Use SetText() before setting the text's color");
+            Contract.Requires(control.Text != null, "Use Text() before setting the text's color");
 
             control.Text.Alignment.HorizontalAlignment = horizontalAignment;
             return control;
@@ -41,7 +41,7 @@ namespace Gem.Gui.Fluent
 
         public static AControl TextVerticalAlignment(this AControl control, IVerticalAlignable verticalAignment)
         {
-            Contract.Requires(control.Text != null, "Use SetText() before setting the text's color");
+            Contract.Requires(control.Text != null, "Use Text() before setting the text's color");
 
             control.Text.Alignment.VerticalAlignment = verticalAignment;
             return control;

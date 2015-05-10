@@ -22,7 +22,7 @@ namespace Gem.Gui.Rendering
         /// <summary>
         /// In case the origin is not the center of the element, provide a different calculation method
         /// </summary>
-        private readonly Func<Region, Vector2> OriginCalculator;
+        private readonly Func<Region, Vector2> CenterCalculator;
 
         /// <summary>
         /// Raised when the region changes position.
@@ -38,24 +38,27 @@ namespace Gem.Gui.Rendering
 
         private Vector2 position;
         private Vector2 size;
-        private Vector2 origin;
+        private Vector2 center;
         private Rectangle frame;
 
         #endregion
 
         #region Ctor
 
-        public Region(Vector2 position, Vector2 size, Func<Region, Vector2> originCalculator = null)
+        public Region(Vector2 position, Vector2 size, Func<Region, Vector2> centerCalculator = null)
         {
-            OriginCalculator = (originCalculator == null) ?
+            CenterCalculator = (centerCalculator == null) ?
                                 region => new Vector2(region.Size.X / 2, region.Size.Y / 2) :
-                                originCalculator;
+                                centerCalculator;
             this.position = position;
             this.size = size;
-            this.origin = OriginCalculator(this);
+            this.center = CenterCalculator(this);
             AdjustFrameBoundaries();
         }
 
+        public Region(float positionX, float positionY, float sizeX, float sizeY, Func<Region, Vector2> centerCalculator = null)
+            :this(new Vector2(positionX,positionY),new Vector2(sizeX,sizeY),centerCalculator)
+        {  }
         #endregion
 
         #region Public Properties
@@ -87,17 +90,17 @@ namespace Gem.Gui.Rendering
                 var previousState = new ImmutableRegion(this);
                 size = value;
                 AdjustFrameBoundaries();
-                origin = OriginCalculator(this);
+                center = CenterCalculator(this);
 
                 OnPositionChange(new RegionEventArgs { PreviousState = previousState });
             }
         }
 
-        public Vector2 Origin
+        public Vector2 Center
         {
             get
             {
-                return origin;
+                return center;
             }
         }
 
@@ -170,7 +173,7 @@ namespace Gem.Gui.Rendering
         {
             return position.GetHashCode()
                  ^ size.GetHashCode()
-                 ^ origin.GetHashCode();
+                 ^ center.GetHashCode();
         }
 
         public static bool operator ==(Region left, Region right)

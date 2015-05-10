@@ -8,6 +8,6 @@ namespace Gem.Gui.Alignment
         /// Calculates the new child region
         /// </summary>
         /// <returns>The new child's region </returns>
-        Region Align(Region parent, Region child, Padding padding);
+        AlignmentResult Align(Region parent, Region child, Padding padding);
     }
 }

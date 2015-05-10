@@ -57,6 +57,7 @@ namespace Gem.Gui.ScreenSystem
             {
                 control.Update(gameTime.ElapsedGameTime.TotalSeconds);
             }
+
         }
 
         public override void Draw(SpriteBatch batch)

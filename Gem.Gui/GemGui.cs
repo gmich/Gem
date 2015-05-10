@@ -119,7 +119,7 @@ namespace Gem.Gui
         {
             foreach (var control in controls)
             {
-                control.Align(new Region(Vector2.Zero, settings.Resolution));
+                //control.Align(new Region(Vector2.Zero, settings.Resolution));
                 settings.OnResolutionChange((sender, args) =>
                                             control.Align(new Region(Vector2.Zero, settings.Resolution)));
             }
@@ -139,7 +139,7 @@ namespace Gem.Gui
             screenManager.Enabled = false;
         }
 
-        public void SwitchTo(string guiHostId)
+        public void Show(string guiHostId)
         {
             Contract.Requires(hosts.ContainsKey(guiHostId), "GuiHost was not found");
 

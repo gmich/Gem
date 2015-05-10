@@ -22,9 +22,9 @@ namespace Gem.Gui.Alignment
 
         private class TopAlignment : IVerticalAlignable
         {
-            public Region Align(Region parent, Region child, Padding padding)
+            public AlignmentResult Align(Region parent, Region child, Padding padding)
             {
-                return new Region(new Vector2(child.Position.X, parent.Position.Y + padding.Top), child.Size);
+                return new AlignmentResult(parent.Frame.Top + padding.Top, child.Size.Y);
             }
         }
 
@@ -43,10 +43,10 @@ namespace Gem.Gui.Alignment
 
         private class CenterAlignment : IVerticalAlignable
         {
-            public Region Align(Region parent, Region child, Padding padding)
+            public AlignmentResult Align(Region parent, Region child, Padding padding)
             {
                 float centerY = parent.Position.Y + parent.Size.Y / 2;
-                return new Region(new Vector2(child.Position.Y, centerY - child.Size.Y / 2), child.Size);
+                return new AlignmentResult(centerY - child.Size.Y / 2, child.Size.Y);
             }
         }
 
@@ -65,9 +65,9 @@ namespace Gem.Gui.Alignment
 
         private class BottomAlignment : IVerticalAlignable
         {
-            public Region Align(Region parent, Region child, Padding padding)
+            public AlignmentResult Align(Region parent, Region child, Padding padding)
             {
-                return new Region(new Vector2(child.Position.X, parent.Position.Y - child.Size.Y - padding.Bottom), child.Size);
+                return new AlignmentResult(parent.Frame.Bottom - child.Size.Y - padding.Bottom, child.Size.Y);
 
             }
         }
@@ -76,23 +76,23 @@ namespace Gem.Gui.Alignment
 
         #region Stretch
 
-        private static Lazy<StretchAlignment> stretch = new Lazy<StretchAlignment>();
-        public static IVerticalAlignable Stretch
-        {
-            get
-            {
-                return stretch.Value;
-            }
-        }
+        //private static Lazy<StretchAlignment> stretch = new Lazy<StretchAlignment>();
+        //public static IVerticalAlignable Stretch
+        //{
+        //    get
+        //    {
+        //        return stretch.Value;
+        //    }
+        //}
 
-        private class StretchAlignment : IVerticalAlignable
-        {
-            public Region Align(Region parent, Region child, Padding padding)
-            {
-                return new Region(new Vector2(child.Position.X, parent.Position.Y + padding.Top),
-                                  new Vector2(child.Size.X, parent.Size.Y - padding.Right));
-            }
-        }
+        //private class StretchAlignment : IVerticalAlignable
+        //{
+        //    public AlignmentResult Align(Region parent, Region child, Padding padding)
+        //    {
+        //        return new AlignmentResult(parent.Position.Y + padding.Top,
+        //                                   parent.Size.Y - padding.Right);
+        //    }
+        //}
 
         #endregion
 
@@ -109,9 +109,9 @@ namespace Gem.Gui.Alignment
 
         private class ManualAlignment : IVerticalAlignable
         {
-            public Region Align(Region parent, Region child, Padding padding)
+            public AlignmentResult Align(Region parent, Region child, Padding padding)
             {
-                return child;
+                return new AlignmentResult(child.Position.X,child.Size.X);
             }
 
         }

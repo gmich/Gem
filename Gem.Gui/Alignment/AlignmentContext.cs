@@ -1,5 +1,6 @@
 ﻿using Gem.Gui.Rendering;
 using Gem.Gui.Transformations;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
@@ -8,22 +9,22 @@ namespace Gem.Gui.Alignment
     public class AlignmentContext
     {
         private readonly List<IDisposable> activeTransformations = new List<IDisposable>();
-
         public IHorizontalAlignable HorizontalAlignment { get; set; }
         public IVerticalAlignable VerticalAlignment { get; set; }
         public IAlignmentTransition Transition { get; set; }
 
-        private static Lazy<AlignmentContext> defaultOptions = new Lazy<AlignmentContext>(() =>
-            new AlignmentContext
-            {
-                HorizontalAlignment = Alignment.HorizontalAlignment.Manual,
-                VerticalAlignment = Alignment.VerticalAlignment.Manual,
-                Transition = AlignmentTransition.Fixed
-            });
 
         public static AlignmentContext Default
         {
-            get { return defaultOptions.Value; }
+            get
+            {
+                return new AlignmentContext
+                    {
+                        HorizontalAlignment = Alignment.HorizontalAlignment.Manual,
+                        VerticalAlignment = Alignment.VerticalAlignment.Manual,
+                        Transition = AlignmentTransition.Fixed
+                    };
+            }
         }
 
         private void Flush()
@@ -45,11 +46,14 @@ namespace Gem.Gui.Alignment
         /// <remarks>AdjustLocation uses Horizontal and Vertical alignment.
         /// Invoke with Foreach to get both the ITransformation instances</remarks>
         /// <returns>An IEnumerable of Transformations</returns>
-        internal IEnumerable<ITransformation> AlignementTransformations(Region parent, Region child, Padding padding)
+        internal ITransformation GetAlignementTransformation(Region parent, Region child, Padding padding)
         {
             Flush();
-            yield return Transition.CreateTransition(child, HorizontalAlignment.Align(parent, child, padding));
-            yield return Transition.CreateTransition(child, VerticalAlignment.Align(parent, child, padding));
+            var horizontal = HorizontalAlignment.Align(parent, child, padding);
+            var vertical = VerticalAlignment.Align(parent, child, padding);
+
+            return Transition.CreateTransition(child,
+                        new Region(horizontal.Position, vertical.Position, horizontal.Size, vertical.Size));
         }
 
     }

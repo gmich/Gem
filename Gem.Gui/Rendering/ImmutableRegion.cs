@@ -19,7 +19,7 @@ namespace Gem.Gui.Rendering
         }
 
         public ImmutableRegion(Region region)
-            : this(region.Position, region.Size, region.Origin)
+            : this(region.Position, region.Size, region.Center)
         { }
 
         public Vector2 Size { get { return size; } }

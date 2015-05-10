@@ -12,7 +12,7 @@ namespace Gem.Gui.Rendering
                              text.Region.Position,
                              text.RenderParameters.Color,
                              text.RenderParameters.Rotation,
-                             text.Region.Origin,
+                             text.RenderParameters.Origin,
                              text.RenderParameters.Scale,
                              text.RenderParameters.SpriteEffect,
                              text.RenderParameters.Layer);

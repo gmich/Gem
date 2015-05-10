@@ -36,7 +36,7 @@ namespace Gem.Gui.Layout
             //portrait
             base.Align(viewPort);
 
-            foreach (var transformation in alignment.AlignementTransformations(this.Region, viewPort, Padding))
+            //foreach (var transformation in alignment.AlignementTransformations(this.Region, viewPort, Padding))
             {
                 //TODO: use IDisposable to dispose active transformations
             }

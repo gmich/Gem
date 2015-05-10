@@ -22,9 +22,9 @@ namespace Gem.Gui.Alignment
 
         private class LeftAlignment : IHorizontalAlignable
         {
-            public Region Align(Region parent, Region child, Padding padding)
+            public AlignmentResult Align(Region parent, Region child, Padding padding)
             {
-                return new Region(new Vector2(parent.Position.X + padding.Left, child.Position.Y), child.Size);
+                return new AlignmentResult(parent.Position.X + padding.Left, child.Size.X);
             }
         }
 
@@ -42,10 +42,10 @@ namespace Gem.Gui.Alignment
         }
         private class CenterAlignent : IHorizontalAlignable
         {
-            public Region Align(Region parent, Region child, Padding padding)
+            public AlignmentResult Align(Region parent, Region child, Padding padding)
             {
                 float centerX = parent.Position.X + parent.Size.X / 2;
-                return new Region(new Vector2(centerX - child.Size.X / 2, child.Position.Y), child.Size);
+                return new AlignmentResult(centerX - child.Size.X / 2, child.Size.X);
             }
         }
 
@@ -54,18 +54,18 @@ namespace Gem.Gui.Alignment
         #region Right
 
         private static Lazy<RightAlignment> right = new Lazy<RightAlignment>();
-        public static IAlignable Right
+        public static IHorizontalAlignable Right
         {
             get
             {
                 return right.Value;
             }
         }
-        private class RightAlignment : IAlignable
+        private class RightAlignment : IHorizontalAlignable
         {
-            public Region Align(Region parent, Region child, Padding padding)
+            public AlignmentResult Align(Region parent, Region child, Padding padding)
             {
-                return new Region(new Vector2(parent.Position.X - child.Size.X - padding.Right, child.Position.Y), child.Size);
+                return new AlignmentResult(parent.Frame.Right - child.Size.X - padding.Right, child.Size.X);
             }
         }
 
@@ -73,22 +73,22 @@ namespace Gem.Gui.Alignment
 
         #region Stretch
 
-        private static Lazy<StretchAlignent> stretch = new Lazy<StretchAlignent>();
-        public static IHorizontalAlignable Stretch
-        {
-            get
-            {
-                return stretch.Value;
-            }
-        }
-        private class StretchAlignent : IHorizontalAlignable
-        {
-            public Region Align(Region parent, Region child, Padding padding)
-            {
-                return new Region(new Vector2(parent.Position.X + padding.Left, child.Position.Y),
-                                  new Vector2(parent.Size.X - padding.Right, child.Size.Y));
-            }
-        }
+        //private static Lazy<StretchAlignent> stretch = new Lazy<StretchAlignent>();
+        //public static IHorizontalAlignable Stretch
+        //{
+        //    get
+        //    {
+        //        return stretch.Value;
+        //    }
+        //}
+        //private class StretchAlignent : IHorizontalAlignable
+        //{
+        //    public AlignmentResult Align(Region parent, Region child, Padding padding)
+        //    {
+        //        return new AlignmentResult(parent.Position.X + padding.Left,
+        //                                   parent.Size.X - padding.Right);
+        //    }
+        //}
 
         #endregion
 
@@ -104,9 +104,9 @@ namespace Gem.Gui.Alignment
         }
         private class ManualAlignent : IHorizontalAlignable
         {
-            public Region Align(Region parent, Region child, Padding padding)
+            public AlignmentResult Align(Region parent, Region child, Padding padding)
             {
-                return child;
+                return new AlignmentResult(child.Position.X, child.Size.X);
             }
         }
 
