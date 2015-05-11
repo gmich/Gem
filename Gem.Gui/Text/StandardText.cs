@@ -32,6 +32,7 @@ namespace Gem.Gui.Text
             this.RenderParameters = new RenderParameters();
             this.Alignment = alignment ?? AlignmentContext.Default;
             this.Region = new Region(position, Font.MeasureString(value));
+            this.RenderStyle = new PlainTextStyle(this);
         }
 
         #endregion

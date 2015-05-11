@@ -74,6 +74,7 @@
     <Compile Include="Rendering\ControlPositionDrawable.cs" />
     <Compile Include="Fluent\RenderControlBy.cs" />
     <Compile Include="Rendering\Padding.cs" />
+    <Compile Include="Rendering\RenderTemplate.cs" />
     <Compile Include="Rendering\Sprite.cs" />
     <Compile Include="Rendering\TextDrawable.cs" />
     <Compile Include="ScreenSystem\AnimatedGuiScreen.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Transformations\ITransformation.cs" />
     <Compile Include="Transformations\PredicateTransformation.cs" />
     <Compile Include="Transformations\TimedTransformation.cs" />
+    <Compile Include="Utilities\NumberExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="SDL.dll">

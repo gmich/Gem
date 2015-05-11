@@ -1,8 +1,11 @@
-﻿using Gem.Gui.Controls;
+﻿using System;
+using System.Collections.Generic;
+using Gem.Gui.Controls;
 using Gem.Gui.Transformations;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
+using Gem.Gui.Utilities;
+using System.ComponentModel;
+using Gem.Infrastructure.Attributes;
 
 namespace Gem.Gui.Core.Styles
 {
@@ -12,7 +15,6 @@ namespace Gem.Gui.Core.Styles
         #region Fields
 
         private readonly AControl control;
-        private readonly float transparencyTransition = 0.1f;
         private readonly List<IDisposable> activeTransformations = new List<IDisposable>();
 
         #endregion
@@ -23,8 +25,8 @@ namespace Gem.Gui.Core.Styles
             {
                 throw new ArgumentNullException("control");
             }
-
             this.control = control;
+            this.AssignDefaultValues();
         }
 
         private void Flush()
@@ -35,50 +37,67 @@ namespace Gem.Gui.Core.Styles
             }
         }
 
+        #region Properties
+
+        [DefaultValue(1.0f)]
+        public float FocusAlpha { get; set; }
+
+        [DefaultValue(0.7f)]
+        public float HoverAlpha { get; set; }
+
+        [DefaultValue(0.5f)]
+        public float DefaultAlpha { get; set; }
+
+        [DefaultValue(1.0f)]
+        public float AlphaLerpStep { get; set; }
+
+        #endregion
+
         #region Style
 
         public void Focus()
         {
             Flush();
-            float focusTransparency = 1.0f;
 
             activeTransformations.Add(
                 this.control.AddTransformation(new PredicateTransformation(
                     expirationPredicate: control =>
-                        control.RenderParameters.Transparency == focusTransparency,
+                        control.RenderParameters.Transparency == FocusAlpha,
                         transformer: (timeDelta, control) =>
-                        control.RenderParameters.Transparency = MathHelper.Min(focusTransparency,
-                                                                   control.RenderParameters.Transparency += (float)timeDelta * transparencyTransition))));
+                        control.RenderParameters.Transparency = control.RenderParameters.Transparency
+                                                                .Approach(FocusAlpha
+                                                                         , (float)timeDelta * AlphaLerpStep))));
+
         }
 
         public void Default()
         {
             Flush();
-            float defaultTransparency = 0.5f;
 
             activeTransformations.Add(
             this.control.AddTransformation(new PredicateTransformation(
                 expirationPredicate: control =>
-                    control.RenderParameters.Transparency == defaultTransparency,
+                    control.RenderParameters.Transparency == DefaultAlpha,
                     transformer: (timeDelta, control) =>
-                    control.RenderParameters.Transparency = MathHelper.Min(defaultTransparency,
-                                                               control.RenderParameters.Transparency += (float)timeDelta * transparencyTransition))));
+                    control.RenderParameters.Transparency = control.RenderParameters.Transparency
+                                                            .Approach(DefaultAlpha
+                                                                      , (float)timeDelta * AlphaLerpStep))));
         }
 
         public void Hover()
         {
             Flush();
-            float hoverTransparency = 0.7f;
 
             activeTransformations.Add(
             this.control.AddTransformation(new PredicateTransformation(
                 expirationPredicate: control =>
-                    control.RenderParameters.Transparency == hoverTransparency,
+                    control.RenderParameters.Transparency == HoverAlpha,
                     transformer: (timeDelta, control) =>
-                    control.RenderParameters.Transparency = MathHelper.Min(hoverTransparency,
-                                                               control.RenderParameters.Transparency -= (float)timeDelta * transparencyTransition))));
+                    control.RenderParameters.Transparency = control.RenderParameters.Transparency
+                                                            .Approach(HoverAlpha
+                                                                     , (float)timeDelta * AlphaLerpStep))));
         }
-        
+
         public void Clicked()
         {
             return;

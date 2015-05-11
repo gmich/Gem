@@ -45,8 +45,7 @@ namespace Gem.Gui.Example
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            gui.Fonts.Add("segoe-10",
-                          container => container.Load<SpriteFont>(@"segoe-10"));
+            gui.Fonts.Add("segoe-10", @"Fonts/segoe-10");
 
             var smallButton =
                gui.Button(50, 50, 100, 100)
@@ -57,6 +56,11 @@ namespace Gem.Gui.Example
                .TextVerticalAlignment(VerticalAlignment.Bottom)
                .OnClick((sender, args) => System.Diagnostics.Trace.Write("i clicked a button"));
 
+            smallButton.Events.GotMouseCapture += (sender, args) => System.Console.WriteLine("GotMouseCapture");
+            smallButton.Events.LostMouseCapture += (sender, args) => System.Console.WriteLine("LostMouseCapture");
+            smallButton.Events.GotFocus += (sender, args) => System.Console.WriteLine("GotFocus");
+            smallButton.Events.LostFocus += (sender, args) => System.Console.WriteLine("LostFocus");
+            smallButton.Events.Clicked += (sender, args) => System.Console.WriteLine("Clicked");
             var largeButton =
                 gui.Button(x: 200, y: 200, sizeX: 100, sizeY: 100)
                .Color(Color.Violet)

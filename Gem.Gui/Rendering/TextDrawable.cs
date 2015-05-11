@@ -10,7 +10,7 @@ namespace Gem.Gui.Rendering
             batch.DrawString(text.Font,
                              text.Value,
                              text.Region.Position,
-                             text.RenderParameters.Color,
+                             text.RenderParameters.Color * text.RenderParameters.Transparency,
                              text.RenderParameters.Rotation,
                              text.RenderParameters.Origin,
                              text.RenderParameters.Scale,

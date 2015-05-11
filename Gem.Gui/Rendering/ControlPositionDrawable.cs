@@ -10,7 +10,7 @@ namespace Gem.Gui.Rendering
             batch.Draw(control.Sprite.Texture,
                        control.Region.Position,
                        control.Sprite.SourceRectangle,
-                       control.RenderParameters.Color,
+                       control.RenderParameters.Color * control.RenderParameters.Transparency,
                        control.RenderParameters.Rotation,
                        control.Region.Center,
                        control.RenderParameters.Scale,

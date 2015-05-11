@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Gem.Gui.Input
 {
-    public static class InputManager
+    public class InputManager : GameComponent
     {
 
         #region Fields
@@ -17,7 +17,7 @@ namespace Gem.Gui.Input
 
         #region Ctor
 
-        static InputManager()
+        public InputManager(Game game):base(game)
         {
             //GetInputCapabilities(true);
         }
@@ -134,20 +134,24 @@ namespace Gem.Gui.Input
 
         #endregion
 
+        #region GameComponent Members
+
+        #endregion
+
         #region Update
 
-        public static void Update()
+        public override void Update(GameTime gameTime)
         {
             FlushDesktop();
-            Flush(Touch);
+            //Flush(Touch);
         }
 
-        [Conditional("WINDOWS"), Conditional("LINUX")]
+        //[Conditional("WINDOWS"), Conditional("LINUX")]
         private static void FlushDesktop()
         {
             Flush(Keyboard);
             Flush(Mouse);
-            Flush(GamePad);
+            //Flush(GamePad);
         }
 
         private static void Flush(IInputHelper inputHelper)
@@ -159,6 +163,8 @@ namespace Gem.Gui.Input
         }
 
         #endregion
+
+
 
     }
 }

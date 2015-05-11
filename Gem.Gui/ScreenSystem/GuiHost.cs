@@ -13,12 +13,12 @@ namespace Gem.Gui.ScreenSystem
     {
         private readonly AggregationContext aggregationContext;
         private readonly IList<AControl> controls = new List<AControl>();
-        private readonly IControlDrawable controlDrawable = Fluent.RenderControlBy.Frame;
-        private readonly ITextDrawable textDrawable = Fluent.RenderTextBy.Position;
+        private readonly RenderTemplate renderTemplate;
 
-        public GuiHost(List<AControl> controls, AggregationContext aggregationContext)
+        public GuiHost(List<AControl> controls,RenderTemplate renderTemplate, AggregationContext aggregationContext)
             : base()
         {
+            this.renderTemplate = renderTemplate;
             this.controls = controls;
             this.aggregationContext = aggregationContext;
         }
@@ -64,12 +64,7 @@ namespace Gem.Gui.ScreenSystem
         {
             foreach (var control in controls)
             {
-                controlDrawable.Render(batch, control);
-
-                if (control.Text != null)
-                {
-                    textDrawable.Render(batch, control.Text);
-                }
+                control.Render(batch, renderTemplate);
             }
         }
     }

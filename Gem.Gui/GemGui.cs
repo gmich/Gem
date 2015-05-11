@@ -47,6 +47,7 @@ namespace Gem.Gui
             this.controlFactory = this.configuration.GetControlFactory(controlTarget);
             screenManager = new ScreenManager(game);
             game.Components.Add(screenManager);
+            game.Components.Add(new Input.InputManager(game));
 
             _fontContainer = new AssetContainer<SpriteFont>(game.Content);
             _textureContainer = new AssetContainer<Texture2D>(game.Content);
@@ -125,6 +126,7 @@ namespace Gem.Gui
             }
             AddGuiHost(guiHostId,
                        new GuiHost(controls.ToList(),
+                                   settings.RenderTemplate,
                                    new AggregationContext(configuration.GetAggregators(aggregationTarget), controls)));
         }
 

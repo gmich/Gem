@@ -7,6 +7,7 @@ using Gem.Gui.Text;
 using Gem.Gui.Transformations;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace Gem.Gui.Controls
@@ -33,7 +34,17 @@ namespace Gem.Gui.Controls
 
         public IRenderStyle RenderStyle { get; set; }
 
-        public IText Text { get; set; }
+        private IText text;
+        public IText Text
+        {
+            get { return text; }
+            set
+            {
+                Contract.Requires(value != null);
+                this.Events.SubscribeStyle(value.RenderStyle);
+                text = value;
+            }
+        }
 
         public Options Options { get; set; }
 
@@ -49,10 +60,11 @@ namespace Gem.Gui.Controls
         {
             this.Region = region;
             this.Sprite = new Sprite(texture);
-            this.RenderStyle = new PlainControlStyle(this);
             this.RenderParameters = new RenderParameters();
             this.Options = new Options();
             this.Events = new ViewEvents<ControlEventArgs>(this, () => new ControlEventArgs());
+            this.RenderStyle = new PlainControlStyle(this);
+            this.Events.SubscribeStyle(RenderStyle);
         }
 
         #endregion
@@ -84,6 +96,18 @@ namespace Gem.Gui.Controls
                     continue;
                 }
                 transformations[index].Transform(this, deltaTime);
+            }
+        }
+
+        public void Render(SpriteBatch batch, RenderTemplate template)
+        {
+            if (!Options.IsVisible) return;
+
+            template.ControlDrawable.Render(batch,this);
+
+            if (Text != null)
+            {
+                template.TextDrawable.Render(batch, this.Text);
             }
         }
 

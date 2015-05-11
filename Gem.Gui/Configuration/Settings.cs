@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Gem.Gui.Input;
 using Gem.Gui.Controls;
 using Gem.Gui.Aggregation;
+using Gem.Gui.Rendering;
+using Gem.Gui.Fluent;
 
 namespace Gem.Gui.Configuration
 {
@@ -25,6 +27,7 @@ namespace Gem.Gui.Configuration
         public Settings(Game game)
         {
             this.game = game;
+            this.RenderTemplate = new Rendering.RenderTemplate(RenderControlBy.Frame, RenderTextBy.Position);
             SetResolution();
             game.Window.ClientSizeChanged += (sender, args) => SetResolution();
         }
@@ -64,6 +67,7 @@ namespace Gem.Gui.Configuration
 
         public Vector2 Resolution { get { return resolution; } }
 
+        public RenderTemplate RenderTemplate { get; set; }
 
         #endregion
 

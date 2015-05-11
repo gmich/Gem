@@ -40,6 +40,8 @@ namespace Gem.Gui.Aggregation
         {
             var currentHasHover = entry.Region.Frame.Contains(input.MousePosition);
 
+            if (token.IsSelected) return;
+
             if (currentHasHover && !token.HasHover)
             {
                 entry.Events.OnMouseCapture();
@@ -68,6 +70,10 @@ namespace Gem.Gui.Aggregation
             else if (!currentFocus && token.HasFocus)
             {
                 entry.Events.OnLostFocus();
+                if (entry.Region.Frame.Contains(input.MousePosition))
+                {
+                    entry.Events.OnMouseCapture();
+                }
             }
             token.HasFocus = currentFocus;
 
@@ -115,12 +121,13 @@ namespace Gem.Gui.Aggregation
 
             CheckMouseHover(entry, token, entryId);
 
+            CheckClick(entry, token, entryId);
+
             if (entry.Options.IsFocusEnabled)
             {
                 CheckFocus(entry, token, entryId);
             }
 
-            CheckClick(entry, token, entryId);
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gem.Gui.Core.Styles;
+using System;
 
 namespace Gem.Gui.Events
 {
@@ -27,6 +28,20 @@ namespace Gem.Gui.Events
 
         public event EventHandler<TEventArgs> LostMouseCapture;
         
+        #endregion
+
+        #region Helpers
+
+        internal void SubscribeStyle(IRenderStyle style)
+        {
+            this.Clicked += (sender, args) => style.Clicked();
+            this.GotFocus += (sender, args) => style.Focus();
+            this.LostFocus += (sender, args) => style.Default();
+            this.LostMouseCapture += (sender, args) => style.Default();
+            this.GotMouseCapture += (sender, args) => style.Hover();
+            style.Default();
+        }
+
         #endregion
 
         #region Aggregation
