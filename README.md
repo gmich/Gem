@@ -8,7 +8,7 @@
 
 
  
-A cross-platform game engine for developing 2D games using Monogame, Farseer physics and Lidgren
+Gem is a cross-platform game framework with GUI and multiplayer support using Monogame, Farseer and Lidgren
 
 ##Developement Progress
 
@@ -19,11 +19,20 @@ A cross-platform game engine for developing 2D games using Monogame, Farseer phy
 ##Description
 
 ###Gem Network
-A standalone library for client server applications using network sockets. Gem Network extends Lidgren Network, offering an easy to use API for creating network events and a configurable and expendable server console for executing remote commands
+A library for client server applications using network sockets. Gem Network extends Lidgren Network, offering an easy to use API for creating network events and a configurable and expendable server console for executing remote commands
 
 Documentation for Gem Network can be found [here](https://github.com/gmich/Gem/wiki/Gem.Network)
 
 ###Gem GUI
-A library to render GUI controls in Monogame applications. Gem Gui supports the basic control events for mouse / keyboard / controller / touch input. The control's style is easily customisable. You can also assing controls into layout groups for automatic alignment that responds to window and resolution changes.
+A library to render [GUI controls](https://github.com/gmich/Gem/wiki/GemGui-Controls) in Monogame applications. 
+Gem Gui supports the basic control events for mouse / keyboard / controller / touch. 
+The control's style is easily customisable. 
 
-Documentation and how to get started can be found [here](https://github.com/gmich/Gem/wiki/Gem-Gui)
+Controls can be grouped into [GuiHosts](https://github.com/gmich/Gem/wiki/GemGui-Host) and show/hide them using the GemGui's screen management.
+
+You can also assing controls into layout groups for automatic alignment that respond to window and resolution changes.
+
+[A Gist with an example](https://gist.github.com/gmich/aee2e5cd3e7866df1446#file-gistfile1-cs)
+
+
+Documentation and how to get started can be found [here](https://github.com/gmich/Gem/wiki)
