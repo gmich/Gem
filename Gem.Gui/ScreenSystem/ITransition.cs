@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Gem.Gui.Rendering;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
@@ -15,6 +16,6 @@ namespace Gem.Gui.ScreenSystem
         void Start(TransitionDirection direction);
 
         void Update(GameTime gameTime);
-        void Draw(RenderTarget2D target, ScreenState state, SpriteBatch batch);
+        void Draw(RenderTarget2D renderTarget, ScreenState state, SpriteBatch batch);
     }
 }

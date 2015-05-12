@@ -24,6 +24,7 @@ namespace Gem.Gui.ScreenSystem
         void Update(GameTime gameTime);
 
         void Draw(SpriteBatch batch);
+
     }
 
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Gem.Gui.Rendering;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Gem.Gui.ScreenSystem
 {
     public class TimedTransition : ITransition
     {
-        public delegate void TransitionRenderAction(ScreenState state, float progress, RenderTarget2D target, SpriteBatch batch);
+        public delegate void TransitionRenderAction(ScreenState state, float progress, RenderTarget2D renderTarget, SpriteBatch batch);
 
         private const float Full = 1.0f;
         private const float Empty = 0.0f;
@@ -122,15 +123,8 @@ namespace Gem.Gui.ScreenSystem
             }
         }
 
-        public void Leave()
-        {
-            OnTransitionStarted();
-        }
-
         public void Update(GameTime gameTime)
         {
-            if (IsFinished) return;
-
             Progress += progressReporter(gameTime);
 
             if (IsFinished)

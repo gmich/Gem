@@ -20,6 +20,7 @@ namespace Gem.Gui.ScreenSystem
             this.controls = controls;
             this.aggregationContext = aggregationContext;
             this.Transition = transition;
+            this.ScreenState = ScreenState.Hidden;
         }
 
         #region Properties
@@ -92,7 +93,6 @@ namespace Gem.Gui.ScreenSystem
 
         public void Update(GameTime gameTime)
         {
-            System.Console.WriteLine(this.ScreenState);
             foreach (var control in controls)
             {
                 control.Update(gameTime.ElapsedGameTime.TotalSeconds);

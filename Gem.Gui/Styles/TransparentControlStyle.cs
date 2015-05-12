@@ -43,7 +43,7 @@ namespace Gem.Gui.Styles
         [DefaultValue(0.6f)]
         public float DefaultAlpha { get; set; }
 
-        [DefaultValue(2.0f)]
+        [DefaultValue(4.0f)]
         public float AlphaLerpStep { get; set; }
 
         #endregion

@@ -49,9 +49,9 @@ namespace Gem.Gui.Example
             gui.Fonts.Add("segoe-10", @"Fonts/segoe-10");
 
             var firstButton =
-               gui.Button(50, 50, 100, 100, style: Style.Transparent)
+               gui.Button(20, 20, 100, 100, style: Style.Transparent)
                .Color(Color.White)
-               .Text("Test", 0, 0, gui.Fonts["segoe-10"])
+               .Text("First", 0, 0, gui.Fonts["segoe-10"])
                .TextColor(Color.Black)
                .TextHorizontalAlignment(HorizontalAlignment.Center)
                .TextVerticalAlignment(VerticalAlignment.Bottom)
@@ -60,23 +60,46 @@ namespace Gem.Gui.Example
             firstButton.Events.GotMouseCapture += (sender, args) => System.Console.WriteLine("GotMouseCapture");
             firstButton.Events.LostMouseCapture += (sender, args) => System.Console.WriteLine("LostMouseCapture");
             firstButton.Events.GotFocus += (sender, args) => System.Console.WriteLine("GotFocus");
-            firstButton.Events.LostFocus += (sender, args) =>System.Console.WriteLine("LostFocus");
+            firstButton.Events.LostFocus += (sender, args) => System.Console.WriteLine("LostFocus");
             firstButton.Events.Clicked += (sender, args) => System.Console.WriteLine("Clicked");
 
             gui.AddGuiHost("First", firstButton);
 
             var secondButton =
-                gui.Button(x: 200, y: 200, sizeX: 100, sizeY: 100,style: Style.Transparent)
+                gui.Button(x: 200, y: 200, sizeX: 100, sizeY: 100, style: Style.Transparent)
                .Color(Color.Violet)
-               .Text("Tester", 20, 20, gui.Fonts["segoe-10"])
+               .Text("Second", 20, 20, gui.Fonts["segoe-10"])
                .TextColor(Color.Blue)
                .TextHorizontalAlignment(HorizontalAlignment.Center)
                .TextVerticalAlignment(VerticalAlignment.Center)
-               .OnClick((sender, args) =>  gui.Swap("Second","First"));
+               .OnClick((sender, args) =>
+                   {
+                       if (gui.IsShowing("Third"))
+                           gui.Hide("Third");
+                       else
+                           gui.Show("Third");
+                   });
 
             gui.AddGuiHost("Second", secondButton);
 
+
+            var thirdButton =
+                gui.Button(x: 300, y: 300, sizeX: 100, sizeY: 100, style: Style.Transparent)
+               .Color(Color.Aqua)
+               .Text("Third", 20, 20, gui.Fonts["segoe-10"])
+               .TextColor(Color.Blue)
+               .TextHorizontalAlignment(HorizontalAlignment.Center)
+               .TextVerticalAlignment(VerticalAlignment.Center)
+               .OnClick((sender, args) =>
+                   {
+                       gui.Hide("Third");
+                       gui.Swap("Second", "First");
+                   });
+            gui.AddGuiHost("Third", thirdButton);
+
             gui.Show("First");
+
+            gui.DrawWith += (sender, batch) => RenderBackground(batch);
         }
 
         /// <summary>
@@ -109,13 +132,15 @@ namespace Gem.Gui.Example
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            //GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
-            spriteBatch.DrawString(gui.Fonts["segoe-10"], "if you see me, then the background is preserved", new Vector2(20, 20), Color.Wheat);
-            spriteBatch.End();
-            // TODO: Add your drawing code here
-
             base.Draw(gameTime);
+        }
+
+        public void RenderBackground(SpriteBatch batch)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+            batch.DrawString(gui.Fonts["segoe-10"], "if you see me, then the background is preserved", new Vector2(20, 20), Color.Wheat);
+            batch.End();
         }
     }
 }

@@ -33,6 +33,8 @@ namespace Gem.Gui
         private readonly Dictionary<string, IGuiHost> hosts = new Dictionary<string, IGuiHost>();
         private ScreenManager screenManager;
 
+        public event EventHandler<SpriteBatch> DrawWith;
+
         #endregion
 
         #region Construct / Dispose
@@ -46,8 +48,8 @@ namespace Gem.Gui
             this.aggregationTarget = aggregationTarget;
             this.settings = new Settings(game);
             this.controlFactory = this.configuration.GetControlFactory(controlTarget);
-            this.HostTransition = TimedTransition.Default;
-            screenManager = new ScreenManager(game);
+            this.HostTransition = () => TimedTransition.Default;
+            screenManager = new ScreenManager(game,DrawTheRest);
 
             game.Components.Add(screenManager);
             game.Components.Add(new Input.InputManager(game));
@@ -74,8 +76,17 @@ namespace Gem.Gui
 
         #endregion
 
-        #region Control Factory
+        private void DrawTheRest(SpriteBatch batch)
+        {
+            var handler = DrawWith;
+            if (handler != null)
+            {
+                handler(this, batch);
+            }
+        }
 
+        #region Control Factory
+        
         private Texture2D CreateDummyTexture()
         {
             var texture = new Texture2D(screenManager.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
@@ -127,12 +138,12 @@ namespace Gem.Gui
 
         public AssetContainer<Texture2D> Textures { get { return _textureContainer; } }
 
-        public ITransition HostTransition { get; set; }
+        public Func<ITransition> HostTransition;
 
         #endregion
 
         #region Public Helper Methods
-
+                
         public void AddGuiHost(string guiHostId, params AControl[] controls)
         {
             foreach (var control in controls)
@@ -144,9 +155,9 @@ namespace Gem.Gui
             var guiHost = new GuiHost(controls.ToList(),
                                    settings.RenderTemplate,
                                    new AggregationContext(configuration.GetAggregators(aggregationTarget), controls),
-                                   HostTransition);
+                                   HostTransition());
             AddGuiHost(guiHostId, guiHost);
-                       
+
         }
 
         public IGuiHost this[string guiHostId]
@@ -169,7 +180,7 @@ namespace Gem.Gui
             Contract.Requires(!hosts.ContainsKey(guiHostId), "A GuiHost with the same id is already registered");
             this.hosts.Add(guiHostId, guiHost);
         }
-        
+
         public void Disable()
         {
             screenManager.Enabled = false;
@@ -183,7 +194,12 @@ namespace Gem.Gui
             screenManager.AddScreen(hosts[guiHostId]);
         }
 
-        public void Remove(string guiHostId)
+        public bool IsShowing(string guiHostId)
+        {
+            return screenManager.IsShowing(hosts[guiHostId]);
+        }
+
+        public void Hide(string guiHostId)
         {
             Contract.Requires(hosts.ContainsKey(guiHostId), "GuiHost was not found");
             screenManager.Enabled = true;
@@ -193,7 +209,7 @@ namespace Gem.Gui
 
         public void Swap(string previousHost, string newHost)
         {
-            Remove(previousHost);
+            Hide(previousHost);
             Show(newHost);
         }
 
