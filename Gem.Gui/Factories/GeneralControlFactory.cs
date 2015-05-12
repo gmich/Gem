@@ -1,5 +1,6 @@
 ﻿using Gem.Gui.Alignment;
 using Gem.Gui.Controls;
+using Gem.Gui.Styles;
 using Gem.Gui.Layout;
 using Gem.Gui.Rendering;
 using Microsoft.Xna.Framework.Graphics;
@@ -25,9 +26,9 @@ namespace Gem.Gui.Factories
             throw new NotImplementedException();
         }
 
-        public Button CreateButton(Region region, Texture2D texture)
+        public Button CreateButton(Region region, Texture2D texture, IRenderStyle style)
         {
-            return new Button(texture, region);
+            return new Button(texture, region,style);
         }
 
         public ListView CreateListView(Texture2D texture,
@@ -38,5 +39,6 @@ namespace Gem.Gui.Factories
         {
             return new ListView(texture, alignment, orientation, region, controls);
         }
+
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Gem.Gui.Configuration;
 using Gem.Gui.Core.Controls;
-using Gem.Gui.Core.Styles;
+using Gem.Gui.Styles;
 using Gem.Gui.Events;
 using Gem.Gui.Rendering;
 using Gem.Gui.Text;
@@ -41,7 +41,7 @@ namespace Gem.Gui.Controls
             set
             {
                 Contract.Requires(value != null);
-                this.Events.SubscribeStyle(value.RenderStyle);
+                this.Events.SubscribeStyle(this, value.RenderStyle);
                 text = value;
             }
         }
@@ -56,15 +56,15 @@ namespace Gem.Gui.Controls
 
         #region Ctor
 
-        public AControl(Texture2D texture, Region region)
+        public AControl(Texture2D texture, Region region, IRenderStyle style)
         {
             this.Region = region;
             this.Sprite = new Sprite(texture);
             this.RenderParameters = new RenderParameters();
             this.Options = new Options();
             this.Events = new ViewEvents<ControlEventArgs>(this, () => new ControlEventArgs());
-            this.RenderStyle = new PlainControlStyle(this);
-            this.Events.SubscribeStyle(RenderStyle);
+            this.RenderStyle = style;
+            this.Events.SubscribeStyle(this,RenderStyle);
         }
 
         #endregion
@@ -103,10 +103,12 @@ namespace Gem.Gui.Controls
         {
             if (!Options.IsVisible) return;
 
-            template.ControlDrawable.Render(batch,this);
+            template.ControlDrawable.Render(batch, this);
+            RenderStyle.Render(batch);
 
             if (Text != null)
             {
+                text.RenderStyle.Render(batch);
                 template.TextDrawable.Render(batch, this.Text);
             }
         }

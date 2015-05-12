@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Gem.Gui.Layout;
 using Gem.Gui.Alignment;
+using Gem.Gui.Styles;
 
 namespace Gem.Gui
 {
@@ -45,7 +46,9 @@ namespace Gem.Gui
             this.aggregationTarget = aggregationTarget;
             this.settings = new Settings(game);
             this.controlFactory = this.configuration.GetControlFactory(controlTarget);
+            this.HostTransition = TimedTransition.Default;
             screenManager = new ScreenManager(game);
+
             game.Components.Add(screenManager);
             game.Components.Add(new Input.InputManager(game));
 
@@ -81,12 +84,24 @@ namespace Gem.Gui
             return texture;
         }
 
-        public Button Button(int x, int y, int sizeX, int sizeY, Func<Region, Vector2> originCalculator = null)
+        public IRenderStyle GetRenderStyle(Style style)
+        {
+            switch (style)
+            {
+                case Style.Transparent:
+                    return new TransparentControlStyle();
+                case Style.Border:
+                    throw new NotImplementedException();
+                default:
+                    throw new ArgumentException("Style not found");
+            }
+        }
+
+        public Button Button(int x, int y, int sizeX, int sizeY, Style style)
         {
             return controlFactory.CreateButton(new Region(new Vector2(x, y),
-                                                           new Vector2(sizeX, sizeY),
-                                                           originCalculator),
-                                                           CreateDummyTexture());
+                                                           new Vector2(sizeX, sizeY)),
+                                                           CreateDummyTexture(), GetRenderStyle(style));
         }
 
         public ListView ListView(int x, int y, int sizeX, int sizeY,
@@ -112,6 +127,8 @@ namespace Gem.Gui
 
         public AssetContainer<Texture2D> Textures { get { return _textureContainer; } }
 
+        public ITransition HostTransition { get; set; }
+
         #endregion
 
         #region Public Helper Methods
@@ -124,10 +141,27 @@ namespace Gem.Gui
                 settings.OnResolutionChange((sender, args) =>
                                             control.Align(new Region(Vector2.Zero, settings.Resolution)));
             }
-            AddGuiHost(guiHostId,
-                       new GuiHost(controls.ToList(),
+            var guiHost = new GuiHost(controls.ToList(),
                                    settings.RenderTemplate,
-                                   new AggregationContext(configuration.GetAggregators(aggregationTarget), controls)));
+                                   new AggregationContext(configuration.GetAggregators(aggregationTarget), controls),
+                                   HostTransition);
+            AddGuiHost(guiHostId, guiHost);
+                       
+        }
+
+        public IGuiHost this[string guiHostId]
+        {
+            get
+            {
+                if (hosts.ContainsKey(guiHostId))
+                {
+                    return hosts[guiHostId];
+                }
+                else
+                {
+                    throw new ArgumentException("Gui host was not found");
+                }
+            }
         }
 
         public void AddGuiHost(string guiHostId, IGuiHost guiHost)
@@ -135,7 +169,7 @@ namespace Gem.Gui
             Contract.Requires(!hosts.ContainsKey(guiHostId), "A GuiHost with the same id is already registered");
             this.hosts.Add(guiHostId, guiHost);
         }
-
+        
         public void Disable()
         {
             screenManager.Enabled = false;
@@ -144,9 +178,23 @@ namespace Gem.Gui
         public void Show(string guiHostId)
         {
             Contract.Requires(hosts.ContainsKey(guiHostId), "GuiHost was not found");
-
             screenManager.Enabled = true;
+
             screenManager.AddScreen(hosts[guiHostId]);
+        }
+
+        public void Remove(string guiHostId)
+        {
+            Contract.Requires(hosts.ContainsKey(guiHostId), "GuiHost was not found");
+            screenManager.Enabled = true;
+
+            screenManager.RemoveScreen(hosts[guiHostId]);
+        }
+
+        public void Swap(string previousHost, string newHost)
+        {
+            Remove(previousHost);
+            Show(newHost);
         }
 
         #endregion

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Gem.Gui.Fluent;
 using Gem.Gui.Alignment;
+using Gem.Gui.Styles;
 
 namespace Gem.Gui.Example
 {
@@ -47,32 +48,35 @@ namespace Gem.Gui.Example
 
             gui.Fonts.Add("segoe-10", @"Fonts/segoe-10");
 
-            var smallButton =
-               gui.Button(50, 50, 100, 100)
+            var firstButton =
+               gui.Button(50, 50, 100, 100, style: Style.Transparent)
                .Color(Color.White)
                .Text("Test", 0, 0, gui.Fonts["segoe-10"])
                .TextColor(Color.Black)
                .TextHorizontalAlignment(HorizontalAlignment.Center)
                .TextVerticalAlignment(VerticalAlignment.Bottom)
-               .OnClick((sender, args) => System.Diagnostics.Trace.Write("i clicked a button"));
+               .OnClick((sender, args) => gui.Swap("First", "Second"));
 
-            smallButton.Events.GotMouseCapture += (sender, args) => System.Console.WriteLine("GotMouseCapture");
-            smallButton.Events.LostMouseCapture += (sender, args) => System.Console.WriteLine("LostMouseCapture");
-            smallButton.Events.GotFocus += (sender, args) => System.Console.WriteLine("GotFocus");
-            smallButton.Events.LostFocus += (sender, args) => System.Console.WriteLine("LostFocus");
-            smallButton.Events.Clicked += (sender, args) => System.Console.WriteLine("Clicked");
-            var largeButton =
-                gui.Button(x: 200, y: 200, sizeX: 100, sizeY: 100)
+            firstButton.Events.GotMouseCapture += (sender, args) => System.Console.WriteLine("GotMouseCapture");
+            firstButton.Events.LostMouseCapture += (sender, args) => System.Console.WriteLine("LostMouseCapture");
+            firstButton.Events.GotFocus += (sender, args) => System.Console.WriteLine("GotFocus");
+            firstButton.Events.LostFocus += (sender, args) =>System.Console.WriteLine("LostFocus");
+            firstButton.Events.Clicked += (sender, args) => System.Console.WriteLine("Clicked");
+
+            gui.AddGuiHost("First", firstButton);
+
+            var secondButton =
+                gui.Button(x: 200, y: 200, sizeX: 100, sizeY: 100,style: Style.Transparent)
                .Color(Color.Violet)
                .Text("Tester", 20, 20, gui.Fonts["segoe-10"])
                .TextColor(Color.Blue)
                .TextHorizontalAlignment(HorizontalAlignment.Center)
                .TextVerticalAlignment(VerticalAlignment.Center)
-               .OnClick((sender, args) => System.Diagnostics.Trace.Write("i clicked a button"));
+               .OnClick((sender, args) =>  gui.Swap("Second","First"));
 
-            gui.AddGuiHost("Main", smallButton, largeButton);
-            gui.Show("Main");
+            gui.AddGuiHost("Second", secondButton);
 
+            gui.Show("First");
         }
 
         /// <summary>
@@ -105,8 +109,10 @@ namespace Gem.Gui.Example
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            //GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
+            spriteBatch.DrawString(gui.Fonts["segoe-10"], "if you see me, then the background is preserved", new Vector2(20, 20), Color.Wheat);
+            spriteBatch.End();
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);

@@ -1,12 +1,12 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+using Gem.Gui.Styles;
+using Gem.Gui.Rendering;
 
 namespace Gem.Gui.Text
 {
     using Alignment;
-    using Microsoft.Xna.Framework;
-    using Gem.Gui.Core.Styles;
-    using Gem.Gui.Rendering;
 
     public class StandardText : IText
     {
@@ -21,10 +21,10 @@ namespace Gem.Gui.Text
         #region Ctor
 
         public StandardText(SpriteFont font, Vector2 position, string value)
-            : this(font,position, value, AlignmentContext.Default)
+            : this(font, position, value, AlignmentContext.Default)
         { }
 
-        public StandardText(SpriteFont font,Vector2 position, string value, AlignmentContext alignment = null)
+        public StandardText(SpriteFont font, Vector2 position, string value, AlignmentContext alignment = null)
         {
             this.font = font;
             this.Value = value;
@@ -32,7 +32,7 @@ namespace Gem.Gui.Text
             this.RenderParameters = new RenderParameters();
             this.Alignment = alignment ?? AlignmentContext.Default;
             this.Region = new Region(position, Font.MeasureString(value));
-            this.RenderStyle = new PlainTextStyle(this);
+            this.RenderStyle = new NoStyle();
         }
 
         #endregion
@@ -77,7 +77,7 @@ namespace Gem.Gui.Text
         }
 
         private RenderParameters _renderParameters;
-        public RenderParameters RenderParameters 
+        public RenderParameters RenderParameters
         {
             get { return _renderParameters; }
             set { _renderParameters = value; }

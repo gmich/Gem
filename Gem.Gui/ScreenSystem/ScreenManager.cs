@@ -8,149 +8,87 @@ using Gem.Gui.Rendering;
 namespace Gem.Gui.ScreenSystem
 {
 
-    /// <summary>
-    /// Maintains a stack of screens, calls their Update and Draw
-    /// methods at the appropriate times, and automatically routes input to the
-    /// topmost active screen.
-    /// </summary>
     public class ScreenManager : DrawableGameComponent
     {
 
-        private List<IGuiHost> screens = new List<IGuiHost>();
-        private List<IGuiHost> screensToUpdate = new List<IGuiHost>();
-        private List<RenderTarget2D> transitions = new List<RenderTarget2D>();
-
+        private List<IGuiHost> hosts = new List<IGuiHost>();
         private SpriteBatch spriteBatch { get; set; }
 
         public ScreenManager(Game game)
             : base(game)
         { }
 
-        public IGuiHost ActiveHost
-        {
-            get
-            {
-                if (screens.Count > 1)
-                {
-                    if (screens[1].ScreenState == ScreenState.Active)
-                        return screens[1];
-                    else
-                        return screens[0];
-                }
-                return null;
-            }
-        }
 
         public override void Initialize()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
-        protected override void LoadContent()
-        {
-        }
-
-        public void Reload()
-        {
-            transitions = new List<RenderTarget2D>();
-        }
-
-        protected override void UnloadContent()
-        {
-            base.UnloadContent();
-        }
-
         public override void Update(GameTime gameTime)
         {
-            screensToUpdate.Clear();
-
-            foreach (var screen in screens)
+            for (int screenIndex = 0; screenIndex < hosts.Count; screenIndex++)
             {
-                screensToUpdate.Add(screen);
-            }
-
-            bool otherScreenHasFocus = !Game.IsActive;
-            bool coveredByOtherScreen = false;
-
-            while (screensToUpdate.Count > 0)
-            {
-                var screen = screensToUpdate[screensToUpdate.Count - 1];
-
-                screensToUpdate.RemoveAt(screensToUpdate.Count - 1);
-
-                // Update the screen.
-                screen.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
-
-                if (screen.ScreenState == ScreenState.TransitionOn || screen.ScreenState == ScreenState.Active)
+                if (hosts[screenIndex].ScreenState == ScreenState.Exit)
                 {
-                    if (!otherScreenHasFocus)
-                    {
-                        screen.HandleInput();
-                        otherScreenHasFocus = true;
-                    }
-                    if (!screen.IsPopup)
-                        coveredByOtherScreen = true;
-                }
-            }
-
-        }
-
-        private void DrawScreensWithTransition()
-        {
-            int transitionCount = 0;
-            foreach (var screen in screens)
-            {
-                if (screen.ScreenState == ScreenState.TransitionOn ||
-                    screen.ScreenState == ScreenState.TransitionOff)
-                {
-                    ++transitionCount;
-                    if (transitions.Count < transitionCount)
-                    {
-                        PresentationParameters _pp = GraphicsDevice.PresentationParameters;
-                        transitions.Add(new RenderTarget2D(GraphicsDevice, _pp.BackBufferWidth, _pp.BackBufferHeight, false, SurfaceFormat.Color, _pp.DepthStencilFormat, _pp.MultiSampleCount, RenderTargetUsage.DiscardContents));
-                    }
-                    GraphicsDevice.SetRenderTarget(transitions[transitionCount - 1]);
-                    GraphicsDevice.Clear(Color.Transparent);
-
-                    DrawHost(screen);
-
-                    GraphicsDevice.SetRenderTarget(null);
-                }
-            }
-        }
-
-        private void DrawActiveScreen()
-        {
-            int transitionCount = 0;
-            foreach (var screen in screens)
-            {
-                if (screen.ScreenState == ScreenState.Hidden)
-                    continue;
-
-                if (screen.ScreenState == ScreenState.TransitionOn || screen.ScreenState == ScreenState.TransitionOff)
-                {
-                    spriteBatch.Begin(0, BlendState.AlphaBlend);
-                    spriteBatch.Draw(transitions[transitionCount], Vector2.Zero, Color.White * screen.TransitionAlpha);
-                    spriteBatch.End();
-
-                    ++transitionCount;
+                    hosts.RemoveAt(screenIndex);
                 }
                 else
                 {
-                    DrawHost(screen);
+                    hosts[screenIndex].Update(gameTime);
+                    if (hosts[screenIndex].ScreenState == ScreenState.Active)
+                    {
+                        hosts[screenIndex].HandleInput();
+                    }
                 }
             }
+
+            base.Update(gameTime);
         }
-        /// <summary>
-        /// Tells each screen to draw itself.
-        /// </summary>
+
+        public RenderTarget2D GetWindowRenderTarget()
+        {
+            PresentationParameters pp = GraphicsDevice.PresentationParameters;
+
+            return new RenderTarget2D(GraphicsDevice,
+                                    pp.BackBufferWidth,
+                                    pp.BackBufferHeight,
+                                    false,
+                                    SurfaceFormat.Color,
+                                    pp.DepthStencilFormat,
+                                    pp.MultiSampleCount,
+                                    RenderTargetUsage.DiscardContents);
+        }
+
         public override void Draw(GameTime gameTime)
         {
-            DrawScreensWithTransition();
+            foreach (var host in hosts)
+            {
+                switch (host.ScreenState)
+                {
+                    case ScreenState.Hidden:
+                        continue;
+                    case ScreenState.Active:
+                        DrawHost(host);
+                        break;
+                    case ScreenState.TransitionOn:
+                    case ScreenState.TransitionOff
+                    :
+                        var target = GetWindowRenderTarget();
+                        GraphicsDevice.SetRenderTarget(target);
+                        GraphicsDevice.Clear(Color.Transparent);
+                        DrawHost(host);
 
-            GraphicsDevice.Clear(Color.Black);
+                        GraphicsDevice.SetRenderTarget(null);
+                        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+                        host.Transition.Draw(target, host.ScreenState, spriteBatch);
+                        spriteBatch.End();
 
-            DrawActiveScreen();
+                        break;
+                    default:
+                        continue;
+                }
+            }
+            base.Draw(gameTime);
         }
 
         private void DrawHost(IGuiHost host)
@@ -160,30 +98,15 @@ namespace Gem.Gui.ScreenSystem
             spriteBatch.End();
         }
 
-        /// <summary>
-        /// Adds a new screen to the screen manager.
-        /// </summary>
         public void AddScreen(IGuiHost screen)
         {
-            foreach (var scr in screens)
-            {
-                if (scr.GetType() == screen.GetType())
-                    return;
-            }
-
-            screens.Add(screen);
+            screen.EnterScreen();
+            hosts.Add(screen);
         }
 
-        /// <summary>
-        /// Removes a screen from the screen manager. You should normally
-        /// use GameScreen.ExitScreen instead of calling this directly, so
-        /// the screen can gradually transition off rather than just being
-        /// instantly removed.
-        /// </summary>
         public void RemoveScreen(IGuiHost screen)
         {
-            screens.Remove(screen);
-            screensToUpdate.Remove(screen);
+            screen.ExitScreen();
         }
     }
 }

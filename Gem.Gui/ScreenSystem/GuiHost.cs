@@ -1,27 +1,28 @@
 ﻿using Gem.Gui.Aggregation;
 using Gem.Gui.Controls;
-using Gem.Gui.Layout;
 using Gem.Gui.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Gem.Gui.ScreenSystem
 {
-    internal class GuiHost : AnimatedGuiScreen
+    public class GuiHost : IGuiHost
     {
         private readonly AggregationContext aggregationContext;
         private readonly IList<AControl> controls = new List<AControl>();
         private readonly RenderTemplate renderTemplate;
 
-        public GuiHost(List<AControl> controls,RenderTemplate renderTemplate, AggregationContext aggregationContext)
+        public GuiHost(List<AControl> controls, RenderTemplate renderTemplate, AggregationContext aggregationContext, ITransition transition)
             : base()
         {
             this.renderTemplate = renderTemplate;
             this.controls = controls;
             this.aggregationContext = aggregationContext;
+            this.Transition = transition;
         }
+
+        #region Properties
 
         public AControl this[int id]
         {
@@ -31,11 +32,40 @@ namespace Gem.Gui.ScreenSystem
             }
         }
 
-        public int ComponentCount
+        private ITransition transition;
+        public ITransition Transition
         {
-            get { return controls.Count; }
+            get
+            {
+                return transition;
+            }
+            set
+            {
+                transition = value;
+                transition.TransitionStarted += (sender, direction) => AssignState(direction, ScreenState.TransitionOn, ScreenState.TransitionOff);
+                transition.TransitionFinished += (sender, direction) => AssignState(direction, ScreenState.Active, ScreenState.Exit);
+            }
         }
 
+
+        public ScreenState ScreenState { get; set; }
+
+        #endregion
+
+        private void AssignState(TransitionDirection direction, ScreenState enterState, ScreenState leaveState)
+        {
+            switch (direction)
+            {
+                case TransitionDirection.Enter:
+                    this.ScreenState = enterState;
+                    break;
+                case TransitionDirection.Leave:
+                    this.ScreenState = leaveState;
+                    break;
+                default:
+                    break;
+            }
+        }
         public IEnumerable<AControl> Entries()
         {
             foreach (var control in controls)
@@ -44,23 +74,37 @@ namespace Gem.Gui.ScreenSystem
             }
         }
 
-        public override void HandleInput()
+        public void EnterScreen()
+        {
+            Transition.Start(TransitionDirection.Enter);
+        }
+
+
+        public void ExitScreen()
+        {
+            Transition.Start(TransitionDirection.Leave);
+        }
+
+        public void HandleInput()
         {
             aggregationContext.Aggregate();
         }
 
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        public void Update(GameTime gameTime)
         {
-            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
-
+            System.Console.WriteLine(this.ScreenState);
             foreach (var control in controls)
             {
                 control.Update(gameTime.ElapsedGameTime.TotalSeconds);
             }
-
+            if(ScreenState == ScreenState.TransitionOff 
+                || ScreenState== ScreenState.TransitionOn)
+            {
+                Transition.Update(gameTime);
+            }
         }
 
-        public override void Draw(SpriteBatch batch)
+        public void Draw(SpriteBatch batch)
         {
             foreach (var control in controls)
             {
@@ -68,5 +112,6 @@ namespace Gem.Gui.ScreenSystem
             }
         }
     }
-
 }
+
+

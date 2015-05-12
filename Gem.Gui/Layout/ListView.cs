@@ -1,6 +1,7 @@
 ﻿using Gem.Gui.Alignment;
 using Gem.Gui.Controls;
 using Gem.Gui.Rendering;
+using Gem.Gui.Styles;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace Gem.Gui.Layout
                         Orientation orientation,
                         Region region,
                         ReadOnlyCollection<AControl> controls)
-            : base(texture, region)
+            : base(texture, region, new NoStyle())
         {
             this.alignment = alignment;
             this.controls = controls;

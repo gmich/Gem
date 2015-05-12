@@ -1,5 +1,6 @@
 ﻿using Gem.Gui.Alignment;
 using Gem.Gui.Controls;
+using Gem.Gui.Styles;
 using Gem.Gui.Layout;
 using Gem.Gui.Rendering;
 using Microsoft.Xna.Framework;
@@ -12,7 +13,7 @@ namespace Gem.Gui.Factories
     //TODO: update method parameters
     public interface IControlFactory
     {
-        Button CreateButton(Region region, Texture2D texture);
+        Button CreateButton(Region region, Texture2D texture, IRenderStyle style);
 
         ListView CreateListView(Texture2D texture,
                                 Region region,

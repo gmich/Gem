@@ -1,4 +1,5 @@
-﻿using Gem.Gui.Core.Styles;
+﻿using Gem.Gui.Controls;
+using Gem.Gui.Styles;
 using System;
 
 namespace Gem.Gui.Events
@@ -32,14 +33,14 @@ namespace Gem.Gui.Events
 
         #region Helpers
 
-        internal void SubscribeStyle(IRenderStyle style)
+        internal void SubscribeStyle(AControl control, IRenderStyle style)
         {
-            this.Clicked += (sender, args) => style.Clicked();
-            this.GotFocus += (sender, args) => style.Focus();
-            this.LostFocus += (sender, args) => style.Default();
-            this.LostMouseCapture += (sender, args) => style.Default();
-            this.GotMouseCapture += (sender, args) => style.Hover();
-            style.Default();
+            this.Clicked += (sender, args) => style.Clicked(control);
+            this.GotFocus += (sender, args) => style.Focus(control);
+            this.LostFocus += (sender, args) => style.Default(control);
+            this.LostMouseCapture += (sender, args) => style.Default(control);
+            this.GotMouseCapture += (sender, args) => style.Hover(control);
+            style.Default(control);
         }
 
         #endregion
