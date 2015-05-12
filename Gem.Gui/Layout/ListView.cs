@@ -18,7 +18,7 @@ namespace Gem.Gui.Layout
     {
         private readonly ReadOnlyCollection<AControl> controls;
         private readonly Orientation orientation;
-        private readonly AlignmentContext alignment;
+
 
         public ListView(Texture2D texture,
                         AlignmentContext alignment,
@@ -27,10 +27,12 @@ namespace Gem.Gui.Layout
                         ReadOnlyCollection<AControl> controls)
             : base(texture, region, new NoStyle())
         {
-            this.alignment = alignment;
+            this.Alignment = AlignmentContext.Default;
             this.controls = controls;
             this.orientation = orientation;
+
         }
+        public AlignmentContext Alignment { get; private set; }
 
         public override void Align(Region viewPort)
         {

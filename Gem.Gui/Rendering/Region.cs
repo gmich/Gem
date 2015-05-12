@@ -92,7 +92,7 @@ namespace Gem.Gui.Rendering
                 AdjustFrameBoundaries();
                 center = CenterCalculator(this);
 
-                OnPositionChange(new RegionEventArgs { PreviousState = previousState });
+                OnSizeChange(new RegionEventArgs { PreviousState = previousState });
             }
         }
 

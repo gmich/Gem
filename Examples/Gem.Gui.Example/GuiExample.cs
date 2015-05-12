@@ -50,16 +50,15 @@ namespace Gem.Gui.Example
 
             var firstButton =
                gui.Button(20, 20, 100, 100, style: Style.Transparent)
-               .Color(Color.White)
-               .Text("First", 0, 0, gui.Fonts["segoe-10"])
-               .TextColor(Color.Black)
-               .TextHorizontalAlignment(HorizontalAlignment.Center)
-               .TextVerticalAlignment(VerticalAlignment.Bottom)
-               .OnClick((sender, args) => gui.Swap("First", "Second"));
+                  .Color(Color.White)
+                  .Text("First", 0, 0, gui.Fonts["segoe-10"])
+                  .TextColor(Color.Black)
+                  .TextHorizontalAlignment(HorizontalAlignment.Center)
+                  .TextVerticalAlignment(VerticalAlignment.Center)
+                  .OnClick((sender, args) => gui.Swap("First", "Second"));
 
-            firstButton.Events.GotMouseCapture += (sender, args) => System.Console.WriteLine("GotMouseCapture");
-            firstButton.Events.LostMouseCapture += (sender, args) => System.Console.WriteLine("LostMouseCapture");
-            firstButton.Events.GotFocus += (sender, args) => System.Console.WriteLine("GotFocus");
+            firstButton.Events.GotMouseCapture += (sender, args) => firstButton.Region.Size = new Vector2(150,150);
+            firstButton.Events.LostMouseCapture += (sender, args) => firstButton.Region.Size = new Vector2(100,100);
             firstButton.Events.LostFocus += (sender, args) => System.Console.WriteLine("LostFocus");
             firstButton.Events.Clicked += (sender, args) => System.Console.WriteLine("Clicked");
 
@@ -67,12 +66,12 @@ namespace Gem.Gui.Example
 
             var secondButton =
                 gui.Button(x: 200, y: 200, sizeX: 100, sizeY: 100, style: Style.Transparent)
-               .Color(Color.Violet)
-               .Text("Second", 20, 20, gui.Fonts["segoe-10"])
-               .TextColor(Color.Blue)
-               .TextHorizontalAlignment(HorizontalAlignment.Center)
-               .TextVerticalAlignment(VerticalAlignment.Center)
-               .OnClick((sender, args) =>
+                   .Color(Color.Violet)
+                   .Text("Second", 20, 20, gui.Fonts["segoe-10"])
+                   .TextColor(Color.Blue)
+                   .TextHorizontalAlignment(HorizontalAlignment.Center)
+                   .TextVerticalAlignment(VerticalAlignment.Center)
+                   .OnClick((sender, args) =>
                    {
                        if (gui.IsShowing("Third"))
                            gui.Hide("Third");
@@ -81,7 +80,6 @@ namespace Gem.Gui.Example
                    });
 
             gui.AddGuiHost("Second", secondButton);
-
 
             var thirdButton =
                 gui.Button(x: 300, y: 300, sizeX: 100, sizeY: 100, style: Style.Transparent)

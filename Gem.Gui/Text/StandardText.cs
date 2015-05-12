@@ -62,39 +62,34 @@ namespace Gem.Gui.Text
             get { return font; }
         }
 
-        private Region _region;
         public Region Region
         {
-            get { return _region; }
-            set { _region = value; }
+            get;
+            set;
         }
 
-        private Padding _padding;
         public Padding Padding
         {
-            get { return _padding; }
-            set { _padding = value; }
+            get;
+            set;
         }
 
-        private RenderParameters _renderParameters;
         public RenderParameters RenderParameters
         {
-            get { return _renderParameters; }
-            set { _renderParameters = value; }
+            get;
+            set;
         }
 
-        private IRenderStyle _renderStyle;
         public IRenderStyle RenderStyle
         {
-            get { return _renderStyle; }
-            set { _renderStyle = value; }
+            get;
+            set;
         }
 
-        private AlignmentContext _alignment;
         public AlignmentContext Alignment
         {
-            get { return _alignment; }
-            set { _alignment = value; }
+            get;
+            set;
         }
 
         #endregion
@@ -107,5 +102,6 @@ namespace Gem.Gui.Text
                 handler(this, eventArgs);
             }
         }
+
     }
 }

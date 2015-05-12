@@ -9,11 +9,38 @@ namespace Gem.Gui.Alignment
     public class AlignmentContext
     {
         private readonly List<IDisposable> activeTransformations = new List<IDisposable>();
-        public IHorizontalAlignable HorizontalAlignment { get; set; }
-        public IVerticalAlignable VerticalAlignment { get; set; }
+        public event EventHandler<EventArgs> OnAlignmentChanged;
+
+        private IHorizontalAlignable horizontal;
+        public IHorizontalAlignable HorizontalAlignment
+        {
+            get
+            {
+                return horizontal;
+            }
+            set
+            {
+                horizontal = value;
+                OnAlignmentChangedAggregation();
+            }
+        }
+
+        private IVerticalAlignable vertical;
+        public IVerticalAlignable VerticalAlignment
+        {
+            get
+            {
+                return vertical;
+            }
+            set
+            {
+                vertical = value;
+                OnAlignmentChangedAggregation();
+            }
+        }
+
         public IAlignmentTransition Transition { get; set; }
-
-
+        
         public static AlignmentContext Default
         {
             get
@@ -54,6 +81,15 @@ namespace Gem.Gui.Alignment
 
             return Transition.CreateTransition(child,
                         new Region(horizontal.Position, vertical.Position, horizontal.Size, vertical.Size));
+        }
+
+        private void OnAlignmentChangedAggregation()
+        {
+            var handler = OnAlignmentChanged;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
         }
 
     }

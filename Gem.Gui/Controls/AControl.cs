@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Microsoft.Xna.Framework;
 
 namespace Gem.Gui.Controls
 {
@@ -26,11 +27,11 @@ namespace Gem.Gui.Controls
 
         #region Properties
 
-        public ViewEvents<ControlEventArgs> Events { get; set; }
+        public ViewEvents<ControlEventArgs> Events { get; private set; }
 
-        public RenderParameters RenderParameters { get; set; }
+        public RenderParameters RenderParameters { get; private set; }
 
-        public Sprite Sprite { get; set; }
+        public Sprite Sprite { get; private set; }
 
         public IRenderStyle RenderStyle { get; set; }
 
@@ -40,17 +41,20 @@ namespace Gem.Gui.Controls
             get { return text; }
             set
             {
-                Contract.Requires(value != null);
-                this.Events.SubscribeStyle(this, value.RenderStyle);
                 text = value;
+                if (text != null)
+                {
+                    this.Events.SubscribeStyle(this, text.RenderStyle);
+                    this.text.Alignment.OnAlignmentChanged += (sender, alignment) => this.Align(Settings.ViewRegion);
+                }
             }
         }
 
-        public Options Options { get; set; }
+        public Options Options { get; private set; }
 
-        public Region Region { get; set; }
+        public Region Region { get; private set; }
 
-        public Padding Padding { get; set; }
+        public Padding Padding { get; private set; }
 
         #endregion
 
@@ -64,7 +68,9 @@ namespace Gem.Gui.Controls
             this.Options = new Options();
             this.Events = new ViewEvents<ControlEventArgs>(this, () => new ControlEventArgs());
             this.RenderStyle = style;
-            this.Events.SubscribeStyle(this,RenderStyle);
+            this.Events.SubscribeStyle(this, RenderStyle);
+
+            region.onSizeChange += (sender, args) => this.Align(Settings.ViewRegion);
         }
 
         #endregion
@@ -99,7 +105,7 @@ namespace Gem.Gui.Controls
             }
         }
 
-        public void Render(SpriteBatch batch, RenderTemplate template)
+        public virtual void Render(SpriteBatch batch, RenderTemplate template)
         {
             if (!Options.IsVisible) return;
 

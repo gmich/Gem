@@ -3,6 +3,7 @@ using Gem.Gui.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using Gem.Gui.Alignment;
 
 namespace Gem.Gui.Text
 {
@@ -10,16 +11,16 @@ namespace Gem.Gui.Text
     {
         event EventHandler<TextEventArgs> OnTextChanged;
 
-        Region Region { get; set;  }
+        Region Region { get; set; }
 
         Padding Padding { get; set; }
 
-        SpriteFont Font { get;  }
+        SpriteFont Font { get; }
 
         string Value { get; set; }
-        
+
         IRenderStyle RenderStyle { get; set; }
-        
+
         RenderParameters RenderParameters { get; set; }
 
         Alignment.AlignmentContext Alignment { get; set; }

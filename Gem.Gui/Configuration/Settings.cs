@@ -18,7 +18,8 @@ namespace Gem.Gui.Configuration
         #region Fields
 
         private readonly Game game;
-        private Vector2 resolution;
+        private static Vector2 resolution;
+        private static Region viewRegion;
 
         #endregion
 
@@ -39,6 +40,7 @@ namespace Gem.Gui.Configuration
         private void SetResolution()
         {
             resolution = new Vector2(game.Window.ClientBounds.Width, game.Window.ClientBounds.Height);
+            viewRegion = new Region(Vector2.Zero, resolution);
         }
 
         #endregion
@@ -63,9 +65,11 @@ namespace Gem.Gui.Configuration
 
         public bool IsMouseVisible { get { return game.IsMouseVisible; } }
 
-        public Rectangle ViewWindow { get { return game.Window.ClientBounds; } }
+        public Rectangle ViewPort { get { return game.Window.ClientBounds; } }
 
-        public Vector2 Resolution { get { return resolution; } }
+        public static Region ViewRegion { get { return viewRegion; } }
+
+        public static Vector2 Resolution { get { return resolution; } }
 
         public RenderTemplate RenderTemplate { get; set; }
 

@@ -146,12 +146,12 @@ namespace Gem.Gui
                 
         public void AddGuiHost(string guiHostId, params AControl[] controls)
         {
-            foreach (var control in controls)
-            {
-                //control.Align(new Region(Vector2.Zero, settings.Resolution));
-                settings.OnResolutionChange((sender, args) =>
-                                            control.Align(new Region(Vector2.Zero, settings.Resolution)));
-            }
+            //foreach (var control in controls)
+            //{
+            //    //control.Align(new Region(Vector2.Zero, settings.Resolution));
+            //    settings.OnResolutionChange((sender, args) =>
+            //                                control.Align(new Region(Vector2.Zero, Settings.Resolution)));
+            //}
             var guiHost = new GuiHost(controls.ToList(),
                                    settings.RenderTemplate,
                                    new AggregationContext(configuration.GetAggregators(aggregationTarget), controls),

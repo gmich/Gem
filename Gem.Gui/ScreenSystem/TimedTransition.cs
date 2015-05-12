@@ -18,9 +18,10 @@ namespace Gem.Gui.ScreenSystem
 
 
         private readonly TransitionRenderAction transitionRenderAction;
-        private TimeSpan transitionTime;
         private TransitionDirection direction;
         private Func<GameTime, float> progressReporter;
+
+        public TimeSpan TransitionTime { get; set; }
 
         private float _progress;
         public float Progress
@@ -38,7 +39,7 @@ namespace Gem.Gui.ScreenSystem
 
         public TimedTransition(TimeSpan transitionTime, TransitionRenderAction transitionRenderAction)
         {
-            this.transitionTime = transitionTime;
+            this.TransitionTime = transitionTime;
             this.transitionRenderAction = transitionRenderAction;
         }
 
@@ -46,7 +47,7 @@ namespace Gem.Gui.ScreenSystem
         {
             get
             {
-                return new TimedTransition(TimeSpan.FromSeconds(0.5),
+                return new TimedTransition(TimeSpan.FromSeconds(0.0),
                                           (state, progress, target, batch) =>
                                           batch.Draw(target, Vector2.Zero, Color.White * progress));
             }
@@ -113,10 +114,10 @@ namespace Gem.Gui.ScreenSystem
             switch (direction)
             {
                 case TransitionDirection.Enter:
-                    progressReporter = gameTime => +(float)(gameTime.ElapsedGameTime.TotalMilliseconds / transitionTime.TotalMilliseconds);
+                    progressReporter = gameTime => +(float)(gameTime.ElapsedGameTime.TotalMilliseconds / TransitionTime.TotalMilliseconds);
                     break;
                 case TransitionDirection.Leave:
-                    progressReporter = gameTime => -(float)(gameTime.ElapsedGameTime.TotalMilliseconds / transitionTime.TotalMilliseconds);
+                    progressReporter = gameTime => -(float)(gameTime.ElapsedGameTime.TotalMilliseconds / TransitionTime.TotalMilliseconds);
                     break;
                 default:
                     break;
