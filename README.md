@@ -21,6 +21,8 @@ Gem is a cross-platform game framework with GUI and multiplayer support using Mo
 ###Gem Network
 A library for client server applications using network sockets. Gem Network extends Lidgren Network, offering an easy to use API for creating network events and a configurable and expendable server console for executing remote commands
 
+[A Gist with a NetworkPackage simple example](https://gist.github.com/gmich/cc0d256b0db04a8d24f5)
+
 Documentation for Gem Network can be found [here](https://github.com/gmich/Gem/wiki/Gem.Network)
 
 ###Gem GUI
