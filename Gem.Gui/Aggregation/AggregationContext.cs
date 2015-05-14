@@ -12,24 +12,19 @@ namespace Gem.Gui.Aggregation
         public AControl FocusedControl { get; set; }
 
 
-        public AggregationContext(IList<IAggregator> aggregators, params AControl[] controls)
+        public AggregationContext(IList<IAggregator> aggregators, IEnumerable<AControl> controls)
         {
             this.aggregators = aggregators;
-            AddControlRange(controls);
+            foreach (var control in controls)
+            {
+                entries.Add(new GuiEntry(control));
+            }
         }
 
         private IDisposable AddAggregator(IAggregator aggregator)
         {
             aggregators.Add(aggregator);
             return Gem.Infrastructure.Disposable.Create(aggregators, aggregator);
-        }
-
-        private void AddControlRange(params AControl[] controls)
-        {
-            foreach (var control in controls)
-            {
-                entries.Add(new GuiEntry(control));
-            }
         }
 
         public void Aggregate()

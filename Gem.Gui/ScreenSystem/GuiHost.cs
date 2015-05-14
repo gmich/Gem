@@ -83,6 +83,10 @@ namespace Gem.Gui.ScreenSystem
 
         public void ExitScreen()
         {
+            foreach (var control in controls)
+            {
+                control.HasFocus=false;
+            }
             Transition.Start(TransitionDirection.Leave);
         }
 

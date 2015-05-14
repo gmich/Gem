@@ -2,7 +2,6 @@
 {
     public enum ControlTarget
     {
-        Irrelevant,
         Windows,
         Linux,
         Android,

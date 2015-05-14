@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
 using Gem.Gui.Rendering;
 using System;
+using Gem.Gui.Configuration;
 
 namespace Gem.Gui.ScreenSystem
 {
@@ -16,10 +17,13 @@ namespace Gem.Gui.ScreenSystem
         private SpriteBatch spriteBatch { get; set; }
         private readonly Dictionary<IGuiHost, RenderTarget2D> renderTargets = new Dictionary<IGuiHost, RenderTarget2D>();
         public Action<SpriteBatch> DrawWith;
+        private RenderTarget2D guiScreen;
 
-        public ScreenManager(Game game, Action<SpriteBatch> drawWith)
+        public ScreenManager(Game game,Settings settings, Action<SpriteBatch> drawWith)
             : base(game)
         {
+            settings.OnResolutionChange((sender, args) => this.guiScreen = GetWindowRenderTarget());
+            this.guiScreen = GetWindowRenderTarget();
             this.DrawWith = drawWith;
         }
 
@@ -61,6 +65,7 @@ namespace Gem.Gui.ScreenSystem
                                     SurfaceFormat.Color,
                                     pp.DepthStencilFormat,
                                     pp.MultiSampleCount,
+                                    //maybe preserve?
                                     RenderTargetUsage.DiscardContents);
         }
 
@@ -72,8 +77,7 @@ namespace Gem.Gui.ScreenSystem
 
 
         public override void Draw(GameTime gameTime)
-        {
-            var guiScreen = GetWindowRenderTarget();
+        {            
             AssignRenderTargetToDevice(guiScreen);
 
             DrawWith(spriteBatch);

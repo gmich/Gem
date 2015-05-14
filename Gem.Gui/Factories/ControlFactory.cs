@@ -13,17 +13,13 @@ namespace Gem.Gui.Factories
     //TODO: update method parameters
     public interface IControlFactory
     {
-        Button CreateButton(Region region, Texture2D texture, IRenderStyle style);
+        Button CreateButton(Region region, Texture2D texture, ARenderStyle style);
 
         ListView CreateListView(Texture2D texture,
                                 Region region,
                                 Orientation orientation,
                                 AlignmentContext alignmentContext,
                                 ReadOnlyCollection<AControl> controls);
-
-        ImageButton CreateImageButton();
-
-        Label CreateLabel();
 
         TextField CreateTextBox();
     }

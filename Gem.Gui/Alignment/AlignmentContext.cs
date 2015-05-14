@@ -1,4 +1,5 @@
-﻿using Gem.Gui.Rendering;
+﻿using Gem.Gui.Controls;
+using Gem.Gui.Rendering;
 using Gem.Gui.Transformations;
 using Microsoft.Xna.Framework;
 using System;
@@ -10,6 +11,15 @@ namespace Gem.Gui.Alignment
     {
         private readonly List<IDisposable> activeTransformations = new List<IDisposable>();
         public event EventHandler<EventArgs> OnAlignmentChanged;
+
+        public AlignmentContext(IHorizontalAlignable horizontal,
+                                IVerticalAlignable vertical,
+                                IAlignmentTransition transition)
+        {
+            this.horizontal = horizontal;
+            this.vertical = vertical;
+            this.Transition = transition;
+        }
 
         private IHorizontalAlignable horizontal;
         public IHorizontalAlignable HorizontalAlignment
@@ -40,17 +50,17 @@ namespace Gem.Gui.Alignment
         }
 
         public IAlignmentTransition Transition { get; set; }
-        
+
         public static AlignmentContext Default
         {
             get
             {
                 return new AlignmentContext
-                    {
-                        HorizontalAlignment = Alignment.HorizontalAlignment.Manual,
-                        VerticalAlignment = Alignment.VerticalAlignment.Manual,
-                        Transition = AlignmentTransition.Fixed
-                    };
+                    (
+                        Alignment.HorizontalAlignment.Manual,
+                        Alignment.VerticalAlignment.Manual,
+                        AlignmentTransition.Fixed
+                    );
             }
         }
 
@@ -75,12 +85,29 @@ namespace Gem.Gui.Alignment
         /// <returns>An IEnumerable of Transformations</returns>
         internal ITransformation GetAlignementTransformation(Region parent, Region child, Padding padding)
         {
+            return Transition.CreateTransition(child, GetTargetLocation(parent, child, padding));
+        }
+
+        internal void ManageTransformation(Func<ITransformation, IDisposable> transformedObject, Region parent, Region child, Padding padding)
+        {
             Flush();
+            ActiveTransformations(transformedObject(Transition.
+                                   CreateTransition(child,
+                                                    GetTargetLocation(parent, child, padding))));
+        }
+
+        internal void ManageTransformation(Func<ITransformation, IDisposable> transformedObject, Region current, Region target)
+        {
+            Flush();
+            ActiveTransformations(transformedObject(Transition.CreateTransition(current,target)));
+        }
+
+        internal Region GetTargetLocation(Region parent, Region child, Padding padding)
+        {
             var horizontal = HorizontalAlignment.Align(parent, child, padding);
             var vertical = VerticalAlignment.Align(parent, child, padding);
 
-            return Transition.CreateTransition(child,
-                        new Region(horizontal.Position, vertical.Position, horizontal.Size, vertical.Size));
+            return new Region(horizontal.Position, vertical.Position, horizontal.Size, vertical.Size);
         }
 
         private void OnAlignmentChangedAggregation()

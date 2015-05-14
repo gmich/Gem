@@ -40,54 +40,60 @@ namespace Gem.Gui.Aggregation
         {
             var currentHasHover = entry.Region.Frame.Contains(input.MousePosition);
 
-            if (token.IsSelected) return;
-
             if (currentHasHover && !token.HasHover)
             {
-                entry.Events.OnMouseCapture();
+                entry.HasHover = true;
             }
             else if (!currentHasHover && token.HasHover)
             {
-                entry.Events.OnLostMouseCapture();
+                entry.HasHover = false;
             }
 
             token.HasHover = currentHasHover;
+            //if (token.IsSelected) return;
         }
 
         private void CheckFocus(AControl entry, AggregationToken token, int entryId)
         {
-            var currentFocus = !token.HasFocus ?
-                                token.HasHover && input.IsLeftButtonClicked() :
-                                input.IsLeftButtonPressed();
-
-            if (currentFocus && !token.HasFocus)
+            if (input.IsLeftButtonClicked())
             {
-                entry.Events.OnGotFocus();
-
-                //entry.FocusIndex.Current = entryId;
-                token.GotFocusBy = this;
-            }
-            else if (!currentFocus && token.HasFocus)
-            {
-                entry.Events.OnLostFocus();
-                if (entry.Region.Frame.Contains(input.MousePosition))
+                if (token.HasHover && !entry.HasFocus)
                 {
-                    entry.Events.OnMouseCapture();
+                    entry.HasFocus = true;
+                    token.GotFocusBy = this;
+                }
+                else if (!token.HasHover && entry.HasFocus)
+                {
+                    entry.HasFocus = false;
+                    token.GotFocusBy = null;
                 }
             }
-            token.HasFocus = currentFocus;
+            CheckSelected(entry, token, entryId);
+        }
 
-            token.IsSelected = token.HasFocus && token.HasHover && token.HasGottenFocusBy(this);
+        private void CheckSelected(AControl entry, AggregationToken token, int entryId)
+        {
+            if (input.IsLeftButtonClicked())
+            {
+                if (token.HasHover)
+                {
+                    token.CanBeClicked = true;
+                }
+            }
+            if (!input.IsLeftButtonPressed())
+            {
+                token.CanBeClicked = false;
+            }
         }
 
         private void CheckClick(AControl entry, AggregationToken token, int entryId)
         {
-            if (token.IsSelected && input.IsLeftButtonReleased())
+            //Console.WriteLine(token.CanBeClicked);
+            if (token.CanBeClicked 
+                && token.HasHover 
+                && input.IsLeftButtonReleased())
             {
-                if (token.HasGottenFocusBy(this))
-                {
-                    entry.Events.OnClicked();
-                }
+                entry.Events.OnClicked();
             }
         }
 

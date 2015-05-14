@@ -57,11 +57,19 @@ namespace Gem.Gui.Rendering
         }
 
         public Region(float positionX, float positionY, float sizeX, float sizeY, Func<Region, Vector2> centerCalculator = null)
-            :this(new Vector2(positionX,positionY),new Vector2(sizeX,sizeY),centerCalculator)
-        {  }
+            : this(new Vector2(positionX, positionY), new Vector2(sizeX, sizeY), centerCalculator)
+        { }
         #endregion
 
         #region Public Properties
+
+        public static Region Empty
+        {
+            get
+            {
+                return new Region(Vector2.Zero, Vector2.Zero);
+            }
+        }
 
         public Vector2 Position
         {
@@ -176,9 +184,18 @@ namespace Gem.Gui.Rendering
                  ^ center.GetHashCode();
         }
 
+        #endregion 
+
+        #region Operator Overloading
+
         public static bool operator ==(Region left, Region right)
         {
             return left.Equals(right);
+        }
+
+        public static Region operator +(Region left, Region right)
+        {
+            return new Region(left.Position + right.Position, left.Size + right.Size);
         }
 
         public static bool operator !=(Region left, Region right)

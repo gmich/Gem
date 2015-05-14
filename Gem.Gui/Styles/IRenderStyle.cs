@@ -1,15 +1,77 @@
 ﻿using Gem.Gui.Controls;
+using Gem.Gui.Transformations;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 
 namespace Gem.Gui.Styles
 {
-    public interface IRenderStyle
+    public abstract class ARenderStyle
     {
-        void Focus(AControl styeControl);
-        void Default(AControl styeControl);
-        void Hover(AControl styeControl);
-        void Clicked(AControl styeControl);
 
-        void Render(SpriteBatch batch);
+        #region Fields
+
+        private readonly List<IDisposable> activeTransformations = new List<IDisposable>();
+
+        #endregion
+
+
+        private void Flush()
+        {
+            foreach (var transformation in activeTransformations)
+            {
+                transformation.Dispose();
+            }
+        }
+
+        #region Styles
+
+        protected virtual Func<AControl, ITransformation> FocusStyle
+        {
+            get { return control => new NoTransformation(); }
+        }
+        protected virtual Func<AControl, ITransformation> DefaultStyle
+        {
+            get { return control => new NoTransformation(); }
+        }
+
+        protected virtual Func<AControl, ITransformation> HoverStyle
+        {
+            get { return control => new NoTransformation(); }
+        }
+
+        protected virtual Func<AControl, ITransformation> ClickedStyle
+        {
+            get { return control => new NoTransformation(); }
+        }
+
+        #endregion
+
+        public void Focus(AControl styleControl)
+        {
+            if (styleControl.HasFocus) return;
+            Flush();
+            activeTransformations.Add(styleControl.AddTransformation(FocusStyle(styleControl)));
+        }
+        public void Default(AControl styleControl)
+        {
+            if (styleControl.HasFocus) return;
+            Flush();
+            activeTransformations.Add(styleControl.AddTransformation(DefaultStyle(styleControl)));
+
+        }
+        public void Hover(AControl styleControl)
+        {
+            if (styleControl.HasFocus) return;
+            Flush();
+            activeTransformations.Add(styleControl.AddTransformation(HoverStyle(styleControl)));
+        }
+        public void Clicked(AControl styleControl)
+        {
+            Flush();
+            activeTransformations.Add(styleControl.AddTransformation(ClickedStyle(styleControl)));
+        }
+
+        public abstract void Render(SpriteBatch batch);
     }
 }

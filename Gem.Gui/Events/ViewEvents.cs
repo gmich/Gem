@@ -33,7 +33,7 @@ namespace Gem.Gui.Events
 
         #region Helpers
 
-        internal void SubscribeStyle(AControl control, IRenderStyle style)
+        internal void SubscribeStyle(AControl control, ARenderStyle style)
         {
             this.Clicked += (sender, args) => style.Clicked(control);
             this.GotFocus += (sender, args) => style.Focus(control);

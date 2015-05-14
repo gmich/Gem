@@ -7,8 +7,21 @@ namespace Gem.Infrastructure.Attributes
     /// <summary>
     /// Helper class for attribute resolving 
     /// </summary>
-    public sealed class AttributeResolver
+    public static class AttributeResolver
     {
+        /// <summary>
+        /// Checks if the class is marked with the specified attribute
+        /// </summary>
+        /// <param name="type">The type to check</param>
+        public static bool HasAttribute<T>(this object obj)
+            where T : Attribute
+        {
+            return 
+            obj.GetType()
+               .CustomAttributes
+               .Any(attr => attr.AttributeType == typeof(T));
+        }
+
         /// <summary>
         /// Checks if the class is marked with the specified attribute
         /// </summary>
@@ -25,6 +38,7 @@ namespace Gem.Infrastructure.Attributes
                 }
             }
         }
+
 
         /// <summary>
         /// Checks if the property is marked with the specified attribute

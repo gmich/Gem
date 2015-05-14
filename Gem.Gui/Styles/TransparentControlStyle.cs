@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using Gem.Gui.Controls;
 using Gem.Gui.Transformations;
-using Microsoft.Xna.Framework;
 using Gem.Gui.Utilities;
 using System.ComponentModel;
 using Gem.Infrastructure.Attributes;
@@ -10,26 +8,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Gem.Gui.Styles
 {
-    public class TransparentControlStyle : IRenderStyle
+    public sealed class TransparentControlStyle : ARenderStyle
     {
-
-        #region Fields
-
-        private readonly List<IDisposable> activeTransformations = new List<IDisposable>();
-
-        #endregion
 
         public TransparentControlStyle()
         {
             this.AssignDefaultValues();
-        }
-
-        private void Flush()
-        {
-            foreach (var transformation in activeTransformations)
-            {
-                transformation.Dispose();
-            }
         }
 
         #region Properties
@@ -50,57 +34,62 @@ namespace Gem.Gui.Styles
 
         #region Style
 
-        public void Focus(AControl styeControl)
+        protected override Func<AControl, ITransformation> FocusStyle
         {
-            Flush();
-
-            activeTransformations.Add(
-                styeControl.AddTransformation(new PredicateTransformation(
-                    expirationPredicate: control =>
-                        control.RenderParameters.Transparency == FocusAlpha,
-                        transformer: (timeDelta, control) =>
-                        control.RenderParameters.Transparency = control.RenderParameters.Transparency
-                                                                .Approach(FocusAlpha
-                                                                         ,(float)timeDelta * AlphaLerpStep))));
-
+            get
+            {
+                return
+                    ctrl => new PredicateTransformation(
+                            expirationPredicate: control =>
+                            control.RenderParameters.Transparency == FocusAlpha,
+                            transformer: (timeDelta, control) =>
+                            control.RenderParameters.Transparency = control.RenderParameters.Transparency
+                                                                    .Approach(FocusAlpha
+                                                                             , (float)timeDelta * AlphaLerpStep));
+            }
+        }
+        protected override Func<AControl, ITransformation> DefaultStyle
+        {
+            get
+            {
+                return
+                    ctrl => new PredicateTransformation(
+                            expirationPredicate: control =>
+                            control.RenderParameters.Transparency == DefaultAlpha,
+                            transformer: (timeDelta, control) =>
+                            control.RenderParameters.Transparency = control.RenderParameters.Transparency
+                                                                    .Approach(DefaultAlpha
+                                                                              , (float)timeDelta * AlphaLerpStep));
+            }
         }
 
-        public void Default(AControl styeControl)
+        protected override Func<AControl, ITransformation> HoverStyle
         {
-            Flush();
-
-            activeTransformations.Add(
-            styeControl.AddTransformation(new PredicateTransformation(
-                expirationPredicate: control =>
-                    control.RenderParameters.Transparency == DefaultAlpha,
-                    transformer: (timeDelta, control) =>
-                    control.RenderParameters.Transparency = control.RenderParameters.Transparency
-                                                            .Approach(DefaultAlpha
-                                                                      ,(float)timeDelta * AlphaLerpStep))));
+            get
+            {
+                return
+                    ctrl => new PredicateTransformation(
+                            expirationPredicate: control =>
+                            control.RenderParameters.Transparency == HoverAlpha,
+                            transformer: (timeDelta, control) =>
+                            control.RenderParameters.Transparency = control.RenderParameters.Transparency
+                                                                    .Approach(HoverAlpha
+                                                                             , (float)timeDelta * AlphaLerpStep));
+            }
         }
 
-        public void Hover(AControl styeControl)
+        protected override Func<AControl, ITransformation> ClickedStyle
         {
-            Flush();
-
-            activeTransformations.Add(
-            styeControl.AddTransformation(new PredicateTransformation(
-                expirationPredicate: control =>
-                    control.RenderParameters.Transparency == HoverAlpha,
-                    transformer: (timeDelta, control) =>
-                    control.RenderParameters.Transparency = control.RenderParameters.Transparency
-                                                            .Approach(HoverAlpha
-                                                                     ,(float)timeDelta * AlphaLerpStep))));
-        }
-
-        public void Clicked(AControl styeControl)
-        {
-            return;
+            get
+            {
+                return
+                    ctrol => new NoTransformation();
+            }
         }
 
         #endregion
 
-        public void Render(SpriteBatch batch)
+        public override void Render(SpriteBatch batch)
         {
             return;
         }

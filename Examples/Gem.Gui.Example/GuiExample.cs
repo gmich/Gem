@@ -4,6 +4,10 @@ using Microsoft.Xna.Framework.Input;
 using Gem.Gui.Fluent;
 using Gem.Gui.Alignment;
 using Gem.Gui.Styles;
+using Gem.Gui.Layout;
+using Gem.Gui.Controls;
+using Gem.Gui.ScreenSystem;
+using System;
 
 namespace Gem.Gui.Example
 {
@@ -43,7 +47,7 @@ namespace Gem.Gui.Example
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
+              // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             gui.Fonts.Add("segoe-10", @"Fonts/segoe-10");
@@ -51,15 +55,25 @@ namespace Gem.Gui.Example
             var firstButton =
                gui.Button(20, 20, 100, 100, style: Style.Transparent)
                   .Color(Color.White)
-                  .Text("First", 0, 0, gui.Fonts["segoe-10"])
+                  .Text(gui.Fonts["segoe-10"],"First")
                   .TextColor(Color.Black)
                   .TextHorizontalAlignment(HorizontalAlignment.Center)
                   .TextVerticalAlignment(VerticalAlignment.Center)
                   .OnClick((sender, args) => gui.Swap("First", "Second"));
 
-            firstButton.Events.GotMouseCapture += (sender, args) => firstButton.Region.Size = new Vector2(150,150);
-            firstButton.Events.LostMouseCapture += (sender, args) => firstButton.Region.Size = new Vector2(100,100);
+            var rand =
+               gui.Button(30, 30, 100, 100, style: Style.Transparent)
+                  .Color(Color.White)
+                  .Text(gui.Fonts["segoe-10"], "rand",10,10,true)
+                  .TextColor(Color.Black)
+                  .OnClick((sender, args) => gui.Swap("Second", "First"));
+
+
+            rand.ScreenAlignment.HorizontalAlignment = HorizontalAlignment.Center;
+            firstButton.Events.GotMouseCapture += (sender, args) => System.Console.WriteLine("GotMouseCapture");
+            firstButton.Events.LostMouseCapture += (sender, args) => System.Console.WriteLine("LostMouseCapture");
             firstButton.Events.LostFocus += (sender, args) => System.Console.WriteLine("LostFocus");
+            firstButton.Events.GotFocus += (sender, args) => System.Console.WriteLine("GotFocus");
             firstButton.Events.Clicked += (sender, args) => System.Console.WriteLine("Clicked");
 
             gui.AddGuiHost("First", firstButton);
@@ -67,7 +81,7 @@ namespace Gem.Gui.Example
             var secondButton =
                 gui.Button(x: 200, y: 200, sizeX: 100, sizeY: 100, style: Style.Transparent)
                    .Color(Color.Violet)
-                   .Text("Second", 20, 20, gui.Fonts["segoe-10"])
+                   .Text(gui.Fonts["segoe-10"], "1231")
                    .TextColor(Color.Blue)
                    .TextHorizontalAlignment(HorizontalAlignment.Center)
                    .TextVerticalAlignment(VerticalAlignment.Center)
@@ -79,55 +93,97 @@ namespace Gem.Gui.Example
                            gui.Show("Third");
                    });
 
-            gui.AddGuiHost("Second", secondButton);
+            gui.AddGuiHost("Second", secondButton, rand);
 
+            gui["First"].Transition = new TimedTransition(TimeSpan.FromSeconds(0.5),
+                                         (state, progress, target, batch) =>
+                                          batch.Draw(target, Vector2.Zero, Color.White * progress));
+
+            gui["Second"].Transition = new TimedTransition(TimeSpan.FromSeconds(0.5),
+                                         (state, progress, target, batch) =>
+                                          batch.Draw(target, Vector2.Zero, Color.White * progress));
             var thirdButton =
                 gui.Button(x: 300, y: 300, sizeX: 100, sizeY: 100, style: Style.Transparent)
                .Color(Color.Aqua)
-               .Text("Third", 20, 20, gui.Fonts["segoe-10"])
+               .Text(gui.Fonts["segoe-10"], "12342331")
                .TextColor(Color.Blue)
                .TextHorizontalAlignment(HorizontalAlignment.Center)
                .TextVerticalAlignment(VerticalAlignment.Center)
                .OnClick((sender, args) =>
                    {
                        gui.Hide("Third");
-                       gui.Swap("Second", "First");
+                       gui.Hide("Second");
+                       gui.Show("LayoutHost");
                    });
             gui.AddGuiHost("Third", thirdButton);
 
-            gui.Show("First");
-
+            AddListView();
             gui.DrawWith += (sender, batch) => RenderBackground(batch);
+            
+            gui.Show("First");
+            
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        public void AddListView()
+        {
+            AControl listView = null;
+            var one =
+                gui.Button(20, 20, 70, 70, style: Style.Transparent)
+                   .Color(Color.White)
+                   .Text(gui.Fonts["segoe-10"], "1")
+                   .TextHorizontalAlignment(HorizontalAlignment.Center)
+                   .TextVerticalAlignment(VerticalAlignment.Center)
+                   .TextColor(Color.Black)
+                   .OnClick((sender, args) => gui.Swap("LayoutHost","First"));
+
+            one.Padding.Bottom = 10;
+            one.Padding.Top = 10;
+
+            var two =
+                gui.Button(100, 100, 50, 50, style: Style.Transparent)
+                   .Color(Color.White)
+                   .Text(gui.Fonts["segoe-10"], "2",10,10,true)
+                   .TextColor(Color.Black)
+                   .OnClick((sender, args) => listView.Region.Size = new Vector2(200, 300));
+
+            //two.Padding.Top =20;
+            two.Padding.Bottom = 40;
+            var three =
+                gui.Button(200, 100, 50, 50, style: Style.Transparent)
+                   .Color(Color.White)
+                   .Text(gui.Fonts["segoe-10"], "3",5,5,true)
+                   .TextColor(Color.Black)
+                   .OnClick((sender, args) =>
+                       listView.Region.Size = new Vector2(300,400));
+
+            listView =
+                gui.ListView(x: 10, y: 10,
+                            sizeX: 200, sizeY: 400,
+                            orientation: Layout.Orientation.Portrait,
+                            horizontalAlignment: HorizontalAlignment.Center,
+                            verticalAlignment: VerticalAlignment.Bottom,
+                            alignmentTransition: AlignmentTransition.Fixed,
+                            controls: new[] { one, two, three })
+                    .ScreenAlignment(HorizontalAlignment.Center, VerticalAlignment.Center)
+                    .Color(Color.Red);
+
+            gui.AddGuiHost("LayoutHost", listView);
+        }
+
+
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);

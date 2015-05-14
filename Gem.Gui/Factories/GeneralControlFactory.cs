@@ -11,22 +11,13 @@ namespace Gem.Gui.Factories
 {
     public class GeneralControlFactory : IControlFactory
     {
-        public ImageButton CreateImageButton()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Label CreateLabel()
-        {
-            throw new NotImplementedException();
-        }
 
         public TextField CreateTextBox()
         {
             throw new NotImplementedException();
         }
 
-        public Button CreateButton(Region region, Texture2D texture, IRenderStyle style)
+        public Button CreateButton(Region region, Texture2D texture, ARenderStyle style)
         {
             return new Button(texture, region,style);
         }

@@ -3,34 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Gem.Gui.Styles
 {
-    public class NoStyle : IRenderStyle
+    public class NoStyle : ARenderStyle
     {
-       
-        #region Style
 
-        public void Focus(AControl styeControl)
-        {
-            return;
-        }
-
-        public void Default(AControl styeControl)
-        {
-            return;
-        }
-
-        public void Hover(AControl styeControl)
-        {
-            return;
-        }
-
-        public void Clicked(AControl styeControl)
-        {
-            return;
-        }
-
-        #endregion
-
-        public void Render(SpriteBatch batch)
+        public override void Render(SpriteBatch batch)
         {
             return;
         }

@@ -6,9 +6,7 @@
 
         public bool HasHover { get; set; }
 
-        public bool HasFocus { get; set; }
-
-        public bool IsSelected { get; set; }
+        public bool CanBeClicked { get; set; }
 
         public object GotFocusBy { get; set; }
 

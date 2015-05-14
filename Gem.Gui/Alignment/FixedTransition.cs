@@ -7,6 +7,7 @@ namespace Gem.Gui.Alignment
     {
         public ITransformation CreateTransition(Region oldRegion, Region newRegion)
         {
+            if (oldRegion == newRegion) return new NoTransformation();
             return new PredicateTransformation(control => oldRegion == newRegion,
                                                (deltaTime, control) =>
                                                {

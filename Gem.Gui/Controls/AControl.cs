@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Gem.Gui.Alignment;
 
 namespace Gem.Gui.Controls
 {
@@ -33,7 +34,7 @@ namespace Gem.Gui.Controls
 
         public Sprite Sprite { get; private set; }
 
-        public IRenderStyle RenderStyle { get; set; }
+        public ARenderStyle RenderStyle { get; set; }
 
         private IText text;
         public IText Text
@@ -52,15 +53,61 @@ namespace Gem.Gui.Controls
 
         public Options Options { get; private set; }
 
-        public Region Region { get; private set; }
+        public Region Region { get; protected set; }
 
         public Padding Padding { get; private set; }
+
+        public virtual IEnumerable<AControl> Entries() { yield return this; }
+
+        private bool hasFocus;
+        public bool HasFocus
+        {
+            get
+            {
+                return hasFocus;
+            }
+            set
+            {
+                var previousFocus = hasFocus;
+                hasFocus = value;
+
+                if (!previousFocus && hasFocus)
+                {
+                    Events.OnGotFocus();
+                }
+                else if (previousFocus && !hasFocus)
+                {
+                    Events.OnLostFocus();
+                }
+            }
+        }
+
+        private bool hasHover;
+        public bool HasHover
+        {
+            get
+            {
+                return hasHover;
+            }
+            set
+            {
+                if (!hasHover && value)
+                {
+                    Events.OnMouseCapture();
+                }
+                else if (hasHover && !value)
+                {
+                    Events.OnLostMouseCapture();
+                }
+                hasHover = value;
+            }
+        }
 
         #endregion
 
         #region Ctor
 
-        public AControl(Texture2D texture, Region region, IRenderStyle style)
+        public AControl(Texture2D texture, Region region, ARenderStyle style)
         {
             this.Region = region;
             this.Sprite = new Sprite(texture);
@@ -69,25 +116,36 @@ namespace Gem.Gui.Controls
             this.Events = new ViewEvents<ControlEventArgs>(this, () => new ControlEventArgs());
             this.RenderStyle = style;
             this.Events.SubscribeStyle(this, RenderStyle);
+            this.Padding = new Padding();
+            this.ScreenAlignment = AlignmentContext.Default;
 
+            this.ScreenAlignment.OnAlignmentChanged += (sender, args) => this.Align(Settings.ViewRegion);
             region.onSizeChange += (sender, args) => this.Align(Settings.ViewRegion);
+            region.onPositionChange += (sender, args) => this.Align(Settings.ViewRegion);
         }
 
         #endregion
 
         #region Public Members
 
+        public AlignmentContext ScreenAlignment { get; private set; }
+
         public virtual void Align(Region viewPort)
         {
+            ScreenAlignment.ManageTransformation(this.AddTransformation, viewPort, this.Region, this.Padding);
             if (Text != null)
             {
-                var transformation = Text.Alignment.GetAlignementTransformation(this.Region, Text.Region, Text.Padding);
-                Text.Alignment.ActiveTransformations(this.AddTransformation(transformation));
+                Text.Alignment.ManageTransformation(this.AddTransformation, this.Region, Text.Region, Text.Padding);
             }
         }
 
         public System.IDisposable AddTransformation(ITransformation transformation)
         {
+            if (!Options.AllowTransformations)
+            {
+                return Gem.Infrastructure.Disposable.CreateDummy();
+            }
+
             transformations.Add(transformation);
             return Gem.Infrastructure.Disposable.Create(transformations, transformation);
         }

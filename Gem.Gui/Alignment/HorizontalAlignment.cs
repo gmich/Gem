@@ -1,4 +1,5 @@
-﻿using Gem.Gui.Rendering;
+﻿using Gem.Gui.Controls;
+using Gem.Gui.Rendering;
 using Microsoft.Xna.Framework;
 using System;
 
@@ -107,6 +108,33 @@ namespace Gem.Gui.Alignment
             public AlignmentResult Align(Region parent, Region child, Padding padding)
             {
                 return new AlignmentResult(child.Position.X, child.Size.X);
+            }
+        }
+
+        #endregion
+
+
+        #region Relative
+
+        public static IHorizontalAlignable RelativeTo(AControl control, int offSet)
+        {
+
+            return new HorizontalRelativeTo(control, offSet);
+        }
+
+        private class HorizontalRelativeTo : IHorizontalAlignable
+        {
+            private readonly int offSet;
+            private readonly AControl relativeControl;
+
+            public HorizontalRelativeTo(AControl relativeControl, int offSet)
+            {
+                this.relativeControl = relativeControl;
+                this.offSet = offSet;
+            }
+            public AlignmentResult Align(Region parent, Region child, Padding padding)
+            {
+                return new AlignmentResult(relativeControl.Region.Position.X + offSet, child.Size.X);
             }
         }
 

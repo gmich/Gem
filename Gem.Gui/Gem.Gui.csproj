@@ -63,12 +63,12 @@
     <Compile Include="Controls\ControlTarget.cs" />
     <Compile Include="Events\ControlEventArgs.cs" />
     <Compile Include="Controls\TextField.cs" />
-    <Compile Include="Controls\Label.cs" />
-    <Compile Include="Controls\ImageButton.cs" />
     <Compile Include="Controls\Button.cs" />
-    <Compile Include="Fluent\ButtonBuilder.cs" />
+    <Compile Include="Fluent\ControlFluentBuilder.cs" />
     <Compile Include="Fluent\RenderTextBy.cs" />
     <Compile Include="Input\KeyboardMenuScript.cs" />
+    <Compile Include="Layout\LayoutAttribute.cs" />
+    <Compile Include="Layout\Orientation.cs" />
     <Compile Include="Rendering\ITextDrawable.cs" />
     <Compile Include="Rendering\ControlFrameDrawable.cs" />
     <Compile Include="Rendering\ControlPositionDrawable.cs" />
@@ -122,6 +122,7 @@
     <Compile Include="Text\IText.cs" />
     <Compile Include="Text\StandardText.cs" />
     <Compile Include="Text\TextEventArgs.cs" />
+    <Compile Include="Transformations\NoTransformation.cs" />
     <Compile Include="Transformations\ITransformation.cs" />
     <Compile Include="Transformations\PredicateTransformation.cs" />
     <Compile Include="Transformations\TimedTransformation.cs" />

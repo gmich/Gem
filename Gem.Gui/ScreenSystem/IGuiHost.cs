@@ -13,7 +13,7 @@ namespace Gem.Gui.ScreenSystem
 
         ScreenState ScreenState { get; }
 
-        ITransition Transition { get; }
+        ITransition Transition { get; set; }
 
         void EnterScreen();
 

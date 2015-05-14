@@ -1,6 +1,7 @@
 ﻿using Gem.Gui.Alignment;
 using Gem.Gui.Controls;
 using Gem.Gui.Core.Controls;
+using Gem.Gui.Layout;
 using Gem.Gui.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,9 +12,16 @@ namespace Gem.Gui.Fluent
 {
     public static class ControlFluentBuilder
     {
-        public static AControl Text(this AControl control, string text, int x, int y, SpriteFont font)
+        public static AControl Text(this AControl control, SpriteFont font, string text, int x = 0, int y = 0, bool relativeToParent = false)
         {
             control.Text = new StandardText(font, control.Region.Position + new Vector2(x, y), text);
+
+            if (relativeToParent)
+            {
+                control.Text.Alignment = new AlignmentContext(HorizontalAlignment.RelativeTo(control, x),
+                                                              VerticalAlignment.RelativeTo(control, y),
+                                                              AlignmentTransition.Fixed);
+            }
             return control;
         }
 
@@ -29,6 +37,13 @@ namespace Gem.Gui.Fluent
 
             control.Text.RenderParameters.Color = color;
             return control;
+        }
+
+        public static AControl ScreenAlignment(this AControl listView, IHorizontalAlignable horizontalAignment, IVerticalAlignable verticalAignment)
+        {
+            listView.ScreenAlignment.HorizontalAlignment = horizontalAignment;
+            listView.ScreenAlignment.VerticalAlignment = verticalAignment;
+            return listView;
         }
 
         public static AControl TextHorizontalAlignment(this AControl control, IHorizontalAlignable horizontalAignment)

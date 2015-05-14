@@ -11,6 +11,9 @@ namespace Gem.Gui.Configuration
         }
 
         [DefaultValue(true)]
+        public bool AllowTransformations { get; set; }
+
+        [DefaultValue(true)]
         public bool IsVisible { get; set; }
 
         [DefaultValue(true)]

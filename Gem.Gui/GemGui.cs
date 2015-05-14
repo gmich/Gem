@@ -5,6 +5,7 @@ using Gem.Gui.Controls;
 using Gem.Gui.Factories;
 using Gem.Gui.Rendering;
 using Gem.Gui.ScreenSystem;
+using Gem.Infrastructure.Attributes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -41,7 +42,7 @@ namespace Gem.Gui
 
         public GemGui(Game game,
                       AggregationTarget aggregationTarget = AggregationTarget.All,
-                      ControlTarget controlTarget = ControlTarget.Irrelevant,
+                      ControlTarget controlTarget = ControlTarget.Windows,
                       IConfigurationResolver configuration = null)
         {
             this.configuration = configuration ?? new DefaultConfiguration();
@@ -49,7 +50,7 @@ namespace Gem.Gui
             this.settings = new Settings(game);
             this.controlFactory = this.configuration.GetControlFactory(controlTarget);
             this.HostTransition = () => TimedTransition.Default;
-            screenManager = new ScreenManager(game,DrawTheRest);
+            screenManager = new ScreenManager(game,settings, DrawTheRest);
 
             game.Components.Add(screenManager);
             game.Components.Add(new Input.InputManager(game));
@@ -86,7 +87,7 @@ namespace Gem.Gui
         }
 
         #region Control Factory
-        
+
         private Texture2D CreateDummyTexture()
         {
             var texture = new Texture2D(screenManager.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
@@ -95,7 +96,7 @@ namespace Gem.Gui
             return texture;
         }
 
-        public IRenderStyle GetRenderStyle(Style style)
+        public ARenderStyle GetRenderStyle(Style style)
         {
             switch (style)
             {
@@ -108,23 +109,28 @@ namespace Gem.Gui
             }
         }
 
-        public Button Button(int x, int y, int sizeX, int sizeY, Style style)
+        public Button Button(int x, int y,
+                             int sizeX, int sizeY,
+                             Style style)
         {
             return controlFactory.CreateButton(new Region(new Vector2(x, y),
                                                            new Vector2(sizeX, sizeY)),
                                                            CreateDummyTexture(), GetRenderStyle(style));
         }
 
-        public ListView ListView(int x, int y, int sizeX, int sizeY,
+        public ListView ListView(int x, int y,
+                                 int sizeX, int sizeY,
                                  Orientation orientation,
-                                 AlignmentContext alignmentContext = null,
+                                 IHorizontalAlignable horizontalAlignment,
+                                 IVerticalAlignable verticalAlignment,
+                                 IAlignmentTransition alignmentTransition,
                                  params AControl[] controls)
         {
             return controlFactory.CreateListView(CreateDummyTexture(),
                                                  new Region(new Vector2(x, y),
                                                             new Vector2(sizeX, sizeY)),
                                                  orientation,
-                                                 alignmentContext ?? AlignmentContext.Default,
+                                                 new AlignmentContext(horizontalAlignment, verticalAlignment, alignmentTransition),
                                                  controls.ToList().AsReadOnly());
         }
 
@@ -143,18 +149,26 @@ namespace Gem.Gui
         #endregion
 
         #region Public Helper Methods
-                
+
         public void AddGuiHost(string guiHostId, params AControl[] controls)
         {
-            //foreach (var control in controls)
-            //{
-            //    //control.Align(new Region(Vector2.Zero, settings.Resolution));
-            //    settings.OnResolutionChange((sender, args) =>
-            //                                control.Align(new Region(Vector2.Zero, Settings.Resolution)));
-            //}
+            foreach (var control in controls)
+            {
+                //control.Align(new Region(Vector2.Zero, settings.Resolution));
+                settings.OnResolutionChange((sender, args) =>
+                                            control.Align(Settings.ViewRegion));
+            }
+            var entries = controls.Where(control => control.HasAttribute<LayoutAttribute>());
+            var controlsEnumerable = controls.AsEnumerable();
+
+            foreach(var entry in entries)
+            {
+                controlsEnumerable = controlsEnumerable.Concat(entry.Entries());
+            }
+
             var guiHost = new GuiHost(controls.ToList(),
                                    settings.RenderTemplate,
-                                   new AggregationContext(configuration.GetAggregators(aggregationTarget), controls),
+                                   new AggregationContext(configuration.GetAggregators(aggregationTarget), controlsEnumerable),
                                    HostTransition());
             AddGuiHost(guiHostId, guiHost);
 

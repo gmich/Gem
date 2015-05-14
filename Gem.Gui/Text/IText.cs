@@ -11,7 +11,7 @@ namespace Gem.Gui.Text
     {
         event EventHandler<TextEventArgs> OnTextChanged;
 
-        Region Region { get; set; }
+        Region Region { get; }
 
         Padding Padding { get; set; }
 
@@ -19,9 +19,9 @@ namespace Gem.Gui.Text
 
         string Value { get; set; }
 
-        IRenderStyle RenderStyle { get; set; }
+        ARenderStyle RenderStyle { get; }
 
-        RenderParameters RenderParameters { get; set; }
+        RenderParameters RenderParameters { get; }
 
         Alignment.AlignmentContext Alignment { get; set; }
     }

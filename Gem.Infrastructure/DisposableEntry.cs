@@ -47,5 +47,17 @@ namespace Gem.Infrastructure
         {
             return new DisposableEntry<TEntry>(registered, current);
         }
+        public static IDisposable CreateDummy()
+        {
+            return new DummyDisposable();
+        }
+    }
+
+    public class DummyDisposable : IDisposable
+    {
+        public void Dispose()
+        {
+            return;
+        }
     }
 }
