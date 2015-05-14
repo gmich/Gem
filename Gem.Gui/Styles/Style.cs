@@ -3,6 +3,7 @@
     public enum Style
     {
         Transparent,
-        Border
+        Border,
+        NoStyle
     }
 }

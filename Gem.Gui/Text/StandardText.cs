@@ -31,9 +31,15 @@ namespace Gem.Gui.Text
             this.Alignment = alignment;
             this.RenderParameters = new RenderParameters();
             this.Alignment = alignment ?? AlignmentContext.Default;
+           
+
             this.Region = new Region(position, Font.MeasureString(value) * RenderParameters.Scale);
             this.RenderStyle = new NoStyle();
-            this.RenderParameters.OnScaleChange += (sender, args) => this.Region = new Region(position, Font.MeasureString(value) * RenderParameters.Scale);
+            Padding = Padding.Zero;
+            
+            //TODO: refactor scaling
+            //this.RenderParameters.OnScaleChange += (sender, args) => this.Region = new Region(position, Font.MeasureString(value) * RenderParameters.Scale);
+            this.OnTextChanged+=(sender, args) => this.Region = new Region(Region.Position, Font.MeasureString(Value));
         }
 
         #endregion

@@ -7,7 +7,7 @@
         public int Bottom { get; set; }
         public int Left { get; set; }
 
-        public Padding Zero
+        public static Padding Zero
         {
             get
             {

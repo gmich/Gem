@@ -21,6 +21,14 @@ namespace Gem.Gui.Factories
                                 AlignmentContext alignmentContext,
                                 ReadOnlyCollection<AControl> controls);
 
-        TextField CreateTextBox();
+        TextField CreateTextBox(TextAppenderHelper appender,
+                                SpriteFont font, 
+                                Texture2D texture,
+                                Region region,
+                                Color textcolor,
+                                ARenderStyle style,
+                                IHorizontalAlignable horizontalAlignment,
+                                IVerticalAlignable verticalAlignment,
+                                IAlignmentTransition transition);
     }
 }

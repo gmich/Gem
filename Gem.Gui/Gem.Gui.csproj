@@ -61,9 +61,11 @@
     <Compile Include="Configuration\IConfigurationResolver.cs" />
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Controls\ControlTarget.cs" />
+    <Compile Include="Controls\TextLineAppender.cs" />
     <Compile Include="Events\ControlEventArgs.cs" />
     <Compile Include="Controls\TextField.cs" />
     <Compile Include="Controls\Button.cs" />
+    <Compile Include="Events\TextFieldEventArgs.cs" />
     <Compile Include="Fluent\ControlFluentBuilder.cs" />
     <Compile Include="Fluent\RenderTextBy.cs" />
     <Compile Include="Input\KeyboardMenuScript.cs" />
@@ -84,7 +86,7 @@
     <Compile Include="ScreenSystem\ScreenManager.cs" />
     <Compile Include="ScreenSystem\ScreenState.cs" />
     <Compile Include="ScreenSystem\TransitionDirection.cs" />
-    <Compile Include="Styles\IRenderStyle.cs" />
+    <Compile Include="Styles\ARenderStyle.cs" />
     <Compile Include="Aggregation\AggregationContext.cs" />
     <Compile Include="Layout\ComponentIndex.cs" />
     <Compile Include="Styles\NoStyle.cs" />

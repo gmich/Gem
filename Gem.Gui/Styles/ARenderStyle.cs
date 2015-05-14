@@ -12,6 +12,7 @@ namespace Gem.Gui.Styles
         #region Fields
 
         private readonly List<IDisposable> activeTransformations = new List<IDisposable>();
+        private bool showedFocusAnimation;
 
         #endregion
 
@@ -22,6 +23,7 @@ namespace Gem.Gui.Styles
             {
                 transformation.Dispose();
             }
+            showedFocusAnimation = false;
         }
 
         #region Styles
@@ -49,9 +51,11 @@ namespace Gem.Gui.Styles
 
         public void Focus(AControl styleControl)
         {
-            if (styleControl.HasFocus) return;
+            if (showedFocusAnimation) return;
+
             Flush();
             activeTransformations.Add(styleControl.AddTransformation(FocusStyle(styleControl)));
+            showedFocusAnimation = true;
         }
         public void Default(AControl styleControl)
         {

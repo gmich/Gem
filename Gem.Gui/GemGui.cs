@@ -50,7 +50,7 @@ namespace Gem.Gui
             this.settings = new Settings(game);
             this.controlFactory = this.configuration.GetControlFactory(controlTarget);
             this.HostTransition = () => TimedTransition.Default;
-            screenManager = new ScreenManager(game,settings, DrawTheRest);
+            screenManager = new ScreenManager(game, settings, DrawTheRest);
 
             game.Components.Add(screenManager);
             game.Components.Add(new Input.InputManager(game));
@@ -102,6 +102,8 @@ namespace Gem.Gui
             {
                 case Style.Transparent:
                     return new TransparentControlStyle();
+                case Style.NoStyle:
+                    return new NoStyle();
                 case Style.Border:
                     throw new NotImplementedException();
                 default:
@@ -134,6 +136,31 @@ namespace Gem.Gui
                                                  controls.ToList().AsReadOnly());
         }
 
+        public TextField TextBox(int x, int y,
+                         int sizeX, int sizeY,
+                         Color textColor,
+                         SpriteFont font,
+                         Style style,
+                         IHorizontalAlignable horizontalAlignment = null,
+                         IVerticalAlignable verticalAlignment = null,
+                         IAlignmentTransition alignmentTransition = null,
+                         TextAppenderHelper appender = null)
+        {
+            TextField textField = null;
+
+            return textField =
+                   controlFactory.CreateTextBox(appender ?? TextAppenderHelper.Default,
+                                                font,
+                                                CreateDummyTexture(),
+                                                new Region(new Vector2(x, y),
+                                                            new Vector2(sizeX, sizeY)),
+                                                textColor,
+                                                GetRenderStyle(style),
+                                                horizontalAlignment ?? HorizontalAlignment.Left,
+                                                verticalAlignment?? VerticalAlignment.Center, 
+                                                alignmentTransition?? AlignmentTransition.Fixed);
+        }
+
         //TODO: add the rest
 
         #endregion
@@ -161,7 +188,7 @@ namespace Gem.Gui
             var entries = controls.Where(control => control.HasAttribute<LayoutAttribute>());
             var controlsEnumerable = controls.AsEnumerable();
 
-            foreach(var entry in entries)
+            foreach (var entry in entries)
             {
                 controlsEnumerable = controlsEnumerable.Concat(entry.Entries());
             }

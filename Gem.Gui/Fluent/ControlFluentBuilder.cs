@@ -39,6 +39,13 @@ namespace Gem.Gui.Fluent
             return control;
         }
 
+        public static AControl TextField(this AControl control, Color color)
+        {
+            Contract.Requires(control.Text != null, "Use Text() before setting the text's color");
+
+            control.Text.RenderParameters.Color = color;
+            return control;
+        }
         public static AControl ScreenAlignment(this AControl listView, IHorizontalAlignable horizontalAignment, IVerticalAlignable verticalAignment)
         {
             listView.ScreenAlignment.HorizontalAlignment = horizontalAignment;

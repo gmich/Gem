@@ -76,7 +76,13 @@ namespace Gem.Gui.Example
             firstButton.Events.GotFocus += (sender, args) => System.Console.WriteLine("GotFocus");
             firstButton.Events.Clicked += (sender, args) => System.Console.WriteLine("Clicked");
 
-            gui.AddGuiHost("First", firstButton);
+            var textBox = gui.TextBox(x: 300, y: 100,
+                                      sizeX: 200, sizeY: 70,
+                                      textColor: Color.Black,
+                                      font: gui.Fonts["segoe-10"],
+                                      style: Style.Transparent);
+
+            gui.AddGuiHost("First", firstButton, textBox);
 
             var secondButton =
                 gui.Button(x: 200, y: 200, sizeX: 100, sizeY: 100, style: Style.Transparent)
@@ -92,6 +98,7 @@ namespace Gem.Gui.Example
                        else
                            gui.Show("Third");
                    });
+
 
             gui.AddGuiHost("Second", secondButton, rand);
 

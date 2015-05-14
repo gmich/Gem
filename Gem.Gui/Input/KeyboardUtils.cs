@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
 
 
-namespace Gem.Input
+namespace Gem.Gui.Input
 {
     public static class KeyboardUtils
     {
