@@ -1,4 +1,5 @@
-﻿using Gem.Gui.Rendering;
+﻿using Gem.Gui.Animations;
+using Gem.Gui.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -19,7 +20,7 @@ namespace Gem.Gui.ScreenSystem
 
         private readonly TransitionRenderAction transitionRenderAction;
         private TransitionDirection direction;
-        private Func<GameTime, float> progressReporter;
+        private Func<AnimationContext, float> progressReporter;
 
         public TimeSpan TransitionTime { get; set; }
 
@@ -114,19 +115,19 @@ namespace Gem.Gui.ScreenSystem
             switch (direction)
             {
                 case TransitionDirection.Enter:
-                    progressReporter = gameTime => +(float)(gameTime.ElapsedGameTime.TotalMilliseconds / TransitionTime.TotalMilliseconds);
+                    progressReporter = context => +(float)(context.TotalMilliseconds / TransitionTime.TotalMilliseconds);
                     break;
                 case TransitionDirection.Leave:
-                    progressReporter = gameTime => -(float)(gameTime.ElapsedGameTime.TotalMilliseconds / TransitionTime.TotalMilliseconds);
+                    progressReporter = context => -(float)(context.TotalMilliseconds / TransitionTime.TotalMilliseconds);
                     break;
                 default:
                     break;
             }
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(Animations.AnimationContext context)
         {
-            Progress += progressReporter(gameTime);
+            Progress += progressReporter(context);
 
             if (IsFinished)
             {

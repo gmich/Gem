@@ -57,11 +57,15 @@
     <Compile Include="Alignment\FixedTransition.cs" />
     <Compile Include="Alignment\AlignmentResult.cs" />
     <Compile Include="Alignment\IAlignmentTransition.cs" />
+    <Compile Include="Animations\Animation.cs" />
+    <Compile Include="Animations\AnimationContext.cs" />
+    <Compile Include="Animations\Step.cs" />
+    <Compile Include="Animations\Time.cs" />
     <Compile Include="Configuration\DefaultConfiguration.cs" />
     <Compile Include="Configuration\IConfigurationResolver.cs" />
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Controls\ControlTarget.cs" />
-    <Compile Include="Controls\TextLineAppender.cs" />
+    <Compile Include="Controls\TextAppenderHelper.cs" />
     <Compile Include="Events\ControlEventArgs.cs" />
     <Compile Include="Controls\TextField.cs" />
     <Compile Include="Controls\Button.cs" />

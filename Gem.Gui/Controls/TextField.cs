@@ -121,17 +121,17 @@ namespace Gem.Gui.Controls
         {
             if (appender.Input.IsKeyClicked(key))
             {
-                appender.keyRepeatTimer = appender.keyRepeatStartDuration;
+                appender.KeyRepeatTimer = appender.KeyRepeatStartDuration;
                 pressedKey = key;
                 return true;
             }
 
             if (key == pressedKey)
             {
-                appender.keyRepeatTimer -= timeDelta;
-                if (appender.keyRepeatTimer <= 0.0f)
+                appender.KeyRepeatTimer -= timeDelta;
+                if (appender.KeyRepeatTimer <= 0.0f)
                 {
-                    appender.keyRepeatTimer += appender.keyRepeatDuration;
+                    appender.KeyRepeatTimer += appender.KeyRepeatDuration;
                     return true;
                 }
             }

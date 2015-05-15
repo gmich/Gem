@@ -1,4 +1,5 @@
 ﻿using Gem.Gui.Aggregation;
+using Gem.Gui.Animations;
 using Gem.Gui.Controls;
 using Gem.Gui.Rendering;
 using Microsoft.Xna.Framework;
@@ -12,8 +13,12 @@ namespace Gem.Gui.ScreenSystem
         private readonly AggregationContext aggregationContext;
         private readonly IList<AControl> controls = new List<AControl>();
         private readonly RenderTemplate renderTemplate;
+        private AnimationContext animationContext;
 
-        public GuiHost(List<AControl> controls, RenderTemplate renderTemplate, AggregationContext aggregationContext, ITransition transition)
+        public GuiHost(List<AControl> controls,
+                       RenderTemplate renderTemplate, 
+                       AggregationContext aggregationContext,
+                       ITransition transition)
             : base()
         {
             this.renderTemplate = renderTemplate;
@@ -21,6 +26,7 @@ namespace Gem.Gui.ScreenSystem
             this.aggregationContext = aggregationContext;
             this.Transition = transition;
             this.ScreenState = ScreenState.Hidden;
+
         }
 
         #region Properties
@@ -97,6 +103,8 @@ namespace Gem.Gui.ScreenSystem
 
         public void Update(GameTime gameTime)
         {
+            this.animationContext = animationContext?? new AnimationContext(gameTime);
+
             foreach (var control in controls)
             {
                 control.Update(gameTime.ElapsedGameTime.TotalSeconds);
@@ -104,7 +112,7 @@ namespace Gem.Gui.ScreenSystem
             if(ScreenState == ScreenState.TransitionOff 
                 || ScreenState== ScreenState.TransitionOn)
             {
-                Transition.Update(gameTime);
+                Transition.Update(animationContext);
             }
         }
 

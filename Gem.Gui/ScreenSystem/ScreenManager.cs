@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
 using Gem.Gui.Rendering;
 using System;
+using System.Linq;
 using Gem.Gui.Configuration;
 
 namespace Gem.Gui.ScreenSystem
@@ -84,28 +85,21 @@ namespace Gem.Gui.ScreenSystem
 
             renderTargets.Clear();
 
-            foreach (var host in hosts)
+            foreach(var host in hosts.Where(host => host.ScreenState == ScreenState.Active))
             {
-                switch (host.ScreenState)
-                {
-                    case ScreenState.Hidden:
-                        continue;
-                    case ScreenState.Active:
-                        DrawHost(host);
-                        break;
-                    case ScreenState.TransitionOn:
-                    case ScreenState.TransitionOff:
-                        var target = GetWindowRenderTarget();
-                        AssignRenderTargetToDevice(target);
-                        DrawHost(host);
-                        renderTargets.Add(host, target);
-                        break;
-                    default:
-                        continue;
-                }
+                DrawHost(host);
             }
 
-
+            var hostsWithTransition = hosts.Where(host => host.ScreenState == ScreenState.TransitionOn 
+                                                       || host.ScreenState == ScreenState.TransitionOff);
+            foreach (var host in hostsWithTransition)
+            {
+                var target = GetWindowRenderTarget();
+                AssignRenderTargetToDevice(target);
+                DrawHost(host);
+                renderTargets.Add(host, target);
+            }
+            
             GraphicsDevice.SetRenderTarget(null);
 
             DrawGui(guiScreen);

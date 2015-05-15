@@ -47,7 +47,7 @@ namespace Gem.Gui.Example
         /// </summary>
         protected override void LoadContent()
         {
-              // Create a new SpriteBatch, which can be used to draw textures.
+            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             gui.Fonts.Add("segoe-10", @"Fonts/segoe-10");
@@ -55,7 +55,7 @@ namespace Gem.Gui.Example
             var firstButton =
                gui.Button(20, 20, 100, 100, style: Style.Transparent)
                   .Color(Color.White)
-                  .Text(gui.Fonts["segoe-10"],"First")
+                  .Text(gui.Fonts["segoe-10"], "First")
                   .TextColor(Color.Black)
                   .TextHorizontalAlignment(HorizontalAlignment.Center)
                   .TextVerticalAlignment(VerticalAlignment.Center)
@@ -64,7 +64,7 @@ namespace Gem.Gui.Example
             var rand =
                gui.Button(30, 30, 100, 100, style: Style.Transparent)
                   .Color(Color.White)
-                  .Text(gui.Fonts["segoe-10"], "rand",10,10,true)
+                  .Text(gui.Fonts["segoe-10"], "rand", 10, 10, true)
                   .TextColor(Color.Black)
                   .OnClick((sender, args) => gui.Swap("Second", "First"));
 
@@ -102,11 +102,12 @@ namespace Gem.Gui.Example
 
             gui.AddGuiHost("Second", secondButton, rand);
 
-            gui["First"].Transition = new TimedTransition(TimeSpan.FromSeconds(0.5),
-                                         (state, progress, target, batch) =>
-                                          batch.Draw(target, Vector2.Zero, Color.White * progress));
 
-            gui["Second"].Transition = new TimedTransition(TimeSpan.FromSeconds(0.5),
+            gui["First"].Transition = new TimedTransition(TimeSpan.FromSeconds(0.3),
+                                         (state, progress, target, batch) =>
+                                           batch.Draw(target, Vector2.Zero + (progress - 1.0f) * new Vector2(500, 0), Color.White * progress));
+ 
+            gui["Second"].Transition = new TimedTransition(TimeSpan.FromSeconds(0.3),
                                          (state, progress, target, batch) =>
                                           batch.Draw(target, Vector2.Zero, Color.White * progress));
             var thirdButton =
@@ -126,9 +127,9 @@ namespace Gem.Gui.Example
 
             AddListView();
             gui.DrawWith += (sender, batch) => RenderBackground(batch);
-            
+
             gui.Show("First");
-            
+
         }
 
         protected override void UnloadContent()
@@ -146,7 +147,7 @@ namespace Gem.Gui.Example
                    .TextHorizontalAlignment(HorizontalAlignment.Center)
                    .TextVerticalAlignment(VerticalAlignment.Center)
                    .TextColor(Color.Black)
-                   .OnClick((sender, args) => gui.Swap("LayoutHost","First"));
+                   .OnClick((sender, args) => gui.Swap("LayoutHost", "First"));
 
             one.Padding.Bottom = 10;
             one.Padding.Top = 10;
@@ -154,7 +155,7 @@ namespace Gem.Gui.Example
             var two =
                 gui.Button(100, 100, 50, 50, style: Style.Transparent)
                    .Color(Color.White)
-                   .Text(gui.Fonts["segoe-10"], "2",10,10,true)
+                   .Text(gui.Fonts["segoe-10"], "2", 10, 10, true)
                    .TextColor(Color.Black)
                    .OnClick((sender, args) => listView.Region.Size = new Vector2(200, 300));
 
@@ -163,10 +164,10 @@ namespace Gem.Gui.Example
             var three =
                 gui.Button(200, 100, 50, 50, style: Style.Transparent)
                    .Color(Color.White)
-                   .Text(gui.Fonts["segoe-10"], "3",5,5,true)
+                   .Text(gui.Fonts["segoe-10"], "3", 5, 5, true)
                    .TextColor(Color.Black)
                    .OnClick((sender, args) =>
-                       listView.Region.Size = new Vector2(300,400));
+                       listView.Region.Size = new Vector2(300, 400));
 
             listView =
                 gui.ListView(x: 10, y: 10,
