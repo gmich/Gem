@@ -85,7 +85,7 @@ namespace Gem.Gui.Alignment
         /// <returns>An IEnumerable of Transformations</returns>
         internal ITransformation GetAlignementTransformation(Region parent, Region child, Padding padding)
         {
-            return Transition.CreateTransition(child, GetTargetLocation(parent, child, padding));
+            return Transition.CreateTransition(child, GetTargetRegion(parent, child, padding));
         }
 
         internal void ManageTransformation(Func<ITransformation, IDisposable> transformedObject, Region parent, Region child, Padding padding)
@@ -93,7 +93,7 @@ namespace Gem.Gui.Alignment
             Flush();
             ActiveTransformations(transformedObject(Transition.
                                    CreateTransition(child,
-                                                    GetTargetLocation(parent, child, padding))));
+                                                    GetTargetRegion(parent, child, padding))));
         }
 
         internal void ManageTransformation(Func<ITransformation, IDisposable> transformedObject, Region current, Region target)
@@ -102,7 +102,7 @@ namespace Gem.Gui.Alignment
             ActiveTransformations(transformedObject(Transition.CreateTransition(current,target)));
         }
 
-        internal Region GetTargetLocation(Region parent, Region child, Padding padding)
+        internal Region GetTargetRegion(Region parent, Region child, Padding padding)
         {
             var horizontal = HorizontalAlignment.Align(parent, child, padding);
             var vertical = VerticalAlignment.Align(parent, child, padding);

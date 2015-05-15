@@ -75,8 +75,7 @@ namespace Gem.Gui.Layout
             Flush();
 
             AlignControls(viewPort);
-            base.Align(viewPort);
-            
+            base.Align(viewPort);            
         }
 
         public void AlignAsLandscape(Region viewPort)
@@ -92,7 +91,7 @@ namespace Gem.Gui.Layout
             {
                 var parentRegion = new Region(this.Region.Position,
                                               new Vector2(this.Region.Size.X, child.Region.Size.Y)) + offSetRegion;
-                var targetRegion = ControlAlignment.GetTargetLocation(parentRegion,
+                var targetRegion = ControlAlignment.GetTargetRegion(parentRegion,
                                                                        child.Region,
                                                                        Padding.Zero);              
                 targetRegion += new Region(0, child.Padding.Top, 0, 0);

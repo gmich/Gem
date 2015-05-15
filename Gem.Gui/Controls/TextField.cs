@@ -64,8 +64,7 @@ namespace Gem.Gui.Controls
             timer.Interval = appender.CursorFlickInterval;
             timer.Enabled = true;
 
-            line = new StandardText(font, Vector2.Zero, string.Empty);
-            line.Alignment = alignmentContext;
+            line = new StandardText(font, region.Position, string.Empty, alignmentContext);
             line.RenderParameters.Color = textcolor;
             SetupCursor();
 
@@ -125,11 +124,12 @@ namespace Gem.Gui.Controls
         {
             line.OnTextChanged += (sender, args) => AlignCursor();
 
-            cursor = new StandardText(this.font,Vector2.Zero, appender.Cursor.ToString());
-            cursor.Alignment = new AlignmentContext(HorizontalAlignment.RelativeTo(() =>line.Region.Position.X + font.MeasureString(line.Value.Substring(0,cursorIndex)).X, 0),
-                                                    VerticalAlignment.RelativeTo(() => line.Region.Frame.Top, 0),
-                                                    AlignmentTransition.Fixed);
-
+            cursor = new StandardText(this.font,
+                                      Region.Position,
+                                      appender.Cursor.ToString(),
+                                      new AlignmentContext(HorizontalAlignment.RelativeTo(() => line.Region.Position.X + font.MeasureString(line.Value.Substring(0, cursorIndex)).X, 0),
+                                                           VerticalAlignment.RelativeTo(() => line.Region.Frame.Top, 0),
+                                                           AlignmentTransition.Fixed));
             cursor.RenderParameters.Color = line.RenderParameters.Color;
         }
 
@@ -234,16 +234,14 @@ namespace Gem.Gui.Controls
 
         public override void Align(Region viewPort)
         {
-            line.Alignment.ManageTransformation(this.AddTransformation, this.Region, line.Region, line.Padding);
-            cursor.Alignment.ManageTransformation(this.AddTransformation, this.Region, cursor.Region, cursor.Padding);
+            line.Region.Position = line.Alignment.GetTargetRegion(this.Region, line.Region, line.Padding).Position;
+            cursor.Region.Position = cursor.Alignment.GetTargetRegion(this.Region, cursor.Region, cursor.Padding).Position;
 
             base.Align(viewPort);
         }
 
         public override void Update(double deltaTime)
         {
-            Console.WriteLine("line:" + line.Region.Frame);
-            Console.WriteLine("cur:" + cursor.Region.Position);
             base.Update(deltaTime);
 
             if (shouldProcessInput)

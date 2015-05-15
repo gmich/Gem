@@ -118,7 +118,6 @@ namespace Gem.Gui.Alignment
 
         public static IHorizontalAlignable RelativeTo(Func<float> relativeX, int offSet)
         {
-
             return new HorizontalRelativeTo(relativeX, offSet);
         }
         

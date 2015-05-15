@@ -13,7 +13,7 @@ namespace Gem.Gui.Text
 
         Region Region { get; }
 
-        Padding Padding { get; set; }
+        Padding Padding { get;  }
 
         SpriteFont Font { get; }
 
@@ -23,6 +23,6 @@ namespace Gem.Gui.Text
 
         RenderParameters RenderParameters { get; }
 
-        Alignment.AlignmentContext Alignment { get; set; }
+        Alignment.AlignmentContext Alignment { get;  }
     }
 }

@@ -32,7 +32,6 @@ namespace Gem.Gui.Text
             this.RenderParameters = new RenderParameters();
             this.Alignment = alignment ?? AlignmentContext.Default;
            
-
             this.Region = new Region(position, Font.MeasureString(value) * RenderParameters.Scale);
             this.RenderStyle = new NoStyle();
             Padding = Padding.Zero;
@@ -78,7 +77,7 @@ namespace Gem.Gui.Text
         public Padding Padding
         {
             get;
-            set;
+            private set;
         }
 
         public RenderParameters RenderParameters
@@ -90,13 +89,13 @@ namespace Gem.Gui.Text
         public ARenderStyle RenderStyle
         {
             get;
-            set;
+            private set;
         }
 
         public AlignmentContext Alignment
         {
             get;
-            set;
+            private set;
         }
 
         #endregion

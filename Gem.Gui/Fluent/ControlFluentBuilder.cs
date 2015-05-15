@@ -18,9 +18,8 @@ namespace Gem.Gui.Fluent
 
             if (relativeToParent)
             {
-                control.Text.Alignment = new AlignmentContext(HorizontalAlignment.RelativeTo(() => control.Region.Position.X, x),
-                                                              VerticalAlignment.RelativeTo(() => control.Region.Position.Y, y),
-                                                              AlignmentTransition.Fixed);
+                control.Text.Alignment.HorizontalAlignment = HorizontalAlignment.RelativeTo(() => control.Region.Position.X, x);
+                control.Text.Alignment.VerticalAlignment = VerticalAlignment.RelativeTo(() => control.Region.Position.Y, y);
             }
             return control;
         }

@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{41293C99-6A34-413C-858D-F4E4C919F279}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Gem.Gui.Example</RootNamespace>
     <AssemblyName>Gem.Gui.Example</AssemblyName>
@@ -47,11 +47,11 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="GuiScreens.cs" />
+    <Compile Include="Screens\GuiScreens.cs" />
     <Compile Include="GuiExample.cs" />
-    <Compile Include="SettingsScreen.cs" />
-    <Compile Include="NewGameScreen.cs" />
-    <Compile Include="MainMenuScreen.cs" />
+    <Compile Include="Screens\SettingsScreen.cs" />
+    <Compile Include="Screens\NewGameScreen.cs" />
+    <Compile Include="Screens\MainMenuScreen.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

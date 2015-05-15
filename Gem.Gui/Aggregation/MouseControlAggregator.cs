@@ -88,7 +88,6 @@ namespace Gem.Gui.Aggregation
 
         private void CheckClick(AControl entry, AggregationToken token, int entryId)
         {
-            //Console.WriteLine(token.CanBeClicked);
             if (token.CanBeClicked 
                 && token.HasHover 
                 && input.IsLeftButtonReleased())

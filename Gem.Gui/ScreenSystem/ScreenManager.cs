@@ -16,6 +16,7 @@ namespace Gem.Gui.ScreenSystem
 
         private List<IGuiHost> hosts = new List<IGuiHost>();
         private SpriteBatch spriteBatch { get; set; }
+        private readonly List<RenderTarget2D> cachedTargets = new List<RenderTarget2D>();
         private readonly Dictionary<IGuiHost, RenderTarget2D> renderTargets = new Dictionary<IGuiHost, RenderTarget2D>();
         public Action<SpriteBatch> DrawWith;
         private RenderTarget2D guiScreen;
@@ -23,7 +24,11 @@ namespace Gem.Gui.ScreenSystem
         public ScreenManager(Game game, Settings settings, Action<SpriteBatch> drawWith)
             : base(game)
         {
-            settings.OnResolutionChange((sender, args) => this.guiScreen = GetWindowRenderTarget());
+            settings.OnResolutionChange((sender, args) =>
+            {
+                 this.cachedTargets.Clear();
+                 this.guiScreen = GetWindowRenderTarget();
+            });
             this.guiScreen = GetWindowRenderTarget();
             this.DrawWith = drawWith;
         }
@@ -66,7 +71,6 @@ namespace Gem.Gui.ScreenSystem
                                     SurfaceFormat.Color,
                                     pp.DepthStencilFormat,
                                     pp.MultiSampleCount,
-                //maybe preserve?
                                     RenderTargetUsage.DiscardContents);
         }
 
@@ -91,12 +95,21 @@ namespace Gem.Gui.ScreenSystem
 
             var hostsWithTransition = hosts.Where(host => host.ScreenState == ScreenState.TransitionOn
                                                        || host.ScreenState == ScreenState.TransitionOff);
+
+            int currenthost = 1;
             foreach (var host in hostsWithTransition)
             {
-                var target = GetWindowRenderTarget();
+                //if there aren't enough rendertargets, create a new one
+                if (cachedTargets.Count < currenthost)
+                {
+                    cachedTargets.Add(GetWindowRenderTarget());
+                }
+
+                RenderTarget2D target = cachedTargets[currenthost - 1];
                 AssignRenderTargetToDevice(target);
                 DrawHost(host);
                 renderTargets.Add(host, target);
+                currenthost++;
             }
 
             GraphicsDevice.SetRenderTarget(null);
@@ -148,7 +161,7 @@ namespace Gem.Gui.ScreenSystem
 
             screen.EnterScreen();
             hosts.Add(screen);
-            
+
             return true;
         }
 
