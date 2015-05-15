@@ -20,6 +20,7 @@ namespace Gem.Gui.Configuration
         private readonly Game game;
         private static Vector2 resolution;
         private static Region viewRegion;
+        private static Rectangle screenRectangle;
 
         #endregion
 
@@ -41,6 +42,7 @@ namespace Gem.Gui.Configuration
         {
             resolution = new Vector2(game.Window.ClientBounds.Width, game.Window.ClientBounds.Height);
             viewRegion = new Region(Vector2.Zero, resolution);
+            screenRectangle = new Rectangle(0, 0, game.Window.ClientBounds.Width, game.Window.ClientBounds.Height);
         }
 
         #endregion
@@ -70,6 +72,8 @@ namespace Gem.Gui.Configuration
         public static Region ViewRegion { get { return viewRegion; } }
 
         public static Vector2 Resolution { get { return resolution; } }
+
+        public static Rectangle ScreenRectangle { get { return screenRectangle; } }
 
         public RenderTemplate RenderTemplate { get; set; }
 

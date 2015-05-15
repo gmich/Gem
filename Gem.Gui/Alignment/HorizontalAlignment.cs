@@ -116,25 +116,25 @@ namespace Gem.Gui.Alignment
 
         #region Relative
 
-        public static IHorizontalAlignable RelativeTo(AControl control, int offSet)
+        public static IHorizontalAlignable RelativeTo(Func<float> relativeX, int offSet)
         {
 
-            return new HorizontalRelativeTo(control, offSet);
+            return new HorizontalRelativeTo(relativeX, offSet);
         }
-
+        
         private class HorizontalRelativeTo : IHorizontalAlignable
         {
             private readonly int offSet;
-            private readonly AControl relativeControl;
+            private readonly Func<float> relativeX;
 
-            public HorizontalRelativeTo(AControl relativeControl, int offSet)
+            public HorizontalRelativeTo(Func<float> relativeX, int offSet)
             {
-                this.relativeControl = relativeControl;
+                this.relativeX = relativeX;
                 this.offSet = offSet;
             }
             public AlignmentResult Align(Region parent, Region child, Padding padding)
             {
-                return new AlignmentResult(relativeControl.Region.Position.X + offSet, child.Size.X);
+                return new AlignmentResult(relativeX() + offSet, child.Size.X);
             }
         }
 

@@ -1,8 +1,10 @@
-﻿using Gem.Gui.Events;
+﻿using Gem.Gui.Alignment;
+using Gem.Gui.Events;
 using Gem.Gui.Input;
 using Gem.Gui.Rendering;
 using Gem.Gui.Styles;
 using Gem.Gui.Text;
+using System.Timers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -13,15 +15,30 @@ namespace Gem.Gui.Controls
 
     public class TextField : AControl
     {
+        #region Fields
+
         private readonly SpriteFont font;
         private readonly TextAppenderHelper appender;
-        private Keys pressedKey;
+
         private int cursorIndex;
         private bool shouldProcessInput;
+        private bool showCursor;
+
+        private Keys pressedKey;
+        private IText line;
+        private IText cursor;
+        private Timer timer;
+
+        #endregion
+
+        #region Events
 
         public event EventHandler<TextFieldEventArgs> OnTextChanged;
         public event EventHandler<string> OnTextEntered;
-        private IText line;
+
+        #endregion
+
+        #region Ctor
 
         public TextField(TextAppenderHelper appender,
                          SpriteFont font,
@@ -29,7 +46,7 @@ namespace Gem.Gui.Controls
                          Region region,
                          Color textcolor,
                          ARenderStyle style,
-                         Alignment.AlignmentContext alignmentContext)
+                         AlignmentContext alignmentContext)
             : base(texture, region, style)
         {
             this.font = font;
@@ -41,12 +58,26 @@ namespace Gem.Gui.Controls
             };
 
             this.Events.GotFocus += (sender, args) => shouldProcessInput = true;
+
+            this.timer = new Timer();
+            timer.Elapsed += new ElapsedEventHandler((sender,args) => showCursor = !showCursor);
+            timer.Interval = appender.CursorFlickInterval;
+            timer.Enabled = true;
+
             line = new StandardText(font, Vector2.Zero, string.Empty);
             line.Alignment = alignmentContext;
             line.RenderParameters.Color = textcolor;
+            SetupCursor();
+
             //check if the buffer is not full
-            appender.ShouldHandleKey += key => (line.Region.Frame.Right) < this.Region.Frame.Right;
+            appender.ShouldHandleKey += (key, keyToChar) =>
+                (line.Region.Frame.Right + cursor.Region.Size.X + font.MeasureString(keyToChar.ToString()).X)
+                < this.Region.Frame.Right;
         }
+
+        #endregion
+
+        #region EventAggregation
 
         private void OnTextChangedAggregation(TextFieldEventArgs args)
         {
@@ -66,7 +97,60 @@ namespace Gem.Gui.Controls
             }
         }
 
-        public void ProcessKeyInputs(double deltaTime)
+        #endregion
+
+        public void InsertText(string text)
+        {
+            foreach (var character in text)
+            {
+                InsertChar(character);
+            }
+        }
+        public void RemoveCharacters(int amount)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                RemoveChar();
+            }
+        }
+
+        #region Private Helpers
+
+        private void AlignCursor()
+        {
+            cursor.Alignment.ManageTransformation(this.AddTransformation, this.Region, cursor.Region, cursor.Padding);
+        }
+
+        private void SetupCursor()
+        {
+            line.OnTextChanged += (sender, args) => AlignCursor();
+
+            cursor = new StandardText(this.font,Vector2.Zero, appender.Cursor.ToString());
+            cursor.Alignment = new AlignmentContext(HorizontalAlignment.RelativeTo(() =>line.Region.Position.X + font.MeasureString(line.Value.Substring(0,cursorIndex)).X, 0),
+                                                    VerticalAlignment.RelativeTo(() => line.Region.Frame.Top, 0),
+                                                    AlignmentTransition.Fixed);
+
+            cursor.RenderParameters.Color = line.RenderParameters.Color;
+        }
+
+        private void InsertChar(char charToInsert)
+        {
+            cursorIndex++;
+            line.Value = line.Value.Insert((cursorIndex-1), new string(charToInsert, 1));
+            OnTextChangedAggregation(new TextFieldEventArgs(this.line.Value, charToInsert));
+        }
+
+        private void RemoveChar()
+        {
+            if (cursorIndex > 0)
+            {
+                char charToRemove = line.Value[--cursorIndex];
+                line.Value = line.Value.Remove(cursorIndex, 1);
+                OnTextChangedAggregation(new TextFieldEventArgs(this.line.Value, charToRemove));
+            }
+        }
+        
+        private void ProcessKeyInputs(double deltaTime)
         {
             var pressedKeys = appender.Input.GetPressedKeys();
 
@@ -80,18 +164,18 @@ namespace Gem.Gui.Controls
                 char convertedChar;
                 if (KeyboardUtils.KeyToString(key, isShiftPressed, out convertedChar))
                 {
-                    if (!appender.ShouldHandleKey(key)) continue;
-                    line.Value = line.Value.Insert(cursorIndex, new string(convertedChar, 1));
-                    OnTextChangedAggregation(new TextFieldEventArgs(this.line.Value, convertedChar));
-                    cursorIndex++;
+                    if (!appender.ShouldHandleKey(key, convertedChar))
+                    {
+                        continue;
+                    }
+                    InsertChar(convertedChar);
                 }
                 else
                 {
                     switch (key)
                     {
                         case Keys.Back:
-                            if (cursorIndex > 0)
-                                line.Value = line.Value.Remove(--cursorIndex, 1);
+                            RemoveChar();
                             break;
                         case Keys.Delete:
                             if (cursorIndex < line.Value.Length)
@@ -103,11 +187,17 @@ namespace Gem.Gui.Controls
                             break;
                         case Keys.Left:
                             if (cursorIndex > 0)
+                            { 
                                 cursorIndex--;
+                                AlignCursor();
+                            }
                             break;
                         case Keys.Right:
                             if (cursorIndex < line.Value.Length)
+                            { 
                                 cursorIndex++;
+                                AlignCursor();
+                            }
                             break;
                         case Keys.Enter:
                             this.HasFocus = false;
@@ -138,15 +228,22 @@ namespace Gem.Gui.Controls
             return false;
         }
 
+        #endregion
+
+        #region AControl Members
+
         public override void Align(Region viewPort)
         {
             line.Alignment.ManageTransformation(this.AddTransformation, this.Region, line.Region, line.Padding);
+            cursor.Alignment.ManageTransformation(this.AddTransformation, this.Region, cursor.Region, cursor.Padding);
 
             base.Align(viewPort);
         }
 
         public override void Update(double deltaTime)
         {
+            Console.WriteLine("line:" + line.Region.Frame);
+            Console.WriteLine("cur:" + cursor.Region.Position);
             base.Update(deltaTime);
 
             if (shouldProcessInput)
@@ -162,6 +259,14 @@ namespace Gem.Gui.Controls
             line.RenderStyle.Render(batch);
             template.TextDrawable.Render(batch, this.line);
 
+            if (showCursor && shouldProcessInput)
+            {
+                cursor.RenderStyle.Render(batch);
+                template.TextDrawable.Render(batch, this.cursor);
+            }
         }
+
+        #endregion
+
     }
 }

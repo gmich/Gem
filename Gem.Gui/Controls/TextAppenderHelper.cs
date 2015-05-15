@@ -11,14 +11,14 @@ namespace Gem.Gui.Controls
 
         public TextAppenderHelper(KeyboardInputHelper input,
                                   char cursor = '_',
-                                  double cursorFlickInterval = 1.0d,
+                                  double cursorFlickInterval = 500.0d,
                                   double keyRepeatStartDuration = 0.3d,
                                   double keyRepeatDuration = 0.003d)
         {
             this.input = input;
             this.KeyRepeatDuration = keyRepeatDuration;
             this.KeyRepeatStartDuration = keyRepeatStartDuration;
-            this.ShouldHandleKey = key => true;
+            this.ShouldHandleKey = (key,charRepresentation) => true;
             this.cursor = cursor;
             this.CursorFlickInterval = cursorFlickInterval;
         }
@@ -28,7 +28,7 @@ namespace Gem.Gui.Controls
         public double KeyRepeatTimer { get; set; }
         public double CursorFlickInterval { get; set; }
 
-        public Predicate<Keys> ShouldHandleKey { get; set; }
+        public Func<Keys,char,bool> ShouldHandleKey { get; set; }
 
         public KeyboardInputHelper Input { get { return input; } }
 

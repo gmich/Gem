@@ -18,8 +18,8 @@ namespace Gem.Gui.Fluent
 
             if (relativeToParent)
             {
-                control.Text.Alignment = new AlignmentContext(HorizontalAlignment.RelativeTo(control, x),
-                                                              VerticalAlignment.RelativeTo(control, y),
+                control.Text.Alignment = new AlignmentContext(HorizontalAlignment.RelativeTo(() => control.Region.Position.X, x),
+                                                              VerticalAlignment.RelativeTo(() => control.Region.Position.Y, y),
                                                               AlignmentTransition.Fixed);
             }
             return control;
@@ -31,11 +31,28 @@ namespace Gem.Gui.Fluent
             return control;
         }
 
+        public static AControl Padding(this AControl control, int top = 0, int bottom = 0, int left = 0, int right = 0)
+        {
+            control.Padding.Top = top;
+            control.Padding.Bottom = bottom;
+            control.Padding.Left = left;
+            control.Padding.Right = right;
+
+            return control;
+        }
+
         public static AControl TextColor(this AControl control, Color color)
         {
             Contract.Requires(control.Text != null, "Use Text() before setting the text's color");
 
             control.Text.RenderParameters.Color = color;
+            return control;
+        }
+
+        public static AControl Sprite(this AControl control, string tag, Texture2D texture, Rectangle? sourceRectangle = null)
+        {
+            control.Sprite.Add(tag, texture, sourceRectangle);
+            control.Sprite.SwitchSprite(tag);
             return control;
         }
 
@@ -67,6 +84,12 @@ namespace Gem.Gui.Fluent
 
             control.Text.Alignment.VerticalAlignment = verticalAignment;
             return control;
+        }
+
+        public static TextField OnTextEntry(this TextField textField, EventHandler<string> handler)
+        {
+            textField.OnTextEntered += handler;
+            return textField;
         }
 
         public static AControl OnClick(this AControl control, EventHandler<ControlEventArgs> handler)

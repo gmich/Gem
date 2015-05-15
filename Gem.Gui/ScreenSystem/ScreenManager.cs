@@ -20,7 +20,7 @@ namespace Gem.Gui.ScreenSystem
         public Action<SpriteBatch> DrawWith;
         private RenderTarget2D guiScreen;
 
-        public ScreenManager(Game game,Settings settings, Action<SpriteBatch> drawWith)
+        public ScreenManager(Game game, Settings settings, Action<SpriteBatch> drawWith)
             : base(game)
         {
             settings.OnResolutionChange((sender, args) => this.guiScreen = GetWindowRenderTarget());
@@ -66,7 +66,7 @@ namespace Gem.Gui.ScreenSystem
                                     SurfaceFormat.Color,
                                     pp.DepthStencilFormat,
                                     pp.MultiSampleCount,
-                                    //maybe preserve?
+                //maybe preserve?
                                     RenderTargetUsage.DiscardContents);
         }
 
@@ -76,21 +76,20 @@ namespace Gem.Gui.ScreenSystem
             GraphicsDevice.Clear(Color.Transparent);
         }
 
-
         public override void Draw(GameTime gameTime)
-        {            
+        {
             AssignRenderTargetToDevice(guiScreen);
 
             DrawWith(spriteBatch);
 
             renderTargets.Clear();
 
-            foreach(var host in hosts.Where(host => host.ScreenState == ScreenState.Active))
+            foreach (var host in hosts.Where(host => host.ScreenState == ScreenState.Active))
             {
                 DrawHost(host);
             }
 
-            var hostsWithTransition = hosts.Where(host => host.ScreenState == ScreenState.TransitionOn 
+            var hostsWithTransition = hosts.Where(host => host.ScreenState == ScreenState.TransitionOn
                                                        || host.ScreenState == ScreenState.TransitionOff);
             foreach (var host in hostsWithTransition)
             {
@@ -99,7 +98,7 @@ namespace Gem.Gui.ScreenSystem
                 DrawHost(host);
                 renderTargets.Add(host, target);
             }
-            
+
             GraphicsDevice.SetRenderTarget(null);
 
             DrawGui(guiScreen);
@@ -118,7 +117,7 @@ namespace Gem.Gui.ScreenSystem
         private void DrawTransitions()
         {
             if (renderTargets.Count == 0) return;
-            
+
             foreach (var target in renderTargets)
             {
                 spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
@@ -140,15 +139,28 @@ namespace Gem.Gui.ScreenSystem
             return hosts.Contains(screen);
         }
 
-        public void AddScreen(IGuiHost screen)
+        public bool AddScreen(IGuiHost screen)
         {
+            if (screen.ScreenState != ScreenState.Exit)
+            {
+                return false;
+            }
+
             screen.EnterScreen();
             hosts.Add(screen);
+            
+            return true;
         }
 
-        public void RemoveScreen(IGuiHost screen)
+        public bool RemoveScreen(IGuiHost screen)
         {
+            if (screen.ScreenState != ScreenState.Active)
+            {
+                return false;
+            }
             screen.ExitScreen();
+
+            return true;
         }
     }
 }

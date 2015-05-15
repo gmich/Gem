@@ -8,7 +8,7 @@
         TransitionOn,
         TransitionOff,
         Active,
-        Exit,
-        Hidden
+        Exit
+        //Hidden
     }
 }

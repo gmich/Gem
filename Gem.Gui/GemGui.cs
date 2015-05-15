@@ -227,12 +227,12 @@ namespace Gem.Gui
             screenManager.Enabled = false;
         }
 
-        public void Show(string guiHostId)
+        public bool Show(string guiHostId)
         {
             Contract.Requires(hosts.ContainsKey(guiHostId), "GuiHost was not found");
             screenManager.Enabled = true;
 
-            screenManager.AddScreen(hosts[guiHostId]);
+            return screenManager.AddScreen(hosts[guiHostId]);
         }
 
         public bool IsShowing(string guiHostId)
@@ -240,18 +240,17 @@ namespace Gem.Gui
             return screenManager.IsShowing(hosts[guiHostId]);
         }
 
-        public void Hide(string guiHostId)
+        public bool Hide(string guiHostId)
         {
             Contract.Requires(hosts.ContainsKey(guiHostId), "GuiHost was not found");
             screenManager.Enabled = true;
 
-            screenManager.RemoveScreen(hosts[guiHostId]);
+            return screenManager.RemoveScreen(hosts[guiHostId]);
         }
 
-        public void Swap(string previousHost, string newHost)
+        public bool Swap(string previousHost, string newHost)
         {
-            Hide(previousHost);
-            Show(newHost);
+            return Hide(previousHost) && Show(newHost); 
         }
 
         #endregion

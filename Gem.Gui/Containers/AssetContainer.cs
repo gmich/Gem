@@ -46,8 +46,14 @@ namespace Gem.Gui.Containers
         {
             get
             {
-                return assets.ContainsKey(id) ?
-                       assets[id] : null;
+                if (assets.ContainsKey(id))
+                {
+                    return assets[id];
+                }
+                else
+                {
+                    throw new ArgumentException(id);
+                }
             }
         }
     }

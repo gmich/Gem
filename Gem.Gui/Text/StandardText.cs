@@ -39,7 +39,7 @@ namespace Gem.Gui.Text
             
             //TODO: refactor scaling
             //this.RenderParameters.OnScaleChange += (sender, args) => this.Region = new Region(position, Font.MeasureString(value) * RenderParameters.Scale);
-            this.OnTextChanged+=(sender, args) => this.Region = new Region(Region.Position, Font.MeasureString(Value));
+            this.OnTextChanged+=(sender, args) => this.Region = new Region(Region.Position, Font.MeasureString(args.NewText));
         }
 
         #endregion
@@ -55,12 +55,12 @@ namespace Gem.Gui.Text
             }
             set
             {
+                _value = value;
                 OnTextChangedAggregation(new TextEventArgs
                 {
                     PreviousText = _value,
                     NewText = value
                 });
-                _value = value;
             }
         }
 

@@ -25,7 +25,7 @@ namespace Gem.Gui.ScreenSystem
             this.controls = controls;
             this.aggregationContext = aggregationContext;
             this.Transition = transition;
-            this.ScreenState = ScreenState.Hidden;
+            this.ScreenState = ScreenState.Exit;
 
         }
 
