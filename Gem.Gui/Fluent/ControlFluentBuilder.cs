@@ -12,14 +12,17 @@ namespace Gem.Gui.Fluent
 {
     public static class ControlFluentBuilder
     {
+
+        #region AControl Extensions
+
         public static AControl Text(this AControl control, SpriteFont font, string text, int x = 0, int y = 0, bool relativeToParent = false)
         {
             control.Text = new StandardText(font, control.Region.Position + new Vector2(x, y), text);
 
             if (relativeToParent)
             {
-                control.Text.Alignment.HorizontalAlignment = HorizontalAlignment.RelativeTo(() => control.Region.Position.X, x);
-                control.Text.Alignment.VerticalAlignment = VerticalAlignment.RelativeTo(() => control.Region.Position.Y, y);
+                control.Text.Alignment.HorizontalAlignment = HorizontalAlignment.RelativeTo(() => control.Region.Position.X + x);
+                control.Text.Alignment.VerticalAlignment = VerticalAlignment.RelativeTo(() => control.Region.Position.Y +y);
             }
             return control;
         }
@@ -55,13 +58,6 @@ namespace Gem.Gui.Fluent
             return control;
         }
 
-        public static AControl TextField(this AControl control, Color color)
-        {
-            Contract.Requires(control.Text != null, "Use Text() before setting the text's color");
-
-            control.Text.RenderParameters.Color = color;
-            return control;
-        }
         public static AControl ScreenAlignment(this AControl listView, IHorizontalAlignable horizontalAignment, IVerticalAlignable verticalAignment)
         {
             listView.ScreenAlignment.HorizontalAlignment = horizontalAignment;
@@ -85,17 +81,24 @@ namespace Gem.Gui.Fluent
             return control;
         }
 
+        public static AControl OnClick(this AControl control, EventHandler<ControlEventArgs> handler)
+        {
+            control.Events.Clicked += handler;
+            return control;
+        }
+
+        #endregion
+
+        #region TextField Extensions
+
         public static TextField OnTextEntry(this TextField textField, EventHandler<string> handler)
         {
             textField.OnTextEntered += handler;
             return textField;
         }
 
-        public static AControl OnClick(this AControl control, EventHandler<ControlEventArgs> handler)
-        {
-            control.Events.Clicked += handler;
-            return control;
-        }
+
+        #endregion
 
     }
 }

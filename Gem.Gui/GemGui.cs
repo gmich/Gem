@@ -136,7 +136,7 @@ namespace Gem.Gui
                                                  controls.ToList().AsReadOnly());
         }
 
-        public TextField TextBox(int x, int y,
+        public TextField TextField(int x, int y,
                          int sizeX, int sizeY,
                          Color textColor,
                          SpriteFont font,

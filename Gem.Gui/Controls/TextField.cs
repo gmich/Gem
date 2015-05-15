@@ -105,9 +105,9 @@ namespace Gem.Gui.Controls
                 InsertChar(character);
             }
         }
-        public void RemoveCharacters(int amount)
+        public void RemoveCharacters(int count)
         {
-            for (int i = 0; i < amount; i++)
+            for (int i = 0; i < count; i++)
             {
                 RemoveChar();
             }
@@ -127,8 +127,8 @@ namespace Gem.Gui.Controls
             cursor = new StandardText(this.font,
                                       Region.Position,
                                       appender.Cursor.ToString(),
-                                      new AlignmentContext(HorizontalAlignment.RelativeTo(() => line.Region.Position.X + font.MeasureString(line.Value.Substring(0, cursorIndex)).X, 0),
-                                                           VerticalAlignment.RelativeTo(() => line.Region.Frame.Top, 0),
+                                      new AlignmentContext(HorizontalAlignment.RelativeTo(() => line.Region.Position.X + font.MeasureString(line.Value.Substring(0, cursorIndex)).X),
+                                                           VerticalAlignment.RelativeTo(() => line.Region.Frame.Top),
                                                            AlignmentTransition.Fixed));
             cursor.RenderParameters.Color = line.RenderParameters.Color;
         }

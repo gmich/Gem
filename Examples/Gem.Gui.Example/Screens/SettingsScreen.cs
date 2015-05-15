@@ -24,7 +24,7 @@ namespace Gem.Gui.Example
                           .OnClick((sender, args) =>
                                    gui.Swap(GuiScreen.Settings, GuiScreen.MainMenu));
 
-            var textBox = gui.TextBox(x: 300, y: 100,
+            var textBox = gui.TextField(x: 300, y: 100,
                                       sizeX: 300, sizeY: 70,
                                       textColor: Color.Black,
                                       font: gui.Fonts["segoe-10"],

@@ -19,7 +19,7 @@ namespace Gem.Gui.Example
                          .TextColor(Color.Black)
                          .TextHorizontalAlignment(HorizontalAlignment.Center)
                          .TextVerticalAlignment(VerticalAlignment.Center)
-                         .ScreenAlignment(HorizontalAlignment.RelativeTo(() => 0.0f, 0),
+                         .ScreenAlignment(HorizontalAlignment.RelativeTo(() => 0.0f),
                                           VerticalAlignment.Center)
                          .OnClick((sender, args) =>
                                   gui.Swap(GuiScreen.MainMenu, GuiScreen.NewGame));
