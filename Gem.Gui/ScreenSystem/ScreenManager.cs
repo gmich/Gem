@@ -52,7 +52,7 @@ namespace Gem.Gui.ScreenSystem
                     hosts[screenIndex].Update(gameTime);
                     if (hosts[screenIndex].ScreenState == ScreenState.Active)
                     {
-                        hosts[screenIndex].HandleInput();
+                        hosts[screenIndex].HandleInput(gameTime);
                     }
                 }
             }

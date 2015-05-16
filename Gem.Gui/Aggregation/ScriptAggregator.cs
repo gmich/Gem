@@ -4,30 +4,46 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Gem.Gui.Aggregation
 {
-    public class ScriptAggregator<TInputHelper> : IAggregator    
+    public class ScriptAggregator<TInputHelper> : IAggregator
         where TInputHelper : Input.IInputHelper
     {
         #region Fields
 
-        private readonly Func<TInputHelper,bool> next;
-        private readonly Func<TInputHelper,bool> previous;
-        private readonly Func<TInputHelper,bool> trigger;
+        private readonly Func<TInputHelper, bool> next;
+        private readonly Func<TInputHelper, bool> previous;
+        private readonly Func<TInputHelper, bool> trigger;
+        private readonly KeyRepetition KeyRepetition;
         private readonly TInputHelper inputHelper;
 
+        private AggregationAction aggrAction;
+
+        /// True when at least one script has evaluated upon aggregation
+        private bool scriptHasEvaluated;
+
         #endregion
+
+        private enum AggregationAction
+        {
+            None,
+            Next,
+            Previous,
+            Trigger
+        }
 
         #region Ctor
 
         public ScriptAggregator(TInputHelper inputHelper,
-                                Func<TInputHelper,bool> next, 
-                                Func<TInputHelper,bool> previous, 
-                                Func<TInputHelper,bool> trigger)
+                                Func<TInputHelper, bool> next,
+                                Func<TInputHelper, bool> previous,
+                                Func<TInputHelper, bool> trigger,
+                                KeyRepetition KeyRepetition)
         {
             this.inputHelper = inputHelper;
             this.next = next;
             this.previous = previous;
             this.trigger = trigger;
             this.IsEnabled = true;
+            this.KeyRepetition = KeyRepetition;
         }
 
         #endregion
@@ -42,26 +58,55 @@ namespace Gem.Gui.Aggregation
 
         public void Aggregate(GuiEntry entry, AggregationContext context)
         {
-            //TODO: implement repeat
-
             if (!context.FirstEntry) return;
 
-            if (next(inputHelper))
+            double timeDelta = context.Time(span => span.TotalSeconds);
+
+            if (ShouldHandle(next, AggregationAction.Next, timeDelta))
             {
                 context.Reset();
                 context.FocusControlAt(context.Indexer.Next);
             }
-            if (previous(inputHelper))
+            if (ShouldHandle(previous, AggregationAction.Previous, timeDelta))
             {
                 context.Reset();
                 context.FocusControlAt(context.Indexer.Previous);
             }
-            if (trigger(inputHelper))
+            if (ShouldHandle(trigger, AggregationAction.Trigger, timeDelta))
             {
                 context[context.Indexer.Current].Events.OnClicked();
             }
 
+            aggrAction = scriptHasEvaluated ? aggrAction : AggregationAction.None;
+
+            scriptHasEvaluated = false;
             context.FirstEntry = false;
+        }
+
+        //handles repetition
+        private bool ShouldHandle(Func<TInputHelper, bool> script, AggregationAction aggrAction, double timeDelta)
+        {
+            if (script(inputHelper))
+            {
+                scriptHasEvaluated = true;
+                if (this.aggrAction != aggrAction)
+                {
+                    KeyRepetition.KeyRepeatTimer = KeyRepetition.KeyRepeatStartDuration;
+                    this.aggrAction = aggrAction;
+                    return true;
+                }
+                if (this.aggrAction == aggrAction)
+                {
+                    KeyRepetition.KeyRepeatTimer -= timeDelta;
+                    if (KeyRepetition.KeyRepeatTimer <= 0.0f)
+                    {
+                        KeyRepetition.KeyRepeatTimer += KeyRepetition.KeyRepeatDuration;
+                        return true;
+                    }
+                    return false;                    
+                }
+            }           
+            return false;            
         }
 
         #endregion
@@ -73,9 +118,10 @@ namespace Gem.Gui.Aggregation
         public static ScriptAggregator<KeyboardInputHelper> ForKeyboard(KeyboardMenuScript keyboardScript)
         {
             return new ScriptAggregator<KeyboardInputHelper>(InputManager.Keyboard,
-                                                             input => input.IsKeyClicked(keyboardScript.Next),
-                                                             input => input.IsKeyClicked(keyboardScript.Previous),
-                                                             input => input.IsKeyClicked(keyboardScript.Trigger));
+                                                             input => input.IsKeyPressed(keyboardScript.Next),
+                                                             input => input.IsKeyPressed(keyboardScript.Previous),
+                                                             input => input.IsKeyClicked(keyboardScript.Trigger),
+                                                             keyboardScript.KeyRepetition);
         }
     }
 }

@@ -21,7 +21,6 @@ namespace Gem.Gui.Controls
         private readonly TextAppenderHelper appender;
 
         private int cursorIndex;
-        private bool shouldProcessInput;
         private bool showCursor;
 
         private Keys pressedKey;
@@ -51,14 +50,10 @@ namespace Gem.Gui.Controls
         {
             this.font = font;
             this.appender = appender;
-            this.Events.LostFocus += (sender, args) =>
-            {
-                shouldProcessInput = false;
-                OnTextEnteredAggregation(this.line.Value);
-            };
-
-            this.Events.Clicked += (sender, args) => shouldProcessInput = !shouldProcessInput;
-
+            this.Events.LostFocus += (sender, args) => ShouldProcessInput = false;
+            //this.Events.Clicked += (sender, args) => ShouldProcessInput = !ShouldProcessInput;
+            this.Events.GotFocus += (sender, args) => ShouldProcessInput = true;
+    
             this.timer = new Timer();
             timer.Elapsed += new ElapsedEventHandler((sender,args) => showCursor = !showCursor);
             timer.Interval = appender.CursorFlickInterval;
@@ -98,6 +93,20 @@ namespace Gem.Gui.Controls
 
         #endregion
 
+        private bool _shouldProcessInput;
+        private bool ShouldProcessInput
+        {
+            get { return _shouldProcessInput; }
+            set
+            {
+                if (!value & _shouldProcessInput)
+                {
+                    OnTextEnteredAggregation(this.line.Value);
+                }
+                _shouldProcessInput = value;
+            }
+        }
+
         public void InsertText(string text)
         {
             foreach (var character in text)
@@ -136,7 +145,7 @@ namespace Gem.Gui.Controls
         private void InsertChar(char charToInsert)
         {
             cursorIndex++;
-            line.Value = line.Value.Insert((cursorIndex-1), new string(charToInsert, 1));
+            line.Value = line.Value.Insert((cursorIndex - 1), new string(charToInsert, 1));
             OnTextChangedAggregation(new TextFieldEventArgs(this.line.Value, charToInsert));
         }
 
@@ -149,13 +158,14 @@ namespace Gem.Gui.Controls
                 OnTextChangedAggregation(new TextFieldEventArgs(this.line.Value, charToRemove));
             }
         }
-        
+
         private void ProcessKeyInputs(double deltaTime)
         {
             var pressedKeys = appender.Input.GetPressedKeys();
 
             bool isShiftPressed = appender.Input.IsKeyPressed(Keys.LeftShift) ||
                                   appender.Input.IsKeyPressed(Keys.RightShift);
+
 
             foreach (Keys key in pressedKeys)
             {
@@ -187,20 +197,17 @@ namespace Gem.Gui.Controls
                             break;
                         case Keys.Left:
                             if (cursorIndex > 0)
-                            { 
+                            {
                                 cursorIndex--;
                                 AlignCursor();
                             }
                             break;
                         case Keys.Right:
                             if (cursorIndex < line.Value.Length)
-                            { 
+                            {
                                 cursorIndex++;
                                 AlignCursor();
                             }
-                            break;
-                        case Keys.Enter:
-                            this.HasFocus = false;
                             break;
                     }
                 }
@@ -244,7 +251,14 @@ namespace Gem.Gui.Controls
         {
             base.Update(deltaTime);
 
-            if (shouldProcessInput)
+            if (!HasFocus) return;
+
+            if (appender.Input.IsKeyClicked(InputManager.KeyboardMenuScript.Trigger))
+            {
+                ShouldProcessInput = !ShouldProcessInput;
+            }
+
+            if (ShouldProcessInput)
             {
                 ProcessKeyInputs(deltaTime);
             }
@@ -257,7 +271,7 @@ namespace Gem.Gui.Controls
             line.RenderStyle.Render(batch);
             template.TextDrawable.Render(batch, this.line);
 
-            if (showCursor && shouldProcessInput)
+            if (showCursor && ShouldProcessInput)
             {
                 cursor.RenderStyle.Render(batch);
                 template.TextDrawable.Render(batch, this.cursor);

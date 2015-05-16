@@ -22,7 +22,6 @@ namespace Gem.Gui.Aggregation
             this.input = inputHelper;
         }
 
-
         private bool _isEnabled = true;
         public bool IsEnabled
         {

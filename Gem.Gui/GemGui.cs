@@ -157,8 +157,8 @@ namespace Gem.Gui
                                                 textColor,
                                                 GetRenderStyle(style),
                                                 horizontalAlignment ?? HorizontalAlignment.Left,
-                                                verticalAlignment?? VerticalAlignment.Center, 
-                                                alignmentTransition?? AlignmentTransition.Fixed);
+                                                verticalAlignment ?? VerticalAlignment.Center,
+                                                alignmentTransition ?? AlignmentTransition.Fixed);
         }
 
         //TODO: add the rest
@@ -250,7 +250,7 @@ namespace Gem.Gui
 
         public bool Swap(string previousHost, string newHost)
         {
-            return Hide(previousHost) && Show(newHost); 
+            return Hide(previousHost) && Show(newHost);
         }
 
         #endregion

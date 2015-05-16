@@ -1,4 +1,5 @@
 ﻿using Gem.Gui.Controls;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
@@ -9,7 +10,7 @@ namespace Gem.Gui.Aggregation
         private readonly IList<IAggregator> aggregators;
         private readonly List<GuiEntry> entries = new List<GuiEntry>();
         private readonly Indexer indexer;
-
+        private GameTime gameTime;
 
         public AggregationContext(IList<IAggregator> aggregators, IEnumerable<AControl> controls)
         {
@@ -72,9 +73,17 @@ namespace Gem.Gui.Aggregation
             entries[indexer.Current].Control.HasFocus = true;
         }
 
-        public void Aggregate()
+        public double Time(Func<TimeSpan, double> timeCalculator)
         {
-            FirstEntry = true;
+            if (gameTime == null) return 0;
+            return timeCalculator(this.gameTime.ElapsedGameTime);
+        }
+
+        public void Aggregate(GameTime gameTime)
+        {
+            this.FirstEntry = true;
+            this.gameTime = gameTime;
+
             foreach (var aggregator in aggregators)
             {
                 entries.ForEach(entry => aggregator.Aggregate(entry, this));

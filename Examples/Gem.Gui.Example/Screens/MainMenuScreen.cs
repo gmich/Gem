@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using Gem.Gui.Fluent;
 using Gem.Gui.ScreenSystem;
+using Microsoft.Xna.Framework.Input;
 
 namespace Gem.Gui.Example
 {
@@ -60,6 +61,12 @@ namespace Gem.Gui.Example
                           .TextVerticalAlignment(VerticalAlignment.Top);
 
             gui.AddGuiHost(GuiScreen.MainMenu, listView);
+
+            gui[GuiScreen.MainMenu].OnEnter += (sender, args) =>
+            {
+                Input.InputManager.KeyboardMenuScript.Previous = Keys.Up;
+                Input.InputManager.KeyboardMenuScript.Next = Keys.Down;
+            };
 
             gui[GuiScreen.MainMenu].Transition = new TimedTransition(
                                                       TimeSpan.FromSeconds(0.5),

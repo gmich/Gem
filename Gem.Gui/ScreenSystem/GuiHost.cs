@@ -4,16 +4,22 @@ using Gem.Gui.Controls;
 using Gem.Gui.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace Gem.Gui.ScreenSystem
 {
     public class GuiHost : IGuiHost
     {
+
+        #region Fields
+
         private readonly AggregationContext aggregationContext;
         private readonly IList<AControl> controls = new List<AControl>();
         private readonly RenderTemplate renderTemplate;
         private AnimationContext animationContext;
+
+        #endregion
 
         public GuiHost(List<AControl> controls,
                        RenderTemplate renderTemplate, 
@@ -59,6 +65,31 @@ namespace Gem.Gui.ScreenSystem
 
         #endregion
 
+        #region Events
+
+        public event EventHandler<EventArgs> OnEnter;
+        public event EventHandler<EventArgs> OnExit;
+
+        private void OnEnteringScreen()
+        {
+            var handler = OnEnter;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
+
+        private void OnExitingScreen()
+        {
+            var handler = OnExit;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
+
+        #endregion
+
         private void AssignState(TransitionDirection direction, ScreenState enterState, ScreenState leaveState)
         {
             switch (direction)
@@ -83,22 +114,24 @@ namespace Gem.Gui.ScreenSystem
 
         public void EnterScreen()
         {
+            OnEnteringScreen();
             Transition.Start(TransitionDirection.Enter);
         }
 
 
         public void ExitScreen()
         {
-            foreach (var control in controls)
-            {
-                control.HasFocus=false;
-            }
+            OnExitingScreen();
+            //foreach (var control in controls)
+            //{
+            //    control.HasFocus=false;
+            //}
             Transition.Start(TransitionDirection.Leave);
         }
 
-        public void HandleInput()
+        public void HandleInput(GameTime gameTime)
         {
-            aggregationContext.Aggregate();
+            aggregationContext.Aggregate(gameTime);
         }
 
         public void Update(GameTime gameTime)

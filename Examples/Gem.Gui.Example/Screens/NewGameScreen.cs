@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using Gem.Gui.Fluent;
 using Gem.Gui.ScreenSystem;
+using Microsoft.Xna.Framework.Input;
 
 namespace Gem.Gui.Example
 {
@@ -13,7 +14,7 @@ namespace Gem.Gui.Example
         {
             var playButton =
                       gui.Button(0, 0, 100, 100, style: Style.Transparent)
-                         .Sprite("frame",gui.Textures["frame"])
+                         .Sprite("frame", gui.Textures["frame"])
                          .Color(Color.White)
                          .Text(gui.Fonts["segoe-10"], "Play")
                          .TextColor(Color.Black)
@@ -35,9 +36,15 @@ namespace Gem.Gui.Example
                                           VerticalAlignment.Center)
                           .OnClick((sender, args) =>
                                    gui.Swap(GuiScreen.NewGame, GuiScreen.MainMenu));
-            
 
-            gui.AddGuiHost(GuiScreen.NewGame, playButton,backButton);
+
+            gui.AddGuiHost(GuiScreen.NewGame, playButton, backButton);
+
+            gui[GuiScreen.NewGame].OnEnter += (sender, args) =>
+            {
+                Input.InputManager.KeyboardMenuScript.Previous = Keys.Left;
+                Input.InputManager.KeyboardMenuScript.Next = Keys.Right;
+            };
 
             gui[GuiScreen.NewGame].Transition = new TimedTransition(
                                                       TimeSpan.FromSeconds(0.5),
