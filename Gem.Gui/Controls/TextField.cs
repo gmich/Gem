@@ -57,7 +57,7 @@ namespace Gem.Gui.Controls
                 OnTextEnteredAggregation(this.line.Value);
             };
 
-            this.Events.GotFocus += (sender, args) => shouldProcessInput = true;
+            this.Events.Clicked += (sender, args) => shouldProcessInput = !shouldProcessInput;
 
             this.timer = new Timer();
             timer.Elapsed += new ElapsedEventHandler((sender,args) => showCursor = !showCursor);

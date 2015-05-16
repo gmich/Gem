@@ -1,15 +1,16 @@
-﻿namespace Gem.Gui.Core.Layout
+﻿namespace Gem.Gui.Aggregation
 {
-    public class ComponentIndex
+    public class Indexer
     {
         private readonly int lowest;
         private readonly int largest;
-        private int current = 0;
+        private int current;
 
-        public ComponentIndex(int largest, int lowest = 0)
+        public Indexer(int lowest, int largest, int current = 0)
         {
-            this.largest = largest;
             this.lowest = lowest;
+            this.largest = largest;
+            this.Current = current;
         }
 
         public int Current
@@ -35,14 +36,16 @@
             }
         }
 
+        public bool HasFocus { get; set; }
+
         public int Next
         {
-            get { return Current++; }
+            get { return ++Current; }
         }
 
         public int Previous
         {
-            get { return Current--; }
+            get { return --Current; }
         }
     }
 }

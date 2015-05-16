@@ -92,7 +92,7 @@
     <Compile Include="ScreenSystem\TransitionDirection.cs" />
     <Compile Include="Styles\ARenderStyle.cs" />
     <Compile Include="Aggregation\AggregationContext.cs" />
-    <Compile Include="Layout\ComponentIndex.cs" />
+    <Compile Include="Aggregation\Indexer.cs" />
     <Compile Include="Styles\NoStyle.cs" />
     <Compile Include="Styles\Style.cs" />
     <Compile Include="Styles\TransparentControlStyle.cs" />

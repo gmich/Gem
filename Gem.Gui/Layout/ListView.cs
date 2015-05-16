@@ -47,6 +47,7 @@ namespace Gem.Gui.Layout
             }
 
             this.Align(Gem.Gui.Configuration.Settings.ViewRegion);
+            this.Options.IsFocusEnabled = false;
         }
 
 

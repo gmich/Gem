@@ -2,6 +2,7 @@
 using Gem.Gui.Controls;
 using Gem.Gui.Factories;
 using Gem.Gui.Input;
+using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace Gem.Gui.Configuration
@@ -19,7 +20,7 @@ namespace Gem.Gui.Configuration
             }
             if (target.HasTargetFlag(AggregationTarget.Keyboard))
             {
-                //aggegators.Add(new ScriptAggregator());
+                aggegators.Add(Script.ForKeyboard(InputManager.KeyboardMenuScript));
             }
             //TODO: add the rest
 

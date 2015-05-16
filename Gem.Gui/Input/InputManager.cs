@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Diagnostics;
@@ -17,16 +18,22 @@ namespace Gem.Gui.Input
 
         #region Ctor
 
-        public InputManager(Game game):base(game)
+        public InputManager(Game game)
+            : base(game)
         {
             //GetInputCapabilities(true);
+        }
+
+        static InputManager()
+        {
+            KeyboardMenuScript = new KeyboardMenuScript();
         }
 
         #endregion
 
         #region Scripts
 
-        public static KeyboardMenuScript KeyboardMenuScript { get; set; }
+        public static KeyboardMenuScript KeyboardMenuScript { get; private set; }
 
         #endregion
 

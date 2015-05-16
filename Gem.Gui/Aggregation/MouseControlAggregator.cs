@@ -36,63 +36,62 @@ namespace Gem.Gui.Aggregation
 
         #region Event Raising
 
-        private void CheckMouseHover(AControl entry, AggregationToken token, int entryId)
+        private void CheckMouseHover(GuiEntry entry, AggregationContext context)
         {
-            var currentHasHover = entry.Region.Frame.Contains(input.MousePosition);
+            var currentHasHover = entry.Control.Region.Frame.Contains(input.MousePosition);
 
-            if (currentHasHover && !token.HasHover)
+            if (currentHasHover && !entry.Token.HasHover)
             {
-                entry.HasHover = true;
+                entry.Control.HasHover = true;
             }
-            else if (!currentHasHover && token.HasHover)
+            else if (!currentHasHover && entry.Token.HasHover)
             {
-                entry.HasHover = false;
+                entry.Control.HasHover = false;
             }
 
-            token.HasHover = currentHasHover;
-            //if (token.IsSelected) return;
+            entry.Token.HasHover = currentHasHover;
         }
 
-        private void CheckFocus(AControl entry, AggregationToken token, int entryId)
+        private void CheckFocus(GuiEntry entry, AggregationContext context)
         {
             if (input.IsLeftButtonClicked())
             {
-                if (token.HasHover && !entry.HasFocus)
+                if (entry.Token.HasHover && !entry.Control.HasFocus)
                 {
-                    entry.HasFocus = true;
-                    token.GotFocusBy = this;
+                    context.FocusControlAt(entry.Index);
+                    entry.Token.GotFocusBy = this;
                 }
-                else if (!token.HasHover && entry.HasFocus)
+                else if (!entry.Token.HasHover && entry.Control.HasFocus)
                 {
-                    entry.HasFocus = false;
-                    token.GotFocusBy = null;
+                    context.Reset();
+                    entry.Token.GotFocusBy = null;
                 }
             }
-            CheckSelected(entry, token, entryId);
+            CheckSelected(entry, context);
         }
 
-        private void CheckSelected(AControl entry, AggregationToken token, int entryId)
+        private void CheckSelected(GuiEntry entry, AggregationContext context)
         {
             if (input.IsLeftButtonClicked())
             {
-                if (token.HasHover)
+                if (entry.Token.HasHover)
                 {
-                    token.CanBeClicked = true;
+                    entry.Token.CanBeClicked = true;
                 }
             }
             if (!input.IsLeftButtonPressed())
             {
-                token.CanBeClicked = false;
+                entry.Token.CanBeClicked = false;
             }
         }
 
-        private void CheckClick(AControl entry, AggregationToken token, int entryId)
+        private void CheckClick(GuiEntry entry, AggregationContext context)
         {
-            if (token.CanBeClicked 
-                && token.HasHover 
+            if (entry.Token.CanBeClicked 
+                && entry.Token.HasHover 
                 && input.IsLeftButtonReleased())
             {
-                entry.Events.OnClicked();
+                entry.Control.Events.OnClicked();
             }
         }
 
@@ -108,32 +107,22 @@ namespace Gem.Gui.Aggregation
                 IsEnabled = (mouseLocation != input.MousePosition);
             }
 
-            //TODO: add aggregation context to the area
-            //Aggregate(area);
-
-            int entryId = 0;
-
-            Aggregate(entry.Control, entry.Token, entryId);
-
-        }
-
-        private void Aggregate(AControl entry, AggregationToken token, int entryId)
-        {
-            if (!entry.Options.IsEnabled || !this.IsEnabled)
+            if (!entry.Control.Options.IsEnabled || !this.IsEnabled)
             {
                 return;
             }
 
-            CheckMouseHover(entry, token, entryId);
+            CheckMouseHover(entry, context);
 
-            CheckClick(entry, token, entryId);
+            CheckClick(entry, context);
 
-            if (entry.Options.IsFocusEnabled)
+            if (entry.Control.Options.IsFocusEnabled)
             {
-                CheckFocus(entry, token, entryId);
+                CheckFocus(entry, context);
             }
 
         }
+
 
         #endregion
 

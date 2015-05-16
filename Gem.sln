@@ -42,11 +42,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{9AC764
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Gui.Example", "Examples\Gem.Gui.Example\Gem.Gui.Example.csproj", "{41293C99-6A34-413C-858D-F4E4C919F279}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6FBA60B8-2A2A-4289-B318-EBAC3E863137}"
-	ProjectSection(SolutionItems) = preProject
-		Performance2.psess = Performance2.psess
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

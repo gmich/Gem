@@ -12,8 +12,8 @@ namespace Gem.Gui.Controls
         public TextAppenderHelper(KeyboardInputHelper input,
                                   char cursor = '_',
                                   double cursorFlickInterval = 500.0d,
-                                  double keyRepeatStartDuration = 0.3d,
-                                  double keyRepeatDuration = 0.003d)
+                                  double keyRepeatStartDuration = 0.5d,
+                                  double keyRepeatDuration = 0.04d)
         {
             this.input = input;
             this.KeyRepeatDuration = keyRepeatDuration;

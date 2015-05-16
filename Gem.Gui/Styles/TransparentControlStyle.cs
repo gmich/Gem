@@ -83,7 +83,7 @@ namespace Gem.Gui.Styles
             get
             {
                 return
-                    ctrol => new NoTransformation();
+                    ctrl => new NoTransformation();
             }
         }
 

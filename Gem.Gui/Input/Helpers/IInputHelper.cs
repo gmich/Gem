@@ -1,7 +1,8 @@
 ﻿using System;
+
 namespace Gem.Gui.Input
 {
-    interface IInputHelper
+    public interface IInputHelper
     {
         void Flush();
     }
