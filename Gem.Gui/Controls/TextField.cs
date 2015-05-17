@@ -53,20 +53,22 @@ namespace Gem.Gui.Controls
             this.Events.LostFocus += (sender, args) => ShouldProcessInput = false;
             //this.Events.Clicked += (sender, args) => ShouldProcessInput = !ShouldProcessInput;
             this.Events.GotFocus += (sender, args) => ShouldProcessInput = true;
-    
+
             this.timer = new Timer();
-            timer.Elapsed += new ElapsedEventHandler((sender,args) => showCursor = !showCursor);
+            timer.Elapsed += new ElapsedEventHandler((sender, args) => showCursor = !showCursor);
             timer.Interval = appender.CursorFlickInterval;
             timer.Enabled = true;
 
-            line = new StandardText(font, region.Position, string.Empty, alignmentContext);
-            line.RenderParameters.Color = textcolor;
+            line = new StandardText(font, Vector2.Zero, null, alignmentContext);
+            line.RenderParameters.Color = textcolor;          
             SetupCursor();
 
             //check if the buffer is not full
             appender.ShouldHandleKey += (key, keyToChar) =>
-                (line.Region.Frame.Right + cursor.Region.Size.X + font.MeasureString(keyToChar.ToString()).X)
-                < this.Region.Frame.Right;
+                ((line.Region.Frame.Right
+                + cursor.Region.Size.X
+                + (font.MeasureString(keyToChar.ToString()).X) * Configuration.Settings.Scale.X) 
+                < (this.Region.Frame.Right));
         }
 
         #endregion
@@ -136,7 +138,7 @@ namespace Gem.Gui.Controls
             cursor = new StandardText(this.font,
                                       Region.Position,
                                       appender.Cursor.ToString(),
-                                      new AlignmentContext(HorizontalAlignment.RelativeTo(() => line.Region.Position.X + font.MeasureString(line.Value.Substring(0, cursorIndex)).X),
+                                      new AlignmentContext(HorizontalAlignment.RelativeTo(() => line.Region.Position.X + font.MeasureString(line.Value.Substring(0, cursorIndex)).X * Configuration.Settings.Scale.X),
                                                            VerticalAlignment.RelativeTo(() => line.Region.Frame.Top),
                                                            AlignmentTransition.Fixed));
             cursor.RenderParameters.Color = line.RenderParameters.Color;
@@ -239,18 +241,30 @@ namespace Gem.Gui.Controls
 
         #region AControl Members
 
+        public override void Scale(Vector2 scale)
+        {
+            base.Scale(scale);
+            
+            line.Scale(scale);
+            cursor.Scale(scale);
+        }
         public override void Align(Region viewPort)
         {
+            base.Align(viewPort);
+
+            //line.Align(this.Region);
+            //cursor.Align(this.Region);
+
             line.Region.Position = line.Alignment.GetTargetRegion(this.Region, line.Region, line.Padding).Position;
             cursor.Region.Position = cursor.Alignment.GetTargetRegion(this.Region, cursor.Region, cursor.Padding).Position;
-
-            base.Align(viewPort);
         }
 
         public override void Update(double deltaTime)
         {
             base.Update(deltaTime);
 
+            //line.Update(deltaTime);
+            //cursor.Update(deltaTime);
             if (!HasFocus) return;
 
             if (appender.Input.IsKeyClicked(InputManager.KeyboardMenuScript.Trigger))
@@ -264,17 +278,17 @@ namespace Gem.Gui.Controls
             }
         }
 
-        public override void Render(SpriteBatch batch, RenderTemplate template)
+        public override void Render(SpriteBatch batch)
         {
-            base.Render(batch, template);
+            base.Render(batch);
 
             line.RenderStyle.Render(batch);
-            template.TextDrawable.Render(batch, this.line);
+            RenderTemplate.TextDrawable.Render(batch, this.line);
 
             if (showCursor && ShouldProcessInput)
             {
                 cursor.RenderStyle.Render(batch);
-                template.TextDrawable.Render(batch, this.cursor);
+                RenderTemplate.TextDrawable.Render(batch, this.cursor);
             }
         }
 

@@ -1,4 +1,6 @@
-﻿using Gem.Gui.Aggregation;
+﻿#region Usings
+
+using Gem.Gui.Aggregation;
 using Gem.Gui.Configuration;
 using Gem.Gui.Containers;
 using Gem.Gui.Controls;
@@ -16,6 +18,8 @@ using Gem.Gui.Layout;
 using Gem.Gui.Alignment;
 using Gem.Gui.Styles;
 
+#endregion
+
 namespace Gem.Gui
 {
     public sealed class GemGui : IDisposable
@@ -26,13 +30,15 @@ namespace Gem.Gui
         private readonly IConfigurationResolver configuration;
         private readonly IControlFactory controlFactory;
         private readonly AggregationTarget aggregationTarget;
+        private readonly ITextureFactory textureFactory;
+
+        private readonly Dictionary<string, IGuiHost> hosts = new Dictionary<string, IGuiHost>();
 
         private readonly AssetContainer<SpriteFont> _fontContainer;
         private readonly AssetContainer<Texture2D> _textureContainer;
 
         private readonly Settings settings;
-        private readonly Dictionary<string, IGuiHost> hosts = new Dictionary<string, IGuiHost>();
-        private ScreenManager screenManager;
+        private readonly ScreenManager screenManager;
 
         public event EventHandler<SpriteBatch> DrawWith;
 
@@ -41,16 +47,19 @@ namespace Gem.Gui
         #region Construct / Dispose
 
         public GemGui(Game game,
+                      int targetResolutionWidth,
+                      int targetResolutionHeight,
                       AggregationTarget aggregationTarget = AggregationTarget.All,
                       ControlTarget controlTarget = ControlTarget.Windows,
                       IConfigurationResolver configuration = null)
         {
             this.configuration = configuration ?? new DefaultConfiguration();
             this.aggregationTarget = aggregationTarget;
-            this.settings = new Settings(game);
+            this.settings = new Settings(game, new Vector2(targetResolutionWidth, targetResolutionHeight));
             this.controlFactory = this.configuration.GetControlFactory(controlTarget);
             this.HostTransition = () => TimedTransition.Default;
-            screenManager = new ScreenManager(game, settings, DrawTheRest);
+            this.screenManager = new ScreenManager(game, settings, DrawTheRest);
+            this.textureFactory = new TextureFactory(game.GraphicsDevice);
 
             game.Components.Add(screenManager);
             game.Components.Add(new Input.InputManager(game));
@@ -71,11 +80,41 @@ namespace Gem.Gui
             if (disposing && !isDisposed)
             {
                 screenManager.Dispose();
+                hosts.Clear();
                 isDisposed = true;
             }
         }
 
         #endregion
+
+        #region Public Properties
+
+        public Settings Settings { get { return settings; } }
+
+        public AssetContainer<SpriteFont> Fonts { get { return _fontContainer; } }
+
+        public AssetContainer<Texture2D> Textures { get { return _textureContainer; } }
+
+        public Func<ITransition> HostTransition { get; set; }
+
+        public IGuiHost this[string guiHostId]
+        {
+            get
+            {
+                if (hosts.ContainsKey(guiHostId))
+                {
+                    return hosts[guiHostId];
+                }
+                else
+                {
+                    throw new ArgumentException("Gui host was not found");
+                }
+            }
+        }
+
+        #endregion
+
+        #region Private Helper Methods
 
         private void DrawTheRest(SpriteBatch batch)
         {
@@ -86,15 +125,17 @@ namespace Gem.Gui
             }
         }
 
-        #region Control Factory
-
-        private Texture2D CreateDummyTexture()
+        private Texture2D GetDefaultTexture(int width, int height)
         {
-            var texture = new Texture2D(screenManager.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-            texture.SetData(new[] { Color.White });
-
-            return texture;
+            return textureFactory.GetTexture(
+                new TextureCreationRequest(width, height,
+                                           Color.White,
+                                           Pattern.SolidColor));
         }
+
+        #endregion
+
+        #region Control Factory
 
         public ARenderStyle GetRenderStyle(Style style)
         {
@@ -117,7 +158,8 @@ namespace Gem.Gui
         {
             return controlFactory.CreateButton(new Region(new Vector2(x, y),
                                                            new Vector2(sizeX, sizeY)),
-                                                           CreateDummyTexture(), GetRenderStyle(style));
+                                                           GetDefaultTexture(sizeX, sizeY),
+                                                           GetRenderStyle(style));
         }
 
         public ListView ListView(int x, int y,
@@ -128,7 +170,7 @@ namespace Gem.Gui
                                  IAlignmentTransition alignmentTransition,
                                  params AControl[] controls)
         {
-            return controlFactory.CreateListView(CreateDummyTexture(),
+            return controlFactory.CreateListView(GetDefaultTexture(sizeX, sizeY),
                                                  new Region(new Vector2(x, y),
                                                             new Vector2(sizeX, sizeY)),
                                                  orientation,
@@ -151,13 +193,13 @@ namespace Gem.Gui
             return textField =
                    controlFactory.CreateTextBox(appender ?? TextAppenderHelper.Default,
                                                 font,
-                                                CreateDummyTexture(),
+                                                GetDefaultTexture(sizeX, sizeY),
                                                 new Region(new Vector2(x, y),
                                                             new Vector2(sizeX, sizeY)),
                                                 textColor,
                                                 GetRenderStyle(style),
                                                 horizontalAlignment ?? HorizontalAlignment.Left,
-                                                verticalAlignment ?? VerticalAlignment.Center,
+                                                verticalAlignment ?? VerticalAlignment.Bottom,
                                                 alignmentTransition ?? AlignmentTransition.Fixed);
         }
 
@@ -165,25 +207,13 @@ namespace Gem.Gui
 
         #endregion
 
-        #region Properties
-
-        public AssetContainer<SpriteFont> Fonts { get { return _fontContainer; } }
-
-        public AssetContainer<Texture2D> Textures { get { return _textureContainer; } }
-
-        public Func<ITransition> HostTransition;
-
-        #endregion
-
-        #region Public Helper Methods
+        #region Public Methods
 
         public void AddGuiHost(string guiHostId, params AControl[] controls)
         {
             foreach (var control in controls)
             {
-                //control.Align(new Region(Vector2.Zero, settings.Resolution));
-                settings.OnResolutionChange((sender, args) =>
-                                            control.Align(Settings.ViewRegion));
+                settings.OnResolutionChange((sender, args) => control.Scale(Settings.Scale));
             }
             var entries = controls.Where(control => control.HasAttribute<LayoutAttribute>());
             var controlsEnumerable = controls.AsEnumerable();
@@ -194,26 +224,9 @@ namespace Gem.Gui
             }
 
             var guiHost = new GuiHost(controls.ToList(),
-                                   settings.RenderTemplate,
-                                   new AggregationContext(configuration.GetAggregators(aggregationTarget), controlsEnumerable),
-                                   HostTransition());
+                                      new AggregationContext(configuration.GetAggregators(aggregationTarget), controlsEnumerable),
+                                      HostTransition());
             AddGuiHost(guiHostId, guiHost);
-
-        }
-
-        public IGuiHost this[string guiHostId]
-        {
-            get
-            {
-                if (hosts.ContainsKey(guiHostId))
-                {
-                    return hosts[guiHostId];
-                }
-                else
-                {
-                    throw new ArgumentException("Gui host was not found");
-                }
-            }
         }
 
         public void AddGuiHost(string guiHostId, IGuiHost guiHost)

@@ -37,7 +37,6 @@ namespace Gem.Gui.Example
                           .OnClick((sender, args) =>
                                    gui.Swap(GuiScreen.NewGame, GuiScreen.MainMenu));
 
-
             gui.AddGuiHost(GuiScreen.NewGame, playButton, backButton);
 
             gui[GuiScreen.NewGame].OnEnter += (sender, args) =>

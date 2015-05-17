@@ -21,17 +21,19 @@ namespace Gem.Gui.Configuration
         private static Vector2 resolution;
         private static Region viewRegion;
         private static Rectangle screenRectangle;
+        private static Vector2 targetResolution;
 
         #endregion
 
         #region Ctor
 
-        public Settings(Game game)
+        public Settings(Game game, Vector2 targetResolution)
         {
             this.game = game;
-            this.RenderTemplate = new Rendering.RenderTemplate(RenderControlBy.Frame, RenderTextBy.Position);
-            SetResolution();
             game.Window.ClientSizeChanged += (sender, args) => SetResolution();
+            Settings.targetResolution = targetResolution;
+            ScaleCalculator = newResolution => newResolution / TargetResolution;            
+            SetResolution();
         }
 
         #endregion
@@ -43,6 +45,7 @@ namespace Gem.Gui.Configuration
             resolution = new Vector2(game.Window.ClientBounds.Width, game.Window.ClientBounds.Height);
             viewRegion = new Region(Vector2.Zero, resolution);
             screenRectangle = new Rectangle(0, 0, game.Window.ClientBounds.Width, game.Window.ClientBounds.Height);
+            Scale = ScaleCalculator(resolution);
         }
 
         #endregion
@@ -57,6 +60,9 @@ namespace Gem.Gui.Configuration
         #endregion
 
         #region Properties
+
+        //Calculates the scale according to the current resolution
+        public Func<Vector2,Vector2> ScaleCalculator { get; set; }
 
         public InputManager.InputCapabilities InputCapabilities
         {
@@ -75,7 +81,9 @@ namespace Gem.Gui.Configuration
 
         public static Rectangle ScreenRectangle { get { return screenRectangle; } }
 
-        public RenderTemplate RenderTemplate { get; set; }
+        public static Vector2 TargetResolution { get { return targetResolution; } }
+
+        public static Vector2 Scale { get; private set; }
 
         #endregion
 

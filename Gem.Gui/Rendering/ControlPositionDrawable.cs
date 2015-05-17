@@ -8,11 +8,11 @@ namespace Gem.Gui.Rendering
         public void Render(SpriteBatch batch, AControl control)
         {
             batch.Draw(control.Sprite.Texture,
-                       control.Region.Position,
+                       control.Region.Position + control.Sprite.Center,
                        control.Sprite.SourceRectangle,
                        control.RenderParameters.Color * control.RenderParameters.Transparency,
                        control.RenderParameters.Rotation,
-                       control.Region.Center,
+                       control.Sprite.Center,
                        control.RenderParameters.Scale,
                        control.RenderParameters.SpriteEffect,
                        control.RenderParameters.Layer);

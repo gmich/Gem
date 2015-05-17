@@ -89,7 +89,11 @@
     <Compile Include="Dependencies.cs" />
     <Compile Include="Dynamic\DynamicDictionary.cs" />
     <Compile Include="Dynamic\PropertyNotifyExtensions.cs" />
+    <Compile Include="Cache\Events\EventAggregator.cs" />
+    <Compile Include="Cache\Events\ICacheEvent.cs" />
+    <Compile Include="Cache\Events\IEventProvider.cs" />
     <Compile Include="Exceptions\ExceptionUtilities.cs" />
+    <Compile Include="Cache\GCache.cs" />
     <Compile Include="Logging\ActionAppender.cs" />
     <Compile Include="Logging\Auditor.cs" />
     <Compile Include="Logging\ConfigurableAppender.cs" />

@@ -16,18 +16,15 @@ namespace Gem.Gui.ScreenSystem
 
         private readonly AggregationContext aggregationContext;
         private readonly IList<AControl> controls = new List<AControl>();
-        private readonly RenderTemplate renderTemplate;
         private AnimationContext animationContext;
 
         #endregion
 
         public GuiHost(List<AControl> controls,
-                       RenderTemplate renderTemplate, 
                        AggregationContext aggregationContext,
                        ITransition transition)
             : base()
         {
-            this.renderTemplate = renderTemplate;
             this.controls = controls;
             this.aggregationContext = aggregationContext;
             this.Transition = transition;
@@ -136,14 +133,14 @@ namespace Gem.Gui.ScreenSystem
 
         public void Update(GameTime gameTime)
         {
-            this.animationContext = animationContext?? new AnimationContext(gameTime);
+            this.animationContext = animationContext ?? new AnimationContext(gameTime);
 
             foreach (var control in controls)
             {
                 control.Update(gameTime.ElapsedGameTime.TotalSeconds);
             }
-            if(ScreenState == ScreenState.TransitionOff 
-                || ScreenState== ScreenState.TransitionOn)
+            if (ScreenState == ScreenState.TransitionOff
+                || ScreenState == ScreenState.TransitionOn)
             {
                 Transition.Update(animationContext);
             }
@@ -153,7 +150,7 @@ namespace Gem.Gui.ScreenSystem
         {
             foreach (var control in controls)
             {
-                control.Render(batch, renderTemplate);
+                control.Render(batch);
             }
         }
     }

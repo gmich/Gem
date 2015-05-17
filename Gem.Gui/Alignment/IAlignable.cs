@@ -4,10 +4,6 @@ namespace Gem.Gui.Alignment
 {
     public interface IAlignable
     {
-        /// <summary>
-        /// Calculates the new child region
-        /// </summary>
-        /// <returns>The new child's region </returns>
-        AlignmentResult Align(Region parent, Region child, Padding padding);
+        void Align(Region parent);
     }
 }

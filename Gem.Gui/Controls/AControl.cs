@@ -17,7 +17,7 @@ namespace Gem.Gui.Controls
     /// <summary>
     /// Base class for controls
     /// </summary>
-    public abstract class AControl
+    public abstract class AControl : IAlignable, IScalable, ITransformable
     {
 
         #region Fields
@@ -36,6 +36,17 @@ namespace Gem.Gui.Controls
 
         public ARenderStyle RenderStyle { get; set; }
 
+        public AlignmentContext ScreenAlignment { get; private set; }
+
+        public Options Options { get; private set; }
+
+        public Region Region { get; protected set; }
+
+        public Padding Padding { get; private set; }
+
+        public RenderTemplate RenderTemplate { get; private set; }
+
+
         private IText text;
         public IText Text
         {
@@ -50,14 +61,6 @@ namespace Gem.Gui.Controls
                 }
             }
         }
-
-        public Options Options { get; private set; }
-
-        public Region Region { get; protected set; }
-
-        public Padding Padding { get; private set; }
-
-        public virtual IEnumerable<AControl> Entries() { yield return this; }
 
         private bool hasFocus;
         public bool HasFocus
@@ -118,37 +121,18 @@ namespace Gem.Gui.Controls
             this.Events.SubscribeStyle(this, RenderStyle);
             this.Padding = new Padding();
             this.ScreenAlignment = AlignmentContext.Default;
+            this.RenderTemplate = RenderTemplate.Default;
 
-            this.ScreenAlignment.OnAlignmentChanged += (sender, args) => this.Align(Settings.ViewRegion);
+            ScreenAlignment.OnAlignmentChanged += (sender, args) => this.Align(Settings.ViewRegion);
             region.onSizeChange += (sender, args) => this.Align(Settings.ViewRegion);
             region.onPositionChange += (sender, args) => this.Align(Settings.ViewRegion);
         }
 
         #endregion
 
-        #region Public Members
+        #region Virtual Members
 
-        public AlignmentContext ScreenAlignment { get; private set; }
-
-        public virtual void Align(Region viewPort)
-        {
-            ScreenAlignment.ManageTransformation(this.AddTransformation, viewPort, this.Region, this.Padding);
-            if (Text != null)
-            {
-                Text.Alignment.ManageTransformation(this.AddTransformation, this.Region, Text.Region, Text.Padding);
-            }
-        }
-
-        public System.IDisposable AddTransformation(ITransformation transformation)
-        {
-            if (!Options.AllowTransformations)
-            {
-                return Gem.Infrastructure.Disposable.CreateDummy();
-            }
-
-            transformations.Add(transformation);
-            return Gem.Infrastructure.Disposable.Create(transformations, transformation);
-        }
+        public virtual IEnumerable<AControl> Entries() { yield return this; }
 
         public virtual void Update(double deltaTime)
         {
@@ -159,22 +143,55 @@ namespace Gem.Gui.Controls
                     transformations.RemoveAt(index);
                     continue;
                 }
-                transformations[index].Transform(this, deltaTime);
+                transformations[index].Transform(this as ITransformable, deltaTime);
+            }
+            if (Text != null)
+            {
+                Text.Update(deltaTime);
             }
         }
 
-        public virtual void Render(SpriteBatch batch, RenderTemplate template)
+        public virtual void Render(SpriteBatch batch)
         {
             if (!Options.IsVisible) return;
 
-            template.ControlDrawable.Render(batch, this);
+            RenderTemplate.ControlDrawable.Render(batch, this);
             RenderStyle.Render(batch);
 
             if (Text != null)
             {
                 text.RenderStyle.Render(batch);
-                template.TextDrawable.Render(batch, this.Text);
+                RenderTemplate.TextDrawable.Render(batch, this.Text);
             }
+        }
+
+        public virtual void Scale(Vector2 scale)
+        {
+            Region.Scale(scale);
+            RenderParameters.Scale = scale;
+            if (Text != null)
+            {
+                Text.Scale(scale);
+            }
+
+            this.Align(Settings.ViewRegion);
+        }
+
+        public virtual void Align(Region parent)
+        {
+            ScreenAlignment.ManageTransformation(this.AddTransformation, parent, this.Region, this.Padding);
+            if (Text != null)
+            {
+                Text.Align(this.Region);
+            }
+        }
+
+        #endregion
+
+        public void Adjust()
+        {
+            Scale(Settings.Scale);
+            Align(Settings.ViewRegion);
         }
 
         public override string ToString()
@@ -183,8 +200,15 @@ namespace Gem.Gui.Controls
             return base.ToString();
         }
 
-        #endregion
+        public System.IDisposable AddTransformation(ITransformation transformation)
+        {
+            if (!Options.AllowTransformations)
+            {
+                return Gem.Infrastructure.Disposable.CreateDummy();
+            }
+            transformations.Add(transformation);
 
-
+            return Gem.Infrastructure.Disposable.Create(transformations, transformation);
+        }
     }
 }

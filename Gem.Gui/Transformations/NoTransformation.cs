@@ -1,4 +1,5 @@
 ﻿using Gem.Gui.Controls;
+using Gem.Gui.Rendering;
 
 namespace Gem.Gui.Transformations
 {
@@ -6,7 +7,7 @@ namespace Gem.Gui.Transformations
     {
         public bool Enabled { get { return false; } }
 
-        public void Transform(AControl element, double deltaTime) { return; }
+        public void Transform(IRenderable element, double deltaTime) { return; }
     }
 
 }

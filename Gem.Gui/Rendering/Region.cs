@@ -41,6 +41,8 @@ namespace Gem.Gui.Rendering
         private Vector2 center;
         private Rectangle frame;
 
+        private Vector2 virtualPosition;
+        private Vector2 virtualSize;
         #endregion
 
         #region Ctor
@@ -52,6 +54,9 @@ namespace Gem.Gui.Rendering
                                 centerCalculator;
             this.position = position;
             this.size = size;
+            this.virtualSize = size;
+            this.virtualPosition = position;
+
             this.center = CenterCalculator(this);
             AdjustFrameBoundaries();
         }
@@ -59,6 +64,7 @@ namespace Gem.Gui.Rendering
         public Region(float positionX, float positionY, float sizeX, float sizeY, Func<Region, Vector2> centerCalculator = null)
             : this(new Vector2(positionX, positionY), new Vector2(sizeX, sizeY), centerCalculator)
         { }
+
         #endregion
 
         #region Public Properties
@@ -84,6 +90,19 @@ namespace Gem.Gui.Rendering
                 AdjustFrameBoundaries();
 
                 OnPositionChange(new RegionEventArgs { PreviousState = previousState });
+            }
+        }
+
+        public Vector2 VirtualSize
+        {
+            get
+            {
+                return virtualSize;
+            }
+            set
+            {
+                this.virtualSize = value;
+                this.size = value;
             }
         }
 
@@ -118,6 +137,13 @@ namespace Gem.Gui.Rendering
             {
                 return frame;
             }
+        }
+
+        public void Scale(Vector2 scale)
+        {
+            size = virtualSize * scale;
+            AdjustFrameBoundaries();
+            center = CenterCalculator(this);
         }
 
         #endregion
@@ -184,7 +210,7 @@ namespace Gem.Gui.Rendering
                  ^ center.GetHashCode();
         }
 
-        #endregion 
+        #endregion
 
         #region Operator Overloading
 

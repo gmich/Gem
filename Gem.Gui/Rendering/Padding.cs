@@ -1,11 +1,35 @@
-﻿namespace Gem.Gui.Rendering
+﻿using Gem.Gui.Configuration;
+namespace Gem.Gui.Rendering
 {
     public class Padding
     {
-        public int Top { get; set; }
-        public int Right { get; set; }
-        public int Bottom { get; set; }
-        public int Left { get; set; }
+        private int top;
+        public int Top
+        {
+            get { return (int)(top * Settings.Scale.Y); }
+            set { top = value; }
+        }
+
+        private int right;
+        public int Right
+        {
+            get { return (int)(right * Settings.Scale.X); }
+            set { right = value; }
+        }
+
+        private int bottom;
+        public int Bottom
+        {
+            get { return (int)(bottom * Settings.Scale.Y); }
+            set { bottom = value; }
+        }
+
+        private int left;
+        public int Left
+        {
+            get { return (int)(left * Settings.Scale.X); }
+            set { left = value; }
+        }
 
         public static Padding Zero
         {

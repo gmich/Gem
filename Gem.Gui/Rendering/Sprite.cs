@@ -19,16 +19,20 @@ namespace Gem.Gui.Rendering
         {
             private readonly Texture2D texture;
             private readonly Rectangle? sourceRectangle;
+            private readonly Vector2 center;
 
-            public SpriteItem(Texture2D texture, Rectangle? sourceRectangle = null)
+            public SpriteItem(Texture2D texture, Rectangle? sourceRectangle, Vector2 center)
             {
                 this.texture = texture;
                 this.sourceRectangle = sourceRectangle;
+                this.center = center;
             }
 
             public Texture2D Texture { get { return texture; } }
 
             public Rectangle? SourceRectangle { get { return sourceRectangle; } }
+
+            public Vector2 Center { get { return center; } }
         }
 
         #endregion
@@ -54,6 +58,12 @@ namespace Gem.Gui.Rendering
         {
             get { return spriteContainer[target].SourceRectangle; }
         }
+
+        public Vector2 Center
+        {
+            get { return spriteContainer[target].Center; }
+        }
+
         #endregion
 
         #region Public Helper Methods
@@ -68,9 +78,12 @@ namespace Gem.Gui.Rendering
             return false;
         }
 
-        public bool Add(string spriteId, Texture2D texture, Rectangle? sourceRectangle = null)
+        public bool Add(string spriteId, Texture2D texture, Rectangle? sourceRectangle = null, Vector2? center = null)
         {
-            return spriteContainer.Add(spriteId, new SpriteItem(texture, sourceRectangle));
+            return spriteContainer.Add(spriteId,
+                                       new SpriteItem(texture,
+                                                      sourceRectangle,
+                                                      center ?? new Vector2(texture.Width / 2, texture.Height / 2)));
         }
 
         #endregion

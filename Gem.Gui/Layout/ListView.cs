@@ -73,10 +73,21 @@ namespace Gem.Gui.Layout
 
         public override void Align(Region viewPort)
         {
+            base.Align(viewPort);    
+        
             Flush();
 
             AlignControls(viewPort);
-            base.Align(viewPort);            
+        }
+
+        public override void Scale(Vector2 scale)
+        {
+            foreach (var control in controls)
+            {
+                control.Scale(scale);
+            }          
+
+            base.Scale(scale);
         }
 
         public void AlignAsLandscape(Region viewPort)
@@ -122,13 +133,13 @@ namespace Gem.Gui.Layout
             }
         }
 
-        public override void Render(SpriteBatch batch, RenderTemplate template)
+        public override void Render(SpriteBatch batch)
         {
-            base.Render(batch, template);
+            base.Render(batch);
 
             foreach (var control in controls)
             {
-                control.Render(batch, template);
+                control.Render(batch);
             }
         }
 

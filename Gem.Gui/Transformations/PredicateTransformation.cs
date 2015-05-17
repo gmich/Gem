@@ -13,13 +13,13 @@ namespace Gem.Gui.Transformations
 
         #region Fields
 
-        private readonly Action<double, AControl> transformer;
-        private readonly Predicate<AControl> expirationPredicate;
+        private readonly Action<double, IRenderable> transformer;
+        private readonly Predicate<IRenderable> expirationPredicate;
         private bool enabled = true;
 
         #endregion
 
-        public PredicateTransformation(Predicate<AControl> expirationPredicate, Action<double, AControl> transformer)
+        public PredicateTransformation(Predicate<IRenderable> expirationPredicate, Action<double, IRenderable> transformer)
         {
             this.transformer = transformer;
             this.expirationPredicate = expirationPredicate;
@@ -30,7 +30,7 @@ namespace Gem.Gui.Transformations
             get { return enabled; }
         }
 
-        public void Transform(AControl control, double deltaTime)
+        public void Transform(IRenderable control, double deltaTime)
         {
             if (enabled = !expirationPredicate(control))
             {

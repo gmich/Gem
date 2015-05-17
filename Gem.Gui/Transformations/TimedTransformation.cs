@@ -12,13 +12,13 @@ namespace Gem.Gui.Transformations
 
         #region Fields
 
-        private readonly Action<double, AControl> transformer;
+        private readonly Action<double, IRenderable> transformer;
         private readonly double duration;
         private double timePassed = 0D;
 
         #endregion
 
-        public TimedTransformation(double duration, Action<double, AControl> transformer)
+        public TimedTransformation(double duration, Action<double, IRenderable> transformer)
         {
             this.transformer = transformer;
             this.duration = duration;
@@ -29,7 +29,7 @@ namespace Gem.Gui.Transformations
             get { return (timePassed < duration); }
         }
 
-        public void Transform(AControl control, double deltaTime)
+        public void Transform(IRenderable control, double deltaTime)
         {
             timePassed += deltaTime;
 

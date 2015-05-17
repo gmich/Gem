@@ -6,7 +6,7 @@ using System;
 namespace Gem.Gui.Alignment
 {
     //For type safety
-    public interface IHorizontalAlignable : IAlignable { }
+    public interface IHorizontalAlignable : IAlignment { }
 
     public class HorizontalAlignment
     {

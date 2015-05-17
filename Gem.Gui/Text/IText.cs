@@ -1,17 +1,15 @@
 ﻿using Gem.Gui.Styles;
 using Gem.Gui.Rendering;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Gem.Gui.Alignment;
+using Gem.Gui.Transformations;
 
 namespace Gem.Gui.Text
 {
-    public interface IText
+    public interface IText : IAlignable, IScalable, ITransformable
     {
         event EventHandler<TextEventArgs> OnTextChanged;
-
-        Region Region { get; }
 
         Padding Padding { get;  }
 
@@ -20,8 +18,6 @@ namespace Gem.Gui.Text
         string Value { get; set; }
 
         ARenderStyle RenderStyle { get; }
-
-        RenderParameters RenderParameters { get; }
 
         Alignment.AlignmentContext Alignment { get;  }
     }

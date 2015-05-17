@@ -61,7 +61,7 @@ namespace Gem.Gui.Example
                           .TextVerticalAlignment(VerticalAlignment.Top);
 
             gui.AddGuiHost(GuiScreen.MainMenu, listView);
-
+            
             gui[GuiScreen.MainMenu].OnEnter += (sender, args) =>
             {
                 Input.InputManager.KeyboardMenuScript.Previous = Keys.Up;

@@ -7,6 +7,8 @@ using Gem.Gui.Rendering;
 namespace Gem.Gui.Text
 {
     using Alignment;
+    using Gem.Gui.Transformations;
+    using System.Collections.Generic;
 
     public class StandardText : IText
     {
@@ -15,6 +17,8 @@ namespace Gem.Gui.Text
 
         private readonly SpriteFont font;
         public event EventHandler<TextEventArgs> OnTextChanged;
+        private readonly IList<ITransformation> transformations = new List<ITransformation>();
+        private readonly string defaultSize = "A";
 
         #endregion
 
@@ -27,18 +31,23 @@ namespace Gem.Gui.Text
         public StandardText(SpriteFont font, Vector2 position, string value, AlignmentContext alignment = null)
         {
             this.font = font;
-            this.Value = value;
-            this.Alignment = alignment;
             this.RenderParameters = new RenderParameters();
+            this.Region = new Region(position, Font.MeasureString(value ?? defaultSize) * RenderParameters.Scale);
+            this.Value = value ?? string.Empty;
+            this.Alignment = alignment;
             this.Alignment = alignment ?? AlignmentContext.Default;
-           
-            this.Region = new Region(position, Font.MeasureString(value) * RenderParameters.Scale);
+
+
             this.RenderStyle = new NoStyle();
             Padding = Padding.Zero;
-            
+
             //TODO: refactor scaling
             //this.RenderParameters.OnScaleChange += (sender, args) => this.Region = new Region(position, Font.MeasureString(value) * RenderParameters.Scale);
-            this.OnTextChanged+=(sender, args) => this.Region = new Region(Region.Position, Font.MeasureString(args.NewText));
+            this.OnTextChanged += (sender, args) =>
+               {
+                   string textToMeasure = args.NewText ?? defaultSize;
+                   this.Region = new Region(Region.Position, Font.MeasureString(textToMeasure) * Configuration.Settings.Scale);
+               };
         }
 
         #endregion
@@ -109,5 +118,35 @@ namespace Gem.Gui.Text
             }
         }
 
+        public void Align(Region parent)
+        {
+            this.Alignment.ManageTransformation(this.AddTransformation, parent, this.Region, this.Padding);
+        }
+
+        public void Scale(Vector2 scale)
+        {
+            RenderParameters.Scale = scale;
+            Region.Scale(scale);
+        }
+
+        public IDisposable AddTransformation(ITransformation transformation)
+        {
+            transformations.Add(transformation);
+
+            return Gem.Infrastructure.Disposable.Create(transformations, transformation);
+        }
+
+        public void Update(double deltaTime)
+        {
+            for (int index = 0; index < transformations.Count; index++)
+            {
+                if (!transformations[index].Enabled)
+                {
+                    transformations.RemoveAt(index);
+                    continue;
+                }
+                transformations[index].Transform(this, deltaTime);
+            }
+        }
     }
 }

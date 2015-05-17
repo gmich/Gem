@@ -6,7 +6,7 @@ using System;
 namespace Gem.Gui.Alignment
 {
 
-    public interface IVerticalAlignable : IAlignable { }
+    public interface IVerticalAlignable : IAlignment { }
 
     public class VerticalAlignment
     {

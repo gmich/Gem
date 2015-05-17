@@ -30,8 +30,7 @@ namespace Gem.Gui.Factories
                                 region, 
                                 controls);
         }
-
-
+        
         public TextField CreateTextBox(TextAppenderHelper appender,
                                        SpriteFont font,
                                        Texture2D texture,

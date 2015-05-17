@@ -9,7 +9,7 @@ namespace Gem.Gui.Example
         private GemGui gui;
 
         public string PlayerName { get; set; }
-    
+
         public GuiExample()
             : base()
         {
@@ -17,14 +17,22 @@ namespace Gem.Gui.Example
             Content.RootDirectory = "Content";
             this.IsMouseVisible = true;
             this.PlayerName = string.Empty;
+            Window.AllowUserResizing = true;
         }
 
         protected override void Initialize()
         {
-            gui = new GemGui(this);
+            int targetResolutionX = 800;
+            int targetResolutionY = 480;
+
+            gui = new GemGui(this, targetResolutionX, targetResolutionY);
+            gui.Settings.ScaleCalculator = resolution =>
+                {
+                    return resolution / new Vector2(targetResolutionX, targetResolutionY);
+                };
             base.Initialize();
         }
-        
+
         protected override void LoadContent()
         {
             gui.Fonts.Add("segoe-10", @"Fonts/segoe-10");
@@ -38,7 +46,7 @@ namespace Gem.Gui.Example
 
             gui.Show(GuiScreen.MainMenu);
         }
-        
+
         public void RenderBackground(SpriteBatch batch)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
