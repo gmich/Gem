@@ -19,14 +19,14 @@ namespace Gem.Gui.Controls
 
         private readonly SpriteFont font;
         private readonly TextAppenderHelper appender;
+        private readonly Timer timer;
+        private readonly IText line;
 
         private int cursorIndex;
         private bool showCursor;
 
-        private Keys pressedKey;
-        private IText line;
         private IText cursor;
-        private Timer timer;
+        private Keys pressedKey;
 
         #endregion
 
@@ -50,16 +50,16 @@ namespace Gem.Gui.Controls
         {
             this.font = font;
             this.appender = appender;
-            this.Events.LostFocus += (sender, args) => ShouldProcessInput = false;
-            //this.Events.Clicked += (sender, args) => ShouldProcessInput = !ShouldProcessInput;
-            this.Events.GotFocus += (sender, args) => ShouldProcessInput = true;
+            Events.LostFocus += (sender, args) => ShouldProcessInput = false;
+            Events.GotFocus += (sender, args) => ShouldProcessInput = true;
 
-            this.timer = new Timer();
+            timer = new Timer();
             timer.Elapsed += new ElapsedEventHandler((sender, args) => showCursor = !showCursor);
             timer.Interval = appender.CursorFlickInterval;
             timer.Enabled = true;
 
             line = new StandardText(font, Vector2.Zero, null, alignmentContext);
+            line.OnTextChanged += (sender, args) => AlignContent();
             line.RenderParameters.Color = textcolor;          
             SetupCursor();
 
@@ -95,6 +95,8 @@ namespace Gem.Gui.Controls
 
         #endregion
 
+        #region Properties
+
         private bool _shouldProcessInput;
         private bool ShouldProcessInput
         {
@@ -108,6 +110,10 @@ namespace Gem.Gui.Controls
                 _shouldProcessInput = value;
             }
         }
+
+        #endregion
+
+        #region Public Methods
 
         public void InsertText(string text)
         {
@@ -124,7 +130,9 @@ namespace Gem.Gui.Controls
             }
         }
 
-        #region Private Helpers
+        #endregion
+
+        #region Private Helper Methods
 
         private void AlignCursor()
         {
@@ -242,19 +250,22 @@ namespace Gem.Gui.Controls
         #region AControl Members
 
         public override void Scale(Vector2 scale)
-        {
-            base.Scale(scale);
-            
+        {            
             line.Scale(scale);
             cursor.Scale(scale);
+
+            base.Scale(scale);
         }
+
         public override void Align(Region viewPort)
         {
             base.Align(viewPort);
 
-            //line.Align(this.Region);
-            //cursor.Align(this.Region);
+            AlignContent();
+        }
 
+        private void AlignContent()
+        {
             line.Region.Position = line.Alignment.GetTargetRegion(this.Region, line.Region, line.Padding).Position;
             cursor.Region.Position = cursor.Alignment.GetTargetRegion(this.Region, cursor.Region, cursor.Padding).Position;
         }
@@ -263,8 +274,6 @@ namespace Gem.Gui.Controls
         {
             base.Update(deltaTime);
 
-            //line.Update(deltaTime);
-            //cursor.Update(deltaTime);
             if (!HasFocus) return;
 
             if (appender.Input.IsKeyClicked(InputManager.KeyboardMenuScript.Trigger))

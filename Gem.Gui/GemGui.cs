@@ -50,7 +50,7 @@ namespace Gem.Gui
                       int targetResolutionWidth,
                       int targetResolutionHeight,
                       AggregationTarget aggregationTarget = AggregationTarget.All,
-                      ControlTarget controlTarget = ControlTarget.Windows,
+                      TargetPlatform controlTarget = TargetPlatform.Windows,
                       IConfigurationResolver configuration = null)
         {
             this.configuration = configuration ?? new DefaultConfiguration();
@@ -125,12 +125,12 @@ namespace Gem.Gui
             }
         }
 
-        private Texture2D GetDefaultTexture(int width, int height)
+        private Texture2D GetDefaultTexture(int width, int height, IPattern pattern)
         {
             return textureFactory.GetTexture(
                 new TextureCreationRequest(width, height,
                                            Color.White,
-                                           Pattern.SolidColor));
+                                           pattern));
         }
 
         #endregion
@@ -154,11 +154,12 @@ namespace Gem.Gui
 
         public Button Button(int x, int y,
                              int sizeX, int sizeY,
-                             Style style)
+                             Style style,
+                             IPattern pattern = null)
         {
             return controlFactory.CreateButton(new Region(new Vector2(x, y),
                                                            new Vector2(sizeX, sizeY)),
-                                                           GetDefaultTexture(sizeX, sizeY),
+                                                           GetDefaultTexture(sizeX, sizeY, pattern ?? Pattern.SolidColor),
                                                            GetRenderStyle(style));
         }
 
@@ -168,9 +169,10 @@ namespace Gem.Gui
                                  IHorizontalAlignable horizontalAlignment,
                                  IVerticalAlignable verticalAlignment,
                                  IAlignmentTransition alignmentTransition,
+                                 IPattern pattern = null,
                                  params AControl[] controls)
         {
-            return controlFactory.CreateListView(GetDefaultTexture(sizeX, sizeY),
+            return controlFactory.CreateListView(GetDefaultTexture(sizeX, sizeY, pattern ?? Pattern.SolidColor),
                                                  new Region(new Vector2(x, y),
                                                             new Vector2(sizeX, sizeY)),
                                                  orientation,
@@ -186,6 +188,7 @@ namespace Gem.Gui
                          IHorizontalAlignable horizontalAlignment = null,
                          IVerticalAlignable verticalAlignment = null,
                          IAlignmentTransition alignmentTransition = null,
+                         IPattern pattern = null,
                          TextAppenderHelper appender = null)
         {
             TextField textField = null;
@@ -193,7 +196,7 @@ namespace Gem.Gui
             return textField =
                    controlFactory.CreateTextBox(appender ?? TextAppenderHelper.Default,
                                                 font,
-                                                GetDefaultTexture(sizeX, sizeY),
+                                                GetDefaultTexture(sizeX, sizeY, pattern ?? Pattern.SolidColor),
                                                 new Region(new Vector2(x, y),
                                                             new Vector2(sizeX, sizeY)),
                                                 textColor,

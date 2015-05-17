@@ -1,6 +1,6 @@
 ﻿namespace Gem.Gui.Controls
 {
-    public enum ControlTarget
+    public enum TargetPlatform
     {
         Windows,
         Linux,

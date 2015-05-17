@@ -45,8 +45,7 @@ namespace Gem.Gui.Controls
         public Padding Padding { get; private set; }
 
         public RenderTemplate RenderTemplate { get; private set; }
-
-
+        
         private IText text;
         public IText Text
         {
@@ -187,13 +186,7 @@ namespace Gem.Gui.Controls
         }
 
         #endregion
-
-        public void Adjust()
-        {
-            Scale(Settings.Scale);
-            Align(Settings.ViewRegion);
-        }
-
+  
         public override string ToString()
         {
             //TODO: implement

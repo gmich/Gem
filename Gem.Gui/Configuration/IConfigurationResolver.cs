@@ -8,6 +8,6 @@ namespace Gem.Gui.Configuration
     public interface IConfigurationResolver
     {
         IList<IAggregator> GetAggregators(Aggregation.AggregationTarget target);
-        IControlFactory GetControlFactory(ControlTarget target);
+        IControlFactory GetControlFactory(TargetPlatform target);
     }
 }

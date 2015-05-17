@@ -13,7 +13,7 @@ namespace Gem.Gui.Example
         public MainMenuScreen(GemGui gui, GuiExample game)
         {
             var newGameButton =
-                      gui.Button(0, 0, 130, 100, style: Style.Transparent)
+                gui.Button(0, 0, 130, 100, style: Style.Transparent)
                          .Color(Color.White)
                          .Text(gui.Fonts["segoe-10"], "New Game")
                          .TextColor(Color.Black)

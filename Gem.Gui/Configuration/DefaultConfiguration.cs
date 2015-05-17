@@ -27,7 +27,7 @@ namespace Gem.Gui.Configuration
             return aggegators;
         }
 
-        public IControlFactory GetControlFactory(ControlTarget target)
+        public IControlFactory GetControlFactory(TargetPlatform target)
         {
             return new GeneralControlFactory();
         }

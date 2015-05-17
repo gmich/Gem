@@ -26,10 +26,9 @@ namespace Gem.Gui.Example
             int targetResolutionY = 480;
 
             gui = new GemGui(this, targetResolutionX, targetResolutionY);
-            gui.Settings.ScaleCalculator = resolution =>
-                {
-                    return resolution / new Vector2(targetResolutionX, targetResolutionY);
-                };
+            gui.Settings.ScaleCalculator = resolution => 
+                        resolution / new Vector2(targetResolutionX, targetResolutionY);
+
             base.Initialize();
         }
 

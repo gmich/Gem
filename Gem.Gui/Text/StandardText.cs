@@ -34,20 +34,17 @@ namespace Gem.Gui.Text
             this.RenderParameters = new RenderParameters();
             this.Region = new Region(position, Font.MeasureString(value ?? defaultSize) * RenderParameters.Scale);
             this.Value = value ?? string.Empty;
-            this.Alignment = alignment;
             this.Alignment = alignment ?? AlignmentContext.Default;
-
-
             this.RenderStyle = new NoStyle();
-            Padding = Padding.Zero;
+            this.Padding = Padding.Zero;
 
             //TODO: refactor scaling
             //this.RenderParameters.OnScaleChange += (sender, args) => this.Region = new Region(position, Font.MeasureString(value) * RenderParameters.Scale);
             this.OnTextChanged += (sender, args) =>
-               {
-                   string textToMeasure = args.NewText ?? defaultSize;
-                   this.Region = new Region(Region.Position, Font.MeasureString(textToMeasure) * Configuration.Settings.Scale);
-               };
+            {
+                string textToMeasure = args.NewText ?? defaultSize;
+                this.Region = new Region(Region.Position, Font.MeasureString(textToMeasure) * Configuration.Settings.Scale);
+            };
         }
 
         #endregion
@@ -127,6 +124,9 @@ namespace Gem.Gui.Text
         {
             RenderParameters.Scale = scale;
             Region.Scale(scale);
+
+            string textToMeasure = (Value==string.Empty) ? defaultSize : Value;
+            Region.Size = Font.MeasureString(textToMeasure) * scale;
         }
 
         public IDisposable AddTransformation(ITransformation transformation)
