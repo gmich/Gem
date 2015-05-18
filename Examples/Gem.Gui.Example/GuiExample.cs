@@ -55,7 +55,7 @@ namespace Gem.Gui.Example
         protected override void Update(GameTime gameTime)
         {
             if(Input.InputManager.Keyboard.IsKeyClicked(Microsoft.Xna.Framework.Input.Keys.Escape)
-                && !gui.IsEnabled)
+                && !gui.ShowsAnything)
             {  
                 gui.Enable();
                 gui.Show(GuiScreen.MainMenu);
@@ -75,7 +75,7 @@ namespace Gem.Gui.Example
         protected override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
-            if (gui.IsEnabled) return;
+            if (gui.ShowsAnything) return;
             RenderBackground(batch);
         }
     }

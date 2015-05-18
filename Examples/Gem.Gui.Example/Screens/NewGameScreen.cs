@@ -12,8 +12,8 @@ namespace Gem.Gui.Example
     {
         private void DisableGui(object sender, EventArgs args)
         {
-            if(gui.IsEnabled)
-            gui.Disable();
+            if (gui.IsEnabled)
+                gui.Disable();
         }
         private readonly GemGui gui;
         public NewGameScreen(GemGui gui, GuiExample game)
@@ -29,13 +29,8 @@ namespace Gem.Gui.Example
                          .TextVerticalAlignment(VerticalAlignment.Center)
                          .ScreenAlignment(HorizontalAlignment.RelativeTo(() => 0.0f),
                                           VerticalAlignment.Center)
-                         .OnClick((sender, args) =>
-                             {
-                                 //gui.HideAndDisable();
-                                 gui[GuiScreen.NewGame].OnExit += DisableGui;
-                                 gui[GuiScreen.NewGame].ExitScreen();
-                             });
-
+                         .OnClick((sender, args) => gui.Hide(GuiScreen.NewGame));
+            
             var backButton =
                        gui.Button(0, 0, 100, 100, style: Style.Transparent)
                           .Color(Color.White)

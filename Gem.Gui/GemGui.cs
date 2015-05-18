@@ -33,7 +33,6 @@ namespace Gem.Gui
         private readonly ITextureFactory textureFactory;
 
         private readonly Dictionary<string, IGuiHost> hosts = new Dictionary<string, IGuiHost>();
-
         private readonly AssetContainer<SpriteFont> _fontContainer;
         private readonly AssetContainer<Texture2D> _textureContainer;
 
@@ -180,11 +179,34 @@ namespace Gem.Gui
                                                  controls.ToList().AsReadOnly());
         }
 
+        public Label Label(int x, int y,
+                           int sizeX, int sizeY,
+                           string text,
+                           SpriteFont font,
+                           Color textcolor,
+                           IHorizontalAlignable horizontalAlignment = null,
+                           IVerticalAlignable verticalAlignment = null,
+                           IAlignmentTransition alignmentTransition = null,
+                           IPattern pattern = null,
+                           TextAppenderHelper appender = null)
+        {
+            return controlFactory.CreateLabel(text,
+                                              font,
+                                              textcolor,
+                                              GetDefaultTexture(sizeX, sizeY, pattern ?? Pattern.SolidColor),
+                                              new Region(new Vector2(x, y),
+                                                         new Vector2(sizeX, sizeY)),
+                                              horizontalAlignment ?? HorizontalAlignment.Left,
+                                              verticalAlignment ?? VerticalAlignment.Center,
+                                              alignmentTransition ?? AlignmentTransition.Fixed);
+        }
+
         public TextField TextField(int x, int y,
                          int sizeX, int sizeY,
                          Color textColor,
                          SpriteFont font,
                          Style style,
+                         string hint = null,
                          IHorizontalAlignable horizontalAlignment = null,
                          IVerticalAlignable verticalAlignment = null,
                          IAlignmentTransition alignmentTransition = null,
@@ -201,8 +223,9 @@ namespace Gem.Gui
                                                             new Vector2(sizeX, sizeY)),
                                                 textColor,
                                                 GetRenderStyle(style),
+                                                hint ?? string.Empty,
                                                 horizontalAlignment ?? HorizontalAlignment.Left,
-                                                verticalAlignment ?? VerticalAlignment.Bottom,
+                                                verticalAlignment ?? VerticalAlignment.Center,
                                                 alignmentTransition ?? AlignmentTransition.Fixed);
         }
 
@@ -240,17 +263,24 @@ namespace Gem.Gui
 
         public void Disable()
         {
+            screenManager.Visible = false;
             screenManager.Enabled = false;
         }
 
         public void Enable()
         {
+            screenManager.Visible = true;
             screenManager.Enabled = true;
         }
 
         public bool IsEnabled
         {
             get { return screenManager.Enabled; }
+        }
+
+        public bool ShowsAnything
+        {
+            get { return screenManager.ActiveHosts > 0; }
         }
 
         public bool Show(string guiHostId)

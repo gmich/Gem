@@ -7,18 +7,30 @@ namespace Gem.Gui.Styles
     {
         public Color[] Get(int sizeX, int sizeY, Color color)
         {
-            throw new NotImplementedException();
-
-            int totalSize = sizeX * sizeY;
-
-            Color[] colorArray = new Color[totalSize];
-
-            for (int arrayIndex = 0; arrayIndex < totalSize; arrayIndex++)
+            Color[] colorArray = new Color[sizeX * sizeY];
+            
+            for (int i = 0; i < sizeX * sizeY; i++)
             {
-                colorArray[arrayIndex] = (arrayIndex <= sizeX) ? Color.Red : color;
+                colorArray[i] = color;
             }
-            return colorArray;
+            for (int i = 0; i < sizeX; i++)
+            {
+                colorArray[i] = Color.Black;
+            }
+            for (int i = 0; i < sizeX; i++)
+            {
+                colorArray[(sizeY - 1) * sizeX + i] = Color.Black;
+            }
+            for (int i = 0; i < sizeY; i++)
+            {
+                colorArray[i * sizeX] = Color.Black;
+            }
+            for (int i = 1; i < sizeY; i++)
+            {
+                colorArray[i * sizeX - 1] = Color.Black;
+            }
 
+            return colorArray;
         }
     }
 }

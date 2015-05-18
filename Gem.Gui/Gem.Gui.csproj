@@ -67,6 +67,8 @@
     <Compile Include="Configuration\DefaultConfiguration.cs" />
     <Compile Include="Configuration\IConfigurationResolver.cs" />
     <Compile Include="Configuration\Settings.cs" />
+    <Compile Include="Controls\Label.cs" />
+    <Compile Include="Controls\CheckBox.cs" />
     <Compile Include="Controls\TargetPlatform.cs" />
     <Compile Include="Controls\TextAppenderHelper.cs" />
     <Compile Include="Events\ControlEventArgs.cs" />
@@ -119,7 +121,7 @@
     <Compile Include="Aggregation\GuiEntry.cs" />
     <Compile Include="Containers\AContainer.cs" />
     <Compile Include="Aggregation\ScriptAggregator.cs" />
-    <Compile Include="Factories\ControlFactory.cs" />
+    <Compile Include="Factories\IControlFactory.cs" />
     <Compile Include="Factories\GeneralControlFactory.cs" />
     <Compile Include="GemGui.cs" />
     <Compile Include="ScreenSystem\GuiHost.cs" />

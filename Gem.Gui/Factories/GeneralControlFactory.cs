@@ -25,18 +25,19 @@ namespace Gem.Gui.Factories
                                        ReadOnlyCollection<AControl> controls)
         {
             return new ListView(texture,
-                                alignment, 
+                                alignment,
                                 orientation,
-                                region, 
+                                region,
                                 controls);
         }
-        
+
         public TextField CreateTextBox(TextAppenderHelper appender,
                                        SpriteFont font,
                                        Texture2D texture,
                                        Region region,
                                        Color textcolor,
                                        ARenderStyle style,
+                                       string hint,
                                        IHorizontalAlignable horizontalAlignment,
                                        IVerticalAlignable verticalAlignment,
                                        IAlignmentTransition transition)
@@ -47,7 +48,28 @@ namespace Gem.Gui.Factories
                                  region,
                                  textcolor,
                                  style,
+                                 hint,
                                  new AlignmentContext(horizontalAlignment, verticalAlignment, transition));
+        }
+
+
+
+
+        public Label CreateLabel(string text,
+                                     SpriteFont font,
+                                     Color textcolor,
+                                     Texture2D texture,
+                                     Region region,
+                                     IHorizontalAlignable horizontalAlignment,
+                                     IVerticalAlignable verticalAlignment,
+                                     IAlignmentTransition transition)
+        {
+            return new Label(text,
+                            font,
+                            texture,
+                            region,
+                            textcolor,
+                            new AlignmentContext(horizontalAlignment, verticalAlignment, transition));
         }
     }
 }

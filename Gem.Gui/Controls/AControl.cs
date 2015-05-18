@@ -55,6 +55,7 @@ namespace Gem.Gui.Controls
                 text = value;
                 if (text != null)
                 {
+                    this.Text.OnTextChanged += (sender, args) => this.Align(Settings.ViewRegion);
                     this.Events.SubscribeStyle(this, text.RenderStyle);
                     this.text.Alignment.OnAlignmentChanged += (sender, alignment) => this.Align(Settings.ViewRegion);
                 }

@@ -25,15 +25,13 @@ namespace Gem.Gui.Example
                                    gui.Swap(GuiScreen.Settings, GuiScreen.MainMenu));
 
             var textBox = gui.TextField(x: 300, y: 100,
-                                      sizeX: 300, sizeY: 70,
+                                      sizeX: 300, sizeY: 30,
                                       textColor: Color.Black,
                                       font: gui.Fonts["segoe-10"],
-                                      style: Style.Transparent)
+                                      style: Style.Transparent,
+                                      pattern: Pattern.Border,
+                                      hint: "Your name")
                                       .OnTextEntry((sender, text) => game.PlayerName = text)
-                                      .Text(gui.Fonts["segoe-10"], "Change your name")
-                                      .TextColor(Color.Red)
-                                      .TextHorizontalAlignment(HorizontalAlignment.Center)
-                                      .TextVerticalAlignment(VerticalAlignment.Top)
                                       .ScreenAlignment(HorizontalAlignment.Center,
                                                        VerticalAlignment.Center);
             

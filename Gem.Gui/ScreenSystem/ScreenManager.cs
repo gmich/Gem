@@ -33,6 +33,10 @@ namespace Gem.Gui.ScreenSystem
             this.DrawWith = drawWith;
         }
 
+        public int ActiveHosts
+        {
+            get { return hosts.Count; }
+        }
 
         public override void Initialize()
         {
@@ -60,7 +64,7 @@ namespace Gem.Gui.ScreenSystem
             base.Update(gameTime);
         }
 
-        public RenderTarget2D GetWindowRenderTarget()
+        private RenderTarget2D GetWindowRenderTarget()
         {
             PresentationParameters pp = GraphicsDevice.PresentationParameters;
 

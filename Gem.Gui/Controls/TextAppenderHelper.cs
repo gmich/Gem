@@ -10,7 +10,7 @@ namespace Gem.Gui.Controls
         private readonly char cursor;
 
         public TextAppenderHelper(KeyboardInputHelper input,
-                                  char cursor = '_',
+                                  char cursor = '|',
                                   double cursorFlickInterval = 500.0d,
                                   double keyRepeatStartDuration = 0.5d,
                                   double keyRepeatDuration = 0.04d)

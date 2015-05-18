@@ -10,7 +10,6 @@ using System.Collections.ObjectModel;
 
 namespace Gem.Gui.Factories
 {
-    //TODO: update method parameters
     public interface IControlFactory
     {
         Button CreateButton(Region region, Texture2D texture, ARenderStyle style);
@@ -22,13 +21,23 @@ namespace Gem.Gui.Factories
                                 ReadOnlyCollection<AControl> controls);
 
         TextField CreateTextBox(TextAppenderHelper appender,
-                                SpriteFont font, 
+                                SpriteFont font,
                                 Texture2D texture,
                                 Region region,
                                 Color textcolor,
                                 ARenderStyle style,
+                                string hint,
                                 IHorizontalAlignable horizontalAlignment,
                                 IVerticalAlignable verticalAlignment,
                                 IAlignmentTransition transition);
+
+        Label CreateLabel(string text,
+                              SpriteFont font,
+                              Color textcolor,
+                              Texture2D texture,
+                              Region region,
+                              IHorizontalAlignable horizontalAlignment,
+                              IVerticalAlignable verticalAlignment,
+                              IAlignmentTransition transition);
     }
 }

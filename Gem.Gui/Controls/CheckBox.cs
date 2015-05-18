@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Gem.Gui.Controls
 {
-    public class Button : AControl
+    public class CheckBox : AControl
     {
-        public Button(Texture2D texture, Region region, ARenderStyle style)
+        public CheckBox(Texture2D texture, Region region, ARenderStyle style)
             : base(texture, region, style)
         { }
     }

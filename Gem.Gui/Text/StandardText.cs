@@ -39,7 +39,7 @@ namespace Gem.Gui.Text
             this.Padding = Padding.Zero;
             this.OnTextChanged += (sender, args) =>
             {
-                string textToMeasure = args.NewText ?? defaultSize;
+                string textToMeasure = (String.IsNullOrEmpty(args.NewText)) ? defaultSize : args.NewText;
                 this.Region = new Region(Region.Position, Font.MeasureString(textToMeasure) * Configuration.Settings.Scale);
             };
         }
