@@ -12,9 +12,6 @@ namespace Gem.Gui.Aggregation
 
         private readonly MouseInputHelper input;
 
-        //this is used to spot new mouse locations
-        private Point mouseLocation;
-
         #endregion
 
         public MouseControlAggregator(MouseInputHelper inputHelper)
@@ -29,7 +26,6 @@ namespace Gem.Gui.Aggregation
             set
             {
                 _isEnabled = value;
-                mouseLocation = input.MousePosition;
             }
         }
 
@@ -100,11 +96,6 @@ namespace Gem.Gui.Aggregation
 
         public void Aggregate(GuiEntry entry, AggregationContext context)
         {
-            if (!this.IsEnabled)
-            {
-                //if the mouse has moved, then the aggregator is activated
-                IsEnabled = (mouseLocation != input.MousePosition);
-            }
 
             if (!entry.Control.Options.IsEnabled || !this.IsEnabled)
             {

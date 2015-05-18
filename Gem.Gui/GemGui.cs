@@ -227,7 +227,7 @@ namespace Gem.Gui
             }
 
             var guiHost = new GuiHost(controls.ToList(),
-                                      new AggregationContext(configuration.GetAggregators(aggregationTarget), controlsEnumerable),
+                                      new AggregationContext(configuration.GetAggregators(aggregationTarget).ToList(), controlsEnumerable),
                                       HostTransition());
             AddGuiHost(guiHostId, guiHost);
         }
@@ -243,10 +243,19 @@ namespace Gem.Gui
             screenManager.Enabled = false;
         }
 
+        public void Enable()
+        {
+            screenManager.Enabled = true;
+        }
+
+        public bool IsEnabled
+        {
+            get { return screenManager.Enabled; }
+        }
+
         public bool Show(string guiHostId)
         {
             Contract.Requires(hosts.ContainsKey(guiHostId), "GuiHost was not found");
-            screenManager.Enabled = true;
 
             return screenManager.AddScreen(hosts[guiHostId]);
         }
@@ -259,7 +268,6 @@ namespace Gem.Gui
         public bool Hide(string guiHostId)
         {
             Contract.Requires(hosts.ContainsKey(guiHostId), "GuiHost was not found");
-            screenManager.Enabled = true;
 
             return screenManager.RemoveScreen(hosts[guiHostId]);
         }

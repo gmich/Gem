@@ -5,9 +5,101 @@ namespace Gem.Gui.Input
 {
     public class GamePadInputHelper : IInputHelper
     {
+
+        #region Fields
+
+        private GamePadState gamePadState = GamePad.GetState(InputManager.GamePadInputKeys.PlayerIndex);
+        private GamePadState previousGamePadState;
+
+        #endregion
+
+        #region Settings
+
+        public bool IsConnected
+        {
+            get { return gamePadState.IsConnected; }
+        }
+
+        #endregion
+
+        #region Buttons
+
+        public bool IsButtonPressed(Buttons buttonToTest)
+        {
+            return gamePadState.IsButtonDown(buttonToTest);
+        }
+
+        public bool IsButtonReleased(Buttons buttonToTest)
+        {
+            return (gamePadState.IsButtonUp(buttonToTest)
+                   && previousGamePadState.IsButtonDown(buttonToTest));
+        }
+
+        public bool IsButtonClicked(Buttons buttonToTest)
+        {
+            return (gamePadState.IsButtonDown(buttonToTest)
+                   && previousGamePadState.IsButtonUp(buttonToTest));
+        }
+
+        #endregion
+
+        #region Thumpstick
+
+        public Vector2 LeftThumpstick
+        {
+            get { return gamePadState.ThumbSticks.Left; }
+        }
+
+        public Vector2 LeftThumpstickDelta
+        {
+            get { return gamePadState.ThumbSticks.Left - previousGamePadState.ThumbSticks.Left; }
+        }
+
+        public Vector2 RightThumpstick
+        {
+            get { return gamePadState.ThumbSticks.Right; }
+        }
+
+        public Vector2 RightThumpstickDelta
+        {
+            get { return gamePadState.ThumbSticks.Right - previousGamePadState.ThumbSticks.Right; }
+        }
+
+        #endregion
+
+        #region Triggers
+
+        public float LeftTriggerPressure
+        {
+            get { return gamePadState.Triggers.Left; }
+        }
+
+        public float LeftTriggerPressureDelta
+        {
+            get { return gamePadState.Triggers.Left - gamePadState.Triggers.Left; }
+        }
+
+        public float RightTriggerPressure
+        {
+            get { return gamePadState.Triggers.Right; }
+        }
+
+        public float RightTriggerPressureDelta
+        {
+            get { return gamePadState.Triggers.Right - gamePadState.Triggers.Right; }
+        }
+
+        #endregion
+
+        #region Update
+
         public void Flush()
         {
-            throw new System.NotImplementedException();
+            previousGamePadState = gamePadState;
+            gamePadState = GamePad.GetState(InputManager.GamePadInputKeys.PlayerIndex);
         }
+        
+        #endregion
+
     }
 }

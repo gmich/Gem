@@ -11,7 +11,6 @@ namespace Gem.Gui.Input
 
         #region Fields
 
-        private static PlayerIndex defaultGamePad = PlayerIndex.One;
         private static InputCapabilities inputCaps;
 
         #endregion
@@ -26,14 +25,17 @@ namespace Gem.Gui.Input
 
         static InputManager()
         {
-            KeyboardMenuScript = new KeyboardMenuScript();
+            KeyboardInputKeys = new KeyboardInputKeys();
+            GamePadInputKeys = new GamePadInputButtons();
         }
 
         #endregion
 
         #region Scripts
 
-        public static KeyboardMenuScript KeyboardMenuScript { get; private set; }
+        public static KeyboardInputKeys KeyboardInputKeys { get; private set; }
+
+        public static GamePadInputButtons GamePadInputKeys { get; private set; }
 
         #endregion
 
@@ -94,7 +96,7 @@ namespace Gem.Gui.Input
         [Conditional("WINDOWS"), Conditional("LINUX")]
         private static void RunningOnDesktop()
         {
-            inputCaps.IsGamePadEnabled = Microsoft.Xna.Framework.Input.GamePad.GetCapabilities(defaultGamePad).IsConnected;
+            inputCaps.IsGamePadEnabled = Microsoft.Xna.Framework.Input.GamePad.GetCapabilities(GamePadInputKeys.PlayerIndex).IsConnected;
             inputCaps.IsMouseEnabled = true;
             inputCaps.IsKeyboardEnabled = true;
         }
@@ -158,7 +160,7 @@ namespace Gem.Gui.Input
         {
             Flush(Keyboard);
             Flush(Mouse);
-            //Flush(GamePad);
+            Flush(GamePad);
         }
 
         private static void Flush(IInputHelper inputHelper)

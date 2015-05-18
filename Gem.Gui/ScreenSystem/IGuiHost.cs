@@ -8,6 +8,9 @@ namespace Gem.Gui.ScreenSystem
 {
     public interface IGuiHost
     {
+        event EventHandler<EventArgs> OnEntering;
+        event EventHandler<EventArgs> OnExiting;
+
         event EventHandler<EventArgs> OnEnter;
         event EventHandler<EventArgs> OnExit;
 

@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aggregation\AggregationTarget.cs" />
+    <Compile Include="Aggregation\Script.cs" />
     <Compile Include="Alignment\AlignmentContext.cs" />
     <Compile Include="Alignment\AlignmentTransition.cs" />
     <Compile Include="Alignment\FixedTransition.cs" />
@@ -72,6 +73,8 @@
     <Compile Include="Controls\TextField.cs" />
     <Compile Include="Controls\Button.cs" />
     <Compile Include="Events\TextFieldEventArgs.cs" />
+    <Compile Include="Input\GamePadInputButtons.cs" />
+    <Compile Include="Input\KeyRepetition.cs" />
     <Compile Include="Styles\IPattern.cs" />
     <Compile Include="Styles\Pattern.cs" />
     <Compile Include="Styles\BorderPattern.cs" />
@@ -81,7 +84,7 @@
     <Compile Include="Factories\ITextureFactory.cs" />
     <Compile Include="Fluent\ControlFluentBuilder.cs" />
     <Compile Include="Fluent\RenderTextBy.cs" />
-    <Compile Include="Input\KeyboardMenuScript.cs" />
+    <Compile Include="Input\KeyboardInputKeys.cs" />
     <Compile Include="Layout\LayoutAttribute.cs" />
     <Compile Include="Layout\Orientation.cs" />
     <Compile Include="Rendering\IRenderable.cs" />

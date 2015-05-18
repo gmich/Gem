@@ -5,6 +5,8 @@ using System;
 using Gem.Gui.Fluent;
 using Gem.Gui.ScreenSystem;
 using Microsoft.Xna.Framework.Input;
+using System.Linq;
+using Gem.Gui.Transformations;
 
 namespace Gem.Gui.Example
 {
@@ -62,17 +64,17 @@ namespace Gem.Gui.Example
 
             gui.AddGuiHost(GuiScreen.MainMenu, listView);
             
-            gui[GuiScreen.MainMenu].OnEnter += (sender, args) =>
+            gui[GuiScreen.MainMenu].OnEntering += (sender, args) =>
             {
-                Input.InputManager.KeyboardMenuScript.Previous = Keys.Up;
-                Input.InputManager.KeyboardMenuScript.Next = Keys.Down;
+                Input.InputManager.KeyboardInputKeys.Previous = Keys.Up;
+                Input.InputManager.KeyboardInputKeys.Next = Keys.Down;
             };
 
             gui[GuiScreen.MainMenu].Transition = new TimedTransition(
                                                       TimeSpan.FromSeconds(0.5),
                                                       (state, progress, target, batch) =>
                                                       batch.Draw(target,
-                                                                 (float)Math.Pow(progress - 1.0f, 2) * new Vector2(300, 0),
+                                                                 (float)Math.Pow(progress - 1.0f, 2) * new Vector2(300, 0) * Configuration.Settings.Scale,
                                                                  Color.White * progress));
         }
 

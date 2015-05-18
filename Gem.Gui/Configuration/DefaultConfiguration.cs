@@ -2,7 +2,6 @@
 using Gem.Gui.Controls;
 using Gem.Gui.Factories;
 using Gem.Gui.Input;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace Gem.Gui.Configuration
@@ -10,21 +9,26 @@ namespace Gem.Gui.Configuration
     public class DefaultConfiguration : IConfigurationResolver
     {
 
-        public IList<IAggregator> GetAggregators(AggregationTarget target)
+        public IEnumerable<IAggregator> GetAggregators(AggregationTarget target)
         {
             var aggegators = new List<IAggregator>();
 
             if (target.HasTargetFlag(AggregationTarget.Mouse))
             {
-                aggegators.Add(new MouseControlAggregator(InputManager.Mouse));
+                yield return new MouseControlAggregator(InputManager.Mouse);
             }
             if (target.HasTargetFlag(AggregationTarget.Keyboard))
             {
-                aggegators.Add(Script.ForKeyboard(InputManager.KeyboardMenuScript));
+                yield return Script.ForKeyboard(InputManager.KeyboardInputKeys);
             }
-            //TODO: add the rest
-
-            return aggegators;
+            if (target.HasTargetFlag(AggregationTarget.GamePad))
+            {
+                yield return Script.ForGamePad(InputManager.GamePadInputKeys);
+            }
+            if (target.HasTargetFlag(AggregationTarget.Touch))
+            {
+                //not implemented yet
+            }
         }
 
         public IControlFactory GetControlFactory(TargetPlatform target)

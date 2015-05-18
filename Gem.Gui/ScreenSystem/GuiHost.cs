@@ -54,6 +54,7 @@ namespace Gem.Gui.ScreenSystem
                 transition = value;
                 transition.TransitionStarted += (sender, direction) => AssignState(direction, ScreenState.TransitionOn, ScreenState.TransitionOff);
                 transition.TransitionFinished += (sender, direction) => AssignState(direction, ScreenState.Active, ScreenState.Exit);
+                transition.TransitionFinished += (sender, direction) => RaiseEndEvent( direction);
             }
         }
 
@@ -64,10 +65,31 @@ namespace Gem.Gui.ScreenSystem
 
         #region Events
 
+        public event EventHandler<EventArgs> OnEntering;
+        public event EventHandler<EventArgs> OnExiting;
+
         public event EventHandler<EventArgs> OnEnter;
         public event EventHandler<EventArgs> OnExit;
 
         private void OnEnteringScreen()
+        {
+            var handler = OnEntering;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
+        
+        private void OnExitingScreen()
+        {
+            var handler = OnExiting;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
+
+        private void OnEnteredScreen()
         {
             var handler = OnEnter;
             if (handler != null)
@@ -76,7 +98,7 @@ namespace Gem.Gui.ScreenSystem
             }
         }
 
-        private void OnExitingScreen()
+        private void OnExitedScreen()
         {
             var handler = OnExit;
             if (handler != null)
@@ -84,6 +106,7 @@ namespace Gem.Gui.ScreenSystem
                 handler(this, EventArgs.Empty);
             }
         }
+
 
         #endregion
 
@@ -101,6 +124,22 @@ namespace Gem.Gui.ScreenSystem
                     break;
             }
         }
+
+        private void RaiseEndEvent(TransitionDirection direction)
+        {
+            switch (direction)
+            {
+                case TransitionDirection.Enter:
+                    OnEnteredScreen();
+                    break;
+                case TransitionDirection.Leave:
+                    OnExitedScreen();
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public IEnumerable<AControl> Entries()
         {
             foreach (var control in controls)

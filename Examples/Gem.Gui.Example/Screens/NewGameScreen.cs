@@ -10,8 +10,15 @@ namespace Gem.Gui.Example
 {
     public class NewGameScreen
     {
+        private void DisableGui(object sender, EventArgs args)
+        {
+            if(gui.IsEnabled)
+            gui.Disable();
+        }
+        private readonly GemGui gui;
         public NewGameScreen(GemGui gui, GuiExample game)
         {
+            this.gui = gui;
             var playButton =
                       gui.Button(0, 0, 100, 100, style: Style.Transparent)
                          .Sprite("frame", gui.Textures["frame"])
@@ -23,7 +30,11 @@ namespace Gem.Gui.Example
                          .ScreenAlignment(HorizontalAlignment.RelativeTo(() => 0.0f),
                                           VerticalAlignment.Center)
                          .OnClick((sender, args) =>
-                                  gui.Swap(GuiScreen.MainMenu, GuiScreen.NewGame));
+                             {
+                                 //gui.HideAndDisable();
+                                 gui[GuiScreen.NewGame].OnExit += DisableGui;
+                                 gui[GuiScreen.NewGame].ExitScreen();
+                             });
 
             var backButton =
                        gui.Button(0, 0, 100, 100, style: Style.Transparent)
@@ -39,10 +50,10 @@ namespace Gem.Gui.Example
 
             gui.AddGuiHost(GuiScreen.NewGame, playButton, backButton);
 
-            gui[GuiScreen.NewGame].OnEnter += (sender, args) =>
+            gui[GuiScreen.NewGame].OnEntering += (sender, args) =>
             {
-                Input.InputManager.KeyboardMenuScript.Previous = Keys.Left;
-                Input.InputManager.KeyboardMenuScript.Next = Keys.Right;
+                Input.InputManager.KeyboardInputKeys.Previous = Keys.Left;
+                Input.InputManager.KeyboardInputKeys.Next = Keys.Right;
             };
 
             gui[GuiScreen.NewGame].Transition = new TimedTransition(

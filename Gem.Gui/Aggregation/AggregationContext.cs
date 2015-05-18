@@ -81,11 +81,11 @@ namespace Gem.Gui.Aggregation
 
         public void Aggregate(GameTime gameTime)
         {
-            this.FirstEntry = true;
             this.gameTime = gameTime;
 
             foreach (var aggregator in aggregators)
             {
+                this.FirstEntry = true;
                 entries.ForEach(entry => aggregator.Aggregate(entry, this));
             }
         }

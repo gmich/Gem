@@ -37,9 +37,6 @@ namespace Gem.Gui.Text
             this.Alignment = alignment ?? AlignmentContext.Default;
             this.RenderStyle = new NoStyle();
             this.Padding = Padding.Zero;
-
-            //TODO: refactor scaling
-            //this.RenderParameters.OnScaleChange += (sender, args) => this.Region = new Region(position, Font.MeasureString(value) * RenderParameters.Scale);
             this.OnTextChanged += (sender, args) =>
             {
                 string textToMeasure = args.NewText ?? defaultSize;

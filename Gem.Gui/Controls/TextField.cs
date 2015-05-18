@@ -276,7 +276,7 @@ namespace Gem.Gui.Controls
 
             if (!HasFocus) return;
 
-            if (appender.Input.IsKeyClicked(InputManager.KeyboardMenuScript.Trigger))
+            if (appender.Input.IsKeyClicked(InputManager.KeyboardInputKeys.Trigger))
             {
                 ShouldProcessInput = !ShouldProcessInput;
             }

@@ -12,6 +12,7 @@ namespace Gem.Gui.Aggregation
         private readonly Func<TInputHelper, bool> next;
         private readonly Func<TInputHelper, bool> previous;
         private readonly Func<TInputHelper, bool> trigger;
+        private readonly Predicate<TInputHelper> disableWhen;
         private readonly KeyRepetition KeyRepetition;
         private readonly TInputHelper inputHelper;
 
@@ -33,6 +34,7 @@ namespace Gem.Gui.Aggregation
         #region Ctor
 
         public ScriptAggregator(TInputHelper inputHelper,
+                                Predicate<TInputHelper> disableWhen,
                                 Func<TInputHelper, bool> next,
                                 Func<TInputHelper, bool> previous,
                                 Func<TInputHelper, bool> trigger,
@@ -44,6 +46,7 @@ namespace Gem.Gui.Aggregation
             this.trigger = trigger;
             this.IsEnabled = true;
             this.KeyRepetition = KeyRepetition;
+            this.disableWhen = disableWhen;
         }
 
         #endregion
@@ -58,6 +61,7 @@ namespace Gem.Gui.Aggregation
 
         public void Aggregate(GuiEntry entry, AggregationContext context)
         {
+            if (disableWhen(inputHelper)) return;
             if (!context.FirstEntry) return;
 
             double timeDelta = context.Time(span => span.TotalSeconds);
@@ -113,15 +117,4 @@ namespace Gem.Gui.Aggregation
 
     }
 
-    public static class Script
-    {
-        public static ScriptAggregator<KeyboardInputHelper> ForKeyboard(KeyboardMenuScript keyboardScript)
-        {
-            return new ScriptAggregator<KeyboardInputHelper>(InputManager.Keyboard,
-                                                             input => input.IsKeyPressed(keyboardScript.Next),
-                                                             input => input.IsKeyPressed(keyboardScript.Previous),
-                                                             input => input.IsKeyClicked(keyboardScript.Trigger),
-                                                             keyboardScript.KeyRepetition);
-        }
-    }
 }
