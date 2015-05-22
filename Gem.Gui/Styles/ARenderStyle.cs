@@ -1,4 +1,5 @@
 ﻿using Gem.Gui.Controls;
+using Gem.Gui.Rendering;
 using Gem.Gui.Transformations;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -28,21 +29,21 @@ namespace Gem.Gui.Styles
 
         #region Styles
 
-        protected virtual Func<AControl, ITransformation> FocusStyle
+        protected virtual Func<IRenderable, ITransformation> FocusStyle
         {
             get { return control => new NoTransformation(); }
         }
-        protected virtual Func<AControl, ITransformation> DefaultStyle
-        {
-            get { return control => new NoTransformation(); }
-        }
-
-        protected virtual Func<AControl, ITransformation> HoverStyle
+        protected virtual Func<IRenderable, ITransformation> DefaultStyle
         {
             get { return control => new NoTransformation(); }
         }
 
-        protected virtual Func<AControl, ITransformation> ClickedStyle
+        protected virtual Func<IRenderable, ITransformation> HoverStyle
+        {
+            get { return control => new NoTransformation(); }
+        }
+
+        protected virtual Func<IRenderable, ITransformation> ClickedStyle
         {
             get { return control => new NoTransformation(); }
         }
@@ -76,6 +77,6 @@ namespace Gem.Gui.Styles
             activeTransformations.Add(styleControl.AddTransformation(ClickedStyle(styleControl)));
         }
 
-        public abstract void Render(SpriteBatch batch);
+        public abstract void Render(IRenderable renderable, SpriteBatch batch);
     }
 }

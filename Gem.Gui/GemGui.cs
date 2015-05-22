@@ -30,8 +30,8 @@ namespace Gem.Gui
         private readonly IConfigurationResolver configuration;
         private readonly IControlFactory controlFactory;
         private readonly AggregationTarget aggregationTarget;
-        private readonly ITextureFactory textureFactory;
 
+        private readonly Style style;
         private readonly Dictionary<string, IGuiHost> hosts = new Dictionary<string, IGuiHost>();
         private readonly AssetContainer<SpriteFont> _fontContainer;
         private readonly AssetContainer<Texture2D> _textureContainer;
@@ -58,7 +58,7 @@ namespace Gem.Gui
             this.controlFactory = this.configuration.GetControlFactory(controlTarget);
             this.HostTransition = () => TimedTransition.Default;
             this.screenManager = new ScreenManager(game, settings, DrawTheRest);
-            this.textureFactory = new TextureFactory(game.GraphicsDevice);
+            this.style = new Style(new TextureFactory(game.GraphicsDevice));
 
             game.Components.Add(screenManager);
             game.Components.Add(new Input.InputManager(game));
@@ -124,11 +124,10 @@ namespace Gem.Gui
             }
         }
 
-        private Texture2D GetDefaultTexture(int width, int height, IPattern pattern)
+        private Texture2D GetTexture(int width, int height, IColorPattern pattern)
         {
-            return textureFactory.GetTexture(
+            return style.TextureFactory.GetTexture(
                 new TextureCreationRequest(width, height,
-                                           Color.White,
                                            pattern));
         }
 
@@ -136,30 +135,15 @@ namespace Gem.Gui
 
         #region Control Factory
 
-        public ARenderStyle GetRenderStyle(Style style)
-        {
-            switch (style)
-            {
-                case Style.Transparent:
-                    return new TransparentControlStyle();
-                case Style.NoStyle:
-                    return new NoStyle();
-                case Style.Border:
-                    throw new NotImplementedException();
-                default:
-                    throw new ArgumentException("Style not found");
-            }
-        }
-
         public Button Button(int x, int y,
                              int sizeX, int sizeY,
-                             Style style,
-                             IPattern pattern = null)
+                             ARenderStyle style,
+                             IColorPattern pattern)
         {
             return controlFactory.CreateButton(new Region(new Vector2(x, y),
                                                            new Vector2(sizeX, sizeY)),
-                                                           GetDefaultTexture(sizeX, sizeY, pattern ?? Pattern.SolidColor),
-                                                           GetRenderStyle(style));
+                                                           GetTexture(sizeX, sizeY, pattern),
+                                                           style);
         }
 
         public ListView ListView(int x, int y,
@@ -168,10 +152,10 @@ namespace Gem.Gui
                                  IHorizontalAlignable horizontalAlignment,
                                  IVerticalAlignable verticalAlignment,
                                  IAlignmentTransition alignmentTransition,
-                                 IPattern pattern = null,
+                                 IColorPattern pattern = null,
                                  params AControl[] controls)
         {
-            return controlFactory.CreateListView(GetDefaultTexture(sizeX, sizeY, pattern ?? Pattern.SolidColor),
+            return controlFactory.CreateListView(GetTexture(sizeX, sizeY, pattern ?? Pattern.SolidColor(Color.White)),
                                                  new Region(new Vector2(x, y),
                                                             new Vector2(sizeX, sizeY)),
                                                  orientation,
@@ -183,17 +167,16 @@ namespace Gem.Gui
                            int sizeX, int sizeY,
                            string text,
                            SpriteFont font,
-                           Color textcolor,
+                           Color textColor,
+                           IColorPattern pattern,
                            IHorizontalAlignable horizontalAlignment = null,
                            IVerticalAlignable verticalAlignment = null,
-                           IAlignmentTransition alignmentTransition = null,
-                           IPattern pattern = null,
-                           TextAppenderHelper appender = null)
+                           IAlignmentTransition alignmentTransition = null)
         {
             return controlFactory.CreateLabel(text,
                                               font,
-                                              textcolor,
-                                              GetDefaultTexture(sizeX, sizeY, pattern ?? Pattern.SolidColor),
+                                              textColor,
+                                              GetTexture(sizeX, sizeY, pattern),
                                               new Region(new Vector2(x, y),
                                                          new Vector2(sizeX, sizeY)),
                                               horizontalAlignment ?? HorizontalAlignment.Left,
@@ -205,12 +188,12 @@ namespace Gem.Gui
                          int sizeX, int sizeY,
                          Color textColor,
                          SpriteFont font,
-                         Style style,
+                         ARenderStyle style,
                          string hint = null,
                          IHorizontalAlignable horizontalAlignment = null,
                          IVerticalAlignable verticalAlignment = null,
                          IAlignmentTransition alignmentTransition = null,
-                         IPattern pattern = null,
+                         IColorPattern pattern = null,
                          TextAppenderHelper appender = null)
         {
             TextField textField = null;
@@ -218,18 +201,58 @@ namespace Gem.Gui
             return textField =
                    controlFactory.CreateTextBox(appender ?? TextAppenderHelper.Default,
                                                 font,
-                                                GetDefaultTexture(sizeX, sizeY, pattern ?? Pattern.SolidColor),
+                                                GetTexture(sizeX, sizeY, pattern),
                                                 new Region(new Vector2(x, y),
                                                             new Vector2(sizeX, sizeY)),
                                                 textColor,
-                                                GetRenderStyle(style),
+                                                style,
                                                 hint ?? string.Empty,
                                                 horizontalAlignment ?? HorizontalAlignment.Left,
                                                 verticalAlignment ?? VerticalAlignment.Center,
                                                 alignmentTransition ?? AlignmentTransition.Fixed);
         }
 
-        //TODO: add the rest
+
+        public CheckBox CheckBox(int x, int y,
+                                       int sizeX, int sizeY,
+                                       IColorPattern backgroundPattern,
+                                       int checkboxSizeX, int checkboxSizeY,
+                                       IColorPattern checkedPattern,
+                                       IColorPattern unCheckedPattern,
+                                       ARenderStyle style,
+                                       string text,
+                                       SpriteFont font)
+        {
+            return controlFactory.CreateCheckBox(GetTexture(sizeX, sizeY, backgroundPattern),
+                                                 GetTexture(checkboxSizeX, checkboxSizeY, checkedPattern),
+                                                 GetTexture(checkboxSizeX, checkboxSizeY, unCheckedPattern),
+                                                 style,
+                                                 new Region(x, y, sizeX, sizeY),
+                                                 HorizontalAlignment.Left,
+                                                 VerticalAlignment.Center,
+                                                 text,
+                                                 font);
+        }
+
+        public CheckBox CheckBox(int x, int y,
+                                       int sizeX, int sizeY,
+                                       Texture2D backgroundTexture,
+                                       Texture2D checkedTexture,
+                                       Texture2D unCheckedTexture,
+                                       ARenderStyle style,
+                                       string text,
+                                       SpriteFont font)
+        {
+            return controlFactory.CreateCheckBox(backgroundTexture,
+                                                checkedTexture,
+                                                unCheckedTexture,
+                                                style,
+                                                new Region(x, y, sizeX, sizeY),                
+                                                HorizontalAlignment.Right,
+                                                VerticalAlignment.Center,
+                                                text,
+                                                font);
+        }
 
         #endregion
 
@@ -240,17 +263,14 @@ namespace Gem.Gui
             foreach (var control in controls)
             {
                 settings.OnResolutionChange((sender, args) => control.Scale(Settings.Scale));
+                control.RenderParameters.OnScaleChange+= (sender, args) => control.Align(Settings.ViewRegion);
             }
-            var entries = controls.Where(control => control.HasAttribute<LayoutAttribute>());
-            var controlsEnumerable = controls.AsEnumerable();
-
-            foreach (var entry in entries)
-            {
-                controlsEnumerable = controlsEnumerable.Concat(entry.Entries());
-            }
+            //var entries = controls.Where(control => control.HasAttribute<LayoutAttribute>());
+            //var controlsEnumerable = controls.Where(control => control.Options.IsFocusEnabled).AsEnumerable();
+            var agggregatedControls = controls.SelectMany(x => x.Entries());
 
             var guiHost = new GuiHost(controls.ToList(),
-                                      new AggregationContext(configuration.GetAggregators(aggregationTarget).ToList(), controlsEnumerable),
+                                      new AggregationContext(configuration.GetAggregators(aggregationTarget).ToList(), agggregatedControls),
                                       HostTransition());
             AddGuiHost(guiHostId, guiHost);
         }

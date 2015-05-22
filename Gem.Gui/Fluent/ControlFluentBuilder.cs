@@ -42,7 +42,7 @@ namespace Gem.Gui.Fluent
 
             return control;
         }
-
+        
         public static AControl TextColor(this AControl control, Color color)
         {
             Contract.Requires(control.Text != null, "Use Text() before setting the text's color");
@@ -97,6 +97,15 @@ namespace Gem.Gui.Fluent
             return textField;
         }
 
+        #endregion
+
+        #region CheckBox Extensions
+
+        public static CheckBox OnCheckChanged(this CheckBox checkBox, EventHandler<bool> onCheckChangedHandler)
+        {
+            checkBox.CheckChanged += onCheckChangedHandler;
+            return checkBox;
+        }
 
         #endregion
 

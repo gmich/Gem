@@ -35,13 +35,12 @@ namespace Gem.Gui.Example
             gui.Settings.ScaleCalculator = resolution =>
                 resolution / new Vector2(targetResolutionX, targetResolutionY);
 
-
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            gui.Fonts.Add("segoe-10", @"Fonts/segoe-10");
+            gui.Fonts.Add("segoe-18", @"Fonts/segoe-18");
             gui.Textures.Add("frame", @"Common/frame");
 
             new MainMenuScreen(gui, this);
@@ -65,10 +64,10 @@ namespace Gem.Gui.Example
         }
         public void RenderBackground(SpriteBatch batch)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(new Color(176,211,212));
 
             batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            batch.DrawString(gui.Fonts["segoe-10"], "You are: " + PlayerName, Vector2.Zero, Color.White);
+            batch.DrawString(gui.Fonts["segoe-18"], "You are: " + PlayerName, Vector2.Zero, Color.White);
             batch.End();
         }
 

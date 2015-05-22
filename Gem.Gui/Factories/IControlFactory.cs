@@ -39,5 +39,15 @@ namespace Gem.Gui.Factories
                               IHorizontalAlignable horizontalAlignment,
                               IVerticalAlignable verticalAlignment,
                               IAlignmentTransition transition);
+
+        CheckBox CreateCheckBox(Texture2D backgroundTexture,
+                             Texture2D checkedTexture,
+                             Texture2D unCheckedTexture,
+                             ARenderStyle style,
+                             Region region,
+                             IHorizontalAlignable checkBoxHorizontalAlignment,
+                             IVerticalAlignable checkBoxVerticalAlignment,
+                             string text,
+                             SpriteFont font);
     }
 }

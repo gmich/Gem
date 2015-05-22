@@ -16,29 +16,30 @@ namespace Gem.Gui.Example
                 gui.Disable();
         }
         private readonly GemGui gui;
+
         public NewGameScreen(GemGui gui, GuiExample game)
         {
             this.gui = gui;
             var playButton =
-                      gui.Button(0, 0, 100, 100, style: Style.Transparent)
+                gui.Button(0, 0, 100, 100, style: Style.Transparent, pattern: Pattern.SolidColor(Color.White))
                          .Sprite("frame", gui.Textures["frame"])
                          .Color(Color.White)
-                         .Text(gui.Fonts["segoe-10"], "Play")
+                         .Text(gui.Fonts["segoe-18"], "Play")
                          .TextColor(Color.Black)
                          .TextHorizontalAlignment(HorizontalAlignment.Center)
                          .TextVerticalAlignment(VerticalAlignment.Center)
                          .ScreenAlignment(HorizontalAlignment.RelativeTo(() => 0.0f),
                                           VerticalAlignment.Center)
                          .OnClick((sender, args) => gui.Hide(GuiScreen.NewGame));
-            
+
             var backButton =
-                       gui.Button(0, 0, 100, 100, style: Style.Transparent)
+                       gui.Button(0, 0, 100, 100, Style.Transparent, Pattern.SolidColor(Color.White))
                           .Color(Color.White)
-                          .Text(gui.Fonts["segoe-10"], "Back")
+                          .Text(gui.Fonts["segoe-18"], "Back")
                           .TextColor(Color.Black)
                           .TextHorizontalAlignment(HorizontalAlignment.Center)
                           .TextVerticalAlignment(VerticalAlignment.Center)
-                         .ScreenAlignment(HorizontalAlignment.Right,
+                          .ScreenAlignment(HorizontalAlignment.Right,
                                           VerticalAlignment.Center)
                           .OnClick((sender, args) =>
                                    gui.Swap(GuiScreen.NewGame, GuiScreen.MainMenu));

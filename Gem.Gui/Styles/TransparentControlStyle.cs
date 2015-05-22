@@ -5,6 +5,7 @@ using Gem.Gui.Utilities;
 using System.ComponentModel;
 using Gem.Infrastructure.Attributes;
 using Microsoft.Xna.Framework.Graphics;
+using Gem.Gui.Rendering;
 
 namespace Gem.Gui.Styles
 {
@@ -14,6 +15,14 @@ namespace Gem.Gui.Styles
         public TransparentControlStyle()
         {
             this.AssignDefaultValues();
+        }
+
+        public TransparentControlStyle(float focusAlpha, float hoverAlpha, float defaultAlpha)
+        {
+            this.FocusAlpha = focusAlpha;
+            this.HoverAlpha = hoverAlpha;
+            this.DefaultAlpha = defaultAlpha;
+            this.AlphaLerpStep = 4.0f;
         }
 
         #region Properties
@@ -34,7 +43,7 @@ namespace Gem.Gui.Styles
 
         #region Style
 
-        protected override Func<AControl, ITransformation> FocusStyle
+        protected override Func<IRenderable, ITransformation> FocusStyle
         {
             get
             {
@@ -48,7 +57,7 @@ namespace Gem.Gui.Styles
                                                                              , (float)timeDelta * AlphaLerpStep));
             }
         }
-        protected override Func<AControl, ITransformation> DefaultStyle
+        protected override Func<IRenderable, ITransformation> DefaultStyle
         {
             get
             {
@@ -63,7 +72,7 @@ namespace Gem.Gui.Styles
             }
         }
 
-        protected override Func<AControl, ITransformation> HoverStyle
+        protected override Func<IRenderable, ITransformation> HoverStyle
         {
             get
             {
@@ -78,7 +87,7 @@ namespace Gem.Gui.Styles
             }
         }
 
-        protected override Func<AControl, ITransformation> ClickedStyle
+        protected override Func<IRenderable, ITransformation> ClickedStyle
         {
             get
             {
@@ -89,7 +98,7 @@ namespace Gem.Gui.Styles
 
         #endregion
 
-        public override void Render(SpriteBatch batch)
+        public override void Render(IRenderable renderable, SpriteBatch batch)
         {
             return;
         }

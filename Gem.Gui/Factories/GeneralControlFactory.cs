@@ -71,5 +71,26 @@ namespace Gem.Gui.Factories
                             textcolor,
                             new AlignmentContext(horizontalAlignment, verticalAlignment, transition));
         }
+
+
+        public CheckBox CreateCheckBox(Texture2D backgroundTexture,
+                                       Texture2D checkedTexture, 
+                                       Texture2D unCheckedTexture, 
+                                       ARenderStyle style, 
+                                       Region region,
+                                       IHorizontalAlignable checkBoxHorizontalAlignment, 
+                                       IVerticalAlignable checkBoxVerticalAlignment,
+                                       string text,
+                                       SpriteFont font)
+        {
+            return new CheckBox(backgroundTexture,
+                                region,
+                                style,
+                                new AlignmentContext(checkBoxHorizontalAlignment, checkBoxVerticalAlignment, AlignmentTransition.Fixed), 
+                                checkedTexture, 
+                                unCheckedTexture,
+                                text,
+                                font);
+        }
     }
 }

@@ -7,8 +7,8 @@ namespace Gem.Gui.Controls
 {
     public class Button : AControl
     {
-        public Button(Texture2D texture, Region region, ARenderStyle style)
-            : base(texture, region, style)
+        public Button(Texture2D texture, Region region, ARenderStyle style, Region parent = null)
+            : base(texture, region, style, parent)
         { }
     }
 }

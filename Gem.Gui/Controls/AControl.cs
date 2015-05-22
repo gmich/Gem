@@ -45,7 +45,7 @@ namespace Gem.Gui.Controls
         public Padding Padding { get; private set; }
 
         public RenderTemplate RenderTemplate { get; private set; }
-        
+
         private IText text;
         public IText Text
         {
@@ -56,7 +56,7 @@ namespace Gem.Gui.Controls
                 if (text != null)
                 {
                     this.Text.OnTextChanged += (sender, args) => this.Align(Settings.ViewRegion);
-                    this.Events.SubscribeStyle(this, text.RenderStyle);
+                    //this.Events.SubscribeStyle(this, text.RenderStyle);
                     this.text.Alignment.OnAlignmentChanged += (sender, alignment) => this.Align(Settings.ViewRegion);
                 }
             }
@@ -110,7 +110,7 @@ namespace Gem.Gui.Controls
 
         #region Ctor
 
-        public AControl(Texture2D texture, Region region, ARenderStyle style)
+        public AControl(Texture2D texture, Region region, ARenderStyle style, Region parent = null)
         {
             this.Region = region;
             this.Sprite = new Sprite(texture);
@@ -123,16 +123,23 @@ namespace Gem.Gui.Controls
             this.ScreenAlignment = AlignmentContext.Default;
             this.RenderTemplate = RenderTemplate.Default;
 
-            ScreenAlignment.OnAlignmentChanged += (sender, args) => this.Align(Settings.ViewRegion);
-            region.onSizeChange += (sender, args) => this.Align(Settings.ViewRegion);
-            region.onPositionChange += (sender, args) => this.Align(Settings.ViewRegion);
+            ScreenAlignment.OnAlignmentChanged += (sender, args) => this.Align(parent ?? Settings.ViewRegion);
+            region.onSizeChange += (sender, args) => this.Align(parent ?? Settings.ViewRegion);
+            region.onPositionChange += (sender, args) => this.Align(parent ?? Settings.ViewRegion);
         }
 
         #endregion
 
         #region Virtual Members
 
-        public virtual IEnumerable<AControl> Entries() { yield return this; }
+        /// <summary>
+        /// These are used for aggregation
+        /// </summary>
+        /// <returns>The entries that are aggregated</returns>
+        public virtual IEnumerable<AControl> Entries()
+        {
+            yield return this;
+        }
 
         public virtual void Update(double deltaTime)
         {
@@ -156,11 +163,11 @@ namespace Gem.Gui.Controls
             if (!Options.IsVisible) return;
 
             RenderTemplate.ControlDrawable.Render(batch, this);
-            RenderStyle.Render(batch);
+            RenderStyle.Render(this, batch);
 
             if (Text != null)
             {
-                text.RenderStyle.Render(batch);
+                text.RenderStyle.Render(this, batch);
                 RenderTemplate.TextDrawable.Render(batch, this.Text);
             }
         }
@@ -168,13 +175,13 @@ namespace Gem.Gui.Controls
         public virtual void Scale(Vector2 scale)
         {
             Region.Scale(scale);
-            RenderParameters.Scale = scale;
             if (Text != null)
             {
                 Text.Scale(scale);
             }
+            RenderParameters.Scale = scale;
 
-            this.Align(Settings.ViewRegion);
+            //this.Align(Settings.ViewRegion);
         }
 
         public virtual void Align(Region parent)
@@ -187,7 +194,7 @@ namespace Gem.Gui.Controls
         }
 
         #endregion
-  
+
         public override string ToString()
         {
             //TODO: implement

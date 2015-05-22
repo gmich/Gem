@@ -59,7 +59,7 @@ namespace Gem.Gui.Factories
             }
 
             texture = new Texture2D(device, request.Width, request.Height, false, SurfaceFormat.Color);
-            texture.SetData(request.Pattern.Get(request.Width, request.Height, request.Color));
+            texture.SetData(request.Pattern.Get(request.Width, request.Height));
             textureCache.Add(request, texture);
             
             return texture;

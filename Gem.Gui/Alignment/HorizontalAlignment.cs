@@ -8,7 +8,7 @@ namespace Gem.Gui.Alignment
     //For type safety
     public interface IHorizontalAlignable : IAlignment { }
 
-    public class HorizontalAlignment
+    public static class HorizontalAlignment
     {
         #region Left
 
@@ -118,14 +118,24 @@ namespace Gem.Gui.Alignment
 
         public static IHorizontalAlignable RelativeTo(Func<float> relativeX)
         {
-            return new HorizontalRelativeTo(relativeX);
+            return new HorizontalRelative(relativeX);
         }
-        
-        private class HorizontalRelativeTo : IHorizontalAlignable
+
+        public static IHorizontalAlignable HorizontalRelativeTo(this AControl control, AControl relativeControl, Func<float> relativeX)
+        {
+            if (relativeControl != null)
+            {
+                relativeControl.Region.onPositionChange += (sender, args) => control.Align(Configuration.Settings.ViewRegion);
+                relativeControl.Region.onSizeChange += (sender, args) => control.Align(Configuration.Settings.ViewRegion);
+            }
+            return new HorizontalRelative(relativeX);
+        }
+
+        private class HorizontalRelative : IHorizontalAlignable
         {
             private readonly Func<float> relativeX;
 
-            public HorizontalRelativeTo(Func<float> relativeX)
+            public HorizontalRelative(Func<float> relativeX)
             {
                 this.relativeX = relativeX;
             }

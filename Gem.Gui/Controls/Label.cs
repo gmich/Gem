@@ -18,7 +18,14 @@ namespace Gem.Gui.Controls
             : base(texture, region, new NoStyle())
         {
             this.Text = new StandardText(font, Vector2.Zero, text, alignmentContext);
-            this.Options.IsEnabled = false;
+            this.Text.RenderParameters.Color = textcolor;
+            this.Options.IsFocusEnabled = false;
+            this.Options.IsHoverEnabled = false;
+        }
+
+        public override System.Collections.Generic.IEnumerable<AControl> Entries()
+        {
+            yield break;
         }
     }
 }

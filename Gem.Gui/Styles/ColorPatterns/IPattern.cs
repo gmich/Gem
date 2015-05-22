@@ -3,9 +3,9 @@ using System;
 
 namespace Gem.Gui.Styles
 {
-    public interface IPattern
+    public interface IColorPattern
     {
-        Color[] Get(int sizeX, int sizeY, Color color);
+        Color[] Get(int sizeX, int sizeY);
     }
 
 }

@@ -77,10 +77,11 @@
     <Compile Include="Events\TextFieldEventArgs.cs" />
     <Compile Include="Input\GamePadInputButtons.cs" />
     <Compile Include="Input\KeyRepetition.cs" />
-    <Compile Include="Styles\IPattern.cs" />
-    <Compile Include="Styles\Pattern.cs" />
-    <Compile Include="Styles\BorderPattern.cs" />
-    <Compile Include="Styles\SolidColorPattern.cs" />
+    <Compile Include="Styles\ColorPatterns\IPattern.cs" />
+    <Compile Include="Styles\ColorPatterns\Pattern.cs" />
+    <Compile Include="Styles\ColorPatterns\BorderPattern.cs" />
+    <Compile Include="Styles\ColorPatterns\TextViewPattern.cs" />
+    <Compile Include="Styles\ColorPatterns\SolidColorPattern.cs" />
     <Compile Include="Factories\TextureFactory.cs" />
     <Compile Include="Factories\TextureCreationRequest.cs" />
     <Compile Include="Factories\ITextureFactory.cs" />
@@ -94,6 +95,8 @@
     <Compile Include="Rendering\ControlFrameDrawable.cs" />
     <Compile Include="Rendering\ControlPositionDrawable.cs" />
     <Compile Include="Fluent\RenderControlBy.cs" />
+    <Compile Include="Styles\DecoratedStyle.cs" />
+    <Compile Include="Styles\ColorMap.cs" />
     <Compile Include="Transformations\ITransformable.cs" />
     <Compile Include="Rendering\Padding.cs" />
     <Compile Include="Rendering\RenderTemplate.cs" />
@@ -147,6 +150,7 @@
     <Compile Include="Transformations\NoTransformation.cs" />
     <Compile Include="Transformations\ITransformation.cs" />
     <Compile Include="Transformations\PredicateTransformation.cs" />
+    <Compile Include="Transformations\OneTimeTransformation.cs" />
     <Compile Include="Transformations\TimedTransformation.cs" />
     <Compile Include="Utilities\NumberExtensions.cs" />
   </ItemGroup>

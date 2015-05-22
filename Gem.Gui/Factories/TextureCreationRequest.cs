@@ -8,24 +8,20 @@ namespace Gem.Gui.Factories
     {
         private readonly int width;
         private readonly int height;
-        private readonly Color color;
-        private readonly IPattern pattern;
+        private readonly IColorPattern pattern;
 
-        public TextureCreationRequest(int width, int height, Color color, IPattern pattern)
+        public TextureCreationRequest(int width, int height, IColorPattern pattern)
         {
             this.width = width;
             this.height = height;
             this.pattern = pattern;
-            this.color = color;
         }
 
         public int Width { get { return width; } }
 
         public int Height { get { return height; } }
 
-        public Color Color { get { return color; } }
-
-        public IPattern Pattern { get { return pattern; } }
+        public IColorPattern Pattern { get { return pattern; } }
 
         #region IEquatable Members
 
@@ -50,7 +46,6 @@ namespace Gem.Gui.Factories
         {
             return ((this.width == other.width)
                    && (this.height == other.height)
-                   && (this.color == other.color)
                    && (this.pattern == other.pattern));
         }
 
@@ -58,8 +53,7 @@ namespace Gem.Gui.Factories
         {
             return width.GetHashCode()
                  ^ height.GetHashCode()
-                 ^ pattern.GetHashCode()
-                 ^ color.GetHashCode();
+                 ^ pattern.GetHashCode();
         }
 
         #endregion

@@ -89,7 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <Content Include="Content\Fonts\segoe-10.xnb">
+    <Content Include="Content\Fonts\segoe-18.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />

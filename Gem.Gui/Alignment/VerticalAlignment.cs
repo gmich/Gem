@@ -8,7 +8,7 @@ namespace Gem.Gui.Alignment
 
     public interface IVerticalAlignable : IAlignment { }
 
-    public class VerticalAlignment
+    public static class VerticalAlignment
     {
         #region Top
 
@@ -112,7 +112,7 @@ namespace Gem.Gui.Alignment
         {
             public AlignmentResult Align(Region parent, Region child, Padding padding)
             {
-                return new AlignmentResult(child.Position.Y,child.Size.Y);
+                return new AlignmentResult(child.Position.Y, child.Size.Y);
             }
 
         }
@@ -122,14 +122,25 @@ namespace Gem.Gui.Alignment
 
         public static IVerticalAlignable RelativeTo(Func<float> relativeX)
         {
-            return new VerticalRelativeTo(relativeX);
+
+            return new VerticalRelative(relativeX);
         }
 
-        private class VerticalRelativeTo : IVerticalAlignable
+        public static IVerticalAlignable VerticalRelativeTo(this AControl control, AControl relativeControl, Func<float> relativeX)
+        {
+            if (relativeControl != null)
+            {
+                relativeControl.Region.onPositionChange += (sender, args) => control.Align(Configuration.Settings.ViewRegion);
+                relativeControl.Region.onSizeChange += (sender, args) => control.Align(Configuration.Settings.ViewRegion);
+            }
+            return new VerticalRelative(relativeX);
+        }
+
+        private class VerticalRelative : IVerticalAlignable
         {
             private readonly Func<float> relativeX;
 
-            public VerticalRelativeTo(Func<float> relativeX)
+            public VerticalRelative(Func<float> relativeX)
             {
                 this.relativeX = relativeX;
             }

@@ -316,12 +316,12 @@ namespace Gem.Gui.Controls
 
             if (showCursor && ShouldProcessInput)
             {
-                cursor.RenderStyle.Render(batch);
+                cursor.RenderStyle.Render(this,batch);
                 RenderTemplate.TextDrawable.Render(batch, this.cursor);
             }
             if (Text.Value == string.Empty)
             {
-                hint.RenderStyle.Render(batch);
+                hint.RenderStyle.Render(this,batch);
                 RenderTemplate.TextDrawable.Render(batch, this.hint);
             }
         }

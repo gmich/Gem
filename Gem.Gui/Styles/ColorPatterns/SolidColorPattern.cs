@@ -3,9 +3,16 @@ using System;
 
 namespace Gem.Gui.Styles
 {
-    internal class SolidColorPattern : IPattern
+    internal class SolidColorPattern : IColorPattern
     {
-        public Color[] Get(int sizeX, int sizeY, Color color)
+        private readonly Color color;
+
+        public SolidColorPattern(Color color)
+        {
+            this.color = color;
+        }
+
+        public Color[] Get(int sizeX, int sizeY)
         {
             int totalSize = sizeX * sizeY;
 
