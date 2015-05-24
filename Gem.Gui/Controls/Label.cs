@@ -18,6 +18,7 @@ namespace Gem.Gui.Controls
             : base(texture, region, new NoStyle())
         {
             this.Text = new StandardText(font, Vector2.Zero, text, alignmentContext);
+            this.Text.OnTextChanged += (sender, args) => this.Align(Configuration.Settings.ViewRegion);
             this.Text.RenderParameters.Color = textcolor;
             this.Options.IsFocusEnabled = false;
             this.Options.IsHoverEnabled = false;

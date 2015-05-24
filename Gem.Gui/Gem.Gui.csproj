@@ -67,8 +67,11 @@
     <Compile Include="Configuration\DefaultConfiguration.cs" />
     <Compile Include="Configuration\IConfigurationResolver.cs" />
     <Compile Include="Configuration\Settings.cs" />
+    <Compile Include="Controls\Slider.cs" />
     <Compile Include="Controls\Label.cs" />
     <Compile Include="Controls\CheckBox.cs" />
+    <Compile Include="Controls\SliderDrawable.cs" />
+    <Compile Include="Controls\SliderInfo.cs" />
     <Compile Include="Controls\TargetPlatform.cs" />
     <Compile Include="Controls\TextAppenderHelper.cs" />
     <Compile Include="Events\ControlEventArgs.cs" />
@@ -77,6 +80,8 @@
     <Compile Include="Events\TextFieldEventArgs.cs" />
     <Compile Include="Input\GamePadInputButtons.cs" />
     <Compile Include="Input\KeyRepetition.cs" />
+    <Compile Include="Layout\Scrollable.cs" />
+    <Compile Include="Layout\ControlCamera.cs" />
     <Compile Include="Styles\ColorPatterns\IPattern.cs" />
     <Compile Include="Styles\ColorPatterns\Pattern.cs" />
     <Compile Include="Styles\ColorPatterns\BorderPattern.cs" />

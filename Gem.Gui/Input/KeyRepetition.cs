@@ -10,6 +10,6 @@
 
         public double KeyRepeatStartDuration { get; set; }
         public double KeyRepeatDuration { get; set; }
-        public double KeyRepeatTimer { get; set; }
+
     }
 }

@@ -107,10 +107,10 @@ namespace Gem.Gui.Input
         /// Gets a character from key information.
         /// </summary>
         /// <param name="key">Pressing key</param>
-        /// <param name="shitKeyPressed">Is shift key pressed?</param>
+        /// <param name="shiftKeyPressed">Is shift key pressed?</param>
         /// <param name="character">Converted character from key input.</param>
         /// <returns>Returns true when it gets a character</returns>
-        public static bool KeyToString(Keys key, bool shitKeyPressed,  out char character)
+        public static bool KeyToString(Keys key, bool shiftKeyPressed,  out char character)
         {
             bool result = false;
             character = ' ';
@@ -119,13 +119,13 @@ namespace Gem.Gui.Input
             if ((Keys.A <= key && key <= Keys.Z) || key == Keys.Space)
             {
                 // Use as is if it is A～Z, or Space key.
-                character = (shitKeyPressed) ? (char)key : Char.ToLower((char)key);
+                character = (shiftKeyPressed) ? (char)key : Char.ToLower((char)key);
                 result = true;
             }
             else if (keyMap.TryGetValue(key, out charPair))
             {
                 // Otherwise, convert by key map.
-                if (!shitKeyPressed)
+                if (!shiftKeyPressed)
                 {
                     character = charPair.NormalChar;
                     result = true;

@@ -29,7 +29,6 @@ namespace Gem.Gui.ScreenSystem
             this.aggregationContext = aggregationContext;
             this.Transition = transition;
             this.ScreenState = ScreenState.Exit;
-
         }
 
         #region Properties

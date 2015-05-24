@@ -49,5 +49,16 @@ namespace Gem.Gui.Factories
                              IVerticalAlignable checkBoxVerticalAlignment,
                              string text,
                              SpriteFont font);
+
+
+        Slider CreateSlider(SliderInfo sliderInfo,
+                                   Texture2D backgroundTexture,
+                                   Texture2D slider,
+                                   Texture2D filling,
+                                   Texture2D border,
+                                   Region region,
+                                   Region borderRegion,
+                                   Region sliderRegion,
+                                   ARenderStyle style);
     }
 }

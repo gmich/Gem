@@ -68,8 +68,8 @@ namespace Gem.Gui.Example
 
             checkBox.ScreenAlignment(checkBox.HorizontalRelativeTo(styleTextBox, () => styleTextBox.Region.Position.X),
                      checkBox.VerticalRelativeTo(styleTextBox, () => styleTextBox.Region.Position.Y
-                                                                      + styleTextBox.Region.Size.Y
-                                                                      + entryOffset * Configuration.Settings.Scale.Y));
+                                                                    + styleTextBox.Region.Size.Y
+                                                                    + entryOffset * Configuration.Settings.Scale.Y));
 
             var label = gui.Label(x: 300, y: 100,
                           sizeX: 300, sizeY: 30,

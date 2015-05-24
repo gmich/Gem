@@ -77,7 +77,7 @@ namespace Gem.Gui.Controls
 
         #endregion
 
-        #region EventAggregation
+        #region Event Aggregation
 
         private void OnTextChangedAggregation(TextFieldEventArgs args)
         {

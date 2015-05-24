@@ -27,6 +27,7 @@ namespace Gem.Gui.Input
         {
             KeyboardInputKeys = new KeyboardInputKeys();
             GamePadInputKeys = new GamePadInputButtons();
+            KeyRepetition = new KeyRepetition();
         }
 
         #endregion
@@ -36,6 +37,8 @@ namespace Gem.Gui.Input
         public static KeyboardInputKeys KeyboardInputKeys { get; private set; }
 
         public static GamePadInputButtons GamePadInputKeys { get; private set; }
+        
+        public static KeyRepetition KeyRepetition { get; private set; }
 
         #endregion
 

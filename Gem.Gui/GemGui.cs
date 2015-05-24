@@ -124,7 +124,7 @@ namespace Gem.Gui
             }
         }
 
-        private Texture2D GetTexture(int width, int height, IColorPattern pattern)
+        public Texture2D GetTexture(int width, int height, IColorPattern pattern)
         {
             return style.TextureFactory.GetTexture(
                 new TextureCreationRequest(width, height,
@@ -247,11 +247,56 @@ namespace Gem.Gui
                                                 checkedTexture,
                                                 unCheckedTexture,
                                                 style,
-                                                new Region(x, y, sizeX, sizeY),                
+                                                new Region(x, y, sizeX, sizeY),
                                                 HorizontalAlignment.Right,
                                                 VerticalAlignment.Center,
                                                 text,
                                                 font);
+        }
+
+        public Slider Slider(int x, int y,
+                             int sizeX, int sizeY,
+                             int sliderSizeX, int sliderSizeY,
+                             SliderInfo sliderInfo,
+                             Texture2D backgroundTexture,
+                             Texture2D slider,
+                             Texture2D filling,
+                             Texture2D border,
+                             ARenderStyle style)
+        {
+            float offSet = 3.0f;
+
+            return controlFactory.CreateSlider(sliderInfo,
+                                               backgroundTexture, 
+                                               slider,
+                                               filling,
+                                               border,
+                                               new Region(x - offSet, y - offSet, sizeX + offSet * 2, sizeY + offSet * 2),
+                                               new Region(x, y, sizeX, sizeY),
+                                               new Region(x, y, sliderSizeX, sliderSizeY),
+                                               style);
+        }
+
+        public Slider Slider(int x, int y,
+                     int sizeX, int sizeY,
+                     int sliderSizeX, int sliderSizeY,
+                     SliderInfo sliderInfo,
+                     IColorPattern background,
+                     IColorPattern slider,
+                     IColorPattern filling,
+                     IColorPattern border,
+                     ARenderStyle style)
+        {
+            int offSet = 3;
+            return controlFactory.CreateSlider(sliderInfo,
+                                               GetTexture(sizeX, sizeY + offSet * 2,background),
+                                               GetTexture(sliderSizeX, sliderSizeY, slider),
+                                               GetTexture(1,1,filling),
+                                               GetTexture(sizeX,sizeY, border),
+                                               new Region(x, y - offSet, sizeX, sizeY + offSet * 2),
+                                               new Region(x, y, sizeX, sizeY),
+                                               new Region(x, y, sliderSizeX, sliderSizeY),
+                                               style);
         }
 
         #endregion
@@ -263,7 +308,7 @@ namespace Gem.Gui
             foreach (var control in controls)
             {
                 settings.OnResolutionChange((sender, args) => control.Scale(Settings.Scale));
-                control.RenderParameters.OnScaleChange+= (sender, args) => control.Align(Settings.ViewRegion);
+                control.RenderParameters.OnScaleChange += (sender, args) => control.Align(Settings.ViewRegion);
             }
             //var entries = controls.Where(control => control.HasAttribute<LayoutAttribute>());
             //var controlsEnumerable = controls.Where(control => control.Options.IsFocusEnabled).AsEnumerable();

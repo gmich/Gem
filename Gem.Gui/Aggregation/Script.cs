@@ -13,7 +13,7 @@ namespace Gem.Gui.Aggregation
                                                              input => input.IsKeyPressed(keyboardKeys.Next),
                                                              input => input.IsKeyPressed(keyboardKeys.Previous),
                                                              input => input.IsKeyClicked(keyboardKeys.Trigger),
-                                                             keyboardKeys.KeyRepetition);
+                                                             InputManager.KeyRepetition);
         }
 
         public static ScriptAggregator<GamePadInputHelper> ForGamePad(GamePadInputButtons gamepadButtons)
@@ -23,7 +23,7 @@ namespace Gem.Gui.Aggregation
                                                              input => input.IsButtonPressed(gamepadButtons.Next),
                                                              input => input.IsButtonPressed(gamepadButtons.Previous),
                                                              input => input.IsButtonClicked(gamepadButtons.Trigger),
-                                                             gamepadButtons.KeyRepetition);
+                                                             InputManager.KeyRepetition);
         }
     }
 }

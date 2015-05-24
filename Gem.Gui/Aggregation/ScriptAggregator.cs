@@ -16,6 +16,7 @@ namespace Gem.Gui.Aggregation
         private readonly KeyRepetition KeyRepetition;
         private readonly TInputHelper inputHelper;
 
+        private double keyRepeatTimer;
         private AggregationAction aggrAction;
 
         /// True when at least one script has evaluated upon aggregation
@@ -95,16 +96,16 @@ namespace Gem.Gui.Aggregation
                 scriptHasEvaluated = true;
                 if (this.aggrAction != aggrAction)
                 {
-                    KeyRepetition.KeyRepeatTimer = KeyRepetition.KeyRepeatStartDuration;
+                    keyRepeatTimer = KeyRepetition.KeyRepeatStartDuration;
                     this.aggrAction = aggrAction;
                     return true;
                 }
                 if (this.aggrAction == aggrAction)
                 {
-                    KeyRepetition.KeyRepeatTimer -= timeDelta;
-                    if (KeyRepetition.KeyRepeatTimer <= 0.0f)
+                    keyRepeatTimer -= timeDelta;
+                    if (keyRepeatTimer <= 0.0f)
                     {
-                        KeyRepetition.KeyRepeatTimer += KeyRepetition.KeyRepeatDuration;
+                        keyRepeatTimer += KeyRepetition.KeyRepeatDuration;
                         return true;
                     }
                     return false;                    

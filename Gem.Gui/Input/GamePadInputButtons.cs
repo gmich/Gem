@@ -10,8 +10,13 @@ namespace Gem.Gui.Input
         public GamePadInputButtons()
         {
             this.AssignDefaultValues();
-            this.KeyRepetition = new KeyRepetition();
         }
+
+        [DefaultValue(Buttons.DPadRight)]
+        public Buttons Right { get; set; }
+
+        [DefaultValue(Buttons.DPadLeft)]
+        public Buttons Left { get; set; }
 
         [DefaultValue(Buttons.DPadDown)]
         public Buttons Next { get; set; }
@@ -24,8 +29,6 @@ namespace Gem.Gui.Input
 
         [DefaultValue(PlayerIndex.One)]
         public PlayerIndex PlayerIndex { get; set; }
-
-        public KeyRepetition KeyRepetition { get; private set; }
     }
     
 }

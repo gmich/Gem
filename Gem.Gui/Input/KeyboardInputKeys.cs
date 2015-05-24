@@ -9,8 +9,13 @@ namespace Gem.Gui.Input
         public KeyboardInputKeys()
         {
             this.AssignDefaultValues();
-            this.KeyRepetition = new KeyRepetition();
         }
+
+        [DefaultValue(Keys.Right)]
+        public Keys Right { get; set; }
+
+        [DefaultValue(Keys.Left)]
+        public Keys Left { get; set; }
 
         [DefaultValue(Keys.Down)]
         public Keys Next { get; set; }
@@ -21,7 +26,6 @@ namespace Gem.Gui.Input
         [DefaultValue(Keys.Enter)]
         public Keys Trigger { get; set; }
 
-        public KeyRepetition KeyRepetition { get; private set; }
     }
 
 

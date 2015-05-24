@@ -92,5 +92,29 @@ namespace Gem.Gui.Factories
                                 text,
                                 font);
         }
+
+
+        public Slider CreateSlider(SliderInfo sliderInfo,
+                                   Texture2D backgroundTexture, 
+                                   Texture2D slider, 
+                                   Texture2D filling,
+                                   Texture2D border, 
+                                   Region region,
+                                   Region borderRegion,
+                                   Region sliderRegion, 
+                                   ARenderStyle style)
+        {
+            return new Slider(sliderInfo, 
+                              new SliderDrawable(slider,
+                                                 border,
+                                                 filling, 
+                                                 borderRegion,
+                                                 new AlignmentContext(HorizontalAlignment.Left,
+                                                                      VerticalAlignment.Center,
+                                                                      AlignmentTransition.Fixed)), 
+                                                 backgroundTexture,
+                                                 region,
+                                                 style);
+        }
     }
 }

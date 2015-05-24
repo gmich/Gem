@@ -90,12 +90,12 @@ namespace Gem.Gui.Layout
             base.Scale(scale);
         }
 
-        public void AlignAsLandscape(Region viewPort)
+        internal void AlignAsLandscape(Region viewPort)
         {
             throw new NotImplementedException();
         }
 
-        public void AlignAsPortrait(Region viewPort)
+        internal void AlignAsPortrait(Region viewPort)
         {
             Region offSetRegion = Region.Empty;
             
@@ -117,7 +117,11 @@ namespace Gem.Gui.Layout
                                           0);
 
             }
+
+            VirtualSize = new Vector2(Region.Size.X, offSetRegion.Position.Y);
         }
+
+        internal Vector2 VirtualSize { get; private set; }
 
         #endregion
 

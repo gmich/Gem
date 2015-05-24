@@ -43,6 +43,8 @@ namespace Gem.Gui.Rendering
 
         private Vector2 virtualPosition;
         private Vector2 virtualSize;
+        private Func<Vector2, Vector2> positionTransformer;
+
         #endregion
 
         #region Ctor
@@ -56,7 +58,8 @@ namespace Gem.Gui.Rendering
             this.size = size;
             this.virtualSize = size;
             this.virtualPosition = position;
-
+            //the default behavior doesnt transform the position
+            this.positionTransformer = (currentPosition) => currentPosition;
             this.center = CenterCalculator(this);
             AdjustFrameBoundaries();
         }
@@ -68,6 +71,21 @@ namespace Gem.Gui.Rendering
         #endregion
 
         #region Public Properties
+
+        /// <summary>
+        /// Transforms the position. Set it when the Region's position is relative to something else e.g. a camera
+        /// </summary>
+        /// <param name="transformerDelegate">Takes the current position as an argument and returns the transformed one</param>
+        public void SetPositionTransformer(Func<Vector2,Vector2> transformerDelegate)
+        {
+            positionTransformer = transformerDelegate;
+            AdjustFrameBoundaries();
+        }
+
+        public static Region FromRectangle(Rectangle rect)
+        {
+            return new Region(rect.Left, rect.Right, rect.Width, rect.Height);
+        }
 
         public static Region Empty
         {
@@ -81,7 +99,7 @@ namespace Gem.Gui.Rendering
         {
             get
             {
-                return position;
+                return positionTransformer(position);
             }
             set
             {
@@ -155,7 +173,7 @@ namespace Gem.Gui.Rendering
         /// </summary>
         private void AdjustFrameBoundaries()
         {
-            frame = new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
+            frame = new Rectangle((int)Position.X, (int)Position.Y, (int)size.X, (int)size.Y);
         }
 
         private void OnSizeChange(RegionEventArgs previousState)
