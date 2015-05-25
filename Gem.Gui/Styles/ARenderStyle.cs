@@ -17,6 +17,7 @@ namespace Gem.Gui.Styles
 
         #endregion
 
+        #region Private Helpers
 
         private void Flush()
         {
@@ -26,6 +27,8 @@ namespace Gem.Gui.Styles
             }
             showedFocusAnimation = false;
         }
+
+        #endregion
 
         #region Styles
 
@@ -49,6 +52,8 @@ namespace Gem.Gui.Styles
         }
 
         #endregion
+
+        #region Public Methods
 
         public void Focus(AControl styleControl)
         {
@@ -78,5 +83,8 @@ namespace Gem.Gui.Styles
         }
 
         public abstract void Render(IRenderable renderable, SpriteBatch batch);
+
+        #endregion
+
     }
 }

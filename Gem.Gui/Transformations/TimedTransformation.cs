@@ -1,5 +1,4 @@
-﻿using Gem.Gui.Controls;
-using Gem.Gui.Rendering;
+﻿using Gem.Gui.Rendering;
 using System;
 
 namespace Gem.Gui.Transformations

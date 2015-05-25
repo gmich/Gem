@@ -38,18 +38,10 @@ namespace Gem.Gui.Controls
             this.Events.Clicked += (sender, args) =>
             {
                 IsChecked = !IsChecked;
-                if (IsChecked)
-                {
-                    checkBox.Sprite.SwitchSprite("checked");
-                }
-                else
-                {
-                    checkBox.Sprite.SwitchSprite();
-                }
+                if (IsChecked) checkBox.Sprite.SwitchSprite("checked");
+                else checkBox.Sprite.SwitchSprite();
             };
-
-            Text = new StandardText(font, Vector2.Zero, text);
-   
+            Text = new StandardText(font, Vector2.Zero, text);   
             Text.Alignment.HorizontalAlignment = HorizontalAlignment.RelativeTo(() => (checkBox.Region.Frame.Right) + offset * Configuration.Settings.Scale.X);
             Text.Alignment.VerticalAlignment = checkBoxAlignment.VerticalAlignment;
             checkBox.Region.onPositionChange += (args, sender) => Text.Align(this.Region);

@@ -1,5 +1,4 @@
 ﻿using Gem.Gui.Styles;
-using Microsoft.Xna.Framework;
 using System;
 
 namespace Gem.Gui.Factories

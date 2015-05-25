@@ -171,7 +171,7 @@ namespace Gem.Gui.Controls
                                                   - font.MeasureString(currentCursor).X / 2)
                                                   * Configuration.Settings.Scale.X;
                                           }), Text.Alignment.VerticalAlignment,
-                                              AlignmentTransition.Fixed));
+                                              AlignmentTransition.Instant));
             cursor.RenderParameters.Color = Text.RenderParameters.Color;
         }
 

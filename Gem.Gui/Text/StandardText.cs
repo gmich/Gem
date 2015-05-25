@@ -3,12 +3,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Gem.Gui.Styles;
 using Gem.Gui.Rendering;
+using Gem.Gui.Alignment;
+using Gem.Gui.Transformations;
+using System.Collections.Generic;
 
 namespace Gem.Gui.Text
 {
-    using Alignment;
-    using Gem.Gui.Transformations;
-    using System.Collections.Generic;
 
     public class StandardText : IText
     {
@@ -16,7 +16,6 @@ namespace Gem.Gui.Text
         #region Fields
 
         private readonly SpriteFont font;
-        public event EventHandler<TextEventArgs> OnTextChanged;
         private readonly IList<ITransformation> transformations = new List<ITransformation>();
         private readonly string defaultSize = "A";
 
@@ -103,6 +102,10 @@ namespace Gem.Gui.Text
 
         #endregion
 
+        #region Events
+
+        public event EventHandler<TextEventArgs> OnTextChanged;
+
         private void OnTextChangedAggregation(TextEventArgs eventArgs)
         {
             var handler = OnTextChanged;
@@ -111,6 +114,10 @@ namespace Gem.Gui.Text
                 handler(this, eventArgs);
             }
         }
+
+        #endregion
+
+        #region IText Members
 
         public void Align(Region parent)
         {
@@ -122,7 +129,7 @@ namespace Gem.Gui.Text
             RenderParameters.Scale = scale;
             Region.Scale(scale);
 
-            string textToMeasure = (Value==string.Empty) ? defaultSize : Value;
+            string textToMeasure = (Value == string.Empty) ? defaultSize : Value;
             Region.Size = Font.MeasureString(textToMeasure) * scale;
         }
 
@@ -145,5 +152,7 @@ namespace Gem.Gui.Text
                 transformations[index].Transform(this, deltaTime);
             }
         }
+
+        #endregion
     }
 }

@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input.Touch;
-using Gem.Gui.Rendering;
 using System;
 using System.Linq;
 using Gem.Gui.Configuration;
@@ -13,13 +10,18 @@ namespace Gem.Gui.ScreenSystem
 
     public class ScreenManager : DrawableGameComponent
     {
+        #region Fields
 
-        private List<IGuiHost> hosts = new List<IGuiHost>();
-        private SpriteBatch spriteBatch { get; set; }
         private readonly List<RenderTarget2D> cachedTargets = new List<RenderTarget2D>();
         private readonly Dictionary<IGuiHost, RenderTarget2D> renderTargets = new Dictionary<IGuiHost, RenderTarget2D>();
-        public Action<SpriteBatch> DrawWith;
+
+        private List<IGuiHost> hosts = new List<IGuiHost>();
+        private SpriteBatch spriteBatch;
         private RenderTarget2D guiScreen;
+
+        #endregion
+
+        #region Ctor
 
         public ScreenManager(Game game, Settings settings, Action<SpriteBatch> drawWith)
             : base(game)
@@ -33,10 +35,71 @@ namespace Gem.Gui.ScreenSystem
             this.DrawWith = drawWith;
         }
 
+        #endregion
+
+        #region Properties
+
+        public Action<SpriteBatch> DrawWith { get; set; }
+
         public int ActiveHosts
         {
             get { return hosts.Count; }
         }
+
+        #endregion
+        
+        #region Private Helpers
+
+        private RenderTarget2D GetWindowRenderTarget()
+        {
+            PresentationParameters pp = GraphicsDevice.PresentationParameters;
+
+            return new RenderTarget2D(GraphicsDevice,
+                                    pp.BackBufferWidth,
+                                    pp.BackBufferHeight,
+                                    false,
+                                    SurfaceFormat.Color,
+                                    pp.DepthStencilFormat,
+                                    pp.MultiSampleCount,
+                                    RenderTargetUsage.DiscardContents);
+        }
+
+        private void AssignRenderTargetToDevice(RenderTarget2D target)
+        {
+            GraphicsDevice.SetRenderTarget(target);
+            GraphicsDevice.Clear(Color.Transparent);
+        }
+
+        private void DrawGui(RenderTarget2D guiScreen)
+        {
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+            spriteBatch.Draw(guiScreen, Vector2.Zero, Color.White);
+            spriteBatch.End();
+        }
+
+        private void DrawTransitions()
+        {
+            if (renderTargets.Count == 0) return;
+
+            foreach (var target in renderTargets)
+            {
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+                target.Key.Transition.Draw(target.Value, target.Key.ScreenState, spriteBatch);
+                spriteBatch.End();
+            }
+        }
+
+        private void DrawHost(IGuiHost host)
+        {
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+            host.Draw(spriteBatch);
+            spriteBatch.End();
+
+        }
+
+        #endregion
+
+        #region DrawableGameComponent Members
 
         public override void Initialize()
         {
@@ -64,26 +127,7 @@ namespace Gem.Gui.ScreenSystem
             base.Update(gameTime);
         }
 
-        private RenderTarget2D GetWindowRenderTarget()
-        {
-            PresentationParameters pp = GraphicsDevice.PresentationParameters;
-
-            return new RenderTarget2D(GraphicsDevice,
-                                    pp.BackBufferWidth,
-                                    pp.BackBufferHeight,
-                                    false,
-                                    SurfaceFormat.Color,
-                                    pp.DepthStencilFormat,
-                                    pp.MultiSampleCount,
-                                    RenderTargetUsage.DiscardContents);
-        }
-
-        public void AssignRenderTargetToDevice(RenderTarget2D target)
-        {
-            GraphicsDevice.SetRenderTarget(target);
-            GraphicsDevice.Clear(Color.Transparent);
-        }
-
+        
         public override void Draw(GameTime gameTime)
         {
             AssignRenderTargetToDevice(guiScreen);
@@ -124,32 +168,9 @@ namespace Gem.Gui.ScreenSystem
             base.Draw(gameTime);
         }
 
-        public void DrawGui(RenderTarget2D guiScreen)
-        {
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            spriteBatch.Draw(guiScreen, Vector2.Zero, Color.White);
-            spriteBatch.End();
-        }
+        #endregion
 
-        private void DrawTransitions()
-        {
-            if (renderTargets.Count == 0) return;
-
-            foreach (var target in renderTargets)
-            {
-                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-                target.Key.Transition.Draw(target.Value, target.Key.ScreenState, spriteBatch);
-                spriteBatch.End();
-            }
-        }
-
-        private void DrawHost(IGuiHost host)
-        {
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            host.Draw(spriteBatch);
-            spriteBatch.End();
-
-        }
+        #region Screen Transition Related
 
         public bool IsShowing(IGuiHost screen)
         {
@@ -179,5 +200,7 @@ namespace Gem.Gui.ScreenSystem
 
             return true;
         }
+
+        #endregion
     }
 }

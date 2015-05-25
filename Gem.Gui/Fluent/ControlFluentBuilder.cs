@@ -1,7 +1,6 @@
 ﻿using Gem.Gui.Alignment;
 using Gem.Gui.Controls;
 using Gem.Gui.Core.Controls;
-using Gem.Gui.Layout;
 using Gem.Gui.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

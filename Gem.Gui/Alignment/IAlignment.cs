@@ -2,6 +2,9 @@
 
 namespace Gem.Gui.Alignment
 {
+    /// <summary>
+    /// Performs an alignment
+    /// </summary>
     public interface IAlignment
     {
         /// <summary>

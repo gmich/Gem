@@ -55,7 +55,7 @@
     <Compile Include="Aggregation\Script.cs" />
     <Compile Include="Alignment\AlignmentContext.cs" />
     <Compile Include="Alignment\AlignmentTransition.cs" />
-    <Compile Include="Alignment\FixedTransition.cs" />
+    <Compile Include="Alignment\InstantTransition.cs" />
     <Compile Include="Alignment\AlignmentResult.cs" />
     <Compile Include="Alignment\IAlignable.cs" />
     <Compile Include="Alignment\IAlignmentTransition.cs" />
@@ -82,7 +82,7 @@
     <Compile Include="Input\KeyRepetition.cs" />
     <Compile Include="Layout\Scrollable.cs" />
     <Compile Include="Layout\ControlCamera.cs" />
-    <Compile Include="Styles\ColorPatterns\IPattern.cs" />
+    <Compile Include="Styles\ColorPatterns\IColorPattern.cs" />
     <Compile Include="Styles\ColorPatterns\Pattern.cs" />
     <Compile Include="Styles\ColorPatterns\BorderPattern.cs" />
     <Compile Include="Styles\ColorPatterns\TextViewPattern.cs" />
@@ -126,7 +126,7 @@
     <Compile Include="Events\ViewEvents.cs" />
     <Compile Include="Aggregation\AggregationToken.cs" />
     <Compile Include="Controls\AControl.cs" />
-    <Compile Include="Aggregation\GuiEntry.cs" />
+    <Compile Include="Aggregation\AggregationEntry.cs" />
     <Compile Include="Containers\AContainer.cs" />
     <Compile Include="Aggregation\ScriptAggregator.cs" />
     <Compile Include="Factories\IControlFactory.cs" />

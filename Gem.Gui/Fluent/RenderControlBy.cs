@@ -16,6 +16,5 @@ namespace Gem.Gui.Fluent
         {
             get { return _frame.Value; }
         }
-
     }
 }

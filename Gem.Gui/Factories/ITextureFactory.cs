@@ -5,6 +5,5 @@ namespace Gem.Gui.Factories
     internal interface ITextureFactory
     {
         Texture2D GetTexture(TextureCreationRequest options);
-    }
-        
+    }        
 }

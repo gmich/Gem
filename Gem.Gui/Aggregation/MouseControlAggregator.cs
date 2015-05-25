@@ -5,11 +5,17 @@ using Microsoft.Xna.Framework;
 
 namespace Gem.Gui.Aggregation
 {
+    /// <summary>
+    /// Aggregates controls according to mouse input
+    /// </summary>
     internal class MouseControlAggregator : IAggregator
     {
 
         #region  Fields
 
+        /// <summary>
+        /// The helper class that sends mouse signals
+        /// </summary>
         private readonly MouseInputHelper input;
 
         #endregion
@@ -17,21 +23,18 @@ namespace Gem.Gui.Aggregation
         public MouseControlAggregator(MouseInputHelper inputHelper)
         {
             this.input = inputHelper;
+            this.IsEnabled = true;
         }
 
-        private bool _isEnabled = true;
         public bool IsEnabled
         {
-            get { return _isEnabled; }
-            set
-            {
-                _isEnabled = value;
-            }
+            get;
+            private set;
         }
 
         #region Event Raising
 
-        private void CheckMouseHover(GuiEntry entry, AggregationContext context)
+        private void CheckMouseHover(AggregationEntry entry, AggregationContext context)
         {
             var currentHasHover = entry.Control.Region.Frame.Contains(input.MousePosition);
 
@@ -47,7 +50,7 @@ namespace Gem.Gui.Aggregation
             entry.Token.HasHover = currentHasHover;
         }
 
-        private void CheckFocus(GuiEntry entry, AggregationContext context)
+        private void CheckFocus(AggregationEntry entry, AggregationContext context)
         {
             if (input.IsLeftButtonClicked())
             {
@@ -65,7 +68,7 @@ namespace Gem.Gui.Aggregation
             CheckSelected(entry, context);
         }
 
-        private void CheckSelected(GuiEntry entry, AggregationContext context)
+        private void CheckSelected(AggregationEntry entry, AggregationContext context)
         {
             if (input.IsLeftButtonClicked())
             {
@@ -80,10 +83,10 @@ namespace Gem.Gui.Aggregation
             }
         }
 
-        private void CheckClick(GuiEntry entry, AggregationContext context)
+        private void CheckClick(AggregationEntry entry, AggregationContext context)
         {
-            if (entry.Token.CanBeClicked 
-                && entry.Token.HasHover 
+            if (entry.Token.CanBeClicked
+                && entry.Token.HasHover
                 && input.IsLeftButtonReleased())
             {
                 entry.Control.Events.OnClicked();
@@ -94,9 +97,8 @@ namespace Gem.Gui.Aggregation
 
         #region Aggregation
 
-        public void Aggregate(GuiEntry entry, AggregationContext context)
+        public void Aggregate(AggregationEntry entry, AggregationContext context)
         {
-
             if (!entry.Control.Options.IsEnabled || !this.IsEnabled)
             {
                 return;
@@ -110,9 +112,7 @@ namespace Gem.Gui.Aggregation
             {
                 CheckFocus(entry, context);
             }
-
         }
-
 
         #endregion
 

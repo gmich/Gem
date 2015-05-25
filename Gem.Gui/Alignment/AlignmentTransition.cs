@@ -2,14 +2,15 @@
 
 namespace Gem.Gui.Alignment
 {
-    public sealed class AlignmentTransition
+    /// <summary>
+    /// Helper static class for fluently using predefined IAlignmentTransitions
+    /// </summary>
+    public static class AlignmentTransition
     {
-
-        private static Lazy<FixedTransition> _fixed = new Lazy<FixedTransition>();
-        public static IAlignmentTransition Fixed
+        private static Lazy<InstantTransition> _instant = new Lazy<InstantTransition>();
+        public static IAlignmentTransition Instant
         {
-            get { return _fixed.Value; }
+            get { return _instant.Value; }
         }
-
     }
 }

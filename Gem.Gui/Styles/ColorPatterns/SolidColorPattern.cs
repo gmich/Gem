@@ -23,7 +23,6 @@ namespace Gem.Gui.Styles
                 colorArray[arrayIndex] = color;
             }
             return colorArray;
-
         }
     }
 }

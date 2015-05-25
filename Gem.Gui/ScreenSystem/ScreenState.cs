@@ -9,6 +9,5 @@
         TransitionOff,
         Active,
         Exit
-        //Hidden
     }
 }

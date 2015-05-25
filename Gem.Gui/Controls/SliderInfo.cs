@@ -6,11 +6,18 @@ namespace Gem.Gui.Controls
 {
     public class SliderInfo
     {
+
+        #region Fields
+
         private readonly float minValue;
         private readonly float maxValue;
         private readonly float step;
         private readonly float stepsUntilFull;
         private float position;
+
+        #endregion
+
+        #region Ctor
 
         public SliderInfo(float minValue, float maxValue, int stepsUntilFull, float initialPosition)
         {
@@ -30,6 +37,8 @@ namespace Gem.Gui.Controls
             position = MathHelper.Clamp(initialPosition, minValue, maxValue);
         }
 
+        #endregion
+
         #region Events
 
         internal event EventHandler<float> OnPositionChanged;
@@ -44,6 +53,8 @@ namespace Gem.Gui.Controls
         }
 
         #endregion 
+
+        #region Properties
 
         public float Position
         {
@@ -63,6 +74,10 @@ namespace Gem.Gui.Controls
 
         public float Step { get { return step; } }
 
+        #endregion
+
+        #region Internal Methods
+
         internal void Move(float value)
         {
             Position += value;
@@ -77,5 +92,7 @@ namespace Gem.Gui.Controls
         {
             return ((value - Min) * 100) / (Max - Min);
         }
+
+        #endregion
     }
 }

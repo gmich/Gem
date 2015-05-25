@@ -1,13 +1,15 @@
 ﻿using Gem.Gui.Controls;
 using Gem.Gui.Rendering;
-using Microsoft.Xna.Framework;
 using System;
 
 namespace Gem.Gui.Alignment
 {
-
+    //for type safety
     public interface IVerticalAlignable : IAlignment { }
 
+    /// <summary>
+    /// Holds all the Vertical Alignment related classes
+    /// </summary>
     public static class VerticalAlignment
     {
         #region Top

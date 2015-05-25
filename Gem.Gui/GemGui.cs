@@ -7,7 +7,6 @@ using Gem.Gui.Controls;
 using Gem.Gui.Factories;
 using Gem.Gui.Rendering;
 using Gem.Gui.ScreenSystem;
-using Gem.Infrastructure.Attributes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -111,6 +110,16 @@ namespace Gem.Gui
             }
         }
 
+        public bool IsEnabled
+        {
+            get { return screenManager.Enabled; }
+        }
+
+        public bool ShowsAnything
+        {
+            get { return screenManager.ActiveHosts > 0; }
+        }
+
         #endregion
 
         #region Private Helper Methods
@@ -181,7 +190,7 @@ namespace Gem.Gui
                                                          new Vector2(sizeX, sizeY)),
                                               horizontalAlignment ?? HorizontalAlignment.Left,
                                               verticalAlignment ?? VerticalAlignment.Center,
-                                              alignmentTransition ?? AlignmentTransition.Fixed);
+                                              alignmentTransition ?? AlignmentTransition.Instant);
         }
 
         public TextField TextField(int x, int y,
@@ -203,13 +212,13 @@ namespace Gem.Gui
                                                 font,
                                                 GetTexture(sizeX, sizeY, pattern),
                                                 new Region(new Vector2(x, y),
-                                                            new Vector2(sizeX, sizeY)),
+                                                           new Vector2(sizeX, sizeY)),
                                                 textColor,
                                                 style,
                                                 hint ?? string.Empty,
                                                 horizontalAlignment ?? HorizontalAlignment.Left,
                                                 verticalAlignment ?? VerticalAlignment.Center,
-                                                alignmentTransition ?? AlignmentTransition.Fixed);
+                                                alignmentTransition ?? AlignmentTransition.Instant);
         }
 
 
@@ -337,17 +346,7 @@ namespace Gem.Gui
             screenManager.Visible = true;
             screenManager.Enabled = true;
         }
-
-        public bool IsEnabled
-        {
-            get { return screenManager.Enabled; }
-        }
-
-        public bool ShowsAnything
-        {
-            get { return screenManager.ActiveHosts > 0; }
-        }
-
+                
         public bool Show(string guiHostId)
         {
             Contract.Requires(hosts.ContainsKey(guiHostId), "GuiHost was not found");

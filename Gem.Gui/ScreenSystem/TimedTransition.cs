@@ -10,19 +10,34 @@ using System.Threading.Tasks;
 
 namespace Gem.Gui.ScreenSystem
 {
+    public delegate void TransitionRenderAction(ScreenState state, float progress, RenderTarget2D renderTarget, SpriteBatch batch);
+
     public class TimedTransition : ITransition
     {
-        public delegate void TransitionRenderAction(ScreenState state, float progress, RenderTarget2D renderTarget, SpriteBatch batch);
+
+        #region Fields
 
         private const float Full = 1.0f;
         private const float Empty = 0.0f;
-
-
+        
         private readonly TransitionRenderAction transitionRenderAction;
         private TransitionDirection direction;
         private Func<AnimationContext, float> progressReporter;
+        private TimeSpan transitionTime;
 
-        public TimeSpan TransitionTime { get; set; }
+        #endregion
+
+        #region Ctor
+
+        public TimedTransition(TimeSpan transitionTime, TransitionRenderAction transitionRenderAction)
+        {
+            this.transitionTime = transitionTime;
+            this.transitionRenderAction = transitionRenderAction;
+        }
+
+        #endregion
+
+        #region Properties
 
         private float _progress;
         public float Progress
@@ -36,12 +51,6 @@ namespace Gem.Gui.ScreenSystem
                 _progress = MathHelper.Clamp(value, Empty, Full);
                 OnReportProgress();
             }
-        }
-
-        public TimedTransition(TimeSpan transitionTime, TransitionRenderAction transitionRenderAction)
-        {
-            this.TransitionTime = transitionTime;
-            this.transitionRenderAction = transitionRenderAction;
         }
 
         public static TimedTransition Default
@@ -59,6 +68,8 @@ namespace Gem.Gui.ScreenSystem
             get { return Progress == TargetProgress(); }
         }
 
+        #endregion
+        
         #region Events
 
         public event EventHandler<float> ProgressChanged;
@@ -115,10 +126,10 @@ namespace Gem.Gui.ScreenSystem
             switch (direction)
             {
                 case TransitionDirection.Enter:
-                    progressReporter = context => +(float)(context.TotalMilliseconds / TransitionTime.TotalMilliseconds);
+                    progressReporter = context => +(float)(context.TotalMilliseconds / transitionTime.TotalMilliseconds);
                     break;
                 case TransitionDirection.Leave:
-                    progressReporter = context => -(float)(context.TotalMilliseconds / TransitionTime.TotalMilliseconds);
+                    progressReporter = context => -(float)(context.TotalMilliseconds / transitionTime.TotalMilliseconds);
                     break;
                 default:
                     break;

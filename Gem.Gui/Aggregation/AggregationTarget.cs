@@ -2,6 +2,9 @@
 
 namespace Gem.Gui.Aggregation
 {
+    /// <summary>
+    /// AggregationTarget shows which input capabilties the Gui is targeting
+    /// </summary>
     [Flags]
     public enum AggregationTarget
     {
@@ -19,9 +22,6 @@ namespace Gem.Gui.Aggregation
         /// Helper extension for AggregationTarget enum for checking if an instance has a specific flag.
         /// This is a Enum.HasFlag duplicate, but AggregationTarget specific, because HasFlag is has performance costs 
         /// </summary>
-        /// <param name="target"></param>
-        /// <param name="flag"></param>
-        /// <returns></returns>
         public static bool HasTargetFlag(this AggregationTarget target, AggregationTarget flag)
         {
             return ((target & flag) != 0);

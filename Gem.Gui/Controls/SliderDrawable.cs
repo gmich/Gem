@@ -76,6 +76,39 @@ namespace Gem.Gui.Controls
 
         #endregion
 
+        #region Properties
+
+        public Region SliderRegion { get { return slider.Region; } }
+
+
+        public float Percentage
+        {
+            get
+            {
+                return GetPercentageByPosition(slider.Region.Position.X);
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private float GetPositionByPercentage(float xPercentage)
+        {
+            return MathHelper.Clamp(border.Region.Frame.Left + CalculateLocationXPercentage(xPercentage),
+                                                                   border.Region.Frame.Left,
+                                                                   border.Region.Frame.Right - slider.Region.Size.X);
+        }
+
+        private void Move(float xOffset)
+        {
+            SetLocation(slider.Region.Position.X + xOffset);
+        }
+
+        #endregion
+
+        #region Public Methods
+
         public void Align(Region parent)
         {
             border.Region.Position = alignment.GetTargetRegion(parent, border.Region, Padding.Zero).Position;
@@ -85,8 +118,6 @@ namespace Gem.Gui.Controls
                                                  border.Region.Position.Y + (border.Region.Size.Y / 2) - slider.Region.Size.Y / 2);
         }
 
-        public Region SliderRegion { get { return slider.Region; } }
-
         public float CalculateLocationXPercentage(float valueX)
         {
             return (valueX * (border.Region.Size.X - slider.Region.Size.X)) / 100;
@@ -95,11 +126,6 @@ namespace Gem.Gui.Controls
         public float GetLocationXByPercentage(float percentage)
         {
             return (slider.Region.Position.X * 100) / (border.Region.Size.X);
-        }
-
-        private void Move(float xOffset)
-        {
-            SetLocation(slider.Region.Position.X + xOffset);
         }
 
         public void MoveByPercentage(float xPercentage)
@@ -114,9 +140,7 @@ namespace Gem.Gui.Controls
             float startX = positionX - border.Region.Position.X;
             return MathHelper.Clamp((startX * 100) / (border.Region.Frame.Width - slider.Region.Size.X), 0, 100.0f);
         }
-
-        public float Percentage { get { return GetPercentageByPosition(slider.Region.Position.X); } }
-
+        
         public void MoveByPercentageSmoothly(float xPercentage)
         {
 
@@ -136,12 +160,17 @@ namespace Gem.Gui.Controls
                                                   slider.Region.Position.Y);
         }
 
-        private float GetPositionByPercentage(float xPercentage)
+        public void Scale(Vector2 scale)
         {
-            return MathHelper.Clamp(border.Region.Frame.Left + CalculateLocationXPercentage(xPercentage),
-                                                                   border.Region.Frame.Left,
-                                                                   border.Region.Frame.Right - slider.Region.Size.X);
+            slider.Region.Scale(scale);
+            filling.Region.Scale(scale);
+            border.Region.Scale(scale);
+            destinationX = -999f;
         }
+
+        #endregion
+
+        #region Update / Draw
 
         public void Update(double deltaTime)
         {
@@ -153,14 +182,6 @@ namespace Gem.Gui.Controls
             }
         }
 
-        public void Scale(Vector2 scale)
-        {
-            slider.Region.Scale(scale);
-            filling.Region.Scale(scale);
-            border.Region.Scale(scale);
-            destinationX = -999f;
-            //destinationX = destinationX * Configuration.Settings.Scale.X;
-        }
 
         public void Draw(SpriteBatch batch, RenderParameters renderParams)
         {
@@ -168,5 +189,7 @@ namespace Gem.Gui.Controls
             filling.Draw(batch, renderParams);
             slider.Draw(batch, renderParams);
         }
+        #endregion
+
     }
 }

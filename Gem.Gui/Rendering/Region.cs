@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace Gem.Gui.Rendering
@@ -71,21 +70,6 @@ namespace Gem.Gui.Rendering
         #endregion
 
         #region Public Properties
-
-        /// <summary>
-        /// Transforms the position. Set it when the Region's position is relative to something else e.g. a camera
-        /// </summary>
-        /// <param name="transformerDelegate">Takes the current position as an argument and returns the transformed one</param>
-        public void SetPositionTransformer(Func<Vector2,Vector2> transformerDelegate)
-        {
-            positionTransformer = transformerDelegate;
-            AdjustFrameBoundaries();
-        }
-
-        public static Region FromRectangle(Rectangle rect)
-        {
-            return new Region(rect.Left, rect.Right, rect.Width, rect.Height);
-        }
 
         public static Region Empty
         {
@@ -192,6 +176,25 @@ namespace Gem.Gui.Rendering
             {
                 handler(this, previousState);
             }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Transforms the position. Set it when the Region's position is relative to something else e.g. a camera
+        /// </summary>
+        /// <param name="transformerDelegate">Takes the current position as an argument and returns the transformed one</param>
+        public void SetPositionTransformer(Func<Vector2, Vector2> transformerDelegate)
+        {
+            positionTransformer = transformerDelegate;
+            AdjustFrameBoundaries();
+        }
+
+        public static Region FromRectangle(Rectangle rect)
+        {
+            return new Region(rect.Left, rect.Right, rect.Width, rect.Height);
         }
 
         #endregion

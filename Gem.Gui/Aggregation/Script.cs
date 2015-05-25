@@ -2,7 +2,9 @@
 
 namespace Gem.Gui.Aggregation
 {
-
+    /// <summary>
+    /// Factory for returning scripts that are used by ScriptAggregator to aggregate the controls 
+    /// </summary>
     public static class Script
     {
         public static ScriptAggregator<KeyboardInputHelper> ForKeyboard(KeyboardInputKeys keyboardKeys)

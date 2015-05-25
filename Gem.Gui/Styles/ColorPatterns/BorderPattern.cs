@@ -13,6 +13,7 @@ namespace Gem.Gui.Styles
             this.border = border;
             this.filling = filling;
         }
+
         public Color[] Get(int sizeX, int sizeY)
         {
             Color[] colorArray = new Color[sizeX * sizeY];

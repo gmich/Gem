@@ -1,5 +1,8 @@
 ﻿namespace Gem.Gui.Aggregation
 {
+    /// <summary>
+    /// The indexer loops an integer that represents the index in aggregation context
+    /// </summary>
     public class Indexer
     {
         private readonly int lowest;
@@ -35,9 +38,7 @@
                 }
             }
         }
-
-        public bool HasFocus { get; set; }
-
+        
         public int Next
         {
             get { return ++Current; }

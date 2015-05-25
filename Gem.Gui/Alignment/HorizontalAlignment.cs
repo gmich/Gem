@@ -1,6 +1,5 @@
 ﻿using Gem.Gui.Controls;
 using Gem.Gui.Rendering;
-using Microsoft.Xna.Framework;
 using System;
 
 namespace Gem.Gui.Alignment
@@ -8,6 +7,9 @@ namespace Gem.Gui.Alignment
     //For type safety
     public interface IHorizontalAlignable : IAlignment { }
 
+    /// <summary>
+    /// Holds all the Horizontal Alignment related classes
+    /// </summary>
     public static class HorizontalAlignment
     {
         #region Left
@@ -112,8 +114,7 @@ namespace Gem.Gui.Alignment
         }
 
         #endregion
-
-
+        
         #region Relative
 
         public static IHorizontalAlignable RelativeTo(Func<float> relativeX)

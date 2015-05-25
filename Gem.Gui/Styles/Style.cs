@@ -14,7 +14,12 @@ namespace Gem.Gui.Styles
         }
 
         internal ITextureFactory TextureFactory
-        { get { return textureFactory; } }
+        {
+            get
+            {
+                return textureFactory;
+            }
+        }
 
         public static ARenderStyle Transparent
         {
@@ -23,17 +28,7 @@ namespace Gem.Gui.Styles
                 return new TransparentControlStyle();
             }
         }
-
-        public static ARenderStyle CustomisedTransparent(float focusedAlpha, float hoverAlpha, float defaultAlpha)
-        {
-            return new TransparentControlStyle(focusedAlpha, hoverAlpha, defaultAlpha);
-        }
-
-        public static ARenderStyle ColorMap(Color defaultColor, Color colorMap)
-        {
-            return new ColorMap(defaultColor, colorMap);
-        }
-
+        
         public static ARenderStyle Bordered
         {
             get
@@ -48,6 +43,16 @@ namespace Gem.Gui.Styles
             {
                 return new NoStyle();
             }
+        }
+
+        public static ARenderStyle CustomisedTransparent(float focusedAlpha, float hoverAlpha, float defaultAlpha)
+        {
+            return new TransparentControlStyle(focusedAlpha, hoverAlpha, defaultAlpha);
+        }
+
+        public static ARenderStyle ColorMap(Color defaultColor, Color colorMap)
+        {
+            return new ColorMap(defaultColor, colorMap);
         }
     }
 }

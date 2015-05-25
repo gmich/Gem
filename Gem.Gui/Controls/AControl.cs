@@ -7,7 +7,6 @@ using Gem.Gui.Text;
 using Gem.Gui.Transformations;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Gem.Gui.Alignment;

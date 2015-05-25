@@ -1,6 +1,5 @@
 ﻿using Gem.Gui.Styles;
 using Gem.Gui.Rendering;
-using Gem.Gui.Text;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Gem.Gui.Controls

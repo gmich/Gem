@@ -1,5 +1,8 @@
 ﻿namespace Gem.Gui.Alignment
 {
+    /// <summary>
+    /// The result of an alignment by AlignmentContext
+    /// </summary>
     public class AlignmentResult
     {
         private readonly float position;

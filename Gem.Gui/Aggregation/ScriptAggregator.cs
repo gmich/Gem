@@ -1,9 +1,12 @@
 ﻿using System;
 using Gem.Gui.Input;
-using Microsoft.Xna.Framework.Input;
 
 namespace Gem.Gui.Aggregation
 {
+    /// <summary>
+    /// Aggregates using delegates that take an instance of IInputHelper for next, previous and triggering events
+    /// </summary>
+    /// <typeparam name="TInputHelper">The IInputHelper that is used to determine the enumeration</typeparam>
     public class ScriptAggregator<TInputHelper> : IAggregator
         where TInputHelper : Input.IInputHelper
     {
@@ -57,10 +60,10 @@ namespace Gem.Gui.Aggregation
         public bool IsEnabled
         {
             get;
-            set;
+            private set;
         }
 
-        public void Aggregate(GuiEntry entry, AggregationContext context)
+        public void Aggregate(AggregationEntry entry, AggregationContext context)
         {
             if (disableWhen(inputHelper)) return;
             if (!context.FirstEntry) return;
@@ -88,7 +91,9 @@ namespace Gem.Gui.Aggregation
             context.FirstEntry = false;
         }
 
-        //handles repetition
+        /// <summary>
+        /// Handles key repetition
+        /// </summary>
         private bool ShouldHandle(Func<TInputHelper, bool> script, AggregationAction aggrAction, double timeDelta)
         {
             if (script(inputHelper))
@@ -108,10 +113,10 @@ namespace Gem.Gui.Aggregation
                         keyRepeatTimer += KeyRepetition.KeyRepeatDuration;
                         return true;
                     }
-                    return false;                    
+                    return false;
                 }
-            }           
-            return false;            
+            }
+            return false;
         }
 
         #endregion

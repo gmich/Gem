@@ -3,7 +3,10 @@ using Gem.Gui.Transformations;
 
 namespace Gem.Gui.Alignment
 {
-    public class FixedTransition : IAlignmentTransition
+    /// <summary>
+    /// An instant transition.
+    /// </summary>
+    public class InstantTransition : IAlignmentTransition
     {
         public ITransformation CreateTransition(Region oldRegion, Region newRegion)
         {

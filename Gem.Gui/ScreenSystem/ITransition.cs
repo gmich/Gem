@@ -1,6 +1,4 @@
 ﻿using Gem.Gui.Animations;
-using Gem.Gui.Rendering;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 

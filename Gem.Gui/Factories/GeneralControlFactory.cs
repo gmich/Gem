@@ -4,7 +4,6 @@ using Gem.Gui.Styles;
 using Gem.Gui.Layout;
 using Gem.Gui.Rendering;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.ObjectModel;
 using Microsoft.Xna.Framework;
 
@@ -86,7 +85,7 @@ namespace Gem.Gui.Factories
             return new CheckBox(backgroundTexture,
                                 region,
                                 style,
-                                new AlignmentContext(checkBoxHorizontalAlignment, checkBoxVerticalAlignment, AlignmentTransition.Fixed), 
+                                new AlignmentContext(checkBoxHorizontalAlignment, checkBoxVerticalAlignment, AlignmentTransition.Instant), 
                                 checkedTexture, 
                                 unCheckedTexture,
                                 text,
@@ -111,7 +110,7 @@ namespace Gem.Gui.Factories
                                                  borderRegion,
                                                  new AlignmentContext(HorizontalAlignment.Left,
                                                                       VerticalAlignment.Center,
-                                                                      AlignmentTransition.Fixed)), 
+                                                                      AlignmentTransition.Instant)), 
                                                  backgroundTexture,
                                                  region,
                                                  style);

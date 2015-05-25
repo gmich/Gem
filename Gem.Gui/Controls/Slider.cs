@@ -144,7 +144,7 @@ namespace Gem.Gui.Controls
 
         #region Private Helpers
         
-        public void CheckMouseIntegration()
+        private void CheckMouseIntegration()
         {
             if (InputManager.Mouse.IsLeftButtonPressed())
             {

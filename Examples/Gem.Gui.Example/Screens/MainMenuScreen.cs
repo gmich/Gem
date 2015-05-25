@@ -54,7 +54,7 @@ namespace Gem.Gui.Example
                                   orientation: Layout.Orientation.Portrait,
                                   horizontalAlignment: HorizontalAlignment.Center,
                                   verticalAlignment: VerticalAlignment.Center,
-                                  alignmentTransition: AlignmentTransition.Fixed,
+                                  alignmentTransition: AlignmentTransition.Instant,
                                   controls: new[] { newGameButton, settingsButton, exitButton })
                           .ScreenAlignment(HorizontalAlignment.Center,
                                            VerticalAlignment.Center)

@@ -3,6 +3,9 @@ using System;
 
 namespace Gem.Gui.Animations
 {
+    /// <summary>
+    /// A functional approach to animation
+    /// </summary>
     public class Animation<T>
     {
         private readonly Func<AnimationContext, T> animationBehavior;
@@ -18,6 +21,9 @@ namespace Gem.Gui.Animations
         }
     }
 
+    /// <summary>
+    /// Animation factory
+    /// </summary>
     public static class Animation
     {
         public static Animation<T> Create<T>(Func<AnimationContext, T> f)
