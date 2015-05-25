@@ -4,6 +4,7 @@ using Gem.Gui.Text;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Gem.Gui.Input;
+using Gem.Gui.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace Gem.Gui.Controls
@@ -13,6 +14,7 @@ namespace Gem.Gui.Controls
 
         private enum SliderAction
         {
+            None,
             Add,
             Subtract
         }
@@ -23,10 +25,13 @@ namespace Gem.Gui.Controls
         private readonly Func<bool> Add;
         private readonly SliderInfo sliderInfo;
         private readonly SliderDrawable sliderDrawable;
+        private readonly KeyRepetition keyRepetition;
 
-        private SliderAction previousAction;
+        private SliderAction sliderAction;
         private double sliderRepeatTimer;
         private bool scriptHasEvaluated;
+        private bool sliderIsLocked;
+        private float sliderOffsetX;
 
         #endregion
 
@@ -36,13 +41,18 @@ namespace Gem.Gui.Controls
             : base(texture, region, style, null)
         {
             this.sliderInfo = sliderInfo;
+            this.sliderInfo.OnPositionChanged += (sender, args) => OnValueChanged();
+
             this.sliderDrawable = sliderDrawable;
+            this.keyRepetition = new KeyRepetition { KeyRepeatDuration = 0.01d, KeyRepeatStartDuration = 0.3d };
 
-            Subtract += () => InputManager.GamePad.IsButtonPressed(InputManager.GamePadInputKeys.Left);
-            Subtract += () => InputManager.Keyboard.IsKeyPressed(InputManager.KeyboardInputKeys.Left);
+            Subtract += () => InputManager.Mouse.IsWheelMovingUp() ||
+                              InputManager.GamePad.IsButtonPressed(InputManager.GamePadInputKeys.Left) ||
+                              InputManager.Keyboard.IsKeyPressed(InputManager.KeyboardInputKeys.Left);
 
-            Add += () => InputManager.GamePad.IsButtonPressed(InputManager.GamePadInputKeys.Right);
-            Add += () => InputManager.Keyboard.IsKeyPressed(InputManager.KeyboardInputKeys.Right);
+            Add += () => InputManager.Mouse.IsWheelMovingDown() ||
+                         InputManager.GamePad.IsButtonPressed(InputManager.GamePadInputKeys.Right) ||
+                         InputManager.Keyboard.IsKeyPressed(InputManager.KeyboardInputKeys.Right);
         }
 
         #endregion
@@ -64,6 +74,11 @@ namespace Gem.Gui.Controls
 
         #region Public Methods
 
+        public Region SliderRegion
+        {
+            get { return sliderDrawable.SliderRegion; }
+        }
+
         public float SliderValue
         {
             get { return sliderInfo.Position; }
@@ -72,7 +87,7 @@ namespace Gem.Gui.Controls
         #endregion
 
         #region AControl Members
-        
+
         public override void Align(Region parent)
         {
             base.Align(parent);
@@ -84,11 +99,10 @@ namespace Gem.Gui.Controls
             base.Scale(scale);
             sliderDrawable.Scale(scale);
         }
-        
+
         public override void Update(double deltaTime)
         {
             base.Update(deltaTime);
-
             sliderDrawable.Update(deltaTime);
 
             if (this.HasFocus)
@@ -97,8 +111,8 @@ namespace Gem.Gui.Controls
                 {
                     if (ShouldHandle(SliderAction.Add, deltaTime))
                     {
-                        MoveSlider(sliderInfo.Step);
-                        sliderDrawable.Move(sliderInfo.PositionPercent);
+                        sliderInfo.Move(sliderInfo.Step);
+                        sliderDrawable.MoveByPercentage(sliderInfo.PositionPercent);
                     }
                     scriptHasEvaluated = true;
                 }
@@ -106,12 +120,17 @@ namespace Gem.Gui.Controls
                 {
                     if (ShouldHandle(SliderAction.Subtract, deltaTime))
                     {
-                        MoveSlider(-sliderInfo.Step);
+                        sliderInfo.Move(-sliderInfo.Step);
                         sliderDrawable.MoveByPercentage(sliderInfo.PositionPercent);
                     }
                     scriptHasEvaluated = true;
                 }
             }
+            sliderInfo.SetPositionByPercentage(sliderDrawable.Percentage);
+            CheckMouseIntegration();
+
+            sliderAction = scriptHasEvaluated ? sliderAction : SliderAction.None;
+
             scriptHasEvaluated = false;
         }
 
@@ -124,33 +143,54 @@ namespace Gem.Gui.Controls
         #endregion
 
         #region Private Helpers
+        
+        public void CheckMouseIntegration()
+        {
+            if (InputManager.Mouse.IsLeftButtonPressed())
+            {
+                if (sliderIsLocked)
+                {
+                    sliderDrawable.MoveToLocationSmoothly(Input.InputManager.Mouse.MousePosition.X - sliderOffsetX);
+                }
+            }
+            if (InputManager.Mouse.IsLeftButtonClicked())
+            {
+                Point mousePosition = Input.InputManager.Mouse.MousePosition;
+                if (sliderDrawable.SliderRegion.Frame.Intersects(mousePosition))
+                {
+                    sliderOffsetX = sliderDrawable.SliderRegion.Frame.IntersectionDepth(mousePosition).X;
+                    sliderIsLocked = true;
+                }
+                if (this.Region.Frame.Intersects(mousePosition))
+                {
+                    sliderDrawable.MoveToLocationSmoothly(mousePosition.X - sliderDrawable.SliderRegion.Frame.Width / 2);
+                }
+            }
+            if (InputManager.Mouse.IsLeftButtonReleased())
+            {
+                sliderIsLocked = false;
+            }
+        }
 
         private bool ShouldHandle(SliderAction action, double deltaTime)
         {
-            if (this.previousAction != action)
+            if (this.sliderAction != action)
             {
-                sliderRepeatTimer = InputManager.KeyRepetition.KeyRepeatStartDuration;
-                this.previousAction = action;
+                sliderRepeatTimer = keyRepetition.KeyRepeatStartDuration;
+                this.sliderAction = action;
                 return true;
             }
-            if (this.previousAction == action)
+            if (this.sliderAction == action)
             {
                 sliderRepeatTimer -= deltaTime;
                 if (sliderRepeatTimer <= 0.0f)
                 {
-                    sliderRepeatTimer += InputManager.KeyRepetition.KeyRepeatDuration;
+                    sliderRepeatTimer += keyRepetition.KeyRepeatDuration;
                     return true;
                 }
             }
             return false;
         }
-
-        private void MoveSlider(float step)
-        {
-            sliderInfo.Move(step);
-            OnValueChanged();
-        }
-
 
         #endregion
 

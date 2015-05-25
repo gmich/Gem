@@ -157,6 +157,7 @@
     <Compile Include="Transformations\PredicateTransformation.cs" />
     <Compile Include="Transformations\OneTimeTransformation.cs" />
     <Compile Include="Transformations\TimedTransformation.cs" />
+    <Compile Include="Utilities\RectangleExtensions.cs" />
     <Compile Include="Utilities\NumberExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,7 @@ using System;
 using Gem.Gui.Fluent;
 using Gem.Gui.ScreenSystem;
 using Microsoft.Xna.Framework.Input;
+using Gem.Gui.Controls;
 
 namespace Gem.Gui.Example
 {
@@ -46,23 +47,38 @@ namespace Gem.Gui.Example
 
             var slider =
                 gui.Slider(x: 50, y: 50,
-                sizeX: 200, sizeY: 10,
-                sliderSizeX: 5, sliderSizeY: 30,
-                sliderInfo: new Controls.SliderInfo(0.0f, 100.0f, 1.0f, 0.0f),
+                sizeX: 200, sizeY: 20,
+                sliderSizeX: 15, sliderSizeY: 25,
+                sliderInfo: new Controls.SliderInfo(minValue: 10.0f, maxValue: 170.0f, step: 1.0f, initialPosition: 10.0f),
                 background: Pattern.SolidColor(Color.White),
                 slider: Pattern.SolidColor(Color.Black),
-                filling: Pattern.SolidColor(Color.Blue),
-                border: Pattern.Border(Color.Black,Color.Transparent),
-                style: Style.CustomisedTransparent(0.6f, 0.3f, 0.0f))
-                .ScreenAlignment(HorizontalAlignment.Center,
-                                 VerticalAlignment.Center);
+                filling: Pattern.SolidColor(new Color(0, 0, 0, 100)),
+                border: Pattern.Border(Color.Black, Color.Transparent),
+                style: Style.CustomisedTransparent(0.6f, 0.3f, 0.0f));
 
-            gui.AddGuiHost(GuiScreen.NewGame, playButton, slider, backButton);
+            var label = gui.Label(x: 10, y: 10,
+              sizeX: 30, sizeY: 30,
+              text: slider.SliderValue.ToString(),
+              font: gui.Fonts["segoe-18"],
+              textColor: Color.White,
+              horizontalAlignment: HorizontalAlignment.Center,
+              verticalAlignment: VerticalAlignment.Center,
+              pattern: Pattern.SolidColor(Color.Black));
+            label.StretchToText = true;
+
+            slider.OnValueChange += (sender, value) => label.Text.Value = value.ToString();
+            slider.ScreenAlignment(HorizontalAlignment.Center,
+                                   VerticalAlignment.Center);
+
+            label.ScreenAlignment(label.HorizontalRelativeTo(slider, () => slider.Region.Frame.Right + 5 * Configuration.Settings.Scale.X),
+                                  VerticalAlignment.Center);
+
+            gui.AddGuiHost(GuiScreen.NewGame, playButton, slider, backButton, label);
 
             gui[GuiScreen.NewGame].OnEntering += (sender, args) =>
             {
-               // Input.InputManager.KeyboardInputKeys.Previous = Keys.Left;
-               // Input.InputManager.KeyboardInputKeys.Next = Keys.Right;
+                // Input.InputManager.KeyboardInputKeys.Previous = Keys.Left;
+                // Input.InputManager.KeyboardInputKeys.Next = Keys.Right;
             };
 
             gui[GuiScreen.NewGame].Transition = new TimedTransition(

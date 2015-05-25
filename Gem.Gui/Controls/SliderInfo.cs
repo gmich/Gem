@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+
 namespace Gem.Gui.Controls
 {
-    public struct SliderInfo
+    public class SliderInfo
     {
         private readonly float minValue;
         private readonly float maxValue;
@@ -28,13 +30,32 @@ namespace Gem.Gui.Controls
             position = MathHelper.Clamp(initialPosition, minValue, maxValue);
         }
 
+        #region Events
+
+        internal event EventHandler<float> OnPositionChanged;
+
+        private void OnPositionChange()
+        {
+            var handler = OnPositionChanged;
+            if (handler != null)
+            {
+                handler(this, Position);
+            }
+        }
+
+        #endregion 
+
         public float Position
         {
             get { return position; }
-            set { position = MathHelper.Clamp(value, minValue, maxValue); }
+            set
+            {
+                position = MathHelper.Clamp(value, minValue, maxValue);
+                OnPositionChange();
+            }
         }
 
-        public float PositionPercent { get { return CalculatePercentage(this.position); } }
+        internal float PositionPercent { get { return CalculatePercentage(this.position); } }
 
         public float Min { get { return minValue; } }
 
@@ -42,14 +63,19 @@ namespace Gem.Gui.Controls
 
         public float Step { get { return step; } }
 
-        public void Move(float value)
+        internal void Move(float value)
         {
             Position += value;
         }
 
-        public float CalculatePercentage(float value)
+        internal void SetPositionByPercentage(float percentage)
         {
-            return (value * 100) / (Max - Min);
+            Position = Min + ((percentage * (Max - Min)) / 100);
+        }
+
+        internal float CalculatePercentage(float value)
+        {
+            return ((value - Min) * 100) / (Max - Min);
         }
     }
 }
