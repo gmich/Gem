@@ -43,8 +43,10 @@ namespace Gem.Gui.Controls
         {
             this.sliderInfo = sliderInfo;
             this.sliderDrawable = sliderDrawable;
-            this.sliderInfo.OnPositionChanged += (sender, args) => ValueChanging();
+            this.sliderDrawable.OnFinishedMoving += (sender, args) => sliderInfo.SetPositionByPercentage(sliderDrawable.Percentage);
             this.sliderDrawable.OnFinishedMoving += (sender, args) => ValueChanged();
+            this.sliderDrawable.OnNewDestination += (sender, destination) => ValueChanging(destination);
+
             this.sliderDrawable.MoveByPercentage(sliderInfo.PositionPercent);
             this.keyRepetition = new KeyRepetition { KeyRepeatDuration = 0.01d, KeyRepeatStartDuration = 0.3d };
 
@@ -64,12 +66,12 @@ namespace Gem.Gui.Controls
         public event EventHandler<float> OnValueChanging;
         public event EventHandler<float> OnValueChanged;
 
-        private void ValueChanging()
+        private void ValueChanging(float targetPercentage)
         {
             var handler = OnValueChanging;
             if (handler != null)
             {
-                handler(this, sliderInfo.Position);
+                handler(this, sliderInfo.GetPositionByPercentage(targetPercentage));
             }
         }
 
@@ -123,8 +125,8 @@ namespace Gem.Gui.Controls
                 {
                     if (ShouldHandle(SliderAction.Add, deltaTime))
                     {
-                        sliderInfo.Move(sliderInfo.Step);
-                        sliderDrawable.MoveByPercentage(sliderInfo.PositionPercent);
+                        //sliderInfo.Move(sliderInfo.Step);
+                        sliderDrawable.MoveByPercentageSmoothly(sliderInfo.PercentageStep);
                     }
                     scriptHasEvaluated = true;
                 }
@@ -132,13 +134,13 @@ namespace Gem.Gui.Controls
                 {
                     if (ShouldHandle(SliderAction.Subtract, deltaTime))
                     {
-                        sliderInfo.Move(-sliderInfo.Step);
-                        sliderDrawable.MoveByPercentage(sliderInfo.PositionPercent);
+                        //sliderInfo.Move(-sliderInfo.Step);
+                        sliderDrawable.MoveByPercentageSmoothly(-sliderInfo.PercentageStep);
                     }
                     scriptHasEvaluated = true;
                 }
             }
-            sliderInfo.SetPositionByPercentage(sliderDrawable.Percentage);
+
             CheckMouseIntegration();
 
             sliderAction = scriptHasEvaluated ? sliderAction : SliderAction.None;

@@ -87,11 +87,16 @@ namespace Gem.Gui.Controls
 
         internal void SetPositionByPercentage(float percentage)
         {
-            float newPosition = Min + ((percentage * (Max - Min)) / 100);
+            float newPosition = GetPositionByPercentage(percentage);
             if(newPosition!=Position)
             {
                 Position = newPosition;
             }
+        }
+
+        internal float GetPositionByPercentage(float percentage)
+        {
+            return Min + ((percentage * (Max - Min)) / 100);
         }
 
         internal float CalculatePercentage(float value)

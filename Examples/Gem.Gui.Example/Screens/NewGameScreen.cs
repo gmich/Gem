@@ -61,7 +61,7 @@ namespace Gem.Gui.Example
                 gui.Slider(x: 50, y: 50,
                 sizeX: 300, sizeY: 20,
                 sliderSizeX: 15, sliderSizeY: 25,
-                sliderInfo: new Controls.SliderInfo(minValue: 0.0f, maxValue: 300.0f, step: 20.0f, initialPosition: 300.0f),
+                sliderInfo: new Controls.SliderInfo(minValue: 1.0f, maxValue: 4.0f, step: 1.0f, initialPosition: 1.0f),
                 background: Pattern.SolidColor(Color.White),
                 slider: Pattern.SolidColor(Color.Black),
                 filling: Pattern.SolidColor(new Color(0, 0, 0, 100)),
@@ -94,7 +94,7 @@ namespace Gem.Gui.Example
               pattern: Pattern.SolidColor(Color.Black));
             label.StretchToText = true;
 
-            slider.OnValueChanging += (sender, value) => label.Text.Value = value.ToString();
+            slider.OnValueChanged += (sender, value) => label.Text.Value = value.ToString();
             slider.ScreenAlignment(HorizontalAlignment.Center,
                                    VerticalAlignment.Center);
 

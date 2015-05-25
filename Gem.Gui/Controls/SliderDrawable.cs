@@ -81,6 +81,16 @@ namespace Gem.Gui.Controls
 
         #region Events
 
+        public event EventHandler<float> OnNewDestination;
+
+        private void OnNewDestinationgAggregation()
+        {
+            var handler = OnNewDestination;
+            if (handler != null)
+            {
+                handler(this, GetPercentageByPosition(destinationX));
+            }
+        }
         public event EventHandler<float> OnFinishedMoving;
 
         private void OnFinishedMovingAggregation()
@@ -163,14 +173,22 @@ namespace Gem.Gui.Controls
             return MathHelper.Clamp((startX * 100) / (border.Region.Size.X - slider.Region.Size.X), 0.0f, 100.0f);
         }
 
-        public void MoveByPercentageSmoothly(float xPercentage)
+        public void MoveToPercentageSmoothly(float xPercentage)
         {
             destinationX = GetPositionByPercentage(xPercentage);
+            OnNewDestinationgAggregation();
+        }
+
+        public void MoveByPercentageSmoothly(float xPercentage)
+        {
+            destinationX = GetPositionByPercentage(GetPercentageByPosition(destinationX) + xPercentage);
+            OnNewDestinationgAggregation();
         }
 
         public void MoveToLocationSmoothly(float xlocation)
         {
             destinationX = GetValidDestination(xlocation);
+            OnNewDestinationgAggregation();
         }
 
         public float GetValidDestination(float xDestination)
