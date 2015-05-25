@@ -108,5 +108,24 @@ namespace Gem.Gui.Fluent
 
         #endregion
 
+        #region Slider Extensions
+
+        public static Slider OnValueChanged(this Slider slider, EventHandler<float> onValueChangedHandler)
+        {
+            slider.OnValueChange += onValueChangedHandler;
+            return slider;
+        }
+
+        #endregion
+
+        #region Label Extensions
+
+        public static Label StretchToText(this Label label,bool shouldStretch)
+        {
+            label.StretchToText = shouldStretch;
+            return label;
+        }
+
+        #endregion
     }
 }

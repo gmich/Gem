@@ -6,7 +6,7 @@ namespace Gem.Gui.Controls
 {
     public class Button : AControl
     {
-        public Button(Texture2D texture, Region region, ARenderStyle style, Region parent = null)
+        internal Button(Texture2D texture, Region region, ARenderStyle style, Region parent = null)
             : base(texture, region, style, parent)
         { }
     }

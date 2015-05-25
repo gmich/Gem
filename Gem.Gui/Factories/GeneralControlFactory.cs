@@ -110,7 +110,8 @@ namespace Gem.Gui.Factories
                                                  borderRegion,
                                                  new AlignmentContext(HorizontalAlignment.Left,
                                                                       VerticalAlignment.Center,
-                                                                      AlignmentTransition.Instant)), 
+                                                                      AlignmentTransition.Instant),
+                                                 sliderInfo.PercentageStep), 
                                                  backgroundTexture,
                                                  region,
                                                  style);

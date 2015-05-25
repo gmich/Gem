@@ -52,7 +52,7 @@ namespace Gem.Gui.Controls
             }
         }
 
-        #endregion 
+        #endregion
 
         #region Properties
 
@@ -66,13 +66,15 @@ namespace Gem.Gui.Controls
             }
         }
 
-        internal float PositionPercent { get { return CalculatePercentage(this.position); } }
-
         public float Min { get { return minValue; } }
 
         public float Max { get { return maxValue; } }
 
         public float Step { get { return step; } }
+
+        internal float PositionPercent { get { return CalculatePercentage(this.position); } }
+
+        internal float PercentageStep { get { return (Step * 100) / (Max - Min); } }
 
         #endregion
 
@@ -85,7 +87,11 @@ namespace Gem.Gui.Controls
 
         internal void SetPositionByPercentage(float percentage)
         {
-            Position = Min + ((percentage * (Max - Min)) / 100);
+            float newPosition = Min + ((percentage * (Max - Min)) / 100);
+            if(newPosition!=Position)
+            {
+                Position = newPosition;
+            }
         }
 
         internal float CalculatePercentage(float value)

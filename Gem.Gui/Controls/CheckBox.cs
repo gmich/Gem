@@ -12,12 +12,16 @@ namespace Gem.Gui.Controls
 
     public class CheckBox : AControl
     {
+        #region Fields
+
         private readonly Button checkBox;
         private bool isChecked;
 
-        public event EventHandler<bool> CheckChanged;
+        #endregion
 
-        public CheckBox(Texture2D texture,
+        #region Ctor
+
+        internal CheckBox(Texture2D texture,
                         Region region,
                         ARenderStyle style,
                         AlignmentContext checkBoxAlignment,
@@ -47,6 +51,10 @@ namespace Gem.Gui.Controls
             checkBox.Region.onPositionChange += (args, sender) => Text.Align(this.Region);
         }
 
+        #endregion
+
+        #region Public Properties
+
         public AControl Box
         {
             get { return checkBox; }
@@ -62,6 +70,12 @@ namespace Gem.Gui.Controls
             }
         }
 
+        #endregion
+
+        #region Events
+
+        public event EventHandler<bool> CheckChanged;
+
         internal void ValueChanged()
         {
             var handler = CheckChanged;
@@ -71,10 +85,13 @@ namespace Gem.Gui.Controls
             }
         }
 
+        #endregion
+
+        #region AControl Members
+
         public override IEnumerable<AControl> Entries()
         {
             yield return this;
-            //yield return checkBox;
         }
 
         public override void Align(Region parent)
@@ -101,5 +118,7 @@ namespace Gem.Gui.Controls
             base.Render(batch);
             checkBox.Render(batch);
         }
+
+        #endregion
     }
 }

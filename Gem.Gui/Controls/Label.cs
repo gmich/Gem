@@ -9,7 +9,7 @@ namespace Gem.Gui.Controls
 {
     public class Label : AControl
     {
-        public Label(string text,
+        internal Label(string text,
                      SpriteFont font,
                      Texture2D texture,
                      Region region,

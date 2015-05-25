@@ -6,6 +6,7 @@ using System;
 using Gem.Gui.Input;
 using Gem.Gui.Utilities;
 using Microsoft.Xna.Framework;
+using System.Diagnostics;
 
 namespace Gem.Gui.Controls
 {
@@ -37,7 +38,7 @@ namespace Gem.Gui.Controls
 
         #region Ctor
 
-        public Slider(SliderInfo sliderInfo, SliderDrawable sliderDrawable, Texture2D texture, Region region, ARenderStyle style)
+        internal Slider(SliderInfo sliderInfo, SliderDrawable sliderDrawable, Texture2D texture, Region region, ARenderStyle style)
             : base(texture, region, style, null)
         {
             this.sliderInfo = sliderInfo;
@@ -144,6 +145,7 @@ namespace Gem.Gui.Controls
 
         #region Private Helpers
         
+        //[Conditional("WINDOWS"), Conditional("LINUX")]
         private void CheckMouseIntegration()
         {
             if (InputManager.Mouse.IsLeftButtonPressed())

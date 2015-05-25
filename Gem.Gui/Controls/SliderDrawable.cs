@@ -45,14 +45,17 @@ namespace Gem.Gui.Controls
         private Func<double, float> SmoothStep;
         private float destinationX;
         private float previousPercentage;
-        private readonly float stepInterpolation = 0.2f;
+        private readonly float stepInterpolation = 0.4f;
+        private readonly float unreachableDestination = -9999f;
+        private readonly float percentageStep;
 
         #endregion
 
         #region Ctor
 
-        public SliderDrawable(Texture2D slider, Texture2D border, Texture2D filling, Region borderRegion, AlignmentContext alignment)
+        public SliderDrawable(Texture2D slider, Texture2D border, Texture2D filling, Region borderRegion, AlignmentContext alignment, float percentageStep)
         {
+            this.percentageStep = percentageStep;
             this.alignment = alignment;
             this.slider = new SliderItem(slider, new Region(borderRegion.Position.X,
                                                             borderRegion.Position.Y + (borderRegion.Size.Y / 2) - slider.Height / 2,
@@ -66,7 +69,7 @@ namespace Gem.Gui.Controls
 
             SmoothStep = (time) =>
             {
-                if (destinationX == -999f) return 0.0f;
+                if (destinationX == unreachableDestination) return 0.0f;
                 float distance = (destinationX - this.slider.Region.Position.X);
                 return (Math.Abs(distance) <= stepInterpolation) ?
                        distance :
@@ -138,18 +141,24 @@ namespace Gem.Gui.Controls
         public float GetPercentageByPosition(float positionX)
         {
             float startX = positionX - border.Region.Position.X;
-            return MathHelper.Clamp((startX * 100) / (border.Region.Frame.Width - slider.Region.Size.X), 0, 100.0f);
+            return MathHelper.Clamp((startX * 100) / (border.Region.Size.X - slider.Region.Size.X), 0.0f, 100.0f);
         }
-        
+
         public void MoveByPercentageSmoothly(float xPercentage)
         {
-
             destinationX = GetPositionByPercentage(xPercentage);
         }
 
         public void MoveToLocationSmoothly(float xlocation)
         {
-            destinationX = xlocation;
+            destinationX = GetValidDestination(xlocation);
+        }
+
+        public float GetValidDestination(float xDestination)
+        {
+            float positionPercentage = GetPercentageByPosition(xDestination);
+            return GetPositionByPercentage(
+                (float)Math.Round(positionPercentage / percentageStep) * percentageStep);
         }
 
         public void SetLocation(float xlocation)
@@ -165,7 +174,7 @@ namespace Gem.Gui.Controls
             slider.Region.Scale(scale);
             filling.Region.Scale(scale);
             border.Region.Scale(scale);
-            destinationX = -999f;
+            destinationX = unreachableDestination;
         }
 
         #endregion

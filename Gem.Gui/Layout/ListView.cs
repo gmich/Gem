@@ -26,7 +26,7 @@ namespace Gem.Gui.Layout
 
         #region Ctor
 
-        public ListView(Texture2D texture,
+        internal ListView(Texture2D texture,
                         AlignmentContext alignment,
                         Orientation orientation,
                         Region region,

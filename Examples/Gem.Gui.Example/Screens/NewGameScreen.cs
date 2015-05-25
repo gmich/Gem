@@ -56,6 +56,33 @@ namespace Gem.Gui.Example
                 border: Pattern.Border(Color.Black, Color.Transparent),
                 style: Style.CustomisedTransparent(0.6f, 0.3f, 0.0f));
 
+            var largeStepSlider =
+                gui.Slider(x: 50, y: 50,
+                sizeX: 300, sizeY: 20,
+                sliderSizeX: 15, sliderSizeY: 25,
+                sliderInfo: new Controls.SliderInfo(minValue: 0.0f, maxValue: 300.0f, step: 20.0f, initialPosition: 10.0f),
+                background: Pattern.SolidColor(Color.White),
+                slider: Pattern.SolidColor(Color.Black),
+                filling: Pattern.SolidColor(new Color(0, 0, 0, 100)),
+                border: Pattern.Border(Color.Black, Color.Transparent),
+                style: Style.CustomisedTransparent(0.6f, 0.3f, 0.0f))
+                .OnValueChanged((sender, value) => Console.WriteLine("LargeStepSlider: " + value))
+               .ScreenAlignment(HorizontalAlignment.Center,
+                                   VerticalAlignment.Bottom);
+            var tinyStepSlider =
+                gui.Slider(x: 50, y: 50,
+                sizeX: 200, sizeY: 20,
+                sliderSizeX: 15, sliderSizeY: 25,
+                sliderInfo: new Controls.SliderInfo(minValue: 10.0f, maxValue: 170.0f, step: 0.01f, initialPosition: 10.0f),
+                background: Pattern.SolidColor(Color.White),
+                slider: Pattern.SolidColor(Color.Black),
+                filling: Pattern.SolidColor(new Color(0, 0, 0, 100)),
+                border: Pattern.Border(Color.Black, Color.Transparent),
+                style: Style.CustomisedTransparent(0.6f, 0.3f, 0.0f))
+               .OnValueChanged((sender, value) => Console.WriteLine("tinyStepSlider: " + value))
+               .ScreenAlignment(HorizontalAlignment.Center,
+                                   VerticalAlignment.Top);
+
             var label = gui.Label(x: 10, y: 10,
               sizeX: 30, sizeY: 30,
               text: slider.SliderValue.ToString(),
@@ -73,7 +100,7 @@ namespace Gem.Gui.Example
             label.ScreenAlignment(label.HorizontalRelativeTo(slider, () => slider.Region.Frame.Right + 5 * Configuration.Settings.Scale.X),
                                   VerticalAlignment.Center);
 
-            gui.AddGuiHost(GuiScreen.NewGame, playButton, slider, backButton, label);
+            gui.AddGuiHost(GuiScreen.NewGame, playButton, largeStepSlider, slider, tinyStepSlider, backButton, label);
 
             gui[GuiScreen.NewGame].OnEntering += (sender, args) =>
             {

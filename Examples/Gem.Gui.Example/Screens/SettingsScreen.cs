@@ -40,13 +40,13 @@ namespace Gem.Gui.Example
                                       .ScreenAlignment(HorizontalAlignment.Center,
                                                        VerticalAlignment.Center);
 
-            var styleTextBox = gui.TextField(x: 300, y: 100,
+            var emailTextBox = gui.TextField(x: 300, y: 100,
                                              sizeX: 300, sizeY: 30,
                                              textColor: Color.Black,
                                              font: gui.Fonts["segoe-18"],
                                              style: Style.Transparent,
                                              pattern: Pattern.TextViewPattern(Color.Black, Color.White),
-                                             hint: "Your style");
+                                             hint: "Your email");
 
             var checkBox =
                         gui.CheckBox(10, 10, 140, 30,
@@ -62,24 +62,35 @@ namespace Gem.Gui.Example
 
             var slider =
                 gui.Slider(x: 50, y: 50,
-                sizeX: 200, sizeY: 20,
-                sliderSizeX: 15, sliderSizeY: 25,
-                sliderInfo: new Controls.SliderInfo(minValue: 10.0f, maxValue: 170.0f, step: 1.0f, initialPosition: 10.0f),
-                background: Pattern.SolidColor(Color.White),
-                slider: Pattern.SolidColor(Color.Black),
-                filling: Pattern.SolidColor(new Color(0, 0, 0, 100)),
-                border: Pattern.Border(Color.Black, Color.Transparent),
-                style: Style.CustomisedTransparent(0.6f, 0.3f, 0.0f));
+                           sizeX: 200, sizeY: 20,
+                           sliderSizeX: 15, sliderSizeY: 25,
+                           sliderInfo: new Controls.SliderInfo(minValue: 10.0f, maxValue: 170.0f, step: 1.0f, initialPosition: 10.0f),
+                           background: Pattern.SolidColor(Color.White),
+                           slider: Pattern.SolidColor(Color.Black),
+                           filling: Pattern.SolidColor(new Color(0, 0, 0, 100)),
+                           border: Pattern.Border(Color.Black, Color.Transparent),
+                           style: Style.CustomisedTransparent(0.6f, 0.3f, 0.0f));
 
-            var sliderLabel = gui.Label(x: 10, y: 10,
-              sizeX: 30, sizeY: 30,
-              text: slider.SliderValue.ToString(),
-              font: gui.Fonts["segoe-18"],
-              textColor: Color.Black,
-              horizontalAlignment: HorizontalAlignment.Center,
-              verticalAlignment: VerticalAlignment.Center,
-              pattern: Pattern.SolidColor(Color.White));
-            sliderLabel.StretchToText = true;
+            var sliderLabel =
+                gui.Label(x: 10, y: 10,
+                          sizeX: 30, sizeY: 30,
+                          text: slider.SliderValue.ToString(),
+                          font: gui.Fonts["segoe-18"],
+                          textColor: Color.White,
+                          horizontalAlignment: HorizontalAlignment.Center,
+                          verticalAlignment: VerticalAlignment.Center,
+                          pattern: Pattern.SolidColor(Color.Black))
+                          .StretchToText(true);
+
+            var label = 
+                gui.Label(x: 300, y: 100,
+                          sizeX: 300, sizeY: 30,
+                          text: "Profile",
+                          font: gui.Fonts["segoe-18"],
+                          textColor: Color.White,
+                          horizontalAlignment: HorizontalAlignment.Center,
+                          verticalAlignment: VerticalAlignment.Center,
+                          pattern: Pattern.SolidColor(Color.Transparent));
 
             slider.OnValueChange += (sender, value) => sliderLabel.Text.Value = value.ToString();
             slider.ScreenAlignment(HorizontalAlignment.Center,
@@ -89,31 +100,23 @@ namespace Gem.Gui.Example
 
             sliderLabel.ScreenAlignment(sliderLabel.HorizontalRelativeTo(slider, () => slider.Region.Frame.Right + 5 * Configuration.Settings.Scale.X),
                                   sliderLabel.VerticalRelativeTo(slider, () => slider.Region.Position.Y));
-
-
-            styleTextBox.ScreenAlignment(HorizontalAlignment.Center,
-                                 styleTextBox.VerticalRelativeTo(nameTextBox, () => nameTextBox.Region.Position.Y
+            
+            emailTextBox.ScreenAlignment(HorizontalAlignment.Center,
+                                 emailTextBox.VerticalRelativeTo(nameTextBox, () => nameTextBox.Region.Position.Y
                                                                                   + nameTextBox.Region.Size.Y
                                                                                   + entryOffset * Configuration.Settings.Scale.Y));
 
-            checkBox.ScreenAlignment(checkBox.HorizontalRelativeTo(styleTextBox, () => styleTextBox.Region.Position.X),
-                     checkBox.VerticalRelativeTo(styleTextBox, () => styleTextBox.Region.Position.Y
-                                                                    + styleTextBox.Region.Size.Y
+            checkBox.ScreenAlignment(checkBox.HorizontalRelativeTo(emailTextBox, () => emailTextBox.Region.Position.X),
+                     checkBox.VerticalRelativeTo(emailTextBox, () => emailTextBox.Region.Position.Y
+                                                                    + emailTextBox.Region.Size.Y
                                                                     + entryOffset * Configuration.Settings.Scale.Y));
 
-            var label = gui.Label(x: 300, y: 100,
-                          sizeX: 300, sizeY: 30,
-                          text: "Profile",
-                          font: gui.Fonts["segoe-18"],
-                          textColor: Color.White,
-                          horizontalAlignment: HorizontalAlignment.Center,
-                          verticalAlignment: VerticalAlignment.Center,
-                          pattern: Pattern.SolidColor(Color.Transparent));
+
 
             label.ScreenAlignment(HorizontalAlignment.Center,
                                   label.VerticalRelativeTo(nameTextBox, () => nameTextBox.Region.Position.Y - label.Region.Size.Y));
 
-            gui.AddGuiHost(GuiScreen.Settings, nameTextBox, styleTextBox, checkBox,slider, backButton, label, sliderLabel);
+            gui.AddGuiHost(GuiScreen.Settings, nameTextBox, emailTextBox, checkBox,slider, backButton, label, sliderLabel);
 
             gui[GuiScreen.Settings].Transition = new TimedTransition(
                                                       TimeSpan.FromSeconds(0.5),

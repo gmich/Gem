@@ -38,7 +38,7 @@ namespace Gem.Gui.Controls
 
         #region Ctor
 
-        public TextField(TextAppenderHelper appender,
+        internal TextField(TextAppenderHelper appender,
                          SpriteFont font,
                          Texture2D texture,
                          Region region,

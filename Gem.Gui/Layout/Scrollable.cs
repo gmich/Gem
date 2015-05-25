@@ -24,15 +24,13 @@ namespace Gem.Gui.Layout
 
         #region Ctor
 
-        public Scrollable(Texture2D texture,
+        internal Scrollable(Texture2D texture,
                         AlignmentContext alignment,
                         Orientation orientation,
                         Region region,
                         ReadOnlyCollection<AControl> controls)
             : base(texture, region, new NoStyle())
         {
-            throw new NotImplementedException();
-
             this.listView = new ListView(texture, alignment, orientation, region, controls);
 
             area = new ControlCamera(region.Position,
@@ -41,6 +39,8 @@ namespace Gem.Gui.Layout
                                                    (int)listView.VirtualSize.X, (int)listView.VirtualSize.Y));
 
             region.SetPositionTransformer(position => area.Position - position);
+
+            throw new NotImplementedException();
         }
 
 
