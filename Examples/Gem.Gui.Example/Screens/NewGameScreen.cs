@@ -54,19 +54,20 @@ namespace Gem.Gui.Example
                 slider: Pattern.SolidColor(Color.Black),
                 filling: Pattern.SolidColor(new Color(0, 0, 0, 100)),
                 border: Pattern.Border(Color.Black, Color.Transparent),
-                style: Style.CustomisedTransparent(0.6f, 0.3f, 0.0f));
+                style: Style.CustomisedTransparent(0.6f, 0.3f, 0.0f))
+                .ValueChanged((sender, value) => Console.WriteLine("slider: " + value));
 
             var largeStepSlider =
                 gui.Slider(x: 50, y: 50,
                 sizeX: 300, sizeY: 20,
                 sliderSizeX: 15, sliderSizeY: 25,
-                sliderInfo: new Controls.SliderInfo(minValue: 0.0f, maxValue: 300.0f, step: 20.0f, initialPosition: 10.0f),
+                sliderInfo: new Controls.SliderInfo(minValue: 0.0f, maxValue: 300.0f, step: 20.0f, initialPosition: 300.0f),
                 background: Pattern.SolidColor(Color.White),
                 slider: Pattern.SolidColor(Color.Black),
                 filling: Pattern.SolidColor(new Color(0, 0, 0, 100)),
                 border: Pattern.Border(Color.Black, Color.Transparent),
                 style: Style.CustomisedTransparent(0.6f, 0.3f, 0.0f))
-                .OnValueChanged((sender, value) => Console.WriteLine("LargeStepSlider: " + value))
+                .ValueChanged((sender, value) => Console.WriteLine("LargeStepSlider: " + value))
                .ScreenAlignment(HorizontalAlignment.Center,
                                    VerticalAlignment.Bottom);
             var tinyStepSlider =
@@ -79,7 +80,7 @@ namespace Gem.Gui.Example
                 filling: Pattern.SolidColor(new Color(0, 0, 0, 100)),
                 border: Pattern.Border(Color.Black, Color.Transparent),
                 style: Style.CustomisedTransparent(0.6f, 0.3f, 0.0f))
-               .OnValueChanged((sender, value) => Console.WriteLine("tinyStepSlider: " + value))
+               .ValueChanged((sender, value) => Console.WriteLine("tinyStepSlider: " + value))
                .ScreenAlignment(HorizontalAlignment.Center,
                                    VerticalAlignment.Top);
 
@@ -93,7 +94,7 @@ namespace Gem.Gui.Example
               pattern: Pattern.SolidColor(Color.Black));
             label.StretchToText = true;
 
-            slider.OnValueChange += (sender, value) => label.Text.Value = value.ToString();
+            slider.OnValueChanging += (sender, value) => label.Text.Value = value.ToString();
             slider.ScreenAlignment(HorizontalAlignment.Center,
                                    VerticalAlignment.Center);
 

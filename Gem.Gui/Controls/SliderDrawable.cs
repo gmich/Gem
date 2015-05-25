@@ -3,11 +3,10 @@ using Gem.Gui.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Gem.Gui.Alignment;
-using Gem.Gui.Utilities;
 
 namespace Gem.Gui.Controls
 {
-    public class SliderDrawable
+    internal class SliderDrawable
     {
         private class SliderItem
         {
@@ -45,6 +44,7 @@ namespace Gem.Gui.Controls
         private Func<double, float> SmoothStep;
         private float destinationX;
         private float previousPercentage;
+        private bool movedPreviously;
         private readonly float stepInterpolation = 0.4f;
         private readonly float unreachableDestination = -9999f;
         private readonly float percentageStep;
@@ -75,6 +75,21 @@ namespace Gem.Gui.Controls
                        distance :
                        distance * MathHelper.Min(1.0f, (float)time * 10);
             };
+        }
+
+        #endregion
+
+        #region Events
+
+        public event EventHandler<float> OnFinishedMoving;
+
+        private void OnFinishedMovingAggregation()
+        {
+            var handler = OnFinishedMoving;
+            if (handler != null)
+            {
+                handler(this, Percentage);
+            }
         }
 
         #endregion
@@ -135,7 +150,11 @@ namespace Gem.Gui.Controls
         {
             previousPercentage = xPercentage;
             destinationX = GetPositionByPercentage(xPercentage);
-            slider.Region.Position = new Vector2(destinationX, slider.Region.Position.Y);
+            if (destinationX != slider.Region.Position.X)
+            {
+                OnFinishedMovingAggregation();
+                slider.Region.Position = new Vector2(destinationX, slider.Region.Position.Y);
+            }
         }
 
         public float GetPercentageByPosition(float positionX)
@@ -188,6 +207,12 @@ namespace Gem.Gui.Controls
             if (step != 0.0f)
             {
                 Move(step);
+                movedPreviously = true;
+            }
+            else if (movedPreviously)
+            {
+                OnFinishedMovingAggregation();
+                movedPreviously = false;
             }
         }
 

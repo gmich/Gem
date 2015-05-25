@@ -42,9 +42,10 @@ namespace Gem.Gui.Controls
             : base(texture, region, style, null)
         {
             this.sliderInfo = sliderInfo;
-            this.sliderInfo.OnPositionChanged += (sender, args) => OnValueChanged();
-
             this.sliderDrawable = sliderDrawable;
+            this.sliderInfo.OnPositionChanged += (sender, args) => ValueChanging();
+            this.sliderDrawable.OnFinishedMoving += (sender, args) => ValueChanged();
+            this.sliderDrawable.MoveByPercentage(sliderInfo.PositionPercent);
             this.keyRepetition = new KeyRepetition { KeyRepeatDuration = 0.01d, KeyRepeatStartDuration = 0.3d };
 
             Subtract += () => InputManager.Mouse.IsWheelMovingUp() ||
@@ -60,11 +61,21 @@ namespace Gem.Gui.Controls
 
         #region Events
 
-        public event EventHandler<float> OnValueChange;
+        public event EventHandler<float> OnValueChanging;
+        public event EventHandler<float> OnValueChanged;
 
-        private void OnValueChanged()
+        private void ValueChanging()
         {
-            var handler = OnValueChange;
+            var handler = OnValueChanging;
+            if (handler != null)
+            {
+                handler(this, sliderInfo.Position);
+            }
+        }
+
+        private void ValueChanged()
+        {
+            var handler = OnValueChanged;
             if (handler != null)
             {
                 handler(this, sliderInfo.Position);

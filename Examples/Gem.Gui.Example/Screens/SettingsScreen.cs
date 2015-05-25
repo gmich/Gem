@@ -92,7 +92,7 @@ namespace Gem.Gui.Example
                           verticalAlignment: VerticalAlignment.Center,
                           pattern: Pattern.SolidColor(Color.Transparent));
 
-            slider.OnValueChange += (sender, value) => sliderLabel.Text.Value = value.ToString();
+            slider.OnValueChanging += (sender, value) => sliderLabel.Text.Value = value.ToString();
             slider.ScreenAlignment(HorizontalAlignment.Center,
                                   slider.VerticalRelativeTo(checkBox, () => checkBox.Region.Position.Y
                                                                                   + checkBox.Region.Size.Y

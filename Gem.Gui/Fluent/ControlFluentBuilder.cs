@@ -110,9 +110,15 @@ namespace Gem.Gui.Fluent
 
         #region Slider Extensions
 
-        public static Slider OnValueChanged(this Slider slider, EventHandler<float> onValueChangedHandler)
+        public static Slider ValueChanged(this Slider slider, EventHandler<float> onValueChangedHandler)
         {
-            slider.OnValueChange += onValueChangedHandler;
+            slider.OnValueChanged += onValueChangedHandler;
+            return slider;
+        }
+
+        public static Slider ValueChanging(this Slider slider, EventHandler<float> onValueChangingHandler)
+        {
+            slider.OnValueChanging += onValueChangingHandler;
             return slider;
         }
 
