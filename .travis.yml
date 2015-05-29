@@ -1,2 +1,6 @@
 language: csharp
 solution: Gem.sln
+
+branches:
+  only:
+    - master
