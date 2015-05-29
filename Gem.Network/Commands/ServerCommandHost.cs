@@ -99,7 +99,7 @@ namespace Gem.Network.Commands
         /// <param name="requiresAuthorization">Shows if a password is required to execute the command</param>
         /// <param name="description">The commands' description that's shown in the help command</param>
         /// <param name="callback">The command's callback</param>
-        public void RegisterCommand(string command, bool requiresAuthorization, string description, CommandExecute callback)
+        public void RegisterCommand(string command, bool requiresAuthorization, string description, ExecuteCommand callback)
         {
             string lowerCommand = command.ToLower();
             if (commandTable.ContainsKey(lowerCommand))

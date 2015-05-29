@@ -42,7 +42,7 @@ namespace Gem.Network.Fluent
         /// <param name="description">The command's descriptiopn </param>
         /// <param name="callback">The <see cref="Gem.Network.Commands>"/> callback that's invoked when someone executes a command</param>
         /// <param name="requiresAuthorization">If a password is required to execute the command</param>
-        void RegisterCommand(string command, string description, CommandExecute callback,
+        void RegisterCommand(string command, string description, ExecuteCommand callback,
                              bool requiresAuthorization = true);
 
         /// <summary>

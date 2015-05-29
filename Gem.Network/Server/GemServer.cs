@@ -181,7 +181,7 @@ namespace Gem.Network.Server
             return new ServerMessageRouter(profileName);
         }
 
-        public static void RegisterCommand(string command, string description, bool requireAuthorization, CommandExecute callback)
+        public static void RegisterCommand(string command, string description, bool requireAuthorization, ExecuteCommand callback)
         {
             GemNetwork.Commander.RegisterCommand(command, requireAuthorization, description, callback);
         }

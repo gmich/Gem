@@ -48,7 +48,7 @@ namespace Gem.Network.Fluent
             }
         }
 
-        public void RegisterCommand(string command, string description, CommandExecute callback, bool requiresAuthorization = true)
+        public void RegisterCommand(string command, string description, ExecuteCommand callback, bool requiresAuthorization = true)
         {
             GemNetwork.Commander.RegisterCommand(command,requiresAuthorization, description, callback);
         }

@@ -38,8 +38,8 @@ namespace Gem.Gui.Text
             this.Padding = Padding.Zero;
             this.OnTextChanged += (sender, args) =>
             {
-                string textToMeasure = (String.IsNullOrEmpty(args.NewText)) ? defaultSize : args.NewText;
-                this.Region = new Region(Region.Position, Font.MeasureString(textToMeasure) * Configuration.Settings.Scale);
+                 string textToMeasure = (String.IsNullOrEmpty(args.NewText)) ? defaultSize : args.NewText;
+                 Region.Size = Font.MeasureString(textToMeasure) * Configuration.Settings.Scale;
             };
         }
 
@@ -129,7 +129,7 @@ namespace Gem.Gui.Text
             RenderParameters.Scale = scale;
             Region.Scale(scale);
 
-            string textToMeasure = (Value == string.Empty) ? defaultSize : Value;
+            string textToMeasure = (String.IsNullOrEmpty(Value)) ? defaultSize : Value;
             Region.Size = Font.MeasureString(textToMeasure) * scale;
         }
 

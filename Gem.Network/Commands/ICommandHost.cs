@@ -11,7 +11,7 @@ namespace Gem.Network.Commands
         /// <param name="description">Description of command</param>
         /// <param name="callback">Invoke delegation</param>
         void RegisterCommand(string command, bool requiresAuthorization, string description,
-                                                        CommandExecute callback);
+                                                        ExecuteCommand callback);
 
         void SetPassword(string newPassword);
 

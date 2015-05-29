@@ -4,6 +4,7 @@ using Gem.Gui.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Gem.Gui.Alignment;
+using System.Collections.Generic;
 
 namespace Gem.Gui.Controls
 {
@@ -17,7 +18,6 @@ namespace Gem.Gui.Controls
                      AlignmentContext alignmentContext)
             : base(texture, region, new NoStyle())
         {
-
             this.Text = new StandardText(font, Vector2.Zero, string.Empty, alignmentContext);
             this.Text.OnTextChanged += (sender, args) => this.Align(Configuration.Settings.ViewRegion);
             this.Text.Value = text;
@@ -32,6 +32,7 @@ namespace Gem.Gui.Controls
                                      Text.Region.Position.Y + Text.Padding.Top);
             this.Region.Size = new Vector2(Text.Region.Size.X + Text.Padding.Right,
                                      Text.Region.Size.Y + Text.Padding.Bottom);
+            this.Region.VirtualSize = this.Region.Size;
         }
 
         private bool stretchToText;
@@ -52,7 +53,7 @@ namespace Gem.Gui.Controls
             }
         }
 
-        public override System.Collections.Generic.IEnumerable<AControl> Entries()
+        public override IEnumerable<AControl> Entries()
         {
             yield break;
         }

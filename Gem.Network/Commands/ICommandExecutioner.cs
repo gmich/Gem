@@ -10,7 +10,7 @@ namespace Gem.Network.Commands
     /// <param name="host">Host who will execute the command</param>
     /// <param name="command">Command name</param>
     /// <param name="arguments">Command arguments</param>
-    public delegate void CommandExecute(IServer server, NetConnection connection, string command, IList<string> arguments);
+    public delegate void ExecuteCommand(IServer server, NetConnection connection, string command, IList<string> arguments);
 
     internal interface ICommandExecutioner
     {
@@ -23,7 +23,7 @@ namespace Gem.Network.Commands
     internal class CommandInfo
     {
         public CommandInfo(
-            string command, bool requiresAuthentication, string description, CommandExecute callback)
+            string command, bool requiresAuthentication, string description, ExecuteCommand callback)
         {
             this.command = command;
             this.description = description;
@@ -39,6 +39,6 @@ namespace Gem.Network.Commands
         public string description;
 
         //Delegate for executing the command
-        public CommandExecute callback;
+        public ExecuteCommand callback;
     }
 }
