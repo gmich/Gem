@@ -42,7 +42,7 @@ namespace Gem
             DebugSystem.Instance.TimeRuler.ShowLog = true;
 
             //Register an echo log4net listener
-            DebugSystem.Instance.DebugCommandUI.RegisterEchoListner(new Diagnostics.Logger.LogEchoListener());
+            //DebugSystem.Instance.DebugCommandUI.RegisterEchoListner(new Diagnostics.Logger.LogEchoListener());
 
             base.Initialize();
         }

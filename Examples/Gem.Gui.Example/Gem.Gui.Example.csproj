@@ -86,6 +86,10 @@
       <Project>{a6950cea-20e9-4949-a49c-8064ed2d1d4a}</Project>
       <Name>Gem.Gui</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Gem.Infrastructure\Gem.Infrastructure.csproj">
+      <Project>{dab38678-499f-4565-9db8-434a5c66a093}</Project>
+      <Name>Gem.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

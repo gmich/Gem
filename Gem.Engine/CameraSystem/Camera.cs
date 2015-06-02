@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Gem.Resolution;
 
 namespace Gem.CameraSystem
 {
@@ -89,14 +88,6 @@ namespace Gem.CameraSystem
             get
             {
                 return Position + new Vector2(ViewPortWidth / 2, ViewPortHeight / 2);
-            }
-        }
-
-        public Vector2 WindowCenter
-        {
-            get
-            {
-                return Position + new Vector2(ResolutionHandler.WindowWidth / 2, ResolutionHandler.WindowHeight / 2);
             }
         }
 

@@ -28,7 +28,7 @@ namespace Gem.Diagnostics.Console
         /// <summary>
         /// Gets the DebugCommandUI for the system.
         /// </summary>
-        public DebugCommandUI DebugCommandUI { get; private set; }
+       // public DebugCommandUI DebugCommandUI { get; private set; }
 
         /// <summary>
         /// Gets the FpsCounter for the system.
@@ -59,8 +59,8 @@ namespace Gem.Diagnostics.Console
             singletonInstance.DebugManager = new DebugManager(game, debugFont);
             game.Components.Add(singletonInstance.DebugManager);
 
-            singletonInstance.DebugCommandUI = new DebugCommandUI(game);
-            game.Components.Add(singletonInstance.DebugCommandUI);
+            //singletonInstance.DebugCommandUI = new DebugCommandUI(game);
+            //game.Components.Add(singletonInstance.DebugCommandUI);
 
             singletonInstance.FpsCounter = new FpsCounter(game);
             game.Components.Add(singletonInstance.FpsCounter);

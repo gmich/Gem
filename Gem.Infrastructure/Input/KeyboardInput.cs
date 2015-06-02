@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Gem.Input
+namespace Gem.Infrastructure.Input
 {
-    public class KeyboardInputHelper : IInputHelper
+    public class KeyboardInput : IInput
     {
 
         #region Fields

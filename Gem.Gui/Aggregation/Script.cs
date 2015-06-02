@@ -1,4 +1,5 @@
 ﻿using Gem.Gui.Input;
+using Gem.Infrastructure.Input;
 
 namespace Gem.Gui.Aggregation
 {
@@ -7,9 +8,9 @@ namespace Gem.Gui.Aggregation
     /// </summary>
     public static class Script
     {
-        public static ScriptAggregator<KeyboardInputHelper> ForKeyboard(KeyboardInputKeys keyboardKeys)
+        public static ScriptAggregator<KeyboardInput> ForKeyboard(KeyboardInputKeys keyboardKeys)
         {
-            return new ScriptAggregator<KeyboardInputHelper>(InputManager.Keyboard,
+            return new ScriptAggregator<KeyboardInput>(InputManager.Keyboard,
                                                              //never disable
                                                              input => false,
                                                              input => input.IsKeyPressed(keyboardKeys.Next),
@@ -18,9 +19,9 @@ namespace Gem.Gui.Aggregation
                                                              InputManager.KeyRepetition);
         }
 
-        public static ScriptAggregator<GamePadInputHelper> ForGamePad(GamePadInputButtons gamepadButtons)
+        public static ScriptAggregator<GamePadInput> ForGamePad(GamePadInputButtons gamepadButtons)
         {
-            return new ScriptAggregator<GamePadInputHelper>(InputManager.GamePad,
+            return new ScriptAggregator<GamePadInput>(InputManager.GamePad,
                                                              input => !input.IsConnected,
                                                              input => input.IsButtonPressed(gamepadButtons.Next),
                                                              input => input.IsButtonPressed(gamepadButtons.Previous),

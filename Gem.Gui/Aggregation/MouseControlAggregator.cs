@@ -2,6 +2,7 @@
 using Gem.Gui.Input;
 using Gem.Gui.Controls;
 using Microsoft.Xna.Framework;
+using Gem.Infrastructure.Input;
 
 namespace Gem.Gui.Aggregation
 {
@@ -16,11 +17,11 @@ namespace Gem.Gui.Aggregation
         /// <summary>
         /// The helper class that sends mouse signals
         /// </summary>
-        private readonly MouseInputHelper input;
+        private readonly MouseInput input;
 
         #endregion
 
-        public MouseControlAggregator(MouseInputHelper inputHelper)
+        public MouseControlAggregator(MouseInput inputHelper)
         {
             this.input = inputHelper;
             this.IsEnabled = true;

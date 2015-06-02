@@ -56,8 +56,15 @@
     <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention">
       <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
     </Reference>
+    <Reference Include="MonoGame.Framework, Version=3.4.0.459, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MonoGame.Framework.WindowsGL.3.4.0.459\lib\net40\MonoGame.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.3.2.0.0\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\packages\MonoGame.Framework.WindowsGL.3.4.0.459\lib\net40\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -68,7 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractEventHandler.cs" />
+    <Compile Include="Events\AbstractEventHandler.cs" />
     <Compile Include="Aspects\ExceptionInterceptor.cs" />
     <Compile Include="Aspects\LogicalOperationInterceptor.cs" />
     <Compile Include="Aspects\LogInterceptor.cs" />
@@ -92,8 +99,14 @@
     <Compile Include="Cache\Events\EventAggregator.cs" />
     <Compile Include="Cache\Events\ICacheEvent.cs" />
     <Compile Include="Cache\Events\IEventProvider.cs" />
+    <Compile Include="Events\EventHandlerExtensions.cs" />
     <Compile Include="Exceptions\ExceptionUtilities.cs" />
     <Compile Include="Cache\GCache.cs" />
+    <Compile Include="Input\GamePadInput.cs" />
+    <Compile Include="Input\IInput.cs" />
+    <Compile Include="Input\KeyboardInput.cs" />
+    <Compile Include="Input\MouseInput.cs" />
+    <Compile Include="Input\TouchInput.cs" />
     <Compile Include="Logging\ActionAppender.cs" />
     <Compile Include="Logging\Auditor.cs" />
     <Compile Include="Logging\ConfigurableAppender.cs" />

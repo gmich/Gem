@@ -133,11 +133,6 @@
     <Compile Include="Factories\GeneralControlFactory.cs" />
     <Compile Include="GemGui.cs" />
     <Compile Include="ScreenSystem\GuiHost.cs" />
-    <Compile Include="Input\Helpers\IInputHelper.cs" />
-    <Compile Include="Input\Helpers\KeyboardInputHelper.cs" />
-    <Compile Include="Input\Helpers\TouchInputHelper.cs" />
-    <Compile Include="Input\Helpers\GamePadInputHelper.cs" />
-    <Compile Include="Input\Helpers\MouseInputHelper.cs" />
     <Compile Include="Input\InputManager.cs" />
     <Compile Include="Input\KeyboardUtils.cs" />
     <Compile Include="Alignment\VerticalAlignment.cs" />

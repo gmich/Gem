@@ -1,5 +1,6 @@
 ﻿using System;
 using Gem.Gui.Input;
+using Gem.Infrastructure.Input;
 
 namespace Gem.Gui.Aggregation
 {
@@ -8,7 +9,7 @@ namespace Gem.Gui.Aggregation
     /// </summary>
     /// <typeparam name="TInputHelper">The IInputHelper that is used to determine the enumeration</typeparam>
     public class ScriptAggregator<TInputHelper> : IAggregator
-        where TInputHelper : Input.IInputHelper
+        where TInputHelper : IInput
     {
         #region Fields
 

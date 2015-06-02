@@ -1,4 +1,5 @@
 ﻿using Gem.Gui.Input;
+using Gem.Infrastructure.Input;
 using Microsoft.Xna.Framework.Input;
 using System;
 
@@ -6,10 +7,10 @@ namespace Gem.Gui.Controls
 {
     public class TextAppenderHelper
     {
-        private readonly KeyboardInputHelper input;
+        private readonly KeyboardInput input;
         private readonly char cursor;
 
-        public TextAppenderHelper(KeyboardInputHelper input,
+        public TextAppenderHelper(KeyboardInput input,
                                   char cursor = '|',
                                   double cursorFlickInterval = 500.0d,
                                   double keyRepeatStartDuration = 0.5d,
@@ -30,7 +31,7 @@ namespace Gem.Gui.Controls
 
         public Func<Keys,char,bool> ShouldHandleKey { get; set; }
 
-        public KeyboardInputHelper Input { get { return input; } }
+        public KeyboardInput Input { get { return input; } }
 
         public char Cursor { get { return cursor; } }
 

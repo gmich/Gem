@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Gem.Gui.Input
+namespace Gem.Infrastructure.Input
 {
-    public class TouchInputHelper : IInputHelper
+    public class TouchInput : IInput
     {
         public void Flush()
         {

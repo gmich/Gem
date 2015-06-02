@@ -1,9 +1,23 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Gem.Infrastructure.Events;
+using System;
 
-namespace Gem.Input
+namespace Gem.Infrastructure.Input
 {
-    public class MouseInputHelper : IInputHelper
+    public class MouseEventArgs : EventArgs
+    {
+        private readonly Point mouseLocation;
+        public MouseEventArgs(Point mouseLocation)
+        {
+            this.mouseLocation = mouseLocation;
+        }
+
+        public Point MouseLocation { get { return mouseLocation; } }
+    }
+
+
+    public class MouseInput : IInput
     {
 
         #region Fields
@@ -13,6 +27,14 @@ namespace Gem.Input
 
         private float scrollWheelValue = Mouse.GetState().ScrollWheelValue;
         private float previousScrollWheelValue;
+
+        #endregion
+
+        #region Events
+
+        public event EventHandler<MouseEventArgs> MouseMove;
+        public event EventHandler<MouseEventArgs> MouseDown;
+        public event EventHandler<MouseEventArgs> MouseUp;
 
         #endregion
 
@@ -170,6 +192,19 @@ namespace Gem.Input
 
         public void Flush()
         {
+            if (previousMouseState.Position != mouseState.Position)
+            {
+                MouseMove.RaiseEvent(this, new MouseEventArgs(mouseState.Position));
+            }
+            if (IsLeftButtonClicked())
+            {
+                MouseDown.RaiseEvent(this, new MouseEventArgs(mouseState.Position));
+            }
+            if (IsLeftButtonReleased())
+            {
+                MouseUp.RaiseEvent(this, new MouseEventArgs(mouseState.Position));
+            }
+
             previousMouseState = mouseState;
             previousScrollWheelValue = scrollWheelValue;
 

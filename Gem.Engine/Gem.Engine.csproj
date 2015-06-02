@@ -38,11 +38,12 @@
     <Compile Include="CameraSystem\Camera.cs" />
     <Compile Include="CameraSystem\CameraFarseer.cs" />
     <Compile Include="CameraSystem\ICamera.cs" />
-    <Compile Include="Console\DebugCommandUI.cs" />
-    <Compile Include="Console\DebugManager.cs" />
-    <Compile Include="Console\DebugSystem.cs" />
-    <Compile Include="Console\FpsCounter.cs" />
-    <Compile Include="Console\IDebugCommandHost.cs" />
+    <Compile Include="Console\ICell.cs" />
+    <Compile Include="Diagnostics\Console\DebugCommandUI.cs" />
+    <Compile Include="Diagnostics\Console\DebugManager.cs" />
+    <Compile Include="Diagnostics\Console\DebugSystem.cs" />
+    <Compile Include="Diagnostics\Console\FpsCounter.cs" />
+    <Compile Include="Diagnostics\Console\IDebugCommandHost.cs" />
     <Compile Include="Diagnostics\DebugViewFarseer\DebugViewFarseer.cs" />
     <Compile Include="Diagnostics\DebugViewFarseer\PrimitiveBatch.cs" />
     <Compile Include="DrawingSystem\AssetCreator.cs" />
@@ -50,22 +51,9 @@
     <Compile Include="DrawingSystem\Sprite.cs" />
     <Compile Include="DrawingSystem\SpriteFonts.cs" />
     <Compile Include="Components\Layout.cs" />
-    <Compile Include="Input\GamePadInputButtons.cs" />
-    <Compile Include="Input\Helpers\GamePadInputHelper.cs" />
-    <Compile Include="Input\Helpers\IInputHelper.cs" />
-    <Compile Include="Input\Helpers\KeyboardInputHelper.cs" />
-    <Compile Include="Input\Helpers\MouseInputHelper.cs" />
-    <Compile Include="Input\Helpers\TouchInputHelper.cs" />
-    <Compile Include="Input\InputManager.cs" />
-    <Compile Include="Input\KeyboardInputKeys.cs" />
-    <Compile Include="Input\KeyboardUtils.cs" />
-    <Compile Include="Input\KeyRepetition.cs" />
-    <Compile Include="Resolution\ResolutionHandler.cs" />
-    <Compile Include="ScreenSystem\GameScreen.cs" />
-    <Compile Include="ScreenSystem\ScreenManagerComponent.cs" />
     <Compile Include="Sound\SoundManager.cs" />
     <Compile Include="Utilities\StringBuilderExtensions.cs" />
-    <Compile Include="Console\TimeRuler.cs" />
+    <Compile Include="Diagnostics\Console\TimeRuler.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -118,6 +106,8 @@
     <Folder Include="Database\" />
     <Folder Include="DrawingSystem\SpriteSheets\" />
     <Folder Include="Map\" />
+    <Folder Include="Resolution\" />
+    <Folder Include="ScreenSystem\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Fonts\consoleFont.xnb">

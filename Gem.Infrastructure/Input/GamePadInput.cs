@@ -1,15 +1,38 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System.ComponentModel;
+using Gem.Infrastructure.Attributes;
 
-namespace Gem.Input
+namespace Gem.Infrastructure.Input
 {
-    public class GamePadInputHelper : IInputHelper
+    public class GamePadInput : IInput
     {
 
         #region Fields
 
-        private GamePadState gamePadState = GamePad.GetState(InputManager.GamePadInputKeys.PlayerIndex);
+        private GamePadState gamePadState;
         private GamePadState previousGamePadState;
+
+        #endregion
+
+        #region Ctor
+
+        public GamePadInput()
+        {
+            this.AssignDefaultValues();
+            gamePadState = GamePad.GetState(PlayerIndex);
+        }
+
+        #endregion
+
+        #region Properties
+
+        [DefaultValue(PlayerIndex.One)]
+        public PlayerIndex PlayerIndex
+        {
+            get;
+            set;
+        }
 
         #endregion
 
@@ -96,7 +119,7 @@ namespace Gem.Input
         public void Flush()
         {
             previousGamePadState = gamePadState;
-            gamePadState = GamePad.GetState(InputManager.GamePadInputKeys.PlayerIndex);
+            gamePadState = GamePad.GetState(PlayerIndex);
         }
         
         #endregion
