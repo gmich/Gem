@@ -1,145 +1,110 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Gem.Console.Rendering.Utilities;
 
 namespace Gem.CameraSystem
 {
 
-   public sealed class Camera
+    public sealed class Camera
     {
-        #region Declarations
+        #region Fields
 
-        private Vector2 viewPortSize;
+        private readonly Vector2 viewportSize;
+        private readonly Rectangle virtualWorld;
+        private readonly Range<float> zoomRange;
+
         private Vector2 position;
-        float zoom; 
-        Matrix transform;
-        float rotation; 
+        private Vector3 zoom;
 
         #endregion
 
         #region Constructor
 
-        public Camera(Vector2 initialPos, Vector2 viewportSize,Vector2 worldSize)
+        public Camera(Vector2 initialPos, Vector2 viewportSize, Rectangle virtualWorld, float minZoom = 0.2f, float maxZoom = 2.0f)
         {
             this.Position = initialPos;
-            this.viewPortSize = viewportSize;
-            this.Zoom = 1.0f;
-            this.WorldSize = worldSize;
+            this.virtualWorld = virtualWorld;
+            this.viewportSize = viewportSize;
+            this.zoomRange = Range.ForFloat(minZoom, maxZoom);
         }
 
         #endregion
 
         #region Properties
 
+        private float ViewPortWidth
+        {
+            get { return viewportSize.X; }
+        }
+
+        private float ViewPortHeight
+        {
+            get { return viewportSize.Y; }
+        }
+        
         public Vector2 Position
         {
             get { return position; }
             set
             {
-                position = value;
-            }
-        }
-
-       //0 default 1 , 2 ,3 clockwise
-        public int RotationState
-        {
-            get;
-            set;
-        }
-
-        public Rectangle WorldRectangle
-        {
-            get
-            {
-                return new Rectangle((int)Position.X, (int)Position.Y, (int)WorldSize.X, (int)WorldSize.Y);
-            }
-        }
-
-        public void ExpandWorldRectangle(Vector2 expandedSize)
-        {
-            WorldSize += expandedSize;
-        }
-
-        public Vector2 WorldSize
-        {
-            get;
-            set;
-        }
-
-        public int ViewPortWidth
-        {
-            get { return (int)viewPortSize.X; }
-            set
-            {
-                viewPortSize.X = value;
-            }
-        }
-
-        public int ViewPortHeight
-        {
-            get { return (int)viewPortSize.Y; }
-            set
-            {
-                viewPortSize.Y = value;
-            }
-        }
-        public Vector2 WorldCenter
-        {
-            get
-            {
-                return Position + new Vector2(ViewPortWidth / 2, ViewPortHeight / 2);
-            }
-        }
-
-        public Rectangle ScreenRectangle
-        {
-            get
-            {
-                return new Rectangle(0, 0,ViewPortWidth, ViewPortHeight);
+                float x = MathHelper.Clamp(value.X, virtualWorld.X, virtualWorld.Left - viewportSize.X);
+                float y = MathHelper.Clamp(value.Y, virtualWorld.Y, virtualWorld.Bottom - viewportSize.Y);
+                position = new Vector2(x, y);
             }
         }
 
         public Rectangle ViewPort
         {
-            get
-            {
-                return new Rectangle((int)Position.X, (int)Position.Y, ViewPortWidth, ViewPortHeight);
-            }
+            get;
+            private set;
+        }
+                
+        public Rectangle VisibleArea
+        {
+            get;
+            private set;
         }
 
         #endregion
 
         #region Translation Properties
-
-        public float Zoom
+        
+        public Vector3 Zoom
         {
             get { return zoom; }
             set
             {
-                zoom = MathHelper.Clamp(value, 0.0f, 2.0f);
-                zoom = (float)Decimal.Round((Decimal)zoom, 2);
+                zoom.X = zoomRange.GetNearest(value.X);
+                zoom.Y = zoomRange.GetNearest(value.Y);
             }
         }
 
         public float Rotation
         {
-            get { return rotation; }
-            set { rotation = value; }
+            get;
+            set;
+        }
+
+        public Matrix TransformationMatrix
+        {
+            get;
+            private set;
         }
 
         #endregion
-
+        
         #region Public Methods
 
-        public void Move(Vector2 offset)
-        {
-            Position += offset;
-        }
-       
-        public bool inScreenBounds(Vector2 location)
+        public bool IsVisible(Vector2 location)
         {
             return (location.X > Position.X && location.X < Position.X + ViewPortWidth
                  && location.Y > Position.Y && location.Y < Position.Y + ViewPortHeight);
+        }
+
+        public bool IsVisible(Rectangle bounds)
+        {
+            return (ViewPort.Intersects(bounds));
         }
 
         public Vector2 AdjustInWorldBounds(Vector2 location, float width, float height)
@@ -149,30 +114,13 @@ namespace Gem.CameraSystem
             return location;
         }
 
-        public Vector2 AdjustInWorldBounds(Vector2 location, float width, float height,Vector2 origin)
+        public Vector2 AdjustInWorldBounds(Vector2 location, float width, float height, Vector2 origin)
         {
-            location.X = MathHelper.Clamp(location.X, position.X+origin.X, position.X + ViewPortWidth - width+origin.X);
-            location.Y = MathHelper.Clamp(location.Y, position.Y+origin.Y, position.Y + ViewPortHeight - height+origin.Y);
+            location.X = MathHelper.Clamp(location.X, position.X + origin.X, position.X + ViewPortWidth - width + origin.X);
+            location.Y = MathHelper.Clamp(location.Y, position.Y + origin.Y, position.Y + ViewPortHeight - height + origin.Y);
             return location;
         }
-
-        public Vector2 AdjustInScreenBounds(Vector2 position,float dimension)
-        {
-            position.X = MathHelper.Clamp(position.X, dimension / 2, ViewPortWidth - dimension / 2);
-            position.Y = MathHelper.Clamp(position.Y, dimension / 2, ViewPortHeight - dimension / 2);
-            return position;
-        }
-
-        public bool ObjectIsVisible(Rectangle bounds)
-        {
-            return (ViewPort.Intersects(bounds));
-        }
-
-        public bool ObjectOnScreenBounds(Rectangle bounds)
-        {
-            return (ScreenRectangle.Intersects(bounds));
-        }
-
+        
         public Vector2 WorldToScreen(Vector2 worldLocation)
         {
             return worldLocation - position;
@@ -181,11 +129,6 @@ namespace Gem.CameraSystem
         public Rectangle WorldToScreen(Rectangle worldRectangle)
         {
             return new Rectangle(worldRectangle.Left - (int)position.X, worldRectangle.Top - (int)position.Y, worldRectangle.Width, worldRectangle.Height);
-        }
-       
-        public Vector2 VectorWorldToScreen(Vector2 worldLocation)
-        {
-            return new Vector2(worldLocation.X - Position.X, worldLocation.Y - Position.Y);
         }
 
         public Vector2 ScreenToWorld(Vector2 screenLocation)
@@ -200,15 +143,50 @@ namespace Gem.CameraSystem
 
         #endregion
 
-        #region 3D Transformation
+        #region Translations
 
-        public Matrix GetTransformation()
+        private void CalculateVisibleArea()
         {
-            transform = Matrix.CreateTranslation(new Vector3(-ViewPortWidth/2,-ViewPortHeight/2, 0)) *
-                                         Matrix.CreateRotationZ(Rotation) *
-                                         Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) *
-                                         Matrix.CreateTranslation(new Vector3(ViewPortWidth * 0.5f, ViewPortHeight * 0.5f, 0));
-            return transform;
+            var inverseViewMatrix = Matrix.Invert(TransformationMatrix);
+            var tl = Vector2.Transform(Vector2.Zero, inverseViewMatrix);
+            var tr = Vector2.Transform(new Vector2(viewportSize.X, 0), inverseViewMatrix);
+            var bl = Vector2.Transform(new Vector2(0, viewportSize.Y), inverseViewMatrix);
+            var br = Vector2.Transform(viewportSize, inverseViewMatrix);
+            var min = new Vector2(
+                MathHelper.Min(tl.X, MathHelper.Min(tr.X, MathHelper.Min(bl.X, br.X))),
+                MathHelper.Min(tl.Y, MathHelper.Min(tr.Y, MathHelper.Min(bl.Y, br.Y))));
+            var max = new Vector2(
+                MathHelper.Max(tl.X, MathHelper.Max(tr.X, MathHelper.Max(bl.X, br.X))),
+                MathHelper.Max(tl.Y, MathHelper.Max(tr.Y, MathHelper.Max(bl.Y, br.Y))));
+            VisibleArea = new Rectangle((int)min.X, (int)min.Y, (int)(max.X - min.X), (int)(max.Y - min.Y));
+        }
+
+        private void CalculateTransformationMatrix()
+        {
+            TransformationMatrix = Matrix.CreateTranslation(new Vector3(ViewPortWidth / 2, -ViewPortHeight / 2, 0)) *
+                                                 Matrix.CreateRotationZ(Rotation) *
+                                                 Matrix.CreateScale(new Vector3(Zoom.X, Zoom.Y, Zoom.Z)) *
+                                                 Matrix.CreateTranslation(new Vector3(ViewPortWidth / 2, ViewPortHeight / 2, 0));
+        }
+        
+        public Vector2 TranslateScreenToWorld(Vector2 location)
+        {
+            return Vector2.Transform(location, Matrix.Invert(TransformationMatrix));
+        }
+
+        public Vector2 TranslateWorldToScreen(Vector2 location)
+        {
+            return Vector2.Transform(location, TransformationMatrix);
+        }
+        
+        #endregion
+
+        #region Update
+
+        public void Update(GameTime gameTime)
+        {
+            ViewPort = new Rectangle((int)Position.X, (int)Position.Y, (int)viewportSize.X, (int)viewportSize.Y);
+            CalculateTransformationMatrix();
         }
 
         #endregion

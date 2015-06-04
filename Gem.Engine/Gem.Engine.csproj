@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -11,6 +11,8 @@
     <RootNamespace>Gem</RootNamespace>
     <AssemblyName>Gem</AssemblyName>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -21,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -30,6 +33,7 @@
     <DefineConstants>TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>gem.ico</ApplicationIcon>
@@ -39,6 +43,16 @@
     <Compile Include="CameraSystem\CameraFarseer.cs" />
     <Compile Include="CameraSystem\ICamera.cs" />
     <Compile Include="Console\ICell.cs" />
+    <Compile Include="Console\Rendering\Areas\ExpandableArea.cs" />
+    <Compile Include="Console\Rendering\Areas\FixedSizeArea.cs" />
+    <Compile Include="Console\Rendering\Sprite.cs" />
+    <Compile Include="Console\Rendering\SpriteSheet.cs" />
+    <Compile Include="Console\Rendering\ITexture.cs" />
+    <Compile Include="Console\Rendering\IDrawing.cs" />
+    <Compile Include="Console\Rendering\RenderRegion.cs" />
+    <Compile Include="Console\Rendering\Areas\IRenderArea.cs" />
+    <Compile Include="Console\Rendering\Style.cs" />
+    <Compile Include="Console\Rendering\Utilities\Range.cs" />
     <Compile Include="Diagnostics\Console\DebugCommandUI.cs" />
     <Compile Include="Diagnostics\Console\DebugManager.cs" />
     <Compile Include="Diagnostics\Console\DebugSystem.cs" />
@@ -121,9 +135,16 @@
     <Content Include="Content\Fonts\menufont.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="app.config" />
     <None Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gem.Infrastructure\Gem.Infrastructure.csproj">
+      <Project>{dab38678-499f-4565-9db8-434a5c66a093}</Project>
+      <Name>Gem.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

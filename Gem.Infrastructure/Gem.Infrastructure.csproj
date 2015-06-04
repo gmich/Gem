@@ -102,6 +102,14 @@
     <Compile Include="Events\EventHandlerExtensions.cs" />
     <Compile Include="Exceptions\ExceptionUtilities.cs" />
     <Compile Include="Cache\GCache.cs" />
+    <Compile Include="Functional\Drawing.cs" />
+    <Compile Include="Functional\Behavior.cs" />
+    <Compile Include="Functional\Maybe.cs" />
+    <Compile Include="Functional\Option.cs" />
+    <Compile Include="Functional\Result.cs" />
+    <Compile Include="Functional\Time.cs" />
+    <Compile Include="Functional\TransformationContext.cs" />
+    <Compile Include="Functional\ValidatorPrimitive.cs" />
     <Compile Include="Input\GamePadInput.cs" />
     <Compile Include="Input\IInput.cs" />
     <Compile Include="Input\KeyboardInput.cs" />
