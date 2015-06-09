@@ -1,11 +1,23 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Reactive.Linq;
 using System.Collections.ObjectModel;
+using Gem.Infrastructure.Events;
 
 namespace Gem.Console
 {
+
+    public class CellAlignerEventArgs : EventArgs
+    {
+        private readonly IEnumerable<Row> rows;
+
+        public CellAlignerEventArgs(IEnumerable<Row> rows)
+        {
+            this.rows = rows;
+        }
+        public IEnumerable<Row> Rows { get { return rows; } }
+    }
+
     /// <summary>
     /// Alligns ICell instances into rows according to the specified buffer axis x-size
     /// </summary>
@@ -20,25 +32,6 @@ namespace Gem.Console
 
         #endregion
 
-        #region Internal Row Class
-
-        public class Row
-        {
-            private readonly int row;
-            private readonly IEnumerable<ICell> entries;
-
-            public Row(int row, IEnumerable<ICell> entries)
-            {
-                this.row = row;
-                this.entries = entries;
-            }
-
-            public int RowIndex { get { return row; } }
-            public IEnumerable<ICell> Entries { get { return entries; } }
-        }
-
-        #endregion
-
         #region Ctor
 
         public CellAligner(Func<float> rowWidthGetter, Func<IEnumerable<ICell>> cellsGetter)
@@ -46,6 +39,12 @@ namespace Gem.Console
             this.rowWidthGetter = rowWidthGetter;
             this.cellsGetter = cellsGetter;
         }
+
+        #endregion
+
+        #region Events
+
+        public event EventHandler<CellAlignerEventArgs> AlignmentChanged;
 
         #endregion
 
@@ -78,6 +77,8 @@ namespace Gem.Console
             {
                 rows.Add(new Row(rows.Count, cells.Skip(skippedEntries).Take(cellsCounter - skippedEntries)));
             }
+
+            AlignmentChanged.RaiseEvent(this, new CellAlignerEventArgs(Rows()));
         }
 
         #endregion

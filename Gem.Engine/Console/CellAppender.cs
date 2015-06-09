@@ -79,7 +79,7 @@ namespace Gem.Console
             cells.Subscribe(observer);
         }
 
-        public void OnCollectionChanged(NotifyCollectionChangedEventHandler collectionChangedEvent)
+        public void OnCellAppend(NotifyCollectionChangedEventHandler collectionChangedEvent)
         {
             cells.CollectionChanged += collectionChangedEvent;
         }

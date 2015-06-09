@@ -46,6 +46,8 @@
     <Compile Include="CameraSystem\ICamera.cs" />
     <Compile Include="Console\CellAligner.cs" />
     <Compile Include="Console\CellAppender.cs" />
+    <Compile Include="Console\Cursor.cs" />
+    <Compile Include="Console\ICursor.cs" />
     <Compile Include="Console\ConsoleCompositor.cs" />
     <Compile Include="Console\IUpdateable.cs" />
     <Compile Include="Console\Cell.cs" />
@@ -60,6 +62,7 @@
     <Compile Include="Console\Rendering\Areas\IRenderArea.cs" />
     <Compile Include="Console\Rendering\Style.cs" />
     <Compile Include="Console\Rendering\Utilities\Range.cs" />
+    <Compile Include="Console\Row.cs" />
     <Compile Include="Diagnostics\Console\DebugCommandUI.cs" />
     <Compile Include="Diagnostics\Console\DebugManager.cs" />
     <Compile Include="Diagnostics\Console\DebugSystem.cs" />
@@ -96,13 +99,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Third Party\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="MonoGame.Framework, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MonoGame.Framework, Version=3.4.0.459, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Third Party\MonoGame.Framework.dll</HintPath>
+      <HintPath>..\packages\MonoGame.Framework.WindowsGL.3.4.0.459\lib\net40\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Third Party\OpenTK.dll</HintPath>
+      <HintPath>..\packages\MonoGame.Framework.WindowsGL.3.4.0.459\lib\net40\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Reactive.Core">
