@@ -47,8 +47,11 @@
     <Compile Include="Console\CellAligner.cs" />
     <Compile Include="Console\CellAppender.cs" />
     <Compile Include="Console\Cursor.cs" />
+    <Compile Include="Console\Effects\Effects.cs" />
+    <Compile Include="Console\EntryPoint\EntryRule.cs" />
     <Compile Include="Console\ICursor.cs" />
-    <Compile Include="Console\ConsoleCompositor.cs" />
+    <Compile Include="Console\EntryPoint\CommandEntry.cs" />
+    <Compile Include="Console\EntryPoint\IEntryRule.cs" />
     <Compile Include="Console\IUpdateable.cs" />
     <Compile Include="Console\Cell.cs" />
     <Compile Include="Console\ICell.cs" />
@@ -57,7 +60,6 @@
     <Compile Include="Console\Rendering\Sprite.cs" />
     <Compile Include="Console\Rendering\SpriteSheet.cs" />
     <Compile Include="Console\Rendering\ITexture.cs" />
-    <Compile Include="Console\Rendering\IDrawing.cs" />
     <Compile Include="Console\Rendering\RenderRegion.cs" />
     <Compile Include="Console\Rendering\Areas\IRenderArea.cs" />
     <Compile Include="Console\Rendering\Style.cs" />
@@ -142,7 +144,6 @@
   <ItemGroup>
     <Folder Include="CameraSystem\Handlers\" />
     <Folder Include="CameraSystem\Scripts\" />
-    <Folder Include="Console\Command\" />
     <Folder Include="Database\" />
     <Folder Include="DrawingSystem\SpriteSheets\" />
     <Folder Include="Map\" />

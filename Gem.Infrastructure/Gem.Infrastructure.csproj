@@ -102,7 +102,6 @@
     <Compile Include="Events\EventHandlerExtensions.cs" />
     <Compile Include="Exceptions\ExceptionUtilities.cs" />
     <Compile Include="Cache\GCache.cs" />
-    <Compile Include="Functional\Drawing.cs" />
     <Compile Include="Functional\Behavior.cs" />
     <Compile Include="Functional\Maybe.cs" />
     <Compile Include="Functional\Option.cs" />

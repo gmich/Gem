@@ -13,6 +13,7 @@ namespace Gem.Console
 
         private readonly Func<char, ICell> cellGenerator;
         private readonly ObservableCollection<ICell> cells = new ObservableCollection<ICell>();
+        private readonly int maxCells;
 
         #endregion
 
@@ -85,6 +86,6 @@ namespace Gem.Console
         }
 
         #endregion
-       
+
     }
 }
