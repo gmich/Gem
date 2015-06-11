@@ -63,6 +63,18 @@ namespace Gem.Infrastructure.Logging
 
         #region IConfigurableAppender Members
 
+        public void Message(string message)
+        {
+            options.Message(appender);
+            appender.Message(message);
+        }
+
+        public void Message(string message, params object[] args)
+        {
+            options.Message(appender);
+            appender.Message(message, args);
+        }
+
         public void Info(string message)
         {
             options.Info(appender);

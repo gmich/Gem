@@ -64,6 +64,10 @@
       <Project>{2784d0e3-736d-4bca-8536-eea8834e6ed9}</Project>
       <Name>Gem.Engine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Gem.Infrastructure\Gem.Infrastructure.csproj">
+      <Project>{dab38678-499f-4565-9db8-434a5c66a093}</Project>
+      <Name>Gem.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

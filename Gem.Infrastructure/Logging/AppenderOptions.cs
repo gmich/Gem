@@ -25,6 +25,7 @@ namespace Gem.Infrastructure.Logging
 
         #region Options
 
+        public Action<TAppender> Message { get; set; }
         public Action<TAppender> Info { get; set; }
         public Action<TAppender> Debug { get; set; }
         public Action<TAppender> Warn { get; set; }

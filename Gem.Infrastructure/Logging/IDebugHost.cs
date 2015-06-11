@@ -5,6 +5,6 @@
     /// </summary>
     public interface IDebugHost : IAppender, IDebugListener 
     {
-        void RemoveAll();
+        void RemoveAppenders();
     }
 }

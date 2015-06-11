@@ -3,6 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gem.Console;
 using System.Linq;
 using System.Collections.Generic;
+using Gem.Infrastructure.Functional;
+using Gem.Console.Commands;
 
 namespace Gem.Engine.Tests
 {
@@ -113,7 +115,7 @@ namespace Gem.Engine.Tests
             string twoRows = "123456789";
             for (int charIndex = 0; charIndex < twoRows.Count(); charIndex++)
             {
-                appender.AddCell(twoRows[charIndex]);             
+                appender.AddCell(twoRows[charIndex]);
             }
             Assert.AreEqual(9, cursor.Head);
 
@@ -126,7 +128,7 @@ namespace Gem.Engine.Tests
             Assert.AreEqual(9, cursor.Head);
             cursor.Down();
             Assert.AreEqual(9, cursor.Head);
-       
+
             cursor.Left();
             cursor.Left();
             Assert.AreEqual(7, cursor.Head);
@@ -140,5 +142,84 @@ namespace Gem.Engine.Tests
             Enumerable.Range(1, 50).ToList().ForEach(x => cursor.Left());
             Assert.AreEqual(0, cursor.Head);
         }
+
+        [TestMethod]
+        public void FixedSizeListLimitOverflowTest()
+        {
+            int listCapacity = 5;
+            var fixedSizeList = new FixedSizeList<int>(listCapacity);
+
+            for (int i = 0; i < listCapacity; i++)
+            {
+                fixedSizeList.Add(i);
+            }
+            for (int i = listCapacity; i > 0; i--)
+            {
+                fixedSizeList.Add(i);
+            }
+
+            CollectionAssert.AreEqual(new List<int> { 5, 4, 3, 2, 1 }, fixedSizeList.Query(x => x.Select(item => item)).ToList());
+        }
+
+        #region Terminal
+
+        [TestMethod]
+        public void TerminalRegistersMethodWithCommandAttribute()
+        {
+            Terminal terminal = new Terminal();
+            MyTest objWithCommand = new ClassWithCommand();
+            terminal.RegisterCommand(objWithCommand);
+
+            Assert.AreEqual(2, terminal.Commands.Count);
+        }
+
+        [TestMethod]
+        public void TerminalRegistersMethodWithSubCommandAttribute()
+        {
+            Terminal terminal = new Terminal();
+            MyTest objWithCommand = new ClassWithCommand();
+            terminal.RegisterCommand(objWithCommand);
+            Assert.AreEqual(2, terminal.Commands.Count);
+            var subcommands = terminal.Commands.Select(x=>x.SubCommand);
+            Assert.AreEqual(1, subcommands.Count());
+        }
+
+
+        internal interface MyTest { }
+        public class ClassWithCommand : MyTest
+        {
+            [Command(command: "firstCommand", description: "just a test")]
+            private Result FirstCommandCallback(ICommandHost host,
+                                                IList<string> arguments, 
+                                                object executionResult)
+            {
+                return Result.Ok();
+            }
+            [Command(command: "write", 
+                     description: "Writes the specified argument to the standard output stream")]
+            public Result ConsoleWriteCallback(ICommandHost host,
+                                               IList<string> arguments,
+                                               object executionResult)
+            {
+                if(arguments.Count==1)
+                {
+                    System.Console.WriteLine(arguments[0]);
+                    return Result.Ok();
+                }
+                return Result.Fail("Wrong number of arguments");
+            }
+
+            [Subcommand(parentCommand: "write",
+                        subCommand:"color",
+                        description: "[red|blue|green]")]
+            private Result SubCommandCallback(ICommandHost host,
+                                                IList<string> arguments,
+                                                object executionResult)
+            {
+                return Result.Ok();
+            }
+        }
+
+        #endregion
     }
 }

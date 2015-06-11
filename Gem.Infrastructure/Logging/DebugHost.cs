@@ -18,7 +18,7 @@ namespace Gem.Infrastructure.Logging
 
         #region Register / Deregister
 
-        public void RemoveAll()
+        public void RemoveAppenders()
         {
             appenders = new List<IAppender>();
         }
@@ -36,6 +36,16 @@ namespace Gem.Infrastructure.Logging
         #endregion
 
         #region Appending
+
+        public void Message(string message)
+        {
+            appenders.ForEach(x => x.Message(message));
+        }
+
+        public void Message(string message, params object[] args)
+        {
+            appenders.ForEach(x => x.Message(message, args));
+        }
 
         public void Info(string message)
         {

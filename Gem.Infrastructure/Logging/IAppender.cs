@@ -7,6 +7,9 @@ namespace Gem.Infrastructure.Logging
     /// </summary>
     public interface IAppender
     {
+        void Message(string message);
+        void Message(string message, params object[] args);
+
         void Info(string message);
         void Info(string message, params object[] args);
 

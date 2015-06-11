@@ -24,6 +24,16 @@
 
         #region IAppender Implementation
 
+        public void Message(string message)
+        {
+            Info(message);
+        }
+
+        public void Message(string message, params object[] args)
+        {
+            Info(message, args);
+        }
+
         public void Info(string message)
         {
             logger.Info(message);

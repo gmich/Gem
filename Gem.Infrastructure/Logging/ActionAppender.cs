@@ -114,6 +114,16 @@ namespace Gem.Infrastructure.Logging
 
         #region Append
 
+        public void Message(string message)
+        {
+            Echo(FormatMessage(string.Empty, message));
+        }
+
+        public void Message(string message, params object[] args)
+        {
+            Echo(FormatMessage(string.Empty, message, args));
+        }
+
         public void Info(string message)
         {
             Echo(FormatMessage(Verbosity.Info, message));

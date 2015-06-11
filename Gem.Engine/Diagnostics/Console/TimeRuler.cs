@@ -265,7 +265,7 @@ namespace Gem.Diagnostics.Console
         /// <summary>
         /// 'tr' command execution.
         /// </summary>
-        string CommandExecute(IDebugCommandHost host, string command,
+        private string CommandExecute(IDebugCommandHost host, string command,
                                                                 IList<string> arguments)
         {
             bool previousVisible = Visible;
@@ -506,9 +506,7 @@ namespace Gem.Diagnostics.Console
         [Conditional("TRACE")]
         public void EndMark(string markerName)
         {
-#if TRACE
             EndMark(0, markerName);
-#endif
         }
 
         /// <summary>
@@ -519,7 +517,6 @@ namespace Gem.Diagnostics.Console
         [Conditional("TRACE")]
         public void EndMark(int barIndex, string markerName)
         {
-#if TRACE
             lock (this)
             {
                 if (barIndex < 0 || barIndex >= MaxBars)
@@ -556,7 +553,6 @@ namespace Gem.Diagnostics.Console
                 bar.Markers[markerIdx].EndTime =
                     (float)stopwatch.Elapsed.TotalMilliseconds;
             }
-#endif
         }
 
         /// <summary>
@@ -588,7 +584,6 @@ namespace Gem.Diagnostics.Console
         [Conditional("TRACE")]
         public void ResetLog()
         {
-#if TRACE
             lock (this)
             {
                 foreach (MarkerInfo markerInfo in markers)
@@ -608,7 +603,6 @@ namespace Gem.Diagnostics.Console
                     }
                 }
             }
-#endif
         }
 
         #endregion
