@@ -164,7 +164,7 @@ namespace Gem.Engine.Tests
         #region Terminal
 
         [TestMethod]
-        public void TerminalRegistersMethodWithCommandAttribute()
+        public void Terminal_RegistersMethodWithCommandAttribute()
         {
             Terminal terminal = new Terminal();
             MyTest objWithCommand = new ClassWithCommand();
@@ -174,51 +174,108 @@ namespace Gem.Engine.Tests
         }
 
         [TestMethod]
-        public void TerminalRegistersMethodWithSubCommandAttribute()
+        public void Terminal_RegistersMethodWithSubCommandAttribute()
         {
             Terminal terminal = new Terminal();
             MyTest objWithCommand = new ClassWithCommand();
             terminal.RegisterCommand(objWithCommand);
             Assert.AreEqual(2, terminal.Commands.Count);
-            var subcommands = terminal.Commands.Select(x=>x.SubCommand);
-            Assert.AreEqual(1, subcommands.Count());
+            Assert.AreEqual(1, terminal.Commands.Select(x => x.SubCommand.Count()).Sum());
         }
 
+        [TestMethod]
+        public void Terminal_RegistersMethodWithCachedSubCommandAttribute()
+        {
+            Terminal terminal = new Terminal();
+            terminal.RegisterCommand(new ClassWithSubCommand());
+            terminal.RegisterCommand(new ClassWithCommand());
+            Assert.AreEqual(2, terminal.Commands.Count);
+            Assert.AreEqual(2, terminal.Commands.Select(x => x.SubCommand.Count()).Sum());
+        }
+
+        [TestMethod]
+        public void Terminal_ExecutesChainedCommandSuccessfuly()
+        {
+            Terminal terminal = new Terminal();
+            var objWithCommand = new ClassWithCommand();
+            terminal.RegisterCommand(new ClassWithSubCommand());
+            terminal.RegisterCommand(objWithCommand);
+            terminal.ExecuteCommand("setnumber 5 | setnumber | setnumber");
+
+            Assert.AreEqual(20, objWithCommand.Number);
+        }
+
+        #region Helper Classes
 
         internal interface MyTest { }
         public class ClassWithCommand : MyTest
         {
-            [Command(command: "firstCommand", description: "just a test")]
-            private Result FirstCommandCallback(ICommandHost host,
-                                                IList<string> arguments, 
-                                                object executionResult)
+            public int Number { get; set; }
+            [Command(command: "setnumber",
+                     description: "provide a number as an argument")]
+            private Result<object> FirstCommandCallback(ICommandHost host,
+                                                        string command,
+                                                        IList<string> arguments, 
+                                                        object executionResult)
             {
-                return Result.Ok();
+                if(arguments.Count==1)
+                {
+                    Number = Int32.Parse(arguments[0]);
+                    return Result.Successful(Number);
+                }
+                else if(executionResult!=null)
+                {
+                    Number += (int)executionResult;
+                    return Result.Successful(Number);
+                }
+                return Result.Fail<object>("Wrong number of arguments");
             }
             [Command(command: "write", 
                      description: "Writes the specified argument to the standard output stream")]
-            public Result ConsoleWriteCallback(ICommandHost host,
-                                               IList<string> arguments,
-                                               object executionResult)
+            public Result<object> ConsoleWriteCallback(ICommandHost host,
+                                                       string command,
+                                                       IList<string> arguments,
+                                                       object executionResult)
             {
                 if(arguments.Count==1)
                 {
                     System.Console.WriteLine(arguments[0]);
-                    return Result.Ok();
+                    return Result.Successful(null);
                 }
-                return Result.Fail("Wrong number of arguments");
+                else if (executionResult!=null)
+                {
+                    System.Console.WriteLine(executionResult);
+                }
+                return Result.Failed("Wrong number of arguments");
             }
 
             [Subcommand(parentCommand: "write",
                         subCommand:"color",
                         description: "[red|blue|green]")]
-            private Result SubCommandCallback(ICommandHost host,
+            private Result<object> SubCommandCallback(ICommandHost host,
+                                                string command,
                                                 IList<string> arguments,
                                                 object executionResult)
             {
-                return Result.Ok();
+                return Result.Successful(null);
             }
         }
+
+        public class ClassWithSubCommand
+        {
+            [Subcommand(parentCommand: "write",
+            subCommand: "format",
+            description: "[something]")]
+            private Result<object> SubCommandCallback(ICommandHost host,
+                                                string command,
+                                                IList<string> arguments,
+                                                object executionResult)
+            {
+                return Result.Successful(null);
+            }
+        }
+
+        #endregion
 
         #endregion
     }

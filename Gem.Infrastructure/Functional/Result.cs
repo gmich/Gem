@@ -37,6 +37,16 @@ namespace Gem.Infrastructure.Functional
             return new Result(true, String.Empty);
         }
 
+        public static Result<object> Successful(object obj)
+        {
+            return new Result<object>(obj, true, String.Empty);
+        }
+
+        public static Result<object> Failed(string message)
+        {
+            return new Result<object>(null, false, message);
+        }
+
         public static Result<T> Ok<T>(T value)
         {
             return new Result<T>(value, true, String.Empty);

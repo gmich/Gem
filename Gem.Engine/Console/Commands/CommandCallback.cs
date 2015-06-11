@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Gem.Console.Commands
 {
-    public delegate Result CommandCallback(ICommandHost host, IList<string> arguments, object executionResult);
+    public delegate Result<object> CommandCallback(ICommandHost host,
+                                                   string command,
+                                                   IList<string> arguments, 
+                                                   object executionResult);
 
 }

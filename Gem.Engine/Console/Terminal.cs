@@ -14,6 +14,8 @@ namespace Gem.Console
     public class Terminal : ICommandHost
     {
 
+        #region Helper Classes
+
         public class CommandTable
         {
             private readonly List<CommandTable> subCommands = new List<CommandTable>();
@@ -68,11 +70,21 @@ namespace Gem.Console
             public IEnumerable<CommandTable> Entries { get { return cachedCommands; } }
         }
 
+        #endregion
+
+        #region Fields
+
         private readonly List<CommandTable> commandTable = new List<CommandTable>();
         private readonly List<SubCommandCacheEntry> subCommandCache = new List<SubCommandCacheEntry>();
 
+        #endregion
+
+        #region To Be Removed
+
         //temporary
         public List<CommandTable> Commands { get { return commandTable; } }
+
+        #endregion
 
         #region Commands
 
@@ -134,7 +146,7 @@ namespace Gem.Console
             }
 
         }
-        
+
         public void RegisterCommand(CommandCallback callback, string command, string description, bool requiresAuthorization)
         {
             if (!commandTable.Any(entry => entry.Command == command))
@@ -166,7 +178,7 @@ namespace Gem.Console
 
         public void RegisterSubCommand(CommandCallback callback, string parentCommand, string subCommand, string description, bool requiresAuthorization)
         {
-            var command = commandTable.First(entry => entry.Command == parentCommand);
+            var command = commandTable.FirstOrDefault(entry => entry.Command == parentCommand);
 
             if (command != null)
             {
@@ -218,7 +230,7 @@ namespace Gem.Console
 
         public void Info(string message)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public void Info(string message, params object[] args)
@@ -253,7 +265,7 @@ namespace Gem.Console
 
         public void Error(string message, params object[] args)
         {
-           // throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
         public void Fatal(string message)
@@ -276,9 +288,92 @@ namespace Gem.Console
             throw new NotImplementedException();
         }
 
-        public Infrastructure.Functional.Result<bool> ExecuteCommand(string command)
+        private readonly char commandSeparator = '|';
+        private readonly char subCommandSeparator = '>';
+        private readonly char argumentSeparator = ' ';
+
+        internal class ExecutionGraphEntry
         {
-            throw new NotImplementedException();
+            private readonly IList<string> arguments = new List<string>();
+            private readonly CommandCallback cmd;
+
+            public ExecutionGraphEntry(CommandCallback cmd, IList<string> arguments)
+            {
+                this.arguments = arguments;
+                this.cmd = cmd;
+            }
+
+            public IList<string> Arguments { get { return arguments; } }
+            public CommandCallback Callback { get { return cmd; } }
         }
+
+        public Result ExecuteCommand(string command)
+        {
+            Result<object> result = Result.Successful(null);
+            List<ExecutionGraphEntry> executionGraph = new List<ExecutionGraphEntry>();
+            var commands = command.Split(commandSeparator);
+
+            //loop through all the commands
+            for (int commandIteration = 0; commandIteration < commands.Count(); commandIteration++)
+            {
+                var trimmed = commands[commandIteration].TrimStart(argumentSeparator).TrimEnd(argumentSeparator);
+                var commandWithArguments = trimmed.Split(argumentSeparator);
+                //if the command string is not long enough, fail
+                if (commandWithArguments.Count() == 0) return Result.Fail("Invalid Command");
+
+                var commandEntry = commandTable.Where(entry => entry.Command == commandWithArguments[0]).FirstOrDefault();
+                if (commandEntry != null)
+                {
+                    executionGraph.Add(new ExecutionGraphEntry(commandEntry.Callback, commandWithArguments.Skip(1).ToList()));
+                }
+                //if the commandtable doesn't have a command match, fail
+                else
+                {
+                    return Result.Fail("Invalid Command");
+                }
+
+                //split the command to its subcommands
+                var subCommands = commands[commandIteration].Split(commandSeparator);
+
+                for (int subCommandIteration = 0; subCommandIteration < subCommands.Count(); subCommandIteration++)
+                {
+                    if (subCommandIteration == 0) continue;
+                    var trimmedSub = subCommands[subCommandIteration].TrimStart(argumentSeparator).TrimEnd(argumentSeparator);
+                    var subCommandWithArguments = trimmedSub.Split(argumentSeparator);
+                    //if the subcommand string is not long enough, fail
+                    if (subCommandWithArguments.Count() == 0) return Result.Fail("Invalid Command");
+
+                    commandEntry = commandTable.Where(entry => entry.Command == commandWithArguments[0])
+                                                     .SelectMany(x => x.SubCommand)
+                                                     .Where(cmd => cmd.Command == subCommandWithArguments[0])
+                                                     .FirstOrDefault();
+                    if (commandEntry != null)
+                    {
+                        executionGraph.Add(new ExecutionGraphEntry(commandEntry.Callback, subCommandWithArguments.Skip(1).ToList()));
+                    }
+                    //if no entries were found, fail
+                    else
+                    {
+                        return Result.Fail("Invalid Command");
+                    }
+                }
+            }
+
+            //execute the graph
+            foreach (var entry in executionGraph)
+            {
+                if (!result.Failure)
+                {
+                    result = entry.Callback(this, command, entry.Arguments, result.Value);
+                }
+                else
+                {
+                    return Result.Fail("Command execution failed");
+                }
+            }
+
+            return result;
+        }
+
     }
 }
