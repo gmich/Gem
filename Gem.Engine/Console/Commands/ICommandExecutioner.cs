@@ -4,7 +4,7 @@ namespace Gem.Console.Commands
 {    
     public interface ICommandExecutioner
     {
-        Result ExecuteCommand(string command);
+        Result<object> ExecuteCommand(string command);
     }
 
 }

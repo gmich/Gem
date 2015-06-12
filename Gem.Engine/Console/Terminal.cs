@@ -16,6 +16,21 @@ namespace Gem.Console
 
         #region Helper Classes
 
+        internal class ExecutionGraphEntry
+        {
+            private readonly IList<string> arguments = new List<string>();
+            private readonly CommandCallback cmd;
+
+            public ExecutionGraphEntry(CommandCallback cmd, IList<string> arguments)
+            {
+                this.arguments = arguments;
+                this.cmd = cmd;
+            }
+
+            public IList<string> Arguments { get { return arguments; } }
+            public CommandCallback Callback { get { return cmd; } }
+        }
+
         public class CommandTable
         {
             private readonly List<CommandTable> subCommands = new List<CommandTable>();
@@ -81,7 +96,6 @@ namespace Gem.Console
 
         #region To Be Removed
 
-        //temporary
         public List<CommandTable> Commands { get { return commandTable; } }
 
         #endregion
@@ -213,6 +227,8 @@ namespace Gem.Console
             throw new NotImplementedException();
         }
 
+        #region Message Appending
+
         public void RemoveAppenders()
         {
             throw new NotImplementedException();
@@ -288,26 +304,13 @@ namespace Gem.Console
             throw new NotImplementedException();
         }
 
+        #endregion
+
         private readonly char commandSeparator = '|';
         private readonly char subCommandSeparator = '>';
         private readonly char argumentSeparator = ' ';
 
-        internal class ExecutionGraphEntry
-        {
-            private readonly IList<string> arguments = new List<string>();
-            private readonly CommandCallback cmd;
-
-            public ExecutionGraphEntry(CommandCallback cmd, IList<string> arguments)
-            {
-                this.arguments = arguments;
-                this.cmd = cmd;
-            }
-
-            public IList<string> Arguments { get { return arguments; } }
-            public CommandCallback Callback { get { return cmd; } }
-        }
-
-        public Result ExecuteCommand(string command)
+        public Result<object> ExecuteCommand(string command)
         {
             Result<object> result = Result.Successful(null);
             List<ExecutionGraphEntry> executionGraph = new List<ExecutionGraphEntry>();
@@ -317,33 +320,38 @@ namespace Gem.Console
             for (int commandIteration = 0; commandIteration < commands.Count(); commandIteration++)
             {
                 var trimmed = commands[commandIteration].TrimStart(argumentSeparator).TrimEnd(argumentSeparator);
-                var commandWithArguments = trimmed.Split(argumentSeparator);
+                var subCommands = commands[commandIteration].Split(subCommandSeparator);
+                string currentCommand = string.Empty;
+                CommandTable commandEntry = null;
+                //var commandWithArguments = trimmed.Split(argumentSeparator);
                 //if the command string is not long enough, fail
-                if (commandWithArguments.Count() == 0) return Result.Fail("Invalid Command");
-
-                var commandEntry = commandTable.Where(entry => entry.Command == commandWithArguments[0]).FirstOrDefault();
-                if (commandEntry != null)
-                {
-                    executionGraph.Add(new ExecutionGraphEntry(commandEntry.Callback, commandWithArguments.Skip(1).ToList()));
-                }
-                //if the commandtable doesn't have a command match, fail
-                else
-                {
-                    return Result.Fail("Invalid Command");
-                }
-
                 //split the command to its subcommands
-                var subCommands = commands[commandIteration].Split(commandSeparator);
 
                 for (int subCommandIteration = 0; subCommandIteration < subCommands.Count(); subCommandIteration++)
                 {
-                    if (subCommandIteration == 0) continue;
                     var trimmedSub = subCommands[subCommandIteration].TrimStart(argumentSeparator).TrimEnd(argumentSeparator);
                     var subCommandWithArguments = trimmedSub.Split(argumentSeparator);
-                    //if the subcommand string is not long enough, fail
-                    if (subCommandWithArguments.Count() == 0) return Result.Fail("Invalid Command");
 
-                    commandEntry = commandTable.Where(entry => entry.Command == commandWithArguments[0])
+                    if (subCommandWithArguments.Count() == 0) return Result.Failed("Invalid Command");
+                    if(subCommandIteration==0)
+                    {
+                        currentCommand = subCommandWithArguments[0];
+                        commandEntry = commandTable.Where(entry => entry.Command == currentCommand).FirstOrDefault();
+                        if (commandEntry != null)
+                        {
+                            executionGraph.Add(new ExecutionGraphEntry(commandEntry.Callback, subCommandWithArguments.Skip(1).ToList()));
+                        }
+                        //if the commandtable doesn't have a command match, fail
+                        else
+                        {
+                            return Result.Failed("Invalid Command");
+                        }
+                    }
+                    if (subCommandIteration == 0) continue;
+                    //if the subcommand string is not long enough, fail
+                    if (subCommandWithArguments.Count() == 0) return Result.Failed("Invalid Command");
+
+                    commandEntry = commandTable.Where(entry => entry.Command == currentCommand)
                                                      .SelectMany(x => x.SubCommand)
                                                      .Where(cmd => cmd.Command == subCommandWithArguments[0])
                                                      .FirstOrDefault();
@@ -354,7 +362,7 @@ namespace Gem.Console
                     //if no entries were found, fail
                     else
                     {
-                        return Result.Fail("Invalid Command");
+                        return Result.Failed("Invalid Command");
                     }
                 }
             }
@@ -368,7 +376,7 @@ namespace Gem.Console
                 }
                 else
                 {
-                    return Result.Fail("Command execution failed");
+                    return Result.Failed("Command execution failed");
                 }
             }
 
