@@ -20,15 +20,18 @@ namespace Gem.Console
         {
             private readonly IList<string> arguments = new List<string>();
             private readonly CommandCallback cmd;
+            private readonly CommandCallback rollback;
 
-            public ExecutionGraphEntry(CommandCallback cmd, IList<string> arguments)
+            public ExecutionGraphEntry(CommandCallback cmd, CommandCallback rollback, IList<string> arguments)
             {
                 this.arguments = arguments;
                 this.cmd = cmd;
+                this.rollback = rollback;
             }
 
             public IList<string> Arguments { get { return arguments; } }
             public CommandCallback Callback { get { return cmd; } }
+            public CommandCallback Rollback { get { return rollback; } }
         }
 
         public class CommandTable
@@ -45,6 +48,7 @@ namespace Gem.Console
                 this.description = description;
                 this.callback = callback;
                 this.requiresAuthorization = requiresAuthorization;
+                Rollback = null;
             }
 
             public bool AddSubCommand(CommandTable subCommand)
@@ -59,30 +63,31 @@ namespace Gem.Console
 
             public IEnumerable<CommandTable> SubCommand { get { return subCommands; } }
             public CommandCallback Callback { get { return callback; } }
+            public CommandCallback Rollback { get; set; }
             public string Command { get { return command; } }
             public string Description { get { return description; } }
             public bool RequiresAuthorization { get { return requiresAuthorization; } }
 
         }
 
-        internal class SubCommandCacheEntry
+        internal class CommandCacheEntry<TEntry>
         {
             private readonly string command;
-            private readonly List<CommandTable> cachedCommands = new List<CommandTable>();
+            private readonly List<TEntry> cachedCommands = new List<TEntry>();
 
-            public SubCommandCacheEntry(string command, CommandTable cachedCommand)
+            public CommandCacheEntry(string command, TEntry cachedCommand)
             {
                 this.command = command;
                 cachedCommands.Add(cachedCommand);
             }
 
-            public void AddEntry(CommandTable cachedCommand)
+            public void AddEntry(TEntry cachedCommand)
             {
                 cachedCommands.Add(cachedCommand);
             }
 
             public string Command { get { return command; } }
-            public IEnumerable<CommandTable> Entries { get { return cachedCommands; } }
+            public IEnumerable<TEntry> Entries { get { return cachedCommands; } }
         }
 
         #endregion
@@ -90,8 +95,8 @@ namespace Gem.Console
         #region Fields
 
         private readonly List<CommandTable> commandTable = new List<CommandTable>();
-        private readonly List<SubCommandCacheEntry> subCommandCache = new List<SubCommandCacheEntry>();
-
+        private readonly List<CommandCacheEntry<CommandTable>> subCommandCache = new List<CommandCacheEntry<CommandTable>>();
+        private readonly List<CommandCacheEntry<CommandCallback>> rollbackCache = new List<CommandCacheEntry<CommandCallback>>();
         #endregion
 
         #region To Be Removed
@@ -105,52 +110,38 @@ namespace Gem.Console
         public void RegisterCommand<TObject>(TObject objectWithCommand)
             where TObject : class
         {
-            var methods = objectWithCommand.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
-                          .Where(m => m.GetCustomAttributes(typeof(CommandAttribute), false).Length > 0);
-            RegisterCommand(methods, objectWithCommand);
-
-            methods = objectWithCommand.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
-                   .Where(m => m.GetCustomAttributes(typeof(SubcommandAttribute), false).Length > 0);
-            RegisterSubCommand(methods, objectWithCommand);
-        }
-
-        private void RegisterCommand<TObject>(IEnumerable<MethodInfo> methods, TObject objectWithCommand)
-        {
-            foreach (var methodInfo in methods)
-            {
-                CommandCallback callback;
-                try
-                {
-                    callback = (CommandCallback)Delegate.CreateDelegate(typeof(CommandCallback), objectWithCommand, methodInfo, true);
-                    AttributeResolver.Find<CommandAttribute>(methodInfo, attribute =>
+            ResolveAttributeToCommand<CommandAttribute>(objectWithCommand, (callback, attribute) =>
                                                                          RegisterCommand(callback,
                                                                                          attribute.Command,
                                                                                          attribute.Description,
                                                                                          attribute.RequiresAuthorization));
-                }
-                catch (Exception ex)
-                {
-                    this.Error("Failed to much delegate with CommandAttribute in {0} with the CommandCallback delegate. {1}", objectWithCommand, ex.Message);
-                }
 
-            }
-
-        }
-
-        private void RegisterSubCommand<TObject>(IEnumerable<MethodInfo> methods, TObject objectWithCommand)
-        {
-            foreach (var methodInfo in methods)
-            {
-                CommandCallback callback;
-                try
-                {
-                    callback = (CommandCallback)Delegate.CreateDelegate(typeof(CommandCallback), objectWithCommand, methodInfo, true);
-                    AttributeResolver.Find<SubcommandAttribute>(methodInfo, attribute =>
+            ResolveAttributeToCommand<SubcommandAttribute>(objectWithCommand, (callback, attribute) =>
                                                                          RegisterSubCommand(callback,
                                                                                          attribute.ParentCommand,
                                                                                          attribute.SubCommand,
                                                                                          attribute.Description,
                                                                                          attribute.RequiresAuthorization));
+
+            ResolveAttributeToCommand<RollbackCommandAttribute>(objectWithCommand, (callback, attribute) =>
+                                                                       RegisterRollback(callback,
+                                                                                        attribute.Command));
+
+
+        }
+
+        private void ResolveAttributeToCommand<TAttribute>(object objectWithCommand, Action<CommandCallback, TAttribute> action)
+            where TAttribute : Attribute
+        {
+            var methods = objectWithCommand.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
+                      .Where(m => m.GetCustomAttributes(typeof(TAttribute), false).Length > 0);
+            foreach (var methodInfo in methods)
+            {
+                CommandCallback callback;
+                try
+                {
+                    callback = (CommandCallback)Delegate.CreateDelegate(typeof(CommandCallback), objectWithCommand, methodInfo, true);
+                    AttributeResolver.Find<TAttribute>(methodInfo, attribute => action(callback, attribute));
                 }
                 catch (Exception ex)
                 {
@@ -169,6 +160,7 @@ namespace Gem.Console
             }
             this.Info("registration result");
             CheckSubcommandCache(command);
+            CheckRollbackCache(command);
         }
 
         //A subcommand might be registered before its parent. To avoid losing the subcommand , cache them 
@@ -190,6 +182,26 @@ namespace Gem.Console
             }
         }
 
+        private void CheckRollbackCache(string parent)
+        {
+            for (int i = 0; i < rollbackCache.Count; i++)
+            {
+                if (rollbackCache[i].Command == parent)
+                {
+                    var cachedEntry = rollbackCache[i];
+                    subCommandCache.RemoveAt(i);
+
+                    CommandCallback callback = null;
+                    foreach (var entry in cachedEntry.Entries)
+                    {
+                        callback += entry;
+                    }
+
+                    RegisterRollback(callback, parent);
+                }
+            }
+        }
+
         public void RegisterSubCommand(CommandCallback callback, string parentCommand, string subCommand, string description, bool requiresAuthorization)
         {
             var command = commandTable.FirstOrDefault(entry => entry.Command == parentCommand);
@@ -203,16 +215,35 @@ namespace Gem.Console
             }
             else
             {
-                subCommandCache.Add(new SubCommandCacheEntry(parentCommand, new CommandTable(callback, subCommand, description, requiresAuthorization)));
+                subCommandCache.Add(new CommandCacheEntry<CommandTable>(parentCommand, new CommandTable(callback, subCommand, description, requiresAuthorization)));
             }
 
             this.Info("registration result");
         }
 
+        public void RegisterRollback(CommandCallback callback, string parentCommand)
+        {
+            var command = commandTable.FirstOrDefault(entry => entry.Command == parentCommand);
+
+            if (command != null)
+            {
+                command.Rollback += callback;
+            }
+            else
+            {
+                rollbackCache.Add(new CommandCacheEntry<CommandCallback>(parentCommand, callback));
+            }
+
+            this.Info("registration result");
+        }
 
         public void UnregisterCommand(string command)
         {
-            throw new NotImplementedException();
+            var entry = commandTable.Where(x => x.Command == command).FirstOrDefault();
+            if (entry != null)
+            {
+                commandTable.Remove(entry);
+            }
         }
 
         #endregion
@@ -323,6 +354,7 @@ namespace Gem.Console
                 var subCommands = commands[commandIteration].Split(subCommandSeparator);
                 string currentCommand = string.Empty;
                 CommandTable commandEntry = null;
+
                 //var commandWithArguments = trimmed.Split(argumentSeparator);
                 //if the command string is not long enough, fail
                 //split the command to its subcommands
@@ -333,21 +365,21 @@ namespace Gem.Console
                     var subCommandWithArguments = trimmedSub.Split(argumentSeparator);
 
                     if (subCommandWithArguments.Count() == 0) return Result.Failed("Invalid Command");
-                    if(subCommandIteration==0)
+                    if (subCommandIteration == 0)
                     {
                         currentCommand = subCommandWithArguments[0];
                         commandEntry = commandTable.Where(entry => entry.Command == currentCommand).FirstOrDefault();
                         if (commandEntry != null)
                         {
-                            executionGraph.Add(new ExecutionGraphEntry(commandEntry.Callback, subCommandWithArguments.Skip(1).ToList()));
+                            executionGraph.Add(new ExecutionGraphEntry(commandEntry.Callback, commandEntry.Rollback, subCommandWithArguments.Skip(1).ToList()));
                         }
                         //if the commandtable doesn't have a command match, fail
                         else
                         {
                             return Result.Failed("Invalid Command");
                         }
+                        continue;
                     }
-                    if (subCommandIteration == 0) continue;
                     //if the subcommand string is not long enough, fail
                     if (subCommandWithArguments.Count() == 0) return Result.Failed("Invalid Command");
 
@@ -357,7 +389,7 @@ namespace Gem.Console
                                                      .FirstOrDefault();
                     if (commandEntry != null)
                     {
-                        executionGraph.Add(new ExecutionGraphEntry(commandEntry.Callback, subCommandWithArguments.Skip(1).ToList()));
+                        executionGraph.Add(new ExecutionGraphEntry(commandEntry.Callback, null, subCommandWithArguments.Skip(1).ToList()));
                     }
                     //if no entries were found, fail
                     else
@@ -368,18 +400,25 @@ namespace Gem.Console
             }
 
             //execute the graph
+            Stack<ExecutionGraphEntry> callstack = new Stack<ExecutionGraphEntry>();
             foreach (var entry in executionGraph)
             {
                 if (!result.Failure)
                 {
+                    callstack.Push(entry);
                     result = entry.Callback(this, command, entry.Arguments, result.Value);
                 }
                 else
                 {
-                    return Result.Failed("Command execution failed");
+                    //fallback
+                    foreach (var executedCommand in callstack)
+                    {
+                        if (executedCommand.Rollback != null)
+                            result = executedCommand.Rollback(this, command, entry.Arguments, result.Value);
+                    }
+                    return Result.Failed("Command execution failed " + result.Error, result.Value);
                 }
             }
-
             return result;
         }
 

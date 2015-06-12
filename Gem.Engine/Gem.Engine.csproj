@@ -46,6 +46,7 @@
     <Compile Include="CameraSystem\ICamera.cs" />
     <Compile Include="Console\Cells\CellAligner.cs" />
     <Compile Include="Console\Cells\CellAppender.cs" />
+    <Compile Include="Console\Commands\RollbackCommandAttribute.cs" />
     <Compile Include="Console\Commands\SubcommandAttribute.cs" />
     <Compile Include="Console\Commands\CommandAttribute.cs" />
     <Compile Include="Console\Commands\CommandCallback.cs" />

@@ -219,6 +219,20 @@ namespace Gem.Engine.Tests
             Assert.AreEqual(12.5d, (double)result.Value);
             Assert.AreEqual(12.5d, (double)objWithCommand.Number);
         }
+
+        [TestMethod]
+        public void Terminal_ChainedSubCommandRollbacksSuccessfuly()
+        {
+            Terminal terminal = new Terminal();
+            var objWithCommand = new ClassWithCommand();
+
+            terminal.RegisterCommand(new Calculator());
+            terminal.RegisterCommand(objWithCommand);
+
+            var result = terminal.ExecuteCommand("calculate 1 > plus 9 > minus invalid > times 5 > divide 2 | setnumber");
+
+            Assert.AreEqual(0d, (double)result.Value);
+        }
      
 
         #endregion

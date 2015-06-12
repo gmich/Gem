@@ -82,9 +82,11 @@ namespace Gem.Engine.Tests
     public class Calculator
     {
 
+        private const string Command = "calculate";
+
         #region Commands
 
-        [Command(command: "calculate",
+        [Command(command: Command,
                  description: "Starts a calculation")]
         private Result<object> Calculate(ICommandHost host,
                                                    string command,
@@ -111,8 +113,16 @@ namespace Gem.Engine.Tests
             return Result.Failed("Wrong number of arguments");
         }
 
-      
-        [Subcommand(parentCommand: "calculate",
+        [RollbackCommand(command: Command)]
+        private Result<object> Rollback(ICommandHost host,
+                                        string command,
+                                        IList<string> arguments,
+                                        object executionResult)
+        {
+            return Result.Failed("rolling back", 0d);
+        }
+
+        [Subcommand(parentCommand: Command,
                     subCommand: "plus",
                     description: "Add a number to the previous")]
         private Result<object> Add(ICommandHost host,
@@ -123,7 +133,7 @@ namespace Gem.Engine.Tests
             return ParseCommand(arguments, executionResult, (res, arg) => res + arg);
         }
 
-        [Subcommand(parentCommand: "calculate",
+        [Subcommand(parentCommand: Command,
                     subCommand: "times",
                     description: "Multiplication")]
         private Result<object> Multiply(ICommandHost host,
@@ -134,7 +144,7 @@ namespace Gem.Engine.Tests
             return ParseCommand(arguments, executionResult, (res, arg) => res * arg);
         }
 
-        [Subcommand(parentCommand: "calculate",
+        [Subcommand(parentCommand: Command,
                     subCommand: "divide",
                     description: "Division")]
         private Result<object> Divide(ICommandHost host,
@@ -146,7 +156,7 @@ namespace Gem.Engine.Tests
             return ParseCommand(arguments, executionResult, (res, arg) => res / arg);
         }
 
-        [Subcommand(parentCommand: "calculate",
+        [Subcommand(parentCommand: Command,
             subCommand: "minus",
             description: "Subtract a number from the previous")]
         private Result<object> Subtract(ICommandHost host,

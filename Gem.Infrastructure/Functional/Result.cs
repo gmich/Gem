@@ -42,9 +42,9 @@ namespace Gem.Infrastructure.Functional
             return new Result<object>(obj, true, String.Empty);
         }
 
-        public static Result<object> Failed(string message)
+        public static Result<object> Failed(string message, object value = null)
         {
-            return new Result<object>(null, false, message);
+            return new Result<object>(value, false, message);
         }
 
         public static Result<T> Ok<T>(T value)
