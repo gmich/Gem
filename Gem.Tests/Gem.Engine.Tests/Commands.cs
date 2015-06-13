@@ -3,6 +3,7 @@ using Gem.Console.Commands;
 using Gem.Infrastructure.Functional;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Gem.Engine.Tests
 {
@@ -16,7 +17,6 @@ namespace Gem.Engine.Tests
         [Command(command: "setnumber",
                  description: "provide a number as an argument")]
         private Result<object> FirstCommandCallback(ICommandHost host,
-                                                    string command,
                                                     IList<string> arguments,
                                                     object executionResult)
         {
@@ -30,13 +30,12 @@ namespace Gem.Engine.Tests
                 Number += (double)executionResult;
                 return Result.Successful(Number);
             }
-            return Result.Fail<object>("Wrong number of arguments");
+            return Result.Failed("Wrong number of arguments");
         }
 
         [Command(command: "write",
                  description: "Writes the specified argument to the standard output stream")]
         public Result<object> ConsoleWriteCallback(ICommandHost host,
-                                                   string command,
                                                    IList<string> arguments,
                                                    object executionResult)
         {
@@ -56,7 +55,6 @@ namespace Gem.Engine.Tests
                     subCommand: "color",
                     description: "[red|blue|green]")]
         private Result<object> SubCommandCallback(ICommandHost host,
-                                            string command,
                                             IList<string> arguments,
                                             object executionResult)
         {
@@ -70,7 +68,6 @@ namespace Gem.Engine.Tests
         subCommand: "format",
         description: "[something]")]
         private Result<object> SubCommandCallback(ICommandHost host,
-                                            string command,
                                             IList<string> arguments,
                                             object executionResult)
         {
@@ -89,7 +86,6 @@ namespace Gem.Engine.Tests
         [Command(command: Command,
                  description: "Starts a calculation")]
         private Result<object> Calculate(ICommandHost host,
-                                                   string command,
                                                    IList<string> arguments,
                                                    object executionResult)
         {
@@ -115,7 +111,6 @@ namespace Gem.Engine.Tests
 
         [RollbackCommand(command: Command)]
         private Result<object> Rollback(ICommandHost host,
-                                        string command,
                                         IList<string> arguments,
                                         object executionResult)
         {
@@ -126,9 +121,8 @@ namespace Gem.Engine.Tests
                     subCommand: "plus",
                     description: "Add a number to the previous")]
         private Result<object> Add(ICommandHost host,
-                                            string command,
-                                            IList<string> arguments,
-                                            object executionResult)
+                                   IList<string> arguments,
+                                   object executionResult)
         {
             return ParseCommand(arguments, executionResult, (res, arg) => res + arg);
         }
@@ -137,9 +131,8 @@ namespace Gem.Engine.Tests
                     subCommand: "times",
                     description: "Multiplication")]
         private Result<object> Multiply(ICommandHost host,
-                                            string command,
-                                            IList<string> arguments,
-                                            object executionResult)
+                                        IList<string> arguments,
+                                        object executionResult)
         {
             return ParseCommand(arguments, executionResult, (res, arg) => res * arg);
         }
@@ -148,9 +141,8 @@ namespace Gem.Engine.Tests
                     subCommand: "divide",
                     description: "Division")]
         private Result<object> Divide(ICommandHost host,
-                                            string command,
-                                            IList<string> arguments,
-                                            object executionResult)
+                                      IList<string> arguments,
+                                      object executionResult)
         {
             //check if argument==0
             return ParseCommand(arguments, executionResult, (res, arg) => res / arg);
@@ -160,9 +152,8 @@ namespace Gem.Engine.Tests
             subCommand: "minus",
             description: "Subtract a number from the previous")]
         private Result<object> Subtract(ICommandHost host,
-                                            string command,
-                                            IList<string> arguments,
-                                            object executionResult)
+                                        IList<string> arguments,
+                                        object executionResult)
         {
             return ParseCommand(arguments, executionResult, (res, arg) => res - arg);
         }

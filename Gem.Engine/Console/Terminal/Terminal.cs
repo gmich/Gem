@@ -1,12 +1,16 @@
-﻿using System;
+﻿#region Usings
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Gem.Infrastructure.Attributes;
 using Gem.Console.Commands;
 using System.Reflection;
 using Gem.Infrastructure.Functional;
+using Gem.Infrastructure.Logging;
+using System.Threading.Tasks;
+
+#endregion
 
 namespace Gem.Console
 {
@@ -14,94 +18,36 @@ namespace Gem.Console
     public class Terminal : ICommandHost
     {
 
-        #region Helper Classes
-
-        internal class ExecutionGraphEntry
-        {
-            private readonly IList<string> arguments = new List<string>();
-            private readonly CommandCallback cmd;
-            private readonly CommandCallback rollback;
-
-            public ExecutionGraphEntry(CommandCallback cmd, CommandCallback rollback, IList<string> arguments)
-            {
-                this.arguments = arguments;
-                this.cmd = cmd;
-                this.rollback = rollback;
-            }
-
-            public IList<string> Arguments { get { return arguments; } }
-            public CommandCallback Callback { get { return cmd; } }
-            public CommandCallback Rollback { get { return rollback; } }
-        }
-
-        public class CommandTable
-        {
-            private readonly List<CommandTable> subCommands = new List<CommandTable>();
-            private readonly CommandCallback callback;
-            private readonly string command;
-            private readonly string description;
-            private readonly bool requiresAuthorization;
-
-            public CommandTable(CommandCallback callback, string command, string description, bool requiresAuthorization)
-            {
-                this.command = command;
-                this.description = description;
-                this.callback = callback;
-                this.requiresAuthorization = requiresAuthorization;
-                Rollback = null;
-            }
-
-            public bool AddSubCommand(CommandTable subCommand)
-            {
-                if (!subCommands.Any(arg => arg.command == subCommand.Command))
-                {
-                    subCommands.Add(subCommand);
-                    return true;
-                }
-                return false;
-            }
-
-            public IEnumerable<CommandTable> SubCommand { get { return subCommands; } }
-            public CommandCallback Callback { get { return callback; } }
-            public CommandCallback Rollback { get; set; }
-            public string Command { get { return command; } }
-            public string Description { get { return description; } }
-            public bool RequiresAuthorization { get { return requiresAuthorization; } }
-
-        }
-
-        internal class CommandCacheEntry<TEntry>
-        {
-            private readonly string command;
-            private readonly List<TEntry> cachedCommands = new List<TEntry>();
-
-            public CommandCacheEntry(string command, TEntry cachedCommand)
-            {
-                this.command = command;
-                cachedCommands.Add(cachedCommand);
-            }
-
-            public void AddEntry(TEntry cachedCommand)
-            {
-                cachedCommands.Add(cachedCommand);
-            }
-
-            public string Command { get { return command; } }
-            public IEnumerable<TEntry> Entries { get { return cachedCommands; } }
-        }
-
-        #endregion
-
         #region Fields
+
+        private readonly char commandSeparator;
+        private readonly char subCommandSeparator;
+        private readonly char argumentSeparator;
 
         private readonly List<CommandTable> commandTable = new List<CommandTable>();
         private readonly List<CommandCacheEntry<CommandTable>> subCommandCache = new List<CommandCacheEntry<CommandTable>>();
         private readonly List<CommandCacheEntry<CommandCallback>> rollbackCache = new List<CommandCacheEntry<CommandCallback>>();
+        private readonly Stack<ICommandExecutioner> executioners = new Stack<ICommandExecutioner>();
+        private readonly List<IAppender> appenders = new List<IAppender>();
+        private readonly CommandHistory history;
+
         #endregion
 
-        #region To Be Removed
+        #region Ctor
 
-        public List<CommandTable> Commands { get { return commandTable; } }
+        public Terminal(TerminalSettings settings)
+        {
+            history = new CommandHistory(settings.HistoryEntries);
+            commandSeparator = settings.CommandSeparator;
+            subCommandSeparator = settings.SubCommandSeparator;
+            argumentSeparator = settings.ArgumentSeparator;
+        }
+
+        #endregion
+
+        #region Public Properties
+
+        public IEnumerable<CommandTable> Commands { get { return commandTable; } }
 
         #endregion
 
@@ -248,102 +194,119 @@ namespace Gem.Console
 
         #endregion
 
+        #region Executioners
+
         public void PushExecutioner(ICommandExecutioner executioner)
         {
-            throw new NotImplementedException();
+            executioners.Push(executioner);
         }
 
         public void PopExecutioner()
         {
-            throw new NotImplementedException();
+            executioners.Pop();
         }
+
+        private Task<Result<object>> CallExecutioner(string command)
+        {
+            return executioners.Peek().ExecuteCommand(command);
+        }
+
+        #endregion
 
         #region Message Appending
 
         public void RemoveAppenders()
         {
-            throw new NotImplementedException();
+            appenders.Clear();
+        }
+
+        public void RegisterAppender(IAppender appender)
+        {
+            appenders.Add(appender);
+        }
+
+        public void DeregisterAppender(IAppender appender)
+        {
+            appenders.Remove(appender);
         }
 
         public void Message(string message)
         {
-            throw new NotImplementedException();
+            appenders.ForEach(x => x.Message(message));
         }
 
         public void Message(string message, params object[] args)
         {
-            throw new NotImplementedException();
+            appenders.ForEach(x => x.Message(message, args));
         }
 
         public void Info(string message)
         {
-            //throw new NotImplementedException();
+            appenders.ForEach(x => x.Info(message));
         }
 
         public void Info(string message, params object[] args)
         {
-            throw new NotImplementedException();
+            appenders.ForEach(x => x.Info(message, args));
         }
 
         public void Debug(string message)
         {
-            throw new NotImplementedException();
+            appenders.ForEach(x => x.Debug(message));
         }
 
         public void Debug(string message, params object[] args)
         {
-            throw new NotImplementedException();
+            appenders.ForEach(x => x.Debug(message, args));
         }
 
         public void Warn(string message)
         {
-            throw new NotImplementedException();
+            appenders.ForEach(x => x.Warn(message));
         }
 
         public void Warn(string message, params object[] args)
         {
-            throw new NotImplementedException();
+            appenders.ForEach(x => x.Warn(message, args));
         }
 
         public void Error(string message)
         {
-            throw new NotImplementedException();
+            appenders.ForEach(x => x.Error(message));
         }
 
         public void Error(string message, params object[] args)
         {
-            // throw new NotImplementedException();
+            appenders.ForEach(x => x.Error(message, args));
         }
 
         public void Fatal(string message)
         {
-            throw new NotImplementedException();
+            appenders.ForEach(x => x.Fatal(message));
         }
 
         public void Fatal(string message, params object[] args)
         {
-            throw new NotImplementedException();
-        }
-
-        public void RegisterAppender(Infrastructure.Logging.IAppender appender)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeregisterAppender(Infrastructure.Logging.IAppender appender)
-        {
-            throw new NotImplementedException();
+            appenders.ForEach(x => x.Fatal(message, args));
         }
 
         #endregion
 
-        private readonly char commandSeparator = '|';
-        private readonly char subCommandSeparator = '>';
-        private readonly char argumentSeparator = ' ';
+        #region Command Execution
 
-        public Result<object> ExecuteCommand(string command)
+        private Task<Result<object>> ExecutionFailed(string error)
         {
-            Result<object> result = Result.Successful(null);
+            return new Task<Result<object>>(() => Result.Failed("Invalid Command"));
+        }
+
+        public Task<Result<object>> ExecuteCommand(string command)
+        {
+            if (executioners.Count != 0)
+            {
+                return CallExecutioner(command);
+            }
+
+            var result = Result.Successful(null);
             List<ExecutionGraphEntry> executionGraph = new List<ExecutionGraphEntry>();
             var commands = command.Split(commandSeparator);
 
@@ -357,14 +320,13 @@ namespace Gem.Console
 
                 //var commandWithArguments = trimmed.Split(argumentSeparator);
                 //if the command string is not long enough, fail
-                //split the command to its subcommands
-
+                //split the command to its0 subcommands
                 for (int subCommandIteration = 0; subCommandIteration < subCommands.Count(); subCommandIteration++)
                 {
                     var trimmedSub = subCommands[subCommandIteration].TrimStart(argumentSeparator).TrimEnd(argumentSeparator);
                     var subCommandWithArguments = trimmedSub.Split(argumentSeparator);
 
-                    if (subCommandWithArguments.Count() == 0) return Result.Failed("Invalid Command");
+                    if (subCommandWithArguments.Count() == 0) return ExecutionFailed("Invalid Command");
                     if (subCommandIteration == 0)
                     {
                         currentCommand = subCommandWithArguments[0];
@@ -376,12 +338,12 @@ namespace Gem.Console
                         //if the commandtable doesn't have a command match, fail
                         else
                         {
-                            return Result.Failed("Invalid Command");
+                            return ExecutionFailed("Invalid Command");
                         }
                         continue;
                     }
                     //if the subcommand string is not long enough, fail
-                    if (subCommandWithArguments.Count() == 0) return Result.Failed("Invalid Command");
+                    if (subCommandWithArguments.Count() == 0) return ExecutionFailed("Invalid Command");
 
                     commandEntry = commandTable.Where(entry => entry.Command == currentCommand)
                                                      .SelectMany(x => x.SubCommand)
@@ -394,33 +356,39 @@ namespace Gem.Console
                     //if no entries were found, fail
                     else
                     {
-                        return Result.Failed("Invalid Command");
+                        return ExecutionFailed("Invalid Command");
                     }
                 }
             }
-
+            
             //execute the graph
-            Stack<ExecutionGraphEntry> callstack = new Stack<ExecutionGraphEntry>();
-            foreach (var entry in executionGraph)
-            {
-                if (!result.Failure)
+            return Task<Result<object>>.Factory.StartNew(() =>
                 {
-                    callstack.Push(entry);
-                    result = entry.Callback(this, command, entry.Arguments, result.Value);
-                }
-                else
-                {
-                    //fallback
-                    foreach (var executedCommand in callstack)
+                    Stack<ExecutionGraphEntry> callstack = new Stack<ExecutionGraphEntry>();
+                    Result<object> executionResult = Result.Ok<object>(null);
+                    foreach (var entry in executionGraph)
                     {
-                        if (executedCommand.Rollback != null)
-                            result = executedCommand.Rollback(this, command, entry.Arguments, result.Value);
+                        if (!executionResult.Failure)
+                        {
+                            callstack.Push(entry);
+                            executionResult = entry.Callback(this, entry.Arguments, executionResult.Value);
+                        }
+                        else
+                        {
+                            //fallback
+                            foreach (var executedCommand in callstack)
+                            {
+                                if (executedCommand.Rollback != null)
+                                    executionResult = executedCommand.Rollback(this, entry.Arguments, executionResult.Value);
+                            }
+                            return Result.Failed("Command execution failed " + executionResult.Error, executionResult.Value);
+                        }
                     }
-                    return Result.Failed("Command execution failed " + result.Error, result.Value);
-                }
-            }
-            return result;
+                    return executionResult;
+                });
         }
+
+        #endregion
 
     }
 }

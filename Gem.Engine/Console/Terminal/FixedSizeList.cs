@@ -22,6 +22,19 @@ namespace Gem.Console
             return query(list);
         }
 
+        public int Count
+        {
+            get { return list.Count; }
+        }
+
+        public T this[int index]
+        {
+            get
+            {
+                return list[index];
+            }
+        }
+
         public IEnumerable<T> Collection
         {
             get { return list; }

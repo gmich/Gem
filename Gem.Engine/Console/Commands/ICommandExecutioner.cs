@@ -1,10 +1,11 @@
 ﻿using Gem.Infrastructure.Functional;
+using System.Threading.Tasks;
 
 namespace Gem.Console.Commands
 {    
     public interface ICommandExecutioner
     {
-        Result<object> ExecuteCommand(string command);
+        Task<Result<object>> ExecuteCommand(string command);
     }
 
 }

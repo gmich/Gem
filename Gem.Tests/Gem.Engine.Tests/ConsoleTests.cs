@@ -5,12 +5,15 @@ using System.Linq;
 using System.Collections.Generic;
 using Gem.Infrastructure.Functional;
 using Gem.Console.Commands;
+using System.Threading.Tasks;
 
 namespace Gem.Engine.Tests
 {
     [TestClass]
     public class ConsoleTests
     {
+        private readonly TerminalSettings terminalSettings = new TerminalSettings();
+
         [TestMethod]
         public void ConsoleAlignerAlignsMultipleRowsCorrectly()
         {
@@ -166,41 +169,41 @@ namespace Gem.Engine.Tests
         [TestMethod]
         public void Terminal_RegistersMethodWithCommandAttribute()
         {
-            Terminal terminal = new Terminal();
+            Terminal terminal = new Terminal(terminalSettings);
             ICommandClass objWithCommand = new ClassWithCommand();
             terminal.RegisterCommand(objWithCommand);
 
-            Assert.AreEqual(2, terminal.Commands.Count);
+            Assert.AreEqual(2, terminal.Commands.Count());
         }
 
         [TestMethod]
         public void Terminal_RegistersMethodWithSubCommandAttribute()
         {
-            Terminal terminal = new Terminal();
+            Terminal terminal = new Terminal(terminalSettings);
             ICommandClass objWithCommand = new ClassWithCommand();
             terminal.RegisterCommand(objWithCommand);
-            Assert.AreEqual(2, terminal.Commands.Count);
+            Assert.AreEqual(2, terminal.Commands.Count());
             Assert.AreEqual(1, terminal.Commands.Select(x => x.SubCommand.Count()).Sum());
         }
 
         [TestMethod]
         public void Terminal_RegistersMethodWithCachedSubCommandAttribute()
         {
-            Terminal terminal = new Terminal();
+            Terminal terminal = new Terminal(terminalSettings);
             terminal.RegisterCommand(new ClassWithSubCommand());
             terminal.RegisterCommand(new ClassWithCommand());
-            Assert.AreEqual(2, terminal.Commands.Count);
+            Assert.AreEqual(2, terminal.Commands.Count());
             Assert.AreEqual(2, terminal.Commands.Select(x => x.SubCommand.Count()).Sum());
         }
 
         [TestMethod]
         public void Terminal_ExecutesChainedCommandSuccessfuly()
         {
-            Terminal terminal = new Terminal();
+            Terminal terminal = new Terminal(terminalSettings);
             var objWithCommand = new ClassWithCommand();
             terminal.RegisterCommand(new ClassWithSubCommand());
             terminal.RegisterCommand(objWithCommand);
-            terminal.ExecuteCommand("setnumber 5 | setnumber | setnumber");
+            var res = terminal.ExecuteCommand("setnumber 5 | setnumber | setnumber").Result;
 
             Assert.AreEqual(20, objWithCommand.Number);
         }
@@ -208,14 +211,14 @@ namespace Gem.Engine.Tests
         [TestMethod]
         public void Terminal_ExecutesChainedSubCommandSuccessfuly()
         {
-            Terminal terminal = new Terminal();
+            Terminal terminal = new Terminal(terminalSettings);
             var objWithCommand = new ClassWithCommand();
 
             terminal.RegisterCommand(new Calculator());
             terminal.RegisterCommand(objWithCommand);
 
-            var result = terminal.ExecuteCommand("calculate 1 > plus 9 > minus 5 > times 5 > divide 2 | setnumber");
-
+            var command = terminal.ExecuteCommand("calculate 1 > plus 9 > minus 5 > times 5 > divide 2 | setnumber");
+            var result = command.Result;
             Assert.AreEqual(12.5d, (double)result.Value);
             Assert.AreEqual(12.5d, (double)objWithCommand.Number);
         }
@@ -223,7 +226,7 @@ namespace Gem.Engine.Tests
         [TestMethod]
         public void Terminal_ChainedSubCommandRollbacksSuccessfuly()
         {
-            Terminal terminal = new Terminal();
+            Terminal terminal = new Terminal(terminalSettings);
             var objWithCommand = new ClassWithCommand();
 
             terminal.RegisterCommand(new Calculator());
@@ -231,9 +234,9 @@ namespace Gem.Engine.Tests
 
             var result = terminal.ExecuteCommand("calculate 1 > plus 9 > minus invalid > times 5 > divide 2 | setnumber");
 
-            Assert.AreEqual(0d, (double)result.Value);
+            Assert.AreEqual(0d, (double)result.Result.Value);
         }
-     
+
 
         #endregion
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.Threading.Tasks;
 
 namespace Gem.Infrastructure.Functional
 {

@@ -54,7 +54,11 @@
     <Compile Include="Console\Cursor.cs" />
     <Compile Include="Console\Effects\Effects.cs" />
     <Compile Include="Console\EntryPoint\EntryRule.cs" />
-    <Compile Include="Console\FixedSizeQueue.cs" />
+    <Compile Include="Console\Terminal\CommandCacheEntry.cs" />
+    <Compile Include="Console\Terminal\CommandHistory.cs" />
+    <Compile Include="Console\Terminal\CommandTable.cs" />
+    <Compile Include="Console\Terminal\ExecutionGraphEntry.cs" />
+    <Compile Include="Console\Terminal\FixedSizeList.cs" />
     <Compile Include="Console\Commands\ICommandExecutioner.cs" />
     <Compile Include="Console\ICursor.cs" />
     <Compile Include="Console\EntryPoint\CommandEntry.cs" />
@@ -72,7 +76,8 @@
     <Compile Include="Console\Rendering\Style.cs" />
     <Compile Include="Console\Rendering\Utilities\Range.cs" />
     <Compile Include="Console\Row.cs" />
-    <Compile Include="Console\Terminal.cs" />
+    <Compile Include="Console\Terminal\Terminal.cs" />
+    <Compile Include="Console\Terminal\TerminalSettings.cs" />
     <Compile Include="Diagnostics\Console\DebugCommandUI.cs" />
     <Compile Include="Diagnostics\Console\DebugManager.cs" />
     <Compile Include="Diagnostics\Console\DebugSystem.cs" />
