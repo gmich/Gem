@@ -10,9 +10,6 @@ namespace Gem.Console
             this.AssignDefaultValues();
         }
 
-        [DefaultValue(30)]
-        public int HistoryEntries { get; set; }
-
         [DefaultValue('|')]
         public char CommandSeparator { get; set; }
 

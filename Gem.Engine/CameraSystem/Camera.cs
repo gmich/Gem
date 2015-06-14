@@ -11,22 +11,24 @@ namespace Gem.CameraSystem
         #region Fields
 
         private readonly Vector2 viewportSize;
-        private readonly Rectangle virtualWorld;
+        private readonly Vector2 virtualSize;
         private readonly Range<float> zoomRange;
 
         private Vector2 position;
         private Vector3 zoom;
+        private float rotation;
 
         #endregion
 
         #region Constructor
 
-        public Camera(Vector2 initialPos, Vector2 viewportSize, Rectangle virtualWorld, float minZoom = 0.2f, float maxZoom = 2.0f)
+        public Camera(Vector2 initialPos, Vector2 viewportSize, Vector2 virtualSize, float minZoom = 0.2f, float maxZoom = 2.0f)
         {
             this.Position = initialPos;
-            this.virtualWorld = virtualWorld;
+            this.virtualSize = virtualSize;
             this.viewportSize = viewportSize;
             this.zoomRange = Range.ForFloat(minZoom, maxZoom);
+            Update();
         }
 
         #endregion
@@ -42,15 +44,16 @@ namespace Gem.CameraSystem
         {
             get { return viewportSize.Y; }
         }
-        
+
         public Vector2 Position
         {
             get { return position; }
             set
             {
-                float x = MathHelper.Clamp(value.X, virtualWorld.X, virtualWorld.Left - viewportSize.X);
-                float y = MathHelper.Clamp(value.Y, virtualWorld.Y, virtualWorld.Bottom - viewportSize.Y);
+                float x = MathHelper.Clamp(value.X, 0, virtualSize.X - viewportSize.X);
+                float y = MathHelper.Clamp(value.Y, 0, virtualSize.Y - viewportSize.Y);
                 position = new Vector2(x, y);
+                Update();
             }
         }
 
@@ -59,7 +62,7 @@ namespace Gem.CameraSystem
             get;
             private set;
         }
-                
+
         public Rectangle VisibleArea
         {
             get;
@@ -69,7 +72,7 @@ namespace Gem.CameraSystem
         #endregion
 
         #region Translation Properties
-        
+
         public Vector3 Zoom
         {
             get { return zoom; }
@@ -77,13 +80,14 @@ namespace Gem.CameraSystem
             {
                 zoom.X = zoomRange.GetNearest(value.X);
                 zoom.Y = zoomRange.GetNearest(value.Y);
+                Update();
             }
         }
 
         public float Rotation
         {
-            get;
-            set;
+            get { return rotation; }
+            set { rotation = value; Update(); }
         }
 
         public Matrix TransformationMatrix
@@ -93,7 +97,7 @@ namespace Gem.CameraSystem
         }
 
         #endregion
-        
+
         #region Public Methods
 
         public bool IsVisible(Vector2 location)
@@ -120,7 +124,7 @@ namespace Gem.CameraSystem
             location.Y = MathHelper.Clamp(location.Y, position.Y + origin.Y, position.Y + ViewPortHeight - height + origin.Y);
             return location;
         }
-        
+
         public Vector2 WorldToScreen(Vector2 worldLocation)
         {
             return worldLocation - position;
@@ -168,7 +172,7 @@ namespace Gem.CameraSystem
                                                  Matrix.CreateScale(new Vector3(Zoom.X, Zoom.Y, Zoom.Z)) *
                                                  Matrix.CreateTranslation(new Vector3(ViewPortWidth / 2, ViewPortHeight / 2, 0));
         }
-        
+
         public Vector2 TranslateScreenToWorld(Vector2 location)
         {
             return Vector2.Transform(location, Matrix.Invert(TransformationMatrix));
@@ -178,12 +182,12 @@ namespace Gem.CameraSystem
         {
             return Vector2.Transform(location, TransformationMatrix);
         }
-        
+
         #endregion
 
         #region Update
 
-        public void Update(GameTime gameTime)
+        private void Update()
         {
             ViewPort = new Rectangle((int)Position.X, (int)Position.Y, (int)viewportSize.X, (int)viewportSize.Y);
             CalculateTransformationMatrix();

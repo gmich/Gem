@@ -22,7 +22,7 @@ namespace Gem.Engine.Tests
                 return new Cell(ch.ToString(), 10, 0);
             });
 
-            var aligner = new CellAligner(() => 70.0f, appender.GetCells);
+            var aligner = new CellAligner(() => 70.0f, appender.GetCells, 10);
 
             appender.OnCellAppend((sender, args) => aligner.ArrangeRows());
 
@@ -52,7 +52,7 @@ namespace Gem.Engine.Tests
                 return new Cell(ch.ToString(), 10, 0);
             });
 
-            var aligner = new CellAligner(() => 70.0f, appender.GetCells);
+            var aligner = new CellAligner(() => 70.0f, appender.GetCells,10);
 
             appender.OnCellAppend((sender, args) => aligner.ArrangeRows());
 
@@ -82,7 +82,7 @@ namespace Gem.Engine.Tests
             {
                 return new Cell(ch.ToString(), 10, 0);
             });
-            var aligner = new CellAligner(() => 70.0f, appender.GetCells);
+            var aligner = new CellAligner(() => 70.0f, appender.GetCells, 10);
             appender.OnCellAppend((sender, args) => aligner.ArrangeRows());
             appender.OnCellAppend((sender, args) =>
             {
@@ -96,7 +96,6 @@ namespace Gem.Engine.Tests
                 appender.AddCell(twoRows[charIndex]);
                 Assert.AreEqual(charIndex + 1, cursor.Head);
             }
-
         }
 
         [TestMethod]
@@ -107,7 +106,7 @@ namespace Gem.Engine.Tests
             {
                 return new Cell(ch.ToString(), 10, 0);
             });
-            var aligner = new CellAligner(() => 70.0f, appender.GetCells);
+            var aligner = new CellAligner(() => 70.0f, appender.GetCells, 10);
             appender.OnCellAppend((sender, args) => aligner.ArrangeRows());
             appender.OnCellAppend((sender, args) =>
             {

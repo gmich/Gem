@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gem.Infrastructure.Functional;
+using System;
 using System.Collections.Generic;
 
 namespace Gem.Console

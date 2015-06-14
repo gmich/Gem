@@ -14,6 +14,8 @@ namespace Gem.Console.Rendering.Utilities
 
         public Range(T upper, T lower, BoundariesChecker boundariesChecker)
         {
+            this.upper = upper;
+            this.lower = lower;
             this.boundariesChecker = boundariesChecker;
         }
 

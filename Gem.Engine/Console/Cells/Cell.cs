@@ -18,5 +18,6 @@
         public int SizeX { get { return sizeX; } }
 
         public int SizeY { get { return sizeY; } }
+
     }
 }

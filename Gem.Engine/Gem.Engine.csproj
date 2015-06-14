@@ -52,8 +52,14 @@
     <Compile Include="Console\Commands\CommandCallback.cs" />
     <Compile Include="Console\Commands\ICommandHost.cs" />
     <Compile Include="Console\Cursor.cs" />
-    <Compile Include="Console\Effects\Effects.cs" />
+    <Compile Include="Console\Animations\Animate.cs" />
+    <Compile Include="Console\Animations\DrawEffect.cs" />
+    <Compile Include="Console\Animations\Effects.cs" />
+    <Compile Include="Console\Animations\IEffect.cs" />
     <Compile Include="Console\EntryPoint\EntryRule.cs" />
+    <Compile Include="Console\EntryPoint\FlushedEntry.cs" />
+    <Compile Include="Console\Rendering\Terminal\Compositor.cs" />
+    <Compile Include="Console\Rendering\Terminal\TerminalRenderArea.cs" />
     <Compile Include="Console\Terminal\CommandCacheEntry.cs" />
     <Compile Include="Console\Terminal\CommandHistory.cs" />
     <Compile Include="Console\Terminal\CommandTable.cs" />
@@ -61,7 +67,7 @@
     <Compile Include="Console\Terminal\FixedSizeList.cs" />
     <Compile Include="Console\Commands\ICommandExecutioner.cs" />
     <Compile Include="Console\ICursor.cs" />
-    <Compile Include="Console\EntryPoint\CommandEntry.cs" />
+    <Compile Include="Console\EntryPoint\TerminalEntry.cs" />
     <Compile Include="Console\EntryPoint\IEntryRule.cs" />
     <Compile Include="Console\IUpdateable.cs" />
     <Compile Include="Console\Cells\Cell.cs" />
@@ -90,6 +96,7 @@
     <Compile Include="DrawingSystem\Sprite.cs" />
     <Compile Include="DrawingSystem\SpriteFonts.cs" />
     <Compile Include="Components\Layout.cs" />
+    <Compile Include="Resolution\Configuration.cs" />
     <Compile Include="Sound\SoundManager.cs" />
     <Compile Include="Utilities\StringBuilderExtensions.cs" />
     <Compile Include="Diagnostics\Console\TimeRuler.cs" />
@@ -160,7 +167,6 @@
     <Folder Include="Database\" />
     <Folder Include="DrawingSystem\SpriteSheets\" />
     <Folder Include="Map\" />
-    <Folder Include="Resolution\" />
     <Folder Include="ScreenSystem\" />
   </ItemGroup>
   <ItemGroup>

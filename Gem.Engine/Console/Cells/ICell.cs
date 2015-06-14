@@ -1,4 +1,6 @@
-﻿namespace Gem.Console
+﻿using Gem.Infrastructure.Functional;
+
+namespace Gem.Console
 {
     public interface ICell
     {
@@ -7,5 +9,6 @@
         int SizeX { get; }
 
         int SizeY { get; }
+
     }
 }

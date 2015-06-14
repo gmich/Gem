@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Gem.Infrastructure.Events;
 using Microsoft.Xna.Framework;
+using Gem.Infrastructure.Functional;
 
 namespace Gem.Console
 {

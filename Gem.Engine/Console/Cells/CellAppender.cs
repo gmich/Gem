@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -13,7 +14,6 @@ namespace Gem.Console
 
         private readonly Func<char, ICell> cellGenerator;
         private readonly ObservableCollection<ICell> cells = new ObservableCollection<ICell>();
-        private readonly int maxCells;
 
         #endregion
 
@@ -27,6 +27,14 @@ namespace Gem.Console
         #endregion
 
         #region Add / Remove
+
+        public void AddCellRange(IEnumerable<ICell> cellRange)
+        {
+            foreach (var cell in cellRange)
+            {
+                cells.Add(cell);
+            }
+        }
 
         public void AddCell(char cell)
         {
@@ -55,11 +63,26 @@ namespace Gem.Console
 
         #endregion
 
-        #region Get
+        #region Collection
 
         public IEnumerable<ICell> GetCells()
         {
             return cells;
+        }
+
+        public void Clear()
+        {
+            cells.Clear();
+        }
+
+        public int Count
+        {
+            get { return cells.Count; }
+        }
+
+        public override string ToString()
+        {
+            return String.Concat(cells);
         }
 
         #endregion

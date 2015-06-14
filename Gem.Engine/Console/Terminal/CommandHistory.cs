@@ -1,30 +1,32 @@
-﻿namespace Gem.Console
+﻿using Gem.Console.EntryPoint;
+using System.Collections.Generic;
+namespace Gem.Console
 {
     internal class CommandHistory
     {
-        private readonly FixedSizeList<string> history;
+        private readonly FixedSizeList<FlushedEntry> history;
         private int peekedEntry;
 
         public CommandHistory(int maxHistoryEntries)
         {
-            history = new FixedSizeList<string>(maxHistoryEntries+1);
-            history.Add(string.Empty);
+            history = new FixedSizeList<FlushedEntry>(maxHistoryEntries + 1);
+            history.Add(new FlushedEntry(new List<ICell>(), string.Empty));
         }
 
-        public void Add(string entry)
+        public void Add(FlushedEntry entry)
         {
             history.Add(entry);
             peekedEntry = history.Count - 1;
         }
 
-        public string PeekNext()
+        public FlushedEntry PeekNext()
         {
             peekedEntry = GuardEntry(peekedEntry - 1);
 
             return history [peekedEntry];
         }
 
-        public string PeekPrevious()
+        public FlushedEntry PeekPrevious()
         {
             peekedEntry = GuardEntry(peekedEntry + 1);
 

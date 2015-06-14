@@ -29,7 +29,6 @@ namespace Gem.Console
         private readonly List<CommandCacheEntry<CommandCallback>> rollbackCache = new List<CommandCacheEntry<CommandCallback>>();
         private readonly Stack<ICommandExecutioner> executioners = new Stack<ICommandExecutioner>();
         private readonly List<IAppender> appenders = new List<IAppender>();
-        private readonly CommandHistory history;
 
         #endregion
 
@@ -37,7 +36,6 @@ namespace Gem.Console
 
         public Terminal(TerminalSettings settings)
         {
-            history = new CommandHistory(settings.HistoryEntries);
             commandSeparator = settings.CommandSeparator;
             subCommandSeparator = settings.SubCommandSeparator;
             argumentSeparator = settings.ArgumentSeparator;

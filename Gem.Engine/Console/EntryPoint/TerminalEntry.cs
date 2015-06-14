@@ -1,14 +1,14 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Gem.Infrastructure.Functional;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Gem.Infrastructure.Events;
+using Gem.Console.EntryPoint;
 
 namespace Gem.Console
 {
 
-    public class CommandEntry
+    public class TerminalEntry
     {
 
         #region Fields
@@ -17,16 +17,31 @@ namespace Gem.Console
         private readonly Cursor cursor;
         private readonly CellAppender appender;
         private readonly CellAligner aligner;
+        private readonly CommandHistory history;
+
+        #endregion
+
+        #region Events
+
+        public event EventHandler<string> OnFlushedEntry;
+
 
         #endregion
 
         #region Ctor
 
-        public CommandEntry(CellAppender appender, Func<float> entryWidth)
+        public TerminalEntry(CellAppender appender, Func<float> entryWidth, int maxRows, int historyEntries = 40)
         {
+            this.cursor = new Cursor();
+            
+            if (appender == null)
+            {
+                throw new ArgumentNullException("appender");
+            }
             this.appender = appender;
-            cursor = new Cursor();
-            aligner = new CellAligner(entryWidth, appender.GetCells);
+            
+            history = new CommandHistory(historyEntries);
+            aligner = new CellAligner(entryWidth, appender.GetCells, maxRows);
 
             appender.OnCellAppend((sender, args) => aligner.ArrangeRows());
             appender.OnCellAppend((sender, args) =>
@@ -46,7 +61,23 @@ namespace Gem.Console
 
         #endregion
 
-        #region Public Methods
+        #region History
+
+        public void PeekNext()
+        {
+            appender.Clear();
+            appender.AddCellRange(history.PeekNext().Cells);
+        }
+
+        public void PeekPrevious()
+        {
+            appender.Clear();
+            appender.AddCellRange(history.PeekPrevious().Cells);
+        }
+
+        #endregion
+
+        #region Entries
 
         public void AddEntryRule(IEntryRule entryRule)
         {
@@ -60,7 +91,7 @@ namespace Gem.Console
 
         public void DeleteEntryAfterCursor()
         {
-            appender.RemoveCellAt(cursor.Head+1);
+            appender.RemoveCellAt(cursor.Head + 1);
         }
 
         public void DeleteEntry()
@@ -77,6 +108,20 @@ namespace Gem.Console
             {
                 appender.AddCellAt(cursor.Head, ch);
             }
+        }
+
+        public Result<FlushedEntry> Flush()
+        {
+            if (appender.Count > 0)
+            {
+                var entry = new FlushedEntry(appender.GetCells(), appender.ToString());
+                var result = Result.Ok(entry);
+                appender.Clear();
+                history.Add(entry);
+                OnFlushedEntry.RaiseEvent(this, entry.StringRepresentation);
+                return result;
+            }
+            return Result.Fail<FlushedEntry>("No entries");
         }
 
         #endregion

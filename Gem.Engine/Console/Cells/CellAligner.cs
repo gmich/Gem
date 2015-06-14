@@ -27,17 +27,18 @@ namespace Gem.Console
         #region Fields
 
         private readonly Func<IEnumerable<ICell>> cellsGetter;
-        private readonly List<Row> rows = new List<Row>();
+        private readonly FixedSizeList<Row> rows;
         private readonly Func<float> rowWidthGetter;
 
         #endregion
 
         #region Ctor
 
-        public CellAligner(Func<float> rowWidthGetter, Func<IEnumerable<ICell>> cellsGetter)
+        public CellAligner(Func<float> rowWidthGetter, Func<IEnumerable<ICell>> cellsGetter, int maxRows)
         {
             this.rowWidthGetter = rowWidthGetter;
             this.cellsGetter = cellsGetter;
+            this.rows = new FixedSizeList<Row>(maxRows);
         }
 
         #endregion
@@ -52,7 +53,7 @@ namespace Gem.Console
 
         public void ArrangeRows()
         {
-            rows.Clear();
+            rows.List.Clear();
 
             int currentRowSize = 0;
             int skippedEntries = 0;
@@ -87,7 +88,7 @@ namespace Gem.Console
 
         public IEnumerable<Row> Rows()
         {
-            return rows.AsEnumerable();
+            return rows.Enumerable;
         }
 
         #endregion

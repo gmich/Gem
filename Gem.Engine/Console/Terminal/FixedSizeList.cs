@@ -35,7 +35,12 @@ namespace Gem.Console
             }
         }
 
-        public IEnumerable<T> Collection
+        public IEnumerable<T> Enumerable
+        {
+            get { return list; }
+        }
+
+        public IList<T> List
         {
             get { return list; }
         }
