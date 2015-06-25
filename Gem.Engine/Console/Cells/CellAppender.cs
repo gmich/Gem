@@ -54,7 +54,7 @@ namespace Gem.Console
 
         public bool AddCellAt(int index, char cell)
         {
-            if (cells.Count > index)
+            if (cells.Count >= index)
             {
                 ICell generatedCell = cellGenerator(cell);
                 cells.Insert(index, generatedCell);

@@ -36,6 +36,7 @@ namespace Gem.Console.Rendering
         private readonly List<IEffect> drawingEffects = new List<IEffect>();
         private readonly CellRenderingOptions areaSettings;
 
+        private Behavior<IEffect> cursorEffect;
         private Vector2 appendLocation;
 
         #endregion
@@ -60,14 +61,14 @@ namespace Gem.Console.Rendering
 
         #endregion
 
+        public void Clear()
+        {
+            effects.Clear();
+        }
+
         public void AddCellRange(Row row, int rowIndex)
         {
-            appendLocation = new Vector2(0, (rowIndex - 1) * (AreaSettings.RowSize.Y + AreaSettings.RowSpacing));
-
-            if (effects.ContainsKey(rowIndex))
-            {
-                effects.Remove(rowIndex);
-            }
+            appendLocation = new Vector2(0, (rowIndex) * (AreaSettings.RowSize.Y + AreaSettings.RowSpacing));
             effects.Add(rowIndex, new List<Behavior<IEffect>>());
 
             foreach (var entry in row.Entries)
@@ -80,24 +81,29 @@ namespace Gem.Console.Rendering
             }
         }
 
-        public void AddCursor(Behavior<IEffect> behavior, Row currentRow, int row, int position)
+        public void UpdateCursor(Behavior<IEffect> behavior, Row currentRow, int row, int position)
         {
-            if (currentRow == null) return;
             int rowIndex = row;
+            appendLocation = new Vector2(0, (rowIndex) * (AreaSettings.RowSize.Y + AreaSettings.RowSpacing)-1);
             if (effects.ContainsKey(rowIndex))
             {
-                appendLocation = new Vector2(0, (rowIndex) * (AreaSettings.RowSize.Y + AreaSettings.RowSpacing));
-                foreach (var entry in currentRow.Entries.Take(position))
+                int pos = MathHelper.Max(0, position - 1);
+                foreach (var entry in currentRow.Entries.Take(pos))
                 {
                     appendLocation.X += (entry.SizeX + AreaSettings.CellSpacing);
                 }
-                float x = AreaSettings.Position.X + appendLocation.X - camera.Position.X;
-                float y = AreaSettings.Position.Y + appendLocation.Y - camera.Position.Y;
-                effects[rowIndex].Add(behavior.At(Behavior.Create(ctx => x),
-                                      Behavior.Create(ctx => y)));
-
+                var lastEntry = currentRow.Entries.Skip(pos).FirstOrDefault();
+                if (lastEntry != null)
+                {
+                    appendLocation.X += lastEntry.SizeX / 2 + 1;
+                }
             }
-            System.Console.WriteLine(row + " " + position);
+            float x = AreaSettings.Position.X + appendLocation.X - camera.Position.X;
+            float y = AreaSettings.Position.Y + appendLocation.Y - camera.Position.Y;
+            cursorEffect = (behavior.At(Behavior.Create(ctx => x),
+                                  Behavior.Create(ctx => y)));
+
+            System.Console.WriteLine(row + " " + position + " " + x + " " + y);
         }
 
         public void Update(GameTime gameTime)
@@ -111,6 +117,8 @@ namespace Gem.Console.Rendering
                 foreach (var effect in behaviors)
                     drawingEffects.Add(effect.BehaviorFunc(context));
             }
+            if (cursorEffect != null)
+                drawingEffects.Add(cursorEffect.BehaviorFunc(context));
         }
 
         public void Draw(SpriteBatch batch)

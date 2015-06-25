@@ -75,7 +75,6 @@
     <Compile Include="Console\ICursor.cs" />
     <Compile Include="Console\EntryPoint\TerminalEntry.cs" />
     <Compile Include="Console\EntryPoint\IEntryRule.cs" />
-    <Compile Include="Console\IUpdateable.cs" />
     <Compile Include="Console\Cells\Cell.cs" />
     <Compile Include="Console\Cells\ICell.cs" />
     <Compile Include="Console\Rendering\Areas\ExpandableArea.cs" />

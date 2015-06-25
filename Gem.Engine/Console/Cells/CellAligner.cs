@@ -70,6 +70,7 @@ namespace Gem.Console
         #region Events
 
         public event EventHandler<CellAlignerEventArgs> RowAdded;
+        public event EventHandler<EventArgs> Cleared;
 
         #endregion
 
@@ -78,6 +79,7 @@ namespace Gem.Console
         public void Reset()
         {
             rows.Clear();
+            Cleared.RaiseEvent(this, EventArgs.Empty);
         }
 
         public void AlignToRows(IEnumerable<ICell> cells, int spacing, float rowSize)
@@ -96,7 +98,7 @@ namespace Gem.Console
                     rows.Add(row);
                     skippedEntries = cellsCounter;
                     currentRowSize = 0;
-                    RowAdded.RaiseEvent(this, new CellAlignerEventArgs(row, rows.Count));
+                    RowAdded.RaiseEvent(this, new CellAlignerEventArgs(row, rows.Count-1));
                 }
                 else
                 {
@@ -105,11 +107,11 @@ namespace Gem.Console
             }
 
             //add the remaining cells
-            if (cellsCounter - skippedEntries > 0)
+            if (cellsCounter - skippedEntries >= 0)
             {
                 var row = new Row(rows.Count,cells.Skip(skippedEntries).Take(cellsCounter - skippedEntries));
                 rows.Add(row);
-                RowAdded.RaiseEvent(this, new CellAlignerEventArgs(row, rows.Count));
+                RowAdded.RaiseEvent(this, new CellAlignerEventArgs(row, rows.Count-1));
             }
         }
 

@@ -16,8 +16,6 @@ namespace Gem.Console
         int Head { get; set; }
         int HeadInRow { get; }
 
-        void Up();
-        void Down();
         void Left();
         void Right();
 

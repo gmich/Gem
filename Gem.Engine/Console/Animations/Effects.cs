@@ -11,7 +11,7 @@ namespace Gem.Console.Animations
                     batch.DrawString(font,
                                      text,
                                      position,
-                                     color,
+                                     color * transparency,
                                      rotation,
                                      Vector2.Zero,
                                      scale,

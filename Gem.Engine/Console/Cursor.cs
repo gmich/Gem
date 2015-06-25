@@ -5,6 +5,7 @@ using Gem.Infrastructure.Events;
 using Microsoft.Xna.Framework;
 using Gem.Infrastructure.Functional;
 using Gem.Console.Animations;
+using System.Timers;
 
 namespace Gem.Console
 {
@@ -29,22 +30,43 @@ namespace Gem.Console
 
         #region Fields
 
+        private readonly Timer activeCursorTimer = new Timer();
+        private readonly Timer showCursorTimer = new Timer();
+
         private List<int> rows = new List<int>();
-        private int cursorRow;
         private int head;
         private int cellSum;
-        private int headInRow;
-
+        private bool showCursor;
+        private float alpha = 1.0f;
         #endregion
 
         #region Ctor
 
         public Cursor()
         {
-            this.Effect = Animate.Cell(Behavior.Create(ctx => "|"), Behavior.Create(ctx => Color.Gray), 1.0f.Forever(), 0.0f.Forever());
+            showCursorTimer.Elapsed += new ElapsedEventHandler((sender, args) =>
+                {
+                    alpha = (alpha == 0.0f || showCursor) ? 1.0f : 0.0f;
+                    CreateEffect(alpha);
+                });
+            showCursorTimer.Interval = 500d;
+            showCursorTimer.Enabled = true;
+
+            activeCursorTimer.Elapsed += new ElapsedEventHandler((sender, args) =>
+            {
+                showCursor = false;
+            });
+            showCursorTimer.Interval = 800d;
+            showCursorTimer.Enabled = true;
+            CreateEffect(alpha);
         }
+
         #endregion
 
+        private void CreateEffect(float alpha)
+        {
+            this.Effect = Animate.Cell(Behavior.Create(ctx => "|"), Behavior.Create(ctx => Color.Gray), alpha.Forever(), 0.0f.Forever());
+        }
         #region Properties
 
         public Behavior<IEffect> Effect
@@ -63,7 +85,7 @@ namespace Gem.Console
             for (int rowIndex = 0; rowIndex < rows.Count; rowIndex++)
             {
                 sum += rows[rowIndex];
-                if (Head < sum)
+                if (Head <= sum)
                 {
                     return rowIndex;
                 }
@@ -77,36 +99,14 @@ namespace Gem.Console
 
         public event EventHandler<CursorEventArgs> CursorChanged;
 
-        public void Up()
-        {
-            if (cursorRow > 0)
-            {
-                Head = rows.Take(cursorRow - 1).Sum() + rows[cursorRow];
-            }
-        }
-
-        public void Down()
-        {
-            if (cursorRow < rows.Count)
-            {
-                Head = rows.Take(cursorRow).Sum() + rows[cursorRow];
-            }
-        }
-
         public void Left()
         {
-            if (Head >= 0)
-            {
-                Head--;
-            }
+            Head--;
         }
 
         public void Right()
         {
-            if (Head < cellSum)
-            {
-                Head++;
-            }
+            Head++;
         }
 
         public int Head
@@ -115,26 +115,31 @@ namespace Gem.Console
             set
             {
                 head = MathHelper.Clamp(value, 0, cellSum);
-                GetCursorRow();
+                CursorChanged.RaiseEvent(this, new CursorEventArgs(head, Row));
 
-                headInRow = (Row > 0) ?
-                    head - rows.Take(Row).Sum() : head;
-
-                CursorChanged.RaiseEvent(this, new CursorEventArgs(head, cursorRow));
+                showCursor = true;
+                activeCursorTimer.Stop();
+                activeCursorTimer.Start();
             }
         }
 
-        public int HeadInRow { get { return headInRow; } }
+        public int HeadInRow
+        {
+            get
+            {
+                return (Row > 0) ?
+                    head - this.rows.Take(Row).Sum() : head;
+            }
+        }
 
         public int Row
         {
-            get { return cursorRow; }
+            get { return GetCursorRow(); }
         }
 
         public void Update(IEnumerable<Row> rows)
         {
             this.rows = rows.Select(row => row.Entries.Count()).ToList();
-            this.cursorRow = GetCursorRow();
             this.cellSum = this.rows.Sum();
         }
 

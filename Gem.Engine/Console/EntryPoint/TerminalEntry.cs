@@ -29,7 +29,7 @@ namespace Gem.Console
 
         #region Ctor
 
-        public TerminalEntry(CellAppender appender,CellAligner aligner, Func<int> spacing, Func<float> rowSize, int historyEntries = 40)
+        public TerminalEntry(CellAppender appender, CellAligner aligner, Func<int> spacing, Func<float> rowSize, int historyEntries = 40)
         {
             this.cursor = new Cursor();
 
@@ -39,13 +39,14 @@ namespace Gem.Console
             }
             this.appender = appender;
 
+            AddEntryRule(new EntryRule(ch => appender.Count < 40));
+
             history = new CommandHistory(historyEntries);
 
             appender.OnCellAppend((sender, args) =>
             {
                 aligner.AlignToRows(appender.GetCells(), spacing(), rowSize());
                 cursor.Update(aligner.Rows());
-                cursor.Right();
             });
         }
 
@@ -64,12 +65,14 @@ namespace Gem.Console
         {
             appender.Clear();
             appender.AddCellRange(history.PeekNext().Cells);
+            cursor.Head = appender.Count;
         }
 
         public void PeekPrevious()
         {
             appender.Clear();
             appender.AddCellRange(history.PeekPrevious().Cells);
+            cursor.Head = appender.Count;
         }
 
         #endregion
@@ -88,13 +91,13 @@ namespace Gem.Console
 
         public void DeleteEntryAfterCursor()
         {
-            appender.RemoveCellAt(cursor.Head + 1);
+            appender.RemoveCellAt(cursor.Head);
         }
 
         public void DeleteEntry()
         {
-            appender.RemoveCellAt(cursor.Head + 1);
             Cursor.Left();
+            appender.RemoveCellAt(cursor.Head);
         }
 
         public void AddEntry(char ch)
@@ -104,6 +107,7 @@ namespace Gem.Console
                 .Any(result => result == false))
             {
                 appender.AddCellAt(cursor.Head, ch);
+                cursor.Right();
             }
         }
 

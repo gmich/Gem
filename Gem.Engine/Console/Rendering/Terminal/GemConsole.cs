@@ -50,6 +50,7 @@ namespace Gem.Console.Rendering
             aligner = new CellAligner();
             entryPoint = new TerminalEntry(appender, aligner, ()=>renderingOptions.CellSpacing,()=> renderingOptions.RowSize.X);
             aligner.RowAdded += (sender, args) => cellEntryRenderArea.AddCellRange(args.Row, args.RowIndex);
+            aligner.Cleared += (sender, args) => cellEntryRenderArea.Clear();
 
             cellEntryRenderArea = new TerminalRenderArea(renderingOptions, font);
 
@@ -60,13 +61,13 @@ namespace Gem.Console.Rendering
 
         private void SubscribeEntryToKeyprocessor()
         {
-            keyProcessor.KeyPressed += (sender, ch) => appender.AddCell(ch);
+            keyProcessor.KeyPressed += (sender, ch) => entryPoint.AddEntry(ch);
             keyProcessor.BackSpace += (sender, args) => entryPoint.DeleteEntry();
             keyProcessor.Delete += (sender, args) => entryPoint.DeleteEntryAfterCursor();
             keyProcessor.Left += (sender, args) => entryPoint.Cursor.Left();
             keyProcessor.Right += (sender, args) => entryPoint.Cursor.Right();
-            keyProcessor.Up += (sender, args) => entryPoint.Cursor.Up();
-            keyProcessor.Down += (sender, args) => entryPoint.Cursor.Down();
+            keyProcessor.Up += (sender, args) => entryPoint.PeekNext();
+            keyProcessor.Down += (sender, args) => entryPoint.PeekPrevious();
         }
 
         public CellRenderingOptions RenderingOptions { get { return renderingOptions; } }
@@ -83,12 +84,12 @@ namespace Gem.Console.Rendering
 
         public override void Update(GameTime gameTime)
         {
-            cellEntryRenderArea.AddCursor(entryPoint.Cursor.Effect,
+            keyProcessor.ProcessKeyInput(gameTime.ElapsedGameTime.TotalSeconds);
+            cellEntryRenderArea.UpdateCursor(entryPoint.Cursor.Effect,
                                           aligner.Rows().Skip(entryPoint.Cursor.Row).FirstOrDefault(),
                                           entryPoint.Cursor.Row,
                                           entryPoint.Cursor.HeadInRow);
 
-            keyProcessor.ProcessKeyInput(gameTime.ElapsedGameTime.TotalSeconds);
             cellEntryRenderArea.Update(gameTime);
 
             base.Update(gameTime);
