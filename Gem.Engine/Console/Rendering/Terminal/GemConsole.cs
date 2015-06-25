@@ -11,12 +11,35 @@ namespace Gem.Console.Rendering
 {
     public class GemConsole : DrawableGameComponent
     {
+
+        #region Fields
+
         private readonly CellAligner aligner;
         private readonly CellAppender appender;
+        private readonly TerminalRenderArea cellEntryRenderArea;
+        private readonly TerminalEntry entryPoint;
+        private readonly Terminal terminal;
+        private readonly KeyProcessor keyProcessor;
+        private readonly CellRenderingOptions renderingOptions;
+
         private SpriteBatch batch;
 
-        public GemConsole(Game game,SpriteFont font):base(game)
+        #endregion
+
+        public GemConsole(Game game, SpriteFont font)
+            : base(game)
         {
+            renderingOptions = new CellRenderingOptions
+            {
+                AreaSize = new Vector2(100, 100),
+                CellSpacing = 2,
+                MaxRows = 5,
+                Position = new Vector2(10, 10),
+                RowSize = new Vector2(200, font.MeasureString("|").Y),
+                RowSpacing = 2
+            };
+
+            keyProcessor = new KeyProcessor(TextAppenderHelper.Default);
             appender = new CellAppender((ch) =>
             {
                 string content = ch.ToString();
@@ -25,12 +48,30 @@ namespace Gem.Console.Rendering
             }, new CellBehavior(Color.Black, 0.0f, 1.0f));
 
             aligner = new CellAligner();
-            var cellEntry = new TerminalEntry(appender, aligner, () => 1, () => 3.0f);
+            entryPoint = new TerminalEntry(appender, aligner, ()=>renderingOptions.CellSpacing,()=> renderingOptions.RowSize.X);
+            aligner.RowAdded += (sender, args) => cellEntryRenderArea.AddCellRange(args.Row, args.RowIndex);
 
-            var historyRenderArea = new TerminalRenderArea(new CellRenderingOptions(), font);
-            Terminal terminal = new Terminal(TerminalSettings.Default);
+            cellEntryRenderArea = new TerminalRenderArea(renderingOptions, font);
+
+            terminal = new Terminal(TerminalSettings.Default);
+            entryPoint.OnFlushedEntry += (sender, command) => terminal.ExecuteCommand(command);
+            SubscribeEntryToKeyprocessor();
         }
 
+        private void SubscribeEntryToKeyprocessor()
+        {
+            keyProcessor.KeyPressed += (sender, ch) => appender.AddCell(ch);
+            keyProcessor.BackSpace += (sender, args) => entryPoint.DeleteEntry();
+            keyProcessor.Delete += (sender, args) => entryPoint.DeleteEntryAfterCursor();
+            keyProcessor.Left += (sender, args) => entryPoint.Cursor.Left();
+            keyProcessor.Right += (sender, args) => entryPoint.Cursor.Right();
+            keyProcessor.Up += (sender, args) => entryPoint.Cursor.Up();
+            keyProcessor.Down += (sender, args) => entryPoint.Cursor.Down();
+        }
+
+        public CellRenderingOptions RenderingOptions { get { return renderingOptions; } }
+        public CellAppender Appender { get { return appender; } }
+        public Terminal Terminal { get { return terminal; } }
 
         #region DrawableGameComponent Members
 
@@ -42,17 +83,26 @@ namespace Gem.Console.Rendering
 
         public override void Update(GameTime gameTime)
         {
+            cellEntryRenderArea.AddCursor(entryPoint.Cursor.Effect,
+                                          aligner.Rows().Skip(entryPoint.Cursor.Row).FirstOrDefault(),
+                                          entryPoint.Cursor.Row,
+                                          entryPoint.Cursor.HeadInRow);
+
+            keyProcessor.ProcessKeyInput(gameTime.ElapsedGameTime.TotalSeconds);
+            cellEntryRenderArea.Update(gameTime);
+
             base.Update(gameTime);
         }
 
-        
+
         public override void Draw(GameTime gameTime)
         {
+            cellEntryRenderArea.Draw(batch);
             base.Draw(gameTime);
         }
 
         #endregion
-        
+
 
     }
 }

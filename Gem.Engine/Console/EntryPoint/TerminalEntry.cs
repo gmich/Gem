@@ -16,7 +16,6 @@ namespace Gem.Console
         private readonly List<IEntryRule> entryRules = new List<IEntryRule>();
         private readonly Cursor cursor;
         private readonly CellAppender appender;
-        private readonly CellAligner aligner;
         private readonly CommandHistory history;
 
         #endregion
@@ -55,7 +54,6 @@ namespace Gem.Console
         #region Public Properties
 
         public Cursor Cursor { get { return cursor; } }
-        public CellAligner Aligner { get { return aligner; } }
         public CellAppender Appender { get { return appender; } }
 
         #endregion

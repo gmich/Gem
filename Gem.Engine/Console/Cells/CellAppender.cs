@@ -25,6 +25,7 @@ namespace Gem.Console
         public CellAppender(Func<char, ICell> cellGenerator, ICellBehavior cellBehavior)
         {
             this.cellGenerator = cellGenerator;
+            this.cellBehavior = cellBehavior;
         }
 
         #endregion

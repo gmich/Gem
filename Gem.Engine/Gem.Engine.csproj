@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{2784D0E3-736D-4BCA-8536-EEA8834E6ED9}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Gem</RootNamespace>
     <AssemblyName>Gem</AssemblyName>
@@ -40,6 +40,9 @@
   <PropertyGroup>
     <ApplicationIcon>gem.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="CameraSystem\Camera.cs" />
     <Compile Include="CameraSystem\CameraFarseer.cs" />
@@ -60,6 +63,7 @@
     <Compile Include="Console\Animations\IEffect.cs" />
     <Compile Include="Console\EntryPoint\EntryRule.cs" />
     <Compile Include="Console\EntryPoint\FlushedEntry.cs" />
+    <Compile Include="Console\KeyProcessor.cs" />
     <Compile Include="Console\Rendering\Terminal\GemConsole.cs" />
     <Compile Include="Console\Rendering\Terminal\TerminalRenderArea.cs" />
     <Compile Include="Console\Terminal\CommandCacheEntry.cs" />
@@ -100,6 +104,7 @@
     <Compile Include="DrawingSystem\Sprite.cs" />
     <Compile Include="DrawingSystem\SpriteFonts.cs" />
     <Compile Include="Components\Layout.cs" />
+    <Compile Include="Input\InputManager.cs" />
     <Compile Include="Resolution\Configuration.cs" />
     <Compile Include="Sound\SoundManager.cs" />
     <Compile Include="Utilities\StringBuilderExtensions.cs" />

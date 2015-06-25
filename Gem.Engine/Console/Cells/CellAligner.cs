@@ -82,6 +82,7 @@ namespace Gem.Console
 
         public void AlignToRows(IEnumerable<ICell> cells, int spacing, float rowSize)
         {
+            this.Reset();
             int currentRowSize = 0;
             int skippedEntries = 0;
             int cellsCounter = 0;
@@ -97,7 +98,10 @@ namespace Gem.Console
                     currentRowSize = 0;
                     RowAdded.RaiseEvent(this, new CellAlignerEventArgs(row, rows.Count));
                 }
-                cellsCounter++;
+                else
+                {
+                    cellsCounter++;
+                }
             }
 
             //add the remaining cells

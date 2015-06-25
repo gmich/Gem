@@ -4,6 +4,7 @@ using System.Linq;
 using Gem.Infrastructure.Events;
 using Microsoft.Xna.Framework;
 using Gem.Infrastructure.Functional;
+using Gem.Console.Animations;
 
 namespace Gem.Console
 {
@@ -32,6 +33,25 @@ namespace Gem.Console
         private int cursorRow;
         private int head;
         private int cellSum;
+        private int headInRow;
+
+        #endregion
+
+        #region Ctor
+
+        public Cursor()
+        {
+            this.Effect = Animate.Cell(Behavior.Create(ctx => "|"), Behavior.Create(ctx => Color.Gray), 1.0f.Forever(), 0.0f.Forever());
+        }
+        #endregion
+
+        #region Properties
+
+        public Behavior<IEffect> Effect
+        {
+            get;
+            set;
+        }
 
         #endregion
 
@@ -96,9 +116,15 @@ namespace Gem.Console
             {
                 head = MathHelper.Clamp(value, 0, cellSum);
                 GetCursorRow();
+
+                headInRow = (Row > 0) ?
+                    head - rows.Take(Row).Sum() : head;
+
                 CursorChanged.RaiseEvent(this, new CursorEventArgs(head, cursorRow));
             }
         }
+
+        public int HeadInRow { get { return headInRow; } }
 
         public int Row
         {
@@ -113,5 +139,7 @@ namespace Gem.Console
         }
 
         #endregion
+
+
     }
 }

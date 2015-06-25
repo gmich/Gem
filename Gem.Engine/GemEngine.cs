@@ -29,6 +29,7 @@ namespace Gem.Engine
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            IsMouseVisible = true;
         }
 
         /// <summary>
@@ -40,25 +41,25 @@ namespace Gem.Engine
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            DebugSystem.Initialize(this, "Fonts/consoleFont");
+            fontContainer = new AssetContainer<SpriteFont>(Content);
+            textureContainer = new AssetContainer<Texture2D>(Content);
             fontContainer.Add("ConsoleFont", "Fonts/consoleFont");
 
+            //DebugSystem.Initialize(this, "Fonts/consoleFont");
             //DebugSystem.Instance.FpsCounter.Visible = true;
             //DebugSystem.Instance.TimeRuler.Visible = true;
             //DebugSystem.Instance.TimeRuler.ShowLog = true;
             //Register an echo log4net listener
             //DebugSystem.Instance.DebugCommandUI.RegisterEchoListner(new Diagnostics.Logger.LogEchoListener());
             gemConsole = new GemConsole(this, fontContainer["ConsoleFont"]);
-
-            this.Components.Add(gemConsole);
+            Components.Add(new Input.InputManager(this));
+            Components.Add(gemConsole);
 
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            fontContainer = new AssetContainer<SpriteFont>(Content);
-            textureContainer = new AssetContainer<Texture2D>(Content);
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
         }
@@ -72,15 +73,11 @@ namespace Gem.Engine
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            DebugSystem.Instance.TimeRuler.StartFrame();
-
-
-            DebugSystem.Instance.TimeRuler.BeginMark("Update", Color.Blue);
-
-
+            //DebugSystem.Instance.TimeRuler.StartFrame();
+            //DebugSystem.Instance.TimeRuler.BeginMark("Update", Color.Blue);
             // End measuring the Update method
-            DebugSystem.Instance.TimeRuler.EndMark("Update");
-
+            //DebugSystem.Instance.TimeRuler.EndMark("Update");
+            
             base.Update(gameTime);
         }
 
