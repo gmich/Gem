@@ -9,49 +9,69 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gem.Console.Rendering.Terminal
+namespace Gem.Console.Rendering
 {
-    public class TerminalRenderAreaSettings
+
+
+
+    public class CellRenderingOptions
     {
-        public float CellSpacing { get; set; }
-        public float RowSpacing { get; set; }
+        public int CellSpacing { get; set; }
+        public int RowSpacing { get; set; }
         public Vector2 RowSize { get; set; }
         public int MaxRows { get; set; }
-        public Vector2 position { get; set; }
-        public Vector2 areaSize { get; set; }
+        public Vector2 Position { get; set; }
+        public Vector2 AreaSize { get; set; }
     }
 
-    internal class TerminalRenderArea
+    public class TerminalRenderArea
     {
+
+        #region Fields
+
         private readonly Camera camera;
         private readonly SpriteFont font;
-
         private readonly List<Behavior<IEffect>> effects = new List<Behavior<IEffect>>();
         private readonly List<IEffect> drawingEffects = new List<IEffect>();
 
+        private Vector2 appendLocation;
 
-        public TerminalRenderArea(TerminalRenderAreaSettings settings, SpriteFont font)
+        #endregion
+
+        #region Properties
+
+        private CellRenderingOptions AreaSettings { get; set; }
+
+        #endregion
+
+        #region Ctor
+
+        public TerminalRenderArea(CellRenderingOptions settings, SpriteFont font)
         {
             camera = new Camera(Vector2.Zero,
-                                settings.areaSize,
-                                new Vector2(settings.areaSize.X, settings.MaxRows * (settings.RowSpacing + settings.RowSize.Y)));
+                                settings.AreaSize,
+                                new Vector2(settings.AreaSize.X, settings.MaxRows * (settings.RowSpacing + settings.RowSize.Y)));
             this.font = font;
         }
+
+        #endregion
 
         private void AddBehavior(Behavior<IEffect> effect)
         {
             effects.Add(effect);
         }
 
-        public void ChangeRow()
+        public void AddCellRange(Row row, int rowIndex)
         {
-
+            appendLocation = new Vector2(0, rowIndex * (AreaSettings.RowSize.Y + AreaSettings.RowSpacing));
+            foreach (var entry in row.Entries)
+            {
+                AddBehavior(entry.Behavior.At(Behavior.Create(ctx => AreaSettings.Position.X + appendLocation.X - camera.Position.X),
+                            Behavior.Create(ctx => AreaSettings.Position.Y + appendLocation.Y - camera.Position.Y)));
+                appendLocation.X += (entry.SizeX + AreaSettings.CellSpacing);
+            }
         }
 
-        public void AddCellRange(IEnumerable<Row> rows)
-        {
-
-        }
         public void Update(GameTime gameTime)
         {
             drawingEffects.Clear();
@@ -65,6 +85,10 @@ namespace Gem.Console.Rendering.Terminal
 
         public void Draw(SpriteBatch batch)
         {
+            foreach (var cellDrawing in drawingEffects)
+            {
+                cellDrawing.Draw(font, batch, Vector2.Zero);
+            }
         }
     }
 }

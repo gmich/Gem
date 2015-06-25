@@ -9,7 +9,7 @@ namespace Gem.Console
         {
             this.AssignDefaultValues();
         }
-
+        
         [DefaultValue('|')]
         public char CommandSeparator { get; set; }
 
@@ -18,5 +18,7 @@ namespace Gem.Console
 
         [DefaultValue(' ')]
         public char ArgumentSeparator { get; set; }
+
+        public static TerminalSettings Default { get { return new TerminalSettings(); } }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Gem.Infrastructure.Functional;
+﻿using Gem.Console.Animations;
+using Gem.Infrastructure.Functional;
 
 namespace Gem.Console
 {
@@ -10,5 +11,6 @@ namespace Gem.Console
 
         int SizeY { get; }
 
+        Behavior<IEffect> Behavior { get; set; }
     }
 }

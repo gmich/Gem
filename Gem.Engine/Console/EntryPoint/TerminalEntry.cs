@@ -30,22 +30,21 @@ namespace Gem.Console
 
         #region Ctor
 
-        public TerminalEntry(CellAppender appender, Func<float> entryWidth, int maxRows, int historyEntries = 40)
+        public TerminalEntry(CellAppender appender,CellAligner aligner, Func<int> spacing, Func<float> rowSize, int historyEntries = 40)
         {
             this.cursor = new Cursor();
-            
+
             if (appender == null)
             {
                 throw new ArgumentNullException("appender");
             }
             this.appender = appender;
-            
-            history = new CommandHistory(historyEntries);
-            aligner = new CellAligner(entryWidth, appender.GetCells, maxRows);
 
-            appender.OnCellAppend((sender, args) => aligner.ArrangeRows());
+            history = new CommandHistory(historyEntries);
+
             appender.OnCellAppend((sender, args) =>
             {
+                aligner.AlignToRows(appender.GetCells(), spacing(), rowSize());
                 cursor.Update(aligner.Rows());
                 cursor.Right();
             });

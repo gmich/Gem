@@ -7,19 +7,24 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Gem.Diagnostics.Console;
+using Gem.Console.Rendering;
+using Gem.Engine.Containers;
 #endregion
 
-namespace Gem
+namespace Gem.Engine
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Engine : Game
+    public class GemEngine : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+        private GemConsole gemConsole;
+        private AssetContainer<SpriteFont> fontContainer;
+        private AssetContainer<Texture2D> textureContainer;
 
-        public Engine()
+        public GemEngine()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -36,42 +41,32 @@ namespace Gem
         {
             // TODO: Add your initialization logic here
             DebugSystem.Initialize(this, "Fonts/consoleFont");
-            DebugSystem.Instance.FpsCounter.Visible = true;
-            DebugSystem.Instance.TimeRuler.Visible = true;
-            DebugSystem.Instance.TimeRuler.ShowLog = true;
+            fontContainer.Add("ConsoleFont", "Fonts/consoleFont");
 
+            //DebugSystem.Instance.FpsCounter.Visible = true;
+            //DebugSystem.Instance.TimeRuler.Visible = true;
+            //DebugSystem.Instance.TimeRuler.ShowLog = true;
             //Register an echo log4net listener
             //DebugSystem.Instance.DebugCommandUI.RegisterEchoListner(new Diagnostics.Logger.LogEchoListener());
+            gemConsole = new GemConsole(this, fontContainer["ConsoleFont"]);
+
+            this.Components.Add(gemConsole);
 
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            fontContainer = new AssetContainer<SpriteFont>(Content);
+            textureContainer = new AssetContainer<Texture2D>(Content);
 
-            // TODO: use this.Content to load your game content here
+            spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -81,7 +76,7 @@ namespace Gem
 
 
             DebugSystem.Instance.TimeRuler.BeginMark("Update", Color.Blue);
-            
+
 
             // End measuring the Update method
             DebugSystem.Instance.TimeRuler.EndMark("Update");
@@ -89,19 +84,15 @@ namespace Gem
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            DebugSystem.Instance.TimeRuler.BeginMark("Draw", Color.CornflowerBlue);
+            //DebugSystem.Instance.TimeRuler.BeginMark("Draw", Color.CornflowerBlue);
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             //Add methods to measure here
 
-            DebugSystem.Instance.TimeRuler.EndMark("Draw");
+            //DebugSystem.Instance.TimeRuler.EndMark("Draw");
 
             base.Draw(gameTime);
         }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 #endregion
 
-namespace Gem
+namespace Gem.Engine
 {
 #if WINDOWS || LINUX
     /// <summary>
@@ -18,7 +18,7 @@ namespace Gem
         [STAThread]
         static void Main()
         {
-            using (var game = new Engine())
+            using (var game = new GemEngine())
                 game.Run();
         }
     }

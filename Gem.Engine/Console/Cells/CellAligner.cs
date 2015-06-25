@@ -3,19 +3,47 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Gem.Infrastructure.Events;
+using Microsoft.Xna.Framework;
+using Gem.Console.Animations;
+using Gem.Infrastructure.Functional;
 
 namespace Gem.Console
 {
 
     public class CellAlignerEventArgs : EventArgs
     {
-        private readonly IEnumerable<Row> rows;
+        private readonly Row row;
+        private readonly int rowIndex;
 
-        public CellAlignerEventArgs(IEnumerable<Row> rows)
+        public CellAlignerEventArgs(Row row, int rowIndex)
         {
-            this.rows = rows;
+            this.rowIndex = rowIndex;
+            this.row = row;
         }
-        public IEnumerable<Row> Rows { get { return rows; } }
+
+        public int RowIndex { get { return rowIndex; } }
+        public Row Row { get { return row; } }
+    }
+
+    public class CellAlignmentOptions
+    {
+        public event EventHandler<EventArgs> OnOptionChanged;
+
+        public CellAlignmentOptions(int cellSpacing)
+        {
+            this.spacing = cellSpacing;
+        }
+
+        private int spacing;
+        public int CellSpacing
+        {
+            get { return spacing; }
+            set
+            {
+                spacing = value;
+                OnOptionChanged.RaiseEvent(this, EventArgs.Empty);
+            }
+        }
     }
 
     /// <summary>
@@ -26,49 +54,48 @@ namespace Gem.Console
 
         #region Fields
 
-        private readonly Func<IEnumerable<ICell>> cellsGetter;
-        private readonly FixedSizeList<Row> rows;
-        private readonly Func<float> rowWidthGetter;
+        private readonly List<Row> rows;
 
         #endregion
 
         #region Ctor
 
-        public CellAligner(Func<float> rowWidthGetter, Func<IEnumerable<ICell>> cellsGetter, int maxRows)
+        public CellAligner()
         {
-            this.rowWidthGetter = rowWidthGetter;
-            this.cellsGetter = cellsGetter;
-            this.rows = new FixedSizeList<Row>(maxRows);
+            this.rows = new List<Row>();
         }
 
         #endregion
 
         #region Events
 
-        public event EventHandler<CellAlignerEventArgs> AlignmentChanged;
+        public event EventHandler<CellAlignerEventArgs> RowAdded;
 
         #endregion
 
         #region Arrange Rows Algorithm
 
-        public void ArrangeRows()
+        public void Reset()
         {
-            rows.List.Clear();
+            rows.Clear();
+        }
 
+        public void AlignToRows(IEnumerable<ICell> cells, int spacing, float rowSize)
+        {
             int currentRowSize = 0;
             int skippedEntries = 0;
             int cellsCounter = 0;
-            float rowWidth = rowWidthGetter();
-            var cells = cellsGetter();
 
             foreach (var cell in cells)
             {
-                currentRowSize += cell.SizeX;
-                if (currentRowSize > rowWidth)
+                currentRowSize += (cell.SizeX + spacing);
+                if (currentRowSize > rowSize)
                 {
-                    rows.Add(new Row(rows.Count, cells.Skip(skippedEntries).Take(cellsCounter - skippedEntries)));
+                    var row = new Row(rows.Count, cells.Skip(skippedEntries).Take(cellsCounter - skippedEntries));
+                    rows.Add(row);
                     skippedEntries = cellsCounter;
                     currentRowSize = 0;
+                    RowAdded.RaiseEvent(this, new CellAlignerEventArgs(row, rows.Count));
                 }
                 cellsCounter++;
             }
@@ -76,10 +103,10 @@ namespace Gem.Console
             //add the remaining cells
             if (cellsCounter - skippedEntries > 0)
             {
-                rows.Add(new Row(rows.Count, cells.Skip(skippedEntries).Take(cellsCounter - skippedEntries)));
+                var row = new Row(rows.Count,cells.Skip(skippedEntries).Take(cellsCounter - skippedEntries));
+                rows.Add(row);
+                RowAdded.RaiseEvent(this, new CellAlignerEventArgs(row, rows.Count));
             }
-
-            AlignmentChanged.RaiseEvent(this, new CellAlignerEventArgs(Rows()));
         }
 
         #endregion
@@ -88,7 +115,7 @@ namespace Gem.Console
 
         public IEnumerable<Row> Rows()
         {
-            return rows.Enumerable;
+            return rows;
         }
 
         #endregion

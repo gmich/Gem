@@ -46,6 +46,8 @@
     <Compile Include="CameraSystem\ICamera.cs" />
     <Compile Include="Console\Cells\CellAligner.cs" />
     <Compile Include="Console\Cells\CellAppender.cs" />
+    <Compile Include="Console\Cells\CellBehavior.cs" />
+    <Compile Include="Console\Cells\ICellBehavior.cs" />
     <Compile Include="Console\Commands\RollbackCommandAttribute.cs" />
     <Compile Include="Console\Commands\SubcommandAttribute.cs" />
     <Compile Include="Console\Commands\CommandAttribute.cs" />
@@ -58,7 +60,7 @@
     <Compile Include="Console\Animations\IEffect.cs" />
     <Compile Include="Console\EntryPoint\EntryRule.cs" />
     <Compile Include="Console\EntryPoint\FlushedEntry.cs" />
-    <Compile Include="Console\Rendering\Terminal\Compositor.cs" />
+    <Compile Include="Console\Rendering\Terminal\GemConsole.cs" />
     <Compile Include="Console\Rendering\Terminal\TerminalRenderArea.cs" />
     <Compile Include="Console\Terminal\CommandCacheEntry.cs" />
     <Compile Include="Console\Terminal\CommandHistory.cs" />
@@ -84,6 +86,8 @@
     <Compile Include="Console\Row.cs" />
     <Compile Include="Console\Terminal\Terminal.cs" />
     <Compile Include="Console\Terminal\TerminalSettings.cs" />
+    <Compile Include="Containers\AContainer.cs" />
+    <Compile Include="Containers\AssetContainer.cs" />
     <Compile Include="Diagnostics\Console\DebugCommandUI.cs" />
     <Compile Include="Diagnostics\Console\DebugManager.cs" />
     <Compile Include="Diagnostics\Console\DebugSystem.cs" />
@@ -100,7 +104,7 @@
     <Compile Include="Sound\SoundManager.cs" />
     <Compile Include="Utilities\StringBuilderExtensions.cs" />
     <Compile Include="Diagnostics\Console\TimeRuler.cs" />
-    <Compile Include="Engine.cs" />
+    <Compile Include="GemEngine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
