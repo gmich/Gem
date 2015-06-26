@@ -1,9 +1,9 @@
-﻿using Gem.Console.Animations;
+﻿using Gem.Engine.Console.Rendering.Animations;
 using Gem.Infrastructure.Functional;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace Gem.Console
+namespace Gem.Engine.Console.Cells
 {
     internal class CellBehavior : ICellBehavior
     {

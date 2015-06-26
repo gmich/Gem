@@ -7,8 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Gem.Diagnostics.Console;
-using Gem.Console.Rendering;
 using Gem.Engine.Containers;
+using Gem.Engine.Console;
+
 #endregion
 
 namespace Gem.Engine

@@ -3,9 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gem.Infrastructure.Events;
-using Gem.Console.EntryPoint;
+using Gem.Engine.Console.Commands;
+using Gem.Engine.Console.Cells;
 
-namespace Gem.Console
+namespace Gem.Engine.Console.EntryPoint
 {
 
     public class TerminalEntry
@@ -29,7 +30,7 @@ namespace Gem.Console
 
         #region Ctor
 
-        public TerminalEntry(CellAppender appender, CellAligner aligner, Func<int> spacing, Func<float> rowSize, int historyEntries = 40)
+        public TerminalEntry(CellAppender appender, CellRowAligner aligner, Func<int> spacing, Func<float> rowSize, int historyEntries = 40)
         {
             this.cursor = new Cursor();
 
@@ -39,7 +40,7 @@ namespace Gem.Console
             }
             this.appender = appender;
 
-            AddEntryRule(new EntryRule(ch => appender.Count < 40));
+            AddEntryRule(new EntryRule(ch => appender.Count < 100));
 
             history = new CommandHistory(historyEntries);
 

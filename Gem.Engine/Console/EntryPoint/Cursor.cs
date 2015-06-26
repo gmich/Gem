@@ -4,10 +4,11 @@ using System.Linq;
 using Gem.Infrastructure.Events;
 using Microsoft.Xna.Framework;
 using Gem.Infrastructure.Functional;
-using Gem.Console.Animations;
 using System.Timers;
+using Gem.Engine.Console.Rendering.Animations;
+using Gem.Engine.Console.Cells;
 
-namespace Gem.Console
+namespace Gem.Engine.Console.EntryPoint
 {
 
     public class CursorEventArgs : EventArgs
@@ -38,6 +39,7 @@ namespace Gem.Console
         private int cellSum;
         private bool showCursor;
         private float alpha = 1.0f;
+
         #endregion
 
         #region Ctor

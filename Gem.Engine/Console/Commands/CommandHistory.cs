@@ -1,6 +1,8 @@
-﻿using Gem.Console.EntryPoint;
+﻿using Gem.Engine.Console.Cells;
+using Gem.Engine.Console.EntryPoint;
 using System.Collections.Generic;
-namespace Gem.Console
+
+namespace Gem.Engine.Console.Commands
 {
     internal class CommandHistory
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gem.Console
+namespace Gem.Engine.Console.EntryPoint
 {
     public class EntryRule : IEntryRule
     {

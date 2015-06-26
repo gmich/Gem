@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Gem.Console
+namespace Gem.Engine.Console.Commands
 {
     public class FixedSizeList<T>
     {

@@ -1,10 +1,10 @@
-﻿using Gem.Console.Animations;
+﻿using Gem.Engine.Console.Cells;
+using Gem.Engine.Console.Rendering.Animations;
 using Gem.Infrastructure.Functional;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace Gem.Console
+namespace Gem.Engine.Console.EntryPoint
 {
     public interface ICursor
     {

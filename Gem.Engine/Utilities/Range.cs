@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace Gem.Console.Rendering.Utilities
+namespace Gem.Engine.Utilities
 {
 
     public sealed class Range<T>

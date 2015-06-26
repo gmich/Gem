@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Gem.Console.Rendering
+namespace Gem.Engine.Console.Rendering
 {
     public class Sprite : ITexture
     {

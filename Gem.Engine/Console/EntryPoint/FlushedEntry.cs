@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Gem.Engine.Console.Cells;
+using System.Collections.Generic;
 
-namespace Gem.Console.EntryPoint
+namespace Gem.Engine.Console.EntryPoint
 {
-
     public class FlushedEntry
     {
         private readonly string stringRepresentation;

@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics.Contracts;
 using Gem.Infrastructure.Events;
 
-namespace Gem.Console
+namespace Gem.Engine.Console.EntryPoint
 {
     public class TextAppenderHelper
     {

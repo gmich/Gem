@@ -1,7 +1,8 @@
-﻿using Gem.Console.Animations;
+﻿using Gem.Engine.Console.Rendering.Animations;
 using Gem.Infrastructure.Functional;
 using System;
-namespace Gem.Console
+
+namespace Gem.Engine.Console.Cells
 {
     public class Cell : ICell
     {

@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Reactive.Linq;
-using Gem.Console.Animations;
 using Gem.Infrastructure.Functional;
 
-namespace Gem.Console
+namespace Gem.Engine.Console.Cells
 {
 
     public class CellAppender

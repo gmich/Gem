@@ -1,6 +1,6 @@
 ﻿using Gem.Infrastructure.Logging;
 
-namespace Gem.Console.Commands
+namespace Gem.Engine.Console.Commands
 {
     public interface ICommandHost : IDebugHost, ICommandExecutioner
     {

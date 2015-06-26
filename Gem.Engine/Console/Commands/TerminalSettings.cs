@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Gem.Infrastructure.Attributes;
 
-namespace Gem.Console
+namespace Gem.Engine.Console.Commands
 {
     public class TerminalSettings
     {

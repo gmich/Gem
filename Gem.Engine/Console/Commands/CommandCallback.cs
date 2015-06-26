@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Gem.Console.Commands
+namespace Gem.Engine.Console.Commands
 {
     public delegate Result<object> CommandCallback(ICommandHost host,
                                                    IList<string> arguments, 

@@ -1,5 +1,4 @@
-﻿
-namespace Gem.Console
+﻿namespace Gem.Engine.Console.EntryPoint
 {
     public interface IEntryRule
     {

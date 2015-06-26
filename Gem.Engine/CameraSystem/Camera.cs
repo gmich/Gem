@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Gem.Console.Rendering.Utilities;
+using Gem.Engine.Utilities;
 
 namespace Gem.CameraSystem
 {

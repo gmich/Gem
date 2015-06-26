@@ -1,5 +1,6 @@
 ﻿using Gem.CameraSystem;
-using Gem.Console.Animations;
+using Gem.Engine.Console.Cells;
+using Gem.Engine.Console.Rendering.Animations;
 using Gem.Infrastructure.Functional;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,10 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gem.Console.Rendering
+namespace Gem.Engine.Console.Rendering
 {
-
-
 
     public class CellRenderingOptions
     {
@@ -25,7 +24,7 @@ namespace Gem.Console.Rendering
         public Vector2 AreaSize { get; set; }
     }
 
-    public class TerminalRenderArea
+    public class TerminalEntryRenderArea
     {
 
         #region Fields
@@ -49,7 +48,7 @@ namespace Gem.Console.Rendering
 
         #region Ctor
 
-        public TerminalRenderArea(CellRenderingOptions settings, SpriteFont font)
+        public TerminalEntryRenderArea(CellRenderingOptions settings, SpriteFont font)
         {
             Contract.Requires(settings != null);
             this.areaSettings = settings;
@@ -73,7 +72,7 @@ namespace Gem.Console.Rendering
 
             foreach (var entry in row.Entries)
             {
-                float x = AreaSettings.Position.X + appendLocation.X - camera.Position.X;
+                float x = AreaSettings.Position.X + appendLocation.X - camera.Position.X + (entry.SizeX/2+1);
                 float y = AreaSettings.Position.Y + appendLocation.Y - camera.Position.Y;
                 effects[rowIndex].Add(entry.Behavior.At(Behavior.Create(ctx => x),
                             Behavior.Create(ctx => y)));
@@ -84,18 +83,21 @@ namespace Gem.Console.Rendering
         public void UpdateCursor(Behavior<IEffect> behavior, Row currentRow, int row, int position)
         {
             int rowIndex = row;
-            appendLocation = new Vector2(0, (rowIndex) * (AreaSettings.RowSize.Y + AreaSettings.RowSpacing)-1);
-            if (effects.ContainsKey(rowIndex))
+            appendLocation = new Vector2(0, (rowIndex) * (AreaSettings.RowSize.Y + AreaSettings.RowSpacing) - 1);
+            int pos = position - 1;
+            if (effects.ContainsKey(rowIndex) && pos > -1)
             {
-                int pos = MathHelper.Max(0, position - 1);
                 foreach (var entry in currentRow.Entries.Take(pos))
                 {
                     appendLocation.X += (entry.SizeX + AreaSettings.CellSpacing);
                 }
-                var lastEntry = currentRow.Entries.Skip(pos).FirstOrDefault();
-                if (lastEntry != null)
+                if (pos != -1)
                 {
-                    appendLocation.X += lastEntry.SizeX / 2 + 1;
+                    var lastEntry = currentRow.Entries.Skip(pos).FirstOrDefault();
+                    if (lastEntry != null)
+                    {
+                        appendLocation.X += lastEntry.SizeX  + 1;
+                    }
                 }
             }
             float x = AreaSettings.Position.X + appendLocation.X - camera.Position.X;

@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace Gem.Console.Animations
+namespace Gem.Engine.Console.Rendering.Animations
 {
     public class DrawEffect : IEffect
     {

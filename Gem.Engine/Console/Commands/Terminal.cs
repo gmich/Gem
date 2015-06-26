@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gem.Infrastructure.Attributes;
-using Gem.Console.Commands;
 using System.Reflection;
 using Gem.Infrastructure.Functional;
 using Gem.Infrastructure.Logging;
@@ -12,7 +11,7 @@ using System.Threading.Tasks;
 
 #endregion
 
-namespace Gem.Console
+namespace Gem.Engine.Console.Commands
 {
 
     public class Terminal : ICommandHost

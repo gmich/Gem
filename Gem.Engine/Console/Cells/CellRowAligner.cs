@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Gem.Infrastructure.Events;
 using Microsoft.Xna.Framework;
-using Gem.Console.Animations;
 using Gem.Infrastructure.Functional;
+using Gem.Engine.Console.Rendering;
 
-namespace Gem.Console
+namespace Gem.Engine.Console.Cells
 {
 
     public class CellAlignerEventArgs : EventArgs
@@ -49,7 +49,7 @@ namespace Gem.Console
     /// <summary>
     /// Alligns ICell instances into rows according to the specified buffer axis x-size
     /// </summary>
-    public class CellAligner
+    public class CellRowAligner
     {
 
         #region Fields
@@ -60,7 +60,7 @@ namespace Gem.Console
 
         #region Ctor
 
-        public CellAligner()
+        public CellRowAligner()
         {
             this.rows = new List<Row>();
         }
@@ -98,20 +98,17 @@ namespace Gem.Console
                     rows.Add(row);
                     skippedEntries = cellsCounter;
                     currentRowSize = 0;
-                    RowAdded.RaiseEvent(this, new CellAlignerEventArgs(row, rows.Count-1));
+                    RowAdded.RaiseEvent(this, new CellAlignerEventArgs(row, rows.Count - 1));
                 }
-                else
-                {
-                    cellsCounter++;
-                }
+                cellsCounter++;
             }
 
             //add the remaining cells
             if (cellsCounter - skippedEntries >= 0)
             {
-                var row = new Row(rows.Count,cells.Skip(skippedEntries).Take(cellsCounter - skippedEntries));
+                var row = new Row(rows.Count, cells.Skip(skippedEntries).Take(cellsCounter - skippedEntries));
                 rows.Add(row);
-                RowAdded.RaiseEvent(this, new CellAlignerEventArgs(row, rows.Count-1));
+                RowAdded.RaiseEvent(this, new CellAlignerEventArgs(row, rows.Count - 1));
             }
         }
 

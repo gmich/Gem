@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace Gem.Console.Rendering
+namespace Gem.Engine.Console.Rendering
 {
     public class SpriteSheet : ITexture
     {

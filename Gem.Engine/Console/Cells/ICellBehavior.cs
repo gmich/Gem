@@ -1,7 +1,7 @@
-﻿using Gem.Console.Animations;
+﻿using Gem.Engine.Console.Rendering.Animations;
 using Gem.Infrastructure.Functional;
 
-namespace Gem.Console
+namespace Gem.Engine.Console.Cells
 {
     public interface ICellBehavior
     {

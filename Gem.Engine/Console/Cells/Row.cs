@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Gem.Console
+namespace Gem.Engine.Console.Cells
 {
     public class Row
     {

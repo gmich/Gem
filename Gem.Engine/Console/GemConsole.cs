@@ -1,22 +1,21 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Gem.Infrastructure.Input;
 using Microsoft.Xna.Framework;
+using Gem.Engine.Console.Rendering;
+using Gem.Engine.Console.EntryPoint;
+using Gem.Engine.Console.Cells;
+using Gem.Engine.Console.Commands;
 
-namespace Gem.Console.Rendering
+namespace Gem.Engine.Console
 {
     public class GemConsole : DrawableGameComponent
     {
 
         #region Fields
 
-        private readonly CellAligner aligner;
+        private readonly CellRowAligner aligner;
         private readonly CellAppender appender;
-        private readonly TerminalRenderArea cellEntryRenderArea;
+        private readonly TerminalEntryRenderArea cellEntryRenderArea;
         private readonly TerminalEntry entryPoint;
         private readonly Terminal terminal;
         private readonly KeyProcessor keyProcessor;
@@ -47,12 +46,12 @@ namespace Gem.Console.Rendering
                 return new Cell(content, (int)size.X, (int)size.Y, cell => appender.CellBehavior.CreateEffect(cell));
             }, new CellBehavior(Color.Black, 0.0f, 1.0f));
 
-            aligner = new CellAligner();
+            aligner = new CellRowAligner();
             entryPoint = new TerminalEntry(appender, aligner, ()=>renderingOptions.CellSpacing,()=> renderingOptions.RowSize.X);
             aligner.RowAdded += (sender, args) => cellEntryRenderArea.AddCellRange(args.Row, args.RowIndex);
             aligner.Cleared += (sender, args) => cellEntryRenderArea.Clear();
 
-            cellEntryRenderArea = new TerminalRenderArea(renderingOptions, font);
+            cellEntryRenderArea = new TerminalEntryRenderArea(renderingOptions, font);
 
             terminal = new Terminal(TerminalSettings.Default);
             entryPoint.OnFlushedEntry += (sender, command) => terminal.ExecuteCommand(command);
@@ -103,7 +102,6 @@ namespace Gem.Console.Rendering
         }
 
         #endregion
-
 
     }
 }

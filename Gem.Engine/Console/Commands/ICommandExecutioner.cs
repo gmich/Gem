@@ -1,7 +1,7 @@
 ﻿using Gem.Infrastructure.Functional;
 using System.Threading.Tasks;
 
-namespace Gem.Console.Commands
+namespace Gem.Engine.Console.Commands
 {    
     public interface ICommandExecutioner
     {

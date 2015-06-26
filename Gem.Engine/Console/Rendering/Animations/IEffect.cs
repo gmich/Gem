@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Gem.Console.Animations
+namespace Gem.Engine.Console.Rendering.Animations
 {
     public interface IEffect
     {
