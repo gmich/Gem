@@ -94,13 +94,17 @@ namespace Gem.Engine.Console.Cells
                 currentRowSize += (cell.SizeX + spacing);
                 if (currentRowSize > rowSize)
                 {
+                    cellsCounter++;
                     var row = new Row(rows.Count, cells.Skip(skippedEntries).Take(cellsCounter - skippedEntries));
                     rows.Add(row);
                     skippedEntries = cellsCounter;
                     currentRowSize = 0;
                     RowAdded.RaiseEvent(this, new CellAlignerEventArgs(row, rows.Count - 1));
                 }
-                cellsCounter++;
+                else
+                {
+                    cellsCounter++;
+                }
             }
 
             //add the remaining cells

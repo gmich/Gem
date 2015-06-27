@@ -18,10 +18,7 @@ namespace Gem.Engine.Console.Rendering
     {
         public int CellSpacing { get; set; }
         public int RowSpacing { get; set; }
-        public Vector2 RowSize { get; set; }
         public int MaxRows { get; set; }
-        public Vector2 Position { get; set; }
-        public Vector2 AreaSize { get; set; }
     }
 
     public class TerminalEntryRenderArea
@@ -29,7 +26,6 @@ namespace Gem.Engine.Console.Rendering
 
         #region Fields
 
-        private readonly Camera camera;
         private readonly SpriteFont font;
         private readonly Dictionary<int, List<Behavior<IEffect>>> effects = new Dictionary<int, List<Behavior<IEffect>>>();
         private readonly List<IEffect> drawingEffects = new List<IEffect>();
@@ -37,6 +33,10 @@ namespace Gem.Engine.Console.Rendering
 
         private Behavior<IEffect> cursorEffect;
         private Vector2 appendLocation;
+        private Camera camera;
+
+        private Vector2 screenPosition;
+        private readonly float rowSize;
 
         #endregion
 
@@ -48,17 +48,25 @@ namespace Gem.Engine.Console.Rendering
 
         #region Ctor
 
-        public TerminalEntryRenderArea(CellRenderingOptions settings, SpriteFont font)
+        public TerminalEntryRenderArea(CellRenderingOptions settings, Rectangle viewArea, SpriteFont font)
         {
             Contract.Requires(settings != null);
             this.areaSettings = settings;
-            camera = new Camera(Vector2.Zero,
-                                settings.AreaSize,
-                                new Vector2(settings.AreaSize.X, settings.MaxRows * (settings.RowSpacing + settings.RowSize.Y)));
             this.font = font;
+            this.rowSize = font.MeasureString("|").Y;
+            SetViewingArea(viewArea);
         }
 
         #endregion
+
+        public void SetViewingArea(Rectangle viewArea)
+        {
+            screenPosition = new Vector2(viewArea.Left, viewArea.Top);
+            var cameraViewportSize = new Vector2(viewArea.Width, viewArea.Height);
+
+            camera = new Camera(Vector2.Zero,
+                               cameraViewportSize, cameraViewportSize);
+        }
 
         public void Clear()
         {
@@ -67,13 +75,13 @@ namespace Gem.Engine.Console.Rendering
 
         public void AddCellRange(Row row, int rowIndex)
         {
-            appendLocation = new Vector2(0, (rowIndex) * (AreaSettings.RowSize.Y + AreaSettings.RowSpacing));
+            appendLocation = new Vector2(0, (rowIndex) * (rowSize + AreaSettings.RowSpacing));
             effects.Add(rowIndex, new List<Behavior<IEffect>>());
 
             foreach (var entry in row.Entries)
             {
-                float x = AreaSettings.Position.X + appendLocation.X - camera.Position.X + (entry.SizeX/2+1);
-                float y = AreaSettings.Position.Y + appendLocation.Y - camera.Position.Y;
+                float x = screenPosition.X + appendLocation.X - camera.Position.X + (entry.SizeX / 2 + 1);
+                float y = screenPosition.Y + appendLocation.Y - camera.Position.Y;
                 effects[rowIndex].Add(entry.Behavior.At(Behavior.Create(ctx => x),
                             Behavior.Create(ctx => y)));
                 appendLocation.X += (entry.SizeX + AreaSettings.CellSpacing);
@@ -83,7 +91,7 @@ namespace Gem.Engine.Console.Rendering
         public void UpdateCursor(Behavior<IEffect> behavior, Row currentRow, int row, int position)
         {
             int rowIndex = row;
-            appendLocation = new Vector2(0, (rowIndex) * (AreaSettings.RowSize.Y + AreaSettings.RowSpacing) - 1);
+            appendLocation = new Vector2(0, (rowIndex) * (rowSize+ AreaSettings.RowSpacing) - 1);
             int pos = position - 1;
             if (effects.ContainsKey(rowIndex) && pos > -1)
             {
@@ -96,12 +104,12 @@ namespace Gem.Engine.Console.Rendering
                     var lastEntry = currentRow.Entries.Skip(pos).FirstOrDefault();
                     if (lastEntry != null)
                     {
-                        appendLocation.X += lastEntry.SizeX  + 1;
+                        appendLocation.X += lastEntry.SizeX + 1;
                     }
                 }
             }
-            float x = AreaSettings.Position.X + appendLocation.X - camera.Position.X;
-            float y = AreaSettings.Position.Y + appendLocation.Y - camera.Position.Y;
+            float x = screenPosition.X + appendLocation.X - camera.Position.X;
+            float y = screenPosition.Y + appendLocation.Y - camera.Position.Y;
             cursorEffect = (behavior.At(Behavior.Create(ctx => x),
                                   Behavior.Create(ctx => y)));
 

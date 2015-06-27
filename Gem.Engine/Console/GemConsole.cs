@@ -30,11 +30,8 @@ namespace Gem.Engine.Console
         {
             renderingOptions = new CellRenderingOptions
             {
-                AreaSize = new Vector2(100, 100),
                 CellSpacing = 2,
                 MaxRows = 5,
-                Position = new Vector2(10, 10),
-                RowSize = new Vector2(200, font.MeasureString("|").Y),
                 RowSpacing = 2
             };
 
@@ -51,11 +48,26 @@ namespace Gem.Engine.Console
             aligner.RowAdded += (sender, args) => cellEntryRenderArea.AddCellRange(args.Row, args.RowIndex);
             aligner.Cleared += (sender, args) => cellEntryRenderArea.Clear();
 
-            cellEntryRenderArea = new TerminalEntryRenderArea(renderingOptions, font);
+            cellEntryRenderArea = new TerminalEntryRenderArea(renderingOptions,new Rectangle(10,10,100,100), font);
 
             terminal = new Terminal(TerminalSettings.Default);
             entryPoint.OnFlushedEntry += (sender, command) => terminal.ExecuteCommand(command);
             SubscribeEntryToKeyprocessor();
+        }
+
+        public void SetConsoleViewArea(Rectangle viewArea)
+        {
+
+        }
+
+        public void SetEntryPointToTerminalRatio(float ratio)
+        {
+
+        }
+
+        private Rectangle ConsoleViewArea()
+        {
+            return new Rectangle();
         }
 
         private void SubscribeEntryToKeyprocessor()

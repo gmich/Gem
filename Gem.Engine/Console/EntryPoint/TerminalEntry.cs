@@ -97,8 +97,8 @@ namespace Gem.Engine.Console.EntryPoint
 
         public void DeleteEntry()
         {
+            appender.RemoveCellAt(cursor.Head-1);
             Cursor.Left();
-            appender.RemoveCellAt(cursor.Head);
         }
 
         public void AddEntry(char ch)

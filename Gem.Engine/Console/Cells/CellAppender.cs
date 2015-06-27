@@ -102,7 +102,7 @@ namespace Gem.Engine.Console.Cells
 
         private bool IndexExists(int index)
         {
-            return (cells.Count > index);
+            return (cells.Count > index && index >= 0);
         }
 
         #endregion
