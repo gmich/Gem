@@ -44,7 +44,7 @@ namespace Gem.Engine.Console
             }, new CellBehavior(Color.Black, 0.0f, 1.0f));
 
             aligner = new CellRowAligner();
-            entryPoint = new TerminalEntry(appender, aligner, ()=>renderingOptions.CellSpacing,()=> renderingOptions.RowSize.X);
+            entryPoint = new TerminalEntry(appender, aligner, ()=>renderingOptions.CellSpacing,()=> 100.0f);
             aligner.RowAdded += (sender, args) => cellEntryRenderArea.AddCellRange(args.Row, args.RowIndex);
             aligner.Cleared += (sender, args) => cellEntryRenderArea.Clear();
 
