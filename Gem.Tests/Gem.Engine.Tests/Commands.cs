@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace Gem.Engine.Tests
 {
 
-    internal interface ICommandClass { }
-
+    internal interface ICommandClass {}
+    
     public class ClassWithCommand : ICommandClass
     {
         public double Number { get; set; }

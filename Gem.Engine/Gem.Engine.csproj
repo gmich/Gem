@@ -44,6 +44,18 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AI\BehaviorTree\BehaviorExtensions.cs" />
+    <Compile Include="AI\BehaviorTree\BehaviorResult.cs" />
+    <Compile Include="AI\BehaviorTree\Composites\Selector.cs" />
+    <Compile Include="AI\BehaviorTree\Composites\Sequence.cs" />
+    <Compile Include="AI\BehaviorTree\Decorators\FluentDecoratorFactory.cs" />
+    <Compile Include="AI\BehaviorTree\Decorators\DebugDecorator.cs" />
+    <Compile Include="AI\BehaviorTree\Decorators\Succeeder.cs" />
+    <Compile Include="AI\BehaviorTree\Decorators\Inverter.cs" />
+    <Compile Include="AI\BehaviorTree\Decorators\RepeatUntilFailure.cs" />
+    <Compile Include="AI\BehaviorTree\IBehaviorNode.cs" />
+    <Compile Include="AI\BehaviorTree\Leaves\ActionLeaf.cs" />
+    <Compile Include="AI\BehaviorTree\Leaves\PredicateLeaf.cs" />
     <Compile Include="CameraSystem\Camera.cs" />
     <Compile Include="CameraSystem\CameraFarseer.cs" />
     <Compile Include="CameraSystem\ICamera.cs" />
