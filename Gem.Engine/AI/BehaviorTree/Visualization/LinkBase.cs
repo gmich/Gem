@@ -5,23 +5,27 @@ namespace Gem.AI.BehaviorTree.Visualization
 {
     public class LinkBase : IBehaviorVirtualizationPiece
     {
-        private readonly Func<float> center;
+        private readonly Func<float> position;
 
-        public LinkBase(Func<float> center, int nodeCount, int linkSize)
+        public LinkBase(RenderedNode linkedNode, Func<float> position, int nodeCount)
         {
-            this.NodeCount = nodeCount;
-            this.center = center;
-            PositionX = Center - linkSize / 2;
+            NodeCount = nodeCount;
+            LinkedNode = linkedNode;
+            this.position = position;
         }
 
-        public float PositionX { get; }
+        public float PositionX
+        {
+            get
+            {
+                return position();
+            }
+        }
+
 
         public Color Color { get; set; }
 
-        public float Center
-        {
-            get { return center(); }
-        }
+        public RenderedNode LinkedNode { get; }
 
         public int NodeCount { get; }
     }

@@ -14,7 +14,6 @@ namespace Gem.AI.BehaviorTree.Visualization
         //int represents tree depth
         private readonly Dictionary<int, List<IBehaviorVirtualizationPiece>> nodeVisualizationInfo
             = new Dictionary<int, List<IBehaviorVirtualizationPiece>>();
-        private readonly int linkSize = 4;
 
         private float nodeWidth;
         private float treeWidth;
@@ -28,28 +27,37 @@ namespace Gem.AI.BehaviorTree.Visualization
 
         public TreeAnalyzer(IBehaviorNode<AIContext> root)
         {
+            string nodeType = root.GetType().Name;
             var rootInfo = new RenderedNode(
-                   root.GetType().Name,
-                   nameof(root),
-                   () => AlignToCenterOfX(TreeWidth() / 2));
+                        nodeType.Substring(0, nodeType.Count() - 2),
+                   root.Name,
+                   () => AlignRelativeTo(() => TreeWidth() / 2, NodeWidth(), 1, 0));
 
             nodeVisualizationInfo.Add(0,
                new List<IBehaviorVirtualizationPiece>(new[] { rootInfo }));
 
             var subNodes = root.SubNodes.ToArray();
-            LinkBase link = new LinkBase(
-                () => rootInfo.PositionX + NodeWidth() / 2,
-                subNodes.Count(),
-                linkSize);
+            Func<float> linkPositionX = () => rootInfo.PositionX;
 
+            LinkBase link = new LinkBase(
+                rootInfo,
+                linkPositionX,
+                subNodes.Count());
+
+            nodeVisualizationInfo.Add(1,
+                new List<IBehaviorVirtualizationPiece>(new[] {
+                  link as IBehaviorVirtualizationPiece,
+                }));
             for (int nodeIndex = 0; nodeIndex < subNodes.Count(); nodeIndex++)
             {
                 AddNode(subNodes[nodeIndex],
                     () => TreeWidth(),
-                    link,
+                    () => NodeWidth(),
+                    linkPositionX,
+                    subNodes.Count()+1,
                     nodeIndex,
                     1);
-            }         
+            }
         }
 
         #endregion
@@ -75,49 +83,50 @@ namespace Gem.AI.BehaviorTree.Visualization
 
         #region Private Helpers
 
-        private void AddNode(IBehaviorNode<AIContext> node, Func<float> nodeWidth, LinkBase link, int column, int depth)
+        private void AddNode(IBehaviorNode<AIContext> node, Func<float> rowWidth, Func<float> nodeWidth, Func<float> linkX, int nodeCount, int column, int depth)
         {
+            string nodeType = node.GetType().Name;
             var nodeInfo = new RenderedNode(
-                        node.GetType().Name,
-                        nameof(node),
-                        () => AlignRelativeTo(link.Center, nodeWidth(), link.NodeCount, column));
+                        nodeType.Substring(0,nodeType.Count()-2),
+                        node.Name,
+                        () => AlignRelativeTo(() => linkX(), nodeWidth(), nodeCount, column));
 
-            if (nodeVisualizationInfo.ContainsKey(depth))
-            {
-                nodeVisualizationInfo[depth].Add(nodeInfo);
-            }
-            else
-            {
-                nodeVisualizationInfo.Add(depth,
-                    new List<IBehaviorVirtualizationPiece>(new[] {
-                        link as IBehaviorVirtualizationPiece,
-                        nodeInfo
-                    }));
-            }
+            nodeVisualizationInfo[depth].Add(nodeInfo);
 
             var subNodes = node.SubNodes.ToArray();
+            Func<float> linkPositionX = () => nodeInfo.PositionX;
+
             for (int nodeIndex = 0; nodeIndex < subNodes.Count(); nodeIndex++)
             {
+                if (nodeIndex == 0)
+                {
+                    var newLink = new LinkBase(nodeInfo, linkPositionX, subNodes.Count());
+                    if (nodeVisualizationInfo.ContainsKey(depth + 1))
+                    {
+                        nodeVisualizationInfo[depth+1].Add(newLink);
+                    }
+                    else
+                    {
+                        nodeVisualizationInfo.Add(depth + 1,
+                        new List<IBehaviorVirtualizationPiece>(new[] {
+                                                    newLink as IBehaviorVirtualizationPiece,
+                        }));
+                    }
+                }
                 AddNode(subNodes[nodeIndex],
-                    () => subNodes.Count() * NodeWidth(),
-                    new LinkBase(() => nodeInfo.PositionX + (NodeWidth() / 2), subNodes.Count(), linkSize),
+                    () => NodeWidth() * (subNodes.Count()),
+                    () => NodeWidth(),
+                    linkPositionX,
+                    subNodes.Count()+1,
                     nodeIndex,
-                    depth);
+                    depth + 1);
             }
         }
 
-        private float NodePosition(float rowWidth, int column, int nodeCount)
-        {
-            return ((rowWidth / (nodeCount + 1)) * column) - (nodeWidth / 2);
-        }
-        private float AlignToCenterOfX(float XtoAlignTo)
-        {
-            return XtoAlignTo - (nodeWidth / 2);
-        }
 
-        private float AlignRelativeTo(float relativeX, float nodeWidth, int nodeCount, int column)
+        private float AlignRelativeTo(Func<float> relativeX, float nodeWidth, int nodeCount, int column)
         {
-            return relativeX - ((nodeWidth * nodeCount) / 2) - ((nodeWidth / 2) * column);
+            return relativeX() - (((nodeWidth) * nodeCount) / 2) + ((nodeWidth) * (column+1));
         }
 
         #endregion

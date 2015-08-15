@@ -11,16 +11,20 @@ namespace Gem.AI.BehaviorTree.Composites
     public class Selector<AIContext> : IBehaviorNode<AIContext>
     {
         private readonly Stack<IBehaviorNode<AIContext>> pendingNodes;
+        private readonly IBehaviorNode<AIContext>[] nodes;
         private BehaviorResult behaviorResult;
         public event EventHandler OnBehaved;
 
         public Selector(IBehaviorNode<AIContext>[] nodes)
         {
+            this.nodes = nodes;
             pendingNodes = new Stack<IBehaviorNode<AIContext>>(nodes.Reverse());
         }
 
+        public string Name { get; set; } = string.Empty;
+
         public IEnumerable<IBehaviorNode<AIContext>> SubNodes
-        { get { return pendingNodes; } }
+        { get { return nodes; } }
 
         private bool HasProcessedAllNodes => pendingNodes.Count == 0;
 

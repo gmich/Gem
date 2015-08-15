@@ -5,7 +5,7 @@ using System;
 namespace Gem.AI.BehaviorTree.Visualization
 {
 
-    internal class RenderedNode : IBehaviorVirtualizationPiece
+    public class RenderedNode : IBehaviorVirtualizationPiece
     {
         private readonly Func<float> getPosition;
 
@@ -16,11 +16,13 @@ namespace Gem.AI.BehaviorTree.Visualization
             this.getPosition = getPosition;
         }
 
+        public float OffsetX { get; set; } = 0.0f;
+
         public string Name { get; }
 
         public string Type { get; }
 
-        public float PositionX { get { return getPosition(); } }
+        public float PositionX { get { return getPosition() + OffsetX; } }
 
         public Color Color { get; set; }
     }

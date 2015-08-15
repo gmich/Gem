@@ -25,7 +25,8 @@ namespace Gem.AI.BehaviorTree.Leaves
                 return initialBehavior(context);
             };
         }
-            
+
+        public string Name { get; set; } = string.Empty;
         public BehaviorResult Behave(AIContext context)
         {
             OnBehaved?.Invoke(this, new BehaviorInvokationEventArgs());

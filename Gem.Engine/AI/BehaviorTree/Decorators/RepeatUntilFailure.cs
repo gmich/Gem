@@ -15,6 +15,7 @@ namespace Gem.AI.BehaviorTree.Decorators
             this.decoratedNode = decoratedNode;
         }
 
+        public string Name { get; set; } = string.Empty;
         public IEnumerable<IBehaviorNode<AIContext>> SubNodes
         { get { yield return decoratedNode; } }
 

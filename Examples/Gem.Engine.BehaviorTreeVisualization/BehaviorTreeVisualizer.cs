@@ -24,6 +24,10 @@ namespace Gem.Engine.BehaviorTreeVisualization
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             SetupBehavior();
+
+            graphics.PreferredBackBufferHeight = 900;
+            graphics.PreferredBackBufferWidth = 1600;
+            graphics.ApplyChanges();
         }
 
         #region Behavior Related
@@ -35,20 +39,26 @@ namespace Gem.Engine.BehaviorTreeVisualization
             var walk = new ActionLeaf<AIContext>(
             context => CheckTarget(step = context.InitialStep, context.Target),
             context => CheckTarget(++step, context.Target));
+            walk.Name = "walk";
 
             var unlockDoor = new ActionLeaf<AIContext>(
             context => context.CanUnlock ? BehaviorResult.Success : BehaviorResult.Failure);
+            unlockDoor.Name = "unlock door";
 
             var breakDoor = new ActionLeaf<AIContext>(
            context => BehaviorResult.Success);
+            breakDoor.Name = "break door";
 
             var closeDoor = new ActionLeaf<AIContext>(
             context => BehaviorResult.Failure);
+            closeDoor.Name = "close door";
 
-            var openDoor = new Selector<AIContext>(new[] { unlockDoor, breakDoor.TraceAs("BreakDoor") });
-            
+            var openDoor = new Selector<AIContext>(new[] { unlockDoor, breakDoor });
+            openDoor.Name = "open door";
+
             goToRoom = new Sequence<AIContext>(new[] { walk, openDoor, DecorateFor.AlwaysSucceeding(closeDoor) });
-            
+            goToRoom.Name = "go to room";
+
             var aiContext = new AIContext();
 
             for (int tick = 0; tick < 50; tick++)

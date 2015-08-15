@@ -17,6 +17,7 @@ namespace Gem.AI.BehaviorTree.Decorators
         public IEnumerable<IBehaviorNode<AIContext>> SubNodes
         { get { yield return decoratedNode; } }
 
+        public string Name { get; set; } = string.Empty;
         public BehaviorResult Behave(AIContext context)
         {
             OnBehaved?.Invoke(this, new BehaviorInvokationEventArgs());
