@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Gem.AI.BehaviorTree.Decorators
 {
@@ -8,6 +9,7 @@ namespace Gem.AI.BehaviorTree.Decorators
         private readonly string debugName;
         private readonly Action<string> writeDebugInfo;
         private BehaviorResult behaviorResult;
+        public event EventHandler OnBehaved;
 
         public DebugDecorator(IBehaviorNode<AIContext> decoratedNode,Action<string> writeDebugInfo, string nodeName)
         {
@@ -15,9 +17,13 @@ namespace Gem.AI.BehaviorTree.Decorators
             this.debugName = nodeName;
             this.decoratedNode = decoratedNode;
         }
-        
+
+        public IEnumerable<IBehaviorNode<AIContext>> SubNodes
+        { get { yield return decoratedNode; } }
+
         public BehaviorResult Behave(AIContext context)
         {
+            OnBehaved?.Invoke(this, new BehaviorInvokationEventArgs());
             writeDebugInfo(Environment.NewLine +"Invoking " + debugName);
             behaviorResult = decoratedNode.Behave(context);
             writeDebugInfo(debugName + " execution terminated: " + behaviorResult) ;

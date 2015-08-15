@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Engine", "Gem.Engine\Gem.Engine.csproj", "{2784D0E3-736D-4BCA-8536-EEA8834E6ED9}"
 EndProject
@@ -43,6 +43,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Gui.Example", "Examples\Gem.Gui.Example\Gem.Gui.Example.csproj", "{41293C99-6A34-413C-858D-F4E4C919F279}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Engine.Tests", "Gem.Tests\Gem.Engine.Tests\Gem.Engine.Tests.csproj", "{4CDBA490-8CC3-42C8-9CF8-0D736CC8F7E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Engine.BehaviorTreeVisualization", "Examples\Gem.Engine.BehaviorTreeVisualization\Gem.Engine.BehaviorTreeVisualization.csproj", "{A86A7479-1250-4105-A206-EFC34833BE8A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -194,6 +196,16 @@ Global
 		{4CDBA490-8CC3-42C8-9CF8-0D736CC8F7E6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4CDBA490-8CC3-42C8-9CF8-0D736CC8F7E6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4CDBA490-8CC3-42C8-9CF8-0D736CC8F7E6}.Release|x86.ActiveCfg = Release|Any CPU
+		{A86A7479-1250-4105-A206-EFC34833BE8A}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{A86A7479-1250-4105-A206-EFC34833BE8A}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{A86A7479-1250-4105-A206-EFC34833BE8A}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{A86A7479-1250-4105-A206-EFC34833BE8A}.Debug|x86.ActiveCfg = Debug|x86
+		{A86A7479-1250-4105-A206-EFC34833BE8A}.Debug|x86.Build.0 = Debug|x86
+		{A86A7479-1250-4105-A206-EFC34833BE8A}.Release|Any CPU.ActiveCfg = Release|x86
+		{A86A7479-1250-4105-A206-EFC34833BE8A}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{A86A7479-1250-4105-A206-EFC34833BE8A}.Release|Mixed Platforms.Build.0 = Release|x86
+		{A86A7479-1250-4105-A206-EFC34833BE8A}.Release|x86.ActiveCfg = Release|x86
+		{A86A7479-1250-4105-A206-EFC34833BE8A}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -213,5 +225,6 @@ Global
 		{A6950CEA-20E9-4949-A49C-8064ED2D1D4A} = {479BCF5C-B1BF-4480-ABDE-40F4E42722A5}
 		{41293C99-6A34-413C-858D-F4E4C919F279} = {84AE5719-A57A-4438-A051-43AA5A041CEE}
 		{4CDBA490-8CC3-42C8-9CF8-0D736CC8F7E6} = {7D9867F2-E0A0-4ADE-99F9-43CEF3C4816E}
+		{A86A7479-1250-4105-A206-EFC34833BE8A} = {84AE5719-A57A-4438-A051-43AA5A041CEE}
 	EndGlobalSection
 EndGlobal
