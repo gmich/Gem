@@ -11,6 +11,7 @@ namespace Gem.AI.BehaviorTree.Leaves
 
         public PredicateLeaf(Predicate<AIContext> behaviorTest)
         {
+            behaviorResult = BehaviorResult.Running;
             this.behaviorTest = behaviorTest;
         }
 
@@ -21,11 +22,6 @@ namespace Gem.AI.BehaviorTree.Leaves
 
         public BehaviorResult Behave(AIContext context)
         {
-            if (behaviorResult != BehaviorResult.Running)
-            {
-                return InvokeAndReturn();
-            }
-
             var behaviorTestResult = behaviorTest(context);
             behaviorResult = behaviorTestResult ?
                 BehaviorResult.Success : BehaviorResult.Failure;

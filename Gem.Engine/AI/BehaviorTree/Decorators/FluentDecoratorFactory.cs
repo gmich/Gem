@@ -1,4 +1,6 @@
-﻿namespace Gem.AI.BehaviorTree.Decorators
+﻿using System;
+
+namespace Gem.AI.BehaviorTree.Decorators
 {
     public sealed class DecorateFor
     {
@@ -7,9 +9,9 @@
             return new Succeeder<AIContext>(decoratedNode);
         }
 
-        public static IBehaviorNode<AIContext> RepeatingUntilFailure<AIContext>(IBehaviorNode<AIContext> decoratedNode)
+        public static IBehaviorNode<AIContext> RepeatingUntilFailure<AIContext>(Func<IBehaviorNode<AIContext>> decoratedNodeFactory)
         {
-            return new RepeatUntilFailure<AIContext>(decoratedNode);
+            return new RepeatUntilFailure<AIContext>(decoratedNodeFactory);
         }
     }
     

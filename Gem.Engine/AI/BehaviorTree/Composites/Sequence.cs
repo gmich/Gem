@@ -10,14 +10,19 @@ namespace Gem.AI.BehaviorTree.Composites
     /// <typeparam name="AIContext">The context to act upon</typeparam>
     public class Sequence<AIContext> : IComposite<AIContext>
     {
-        private readonly Stack<IBehaviorNode<AIContext>> pendingNodes;
         private readonly IBehaviorNode<AIContext>[] nodes;
+        private Stack<IBehaviorNode<AIContext>> pendingNodes;
         private BehaviorResult behaviorResult;
         public event EventHandler OnBehaved;
 
         public Sequence(IBehaviorNode<AIContext>[] nodes)
         {
             this.nodes = nodes;
+            pendingNodes = new Stack<IBehaviorNode<AIContext>>(nodes.Reverse());
+        }
+
+        public void Reset()
+        {
             pendingNodes = new Stack<IBehaviorNode<AIContext>>(nodes.Reverse());
         }
 

@@ -10,8 +10,8 @@ namespace Gem.AI.BehaviorTree.Composites
     /// <typeparam name="AIContext">The context to act upon</typeparam>
     public class Selector<AIContext> :  IComposite<AIContext>
     {
-        private readonly Stack<IBehaviorNode<AIContext>> pendingNodes;
         private readonly IBehaviorNode<AIContext>[] nodes;
+        private Stack<IBehaviorNode<AIContext>> pendingNodes;
         private BehaviorResult behaviorResult;
         public event EventHandler OnBehaved;
 
@@ -19,6 +19,11 @@ namespace Gem.AI.BehaviorTree.Composites
         {
             this.nodes = nodes;
             pendingNodes = new Stack<IBehaviorNode<AIContext>>(Enumerable.Reverse(nodes));
+        }
+
+        public void Reset()
+        {
+            pendingNodes = new Stack<IBehaviorNode<AIContext>>(nodes.Reverse());
         }
 
         public string Name { get; set; } = string.Empty;

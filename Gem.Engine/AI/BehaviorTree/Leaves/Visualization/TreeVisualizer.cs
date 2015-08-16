@@ -22,7 +22,10 @@ namespace Gem.AI.BehaviorTree.Visualization
         private readonly int rowHeight = 90;
         private readonly int linkSize = 10;
         private readonly int lineWidth = 2;
+        private readonly float initialRow = 0.5f;
+        private readonly float rowStep = 1.5f;
 
+        private float treeWidth;
         private INodePainter painter;
         private Dictionary<int, List<IBehaviorVirtualizationPiece>> nodeVisualizationInfo;
         private readonly Dictionary<BehaviorResult, Texture2D> BehaviorTextures
@@ -33,6 +36,10 @@ namespace Gem.AI.BehaviorTree.Visualization
                 [BehaviorResult.Running] = null,
             };
         private float nodeWidth;
+
+        public Vector2 TreeSize => new Vector2(
+            treeWidth,
+            ((nodeVisualizationInfo.Count * rowStep) + initialRow) * rowHeight);
 
         #endregion
 
@@ -65,7 +72,6 @@ namespace Gem.AI.BehaviorTree.Visualization
             this.painter = painter;
             var analyzer = new TreeAnalyzer<AIContext>(painter.Paint, root);
             nodeVisualizationInfo = analyzer.AnalyzedTree;
-
             //find the largest name and calculate the node width
             int largestCharacterCount = 0;
             foreach (var noddeInfo in nodeVisualizationInfo.SelectMany(x => x.Value))
@@ -83,7 +89,7 @@ namespace Gem.AI.BehaviorTree.Visualization
                     itemsPerRow = countNodes;
                 }
             }
-            float treeWidth = itemsPerRow * nodeWidth;
+            treeWidth = itemsPerRow * nodeWidth;
             analyzer.SetNodeWidth(nodeWidth + nodeSpan);
             analyzer.SetTreeWidth(treeWidth);
 
@@ -130,7 +136,7 @@ namespace Gem.AI.BehaviorTree.Visualization
 
             var triggeredNode = new TriggeredNodeCover(
                 node,
-                () => new Vector2(node.PositionX, ((node.Row * 1.5f) + 0.5f) * rowHeight),
+                () => new Vector2(node.PositionX, ((node.Row * rowStep) + initialRow) * rowHeight),
                 2.0d,
                 painter.Triggered);
             triggeredNodes.Add(triggeredNode);
@@ -141,12 +147,9 @@ namespace Gem.AI.BehaviorTree.Visualization
             int largestCharacterCount = currentLargest;
             if (node != null)
             {
-                int nameCharacterCount = node.Name.Count();
-                if (nameCharacterCount > largestCharacterCount)
-                {
-                    largestCharacterCount = nameCharacterCount;
-                }
-
+                largestCharacterCount = Math.Max(
+                            Math.Max(node.Name.Count(), currentLargest),
+                            node.BehaviorType.Count());
             }
             return largestCharacterCount;
         }
@@ -220,8 +223,7 @@ namespace Gem.AI.BehaviorTree.Visualization
                 SpriteEffects.None,
                 0.25f);
         }
-
-        private void RenderNodeIcon(SpriteBatch batch, Vector2 position, BehaviorResult? result)
+        private void DrawNodeIcon(SpriteBatch batch, Vector2 position, BehaviorResult? result)
         {
             if (result == null) return;
 
@@ -299,7 +301,7 @@ namespace Gem.AI.BehaviorTree.Visualization
         }
         public void RenderTree(SpriteBatch batch)
         {
-            float row = 0.5f;
+            float row = initialRow;
             foreach (var treeRow in nodeVisualizationInfo.Values)
             {
                 Vector2 linkLocation = Vector2.Zero;
@@ -311,7 +313,7 @@ namespace Gem.AI.BehaviorTree.Visualization
                         node = nodeInfo as RenderedNode;
                         var nodePosition = new Vector2(node.PositionX, rowHeight * (row));
 
-                        RenderNodeIcon(batch, nodePosition, node.BehaviorStatus);
+                        DrawNodeIcon(batch, nodePosition, node.BehaviorStatus);
                         DrawNodeBackground(batch, nodePosition, painter.NodeBackground, (int)nodeWidth, rowHeight);
                         if (linkLocation != Vector2.Zero)
                         {
@@ -322,11 +324,11 @@ namespace Gem.AI.BehaviorTree.Visualization
                     else
                     {
                         var link = nodeInfo as LinkBase;
-                        linkLocation = new Vector2(link.PositionX, rowHeight * (row - 0.5f));
+                        linkLocation = new Vector2(link.PositionX, rowHeight * (row - initialRow));
                         DrawLink(batch, linkLocation, painter.Link, linkSize);
                     }
                 }
-                row += 1.5f;
+                row += rowStep;
             }
 
             foreach (var triggeredNode in triggeredNodes)
