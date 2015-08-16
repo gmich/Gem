@@ -13,30 +13,30 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
         public WalkBehavior()
         {
             IBehaviorNode<BehaviorContext> checkNextTile
-                = new PredicateLeaf<BehaviorContext>(
+                = new Question<BehaviorContext>(
                  context => context.Level.NextTile is EmptyTile);
-            checkNextTile.Name = "is tile safe?";
+            checkNextTile.Name = "is tile free?";
 
             IBehaviorNode<BehaviorContext> foundKey
-                = new PredicateLeaf<BehaviorContext>(
+                = new Question<BehaviorContext>(
                  context => context.Level.Map[context.Level.PlayerPosition + 1] is Key);
             foundKey.Name = "found key?";
 
             IBehaviorNode<BehaviorContext> foundDoor
-                = new PredicateLeaf<BehaviorContext>(
+                = new Question<BehaviorContext>(
                  context => context.Level.Map[context.Level.PlayerPosition + 1] is Door);
             foundDoor.Name = "found door?";
 
             IBehaviorNode<BehaviorContext> doIHaveKey
-            = new PredicateLeaf<BehaviorContext>(context => context.Level.HaveKey);
+            = new Question<BehaviorContext>(context => context.Level.HaveKey);
             doIHaveKey.Name = "do i if have key?";
 
             IBehaviorNode<BehaviorContext> doIHaveEmptySpace
-                = new PredicateLeaf<BehaviorContext>(context => !context.Level.HaveKey);
+                = new Question<BehaviorContext>(context => !context.Level.HaveKey);
             doIHaveEmptySpace.Name = "can i pick it up?";
 
             IBehaviorNode<BehaviorContext> pickKeyUp
-                = new ActionLeaf<BehaviorContext>(
+                = new Behavior<BehaviorContext>(
                  context =>
                  {
                      context.Level.HaveKey = true;
@@ -46,19 +46,19 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
             pickKeyUp.Name = "pick key up";
 
             IBehaviorNode<BehaviorContext> walk
-                = new ActionLeaf<BehaviorContext>(context =>
+                = new Behavior<BehaviorContext>(context =>
                 context.Level.MovePlayer(1) ?
                 BehaviorResult.Success : BehaviorResult.Failure);
             walk.Name = "move 1 step";
 
             IBehaviorNode<BehaviorContext> skipKey
-                = new ActionLeaf<BehaviorContext>(context =>
+                = new Behavior<BehaviorContext>(context =>
                 context.Level.MovePlayer(1) ?
                 BehaviorResult.Success : BehaviorResult.Failure);
                         skipKey.Name = "skip key";
 
             IBehaviorNode<BehaviorContext> unlockDoor
-                = new ActionLeaf<BehaviorContext>(context =>
+                = new Behavior<BehaviorContext>(context =>
                 {
                     context.Level.Map[context.Level.PlayerPosition + 1] = new EmptyTile();
                     context.Level.HaveKey = false;
@@ -67,7 +67,7 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
             unlockDoor.Name = "unlock door";
 
             IBehaviorNode<BehaviorContext> goBack
-                = new ActionLeaf<BehaviorContext>(context =>
+                = new Behavior<BehaviorContext>(context =>
                 {
                     context.Level.MovePlayer(-1);
                     return BehaviorResult.Success;
@@ -75,12 +75,12 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
             goBack.Name = "go back";
 
             IBehaviorNode<BehaviorContext> isPreviousNodeKey
-                = new PredicateLeaf<BehaviorContext>(
+                = new Question<BehaviorContext>(
                  context => context.Level.Map[context.Level.PlayerPosition - 1] is Key);
             isPreviousNodeKey.Name = "found key?";
 
             IBehaviorNode<BehaviorContext> pickFoundKeyUp
-            = new ActionLeaf<BehaviorContext>(
+            = new Behavior<BehaviorContext>(
              context =>
              {
                  context.Level.HaveKey = true;
@@ -90,14 +90,13 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
             pickFoundKeyUp.Name = "pick key up";
 
             var findKeySequence = new Sequence<BehaviorContext>(new[] { goBack, isPreviousNodeKey, pickFoundKeyUp });
-            findKeySequence.Name = "search for a key";
+            findKeySequence.Name = "find key";
 
             var repeatUntiFoundAKey = DecorateFor.RepeatingUntilSuccess(() =>
             {
                 findKeySequence.Reset();
                 return findKeySequence;
             });
-            repeatUntiFoundAKey.Name = "repeat until";
             
             var pickupKeySequence = new Sequence<BehaviorContext>(new[] { doIHaveEmptySpace, pickKeyUp });
             pickupKeySequence.Name = "try pick up";
@@ -125,10 +124,9 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
                move.Reset();
                return move;
            });
-            repeater.Name = "move forward";
 
             Behavior = new Selector<BehaviorContext>(new[] { repeater, keySequence, doorSequence });
-            Behavior.Name = "walk";
+            Behavior.Name = "move to end";
         }
     }
 }

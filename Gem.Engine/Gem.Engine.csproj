@@ -58,9 +58,9 @@
     <Compile Include="AI\BehaviorTree\Decorators\Inverter.cs" />
     <Compile Include="AI\BehaviorTree\Decorators\RepeatUntilFailure.cs" />
     <Compile Include="AI\BehaviorTree\IBehaviorNode.cs" />
-    <Compile Include="AI\BehaviorTree\Leaves\ActionLeaf.cs" />
+    <Compile Include="AI\BehaviorTree\Leaves\Behavior.cs" />
     <Compile Include="AI\BehaviorTree\Leaves\ILeaf.cs" />
-    <Compile Include="AI\BehaviorTree\Leaves\PredicateLeaf.cs" />
+    <Compile Include="AI\BehaviorTree\Leaves\Question.cs" />
     <Compile Include="AI\BehaviorTree\Visualization\IVirtualizationItem.cs" />
     <Compile Include="AI\BehaviorTree\Visualization\NodeStatusIcon.cs" />
     <Compile Include="AI\BehaviorTree\Visualization\TriggeredNodeCover.cs" />

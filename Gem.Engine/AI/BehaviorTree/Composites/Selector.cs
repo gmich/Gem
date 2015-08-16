@@ -5,7 +5,7 @@ using System.Linq;
 namespace Gem.AI.BehaviorTree.Composites
 {
     /// <summary>
-    /// Iterates BehaviorNodes in sequence and terminates upon failure. Behaves like the logical AND operator
+    /// Selector. Iterates BehaviorNodes in sequence and terminates upon failure. Behaves like the logical AND operator
     /// </summary>
     /// <typeparam name="AIContext">The context to act upon</typeparam>
     public class Selector<AIContext> :  IComposite<AIContext>

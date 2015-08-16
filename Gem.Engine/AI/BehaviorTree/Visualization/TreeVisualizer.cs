@@ -19,7 +19,7 @@ namespace Gem.AI.BehaviorTree.Visualization
         private readonly List<IVirtualizationItem> virtualizationItems = new List<IVirtualizationItem>();
 
         private readonly float nodeSpan = 20.0f;
-        private readonly int rowHeight = 90;
+        private readonly int rowHeight = 70;
         private readonly int linkSize = 10;
         private readonly int lineWidth = 2;
         private readonly float initialRow = 0.5f;
@@ -78,7 +78,7 @@ namespace Gem.AI.BehaviorTree.Visualization
             {
                 largestCharacterCount = CountLargestNameCharacters(noddeInfo as RenderedNode, largestCharacterCount);
             }
-            nodeWidth = CalculateNodeWidth(largestCharacterCount + 2);
+            nodeWidth = CalculateNodeWidth(largestCharacterCount + 3);
 
             int itemsPerRow = 1;
             foreach (var node in nodeVisualizationInfo.Values)
@@ -274,9 +274,9 @@ namespace Gem.AI.BehaviorTree.Visualization
             var nodeNameSize = StringSize(nodeName);
             var nodeTypeSize = StringSize(nodeType);
 
-            DrawString(batch, nodePosition - new Vector2(nodeTypeSize.X / 2, 0), nodeType, painter.NodeBehaviorType);
+            DrawString(batch, nodePosition - new Vector2(nodeTypeSize.X / 2, -rowHeight / 2), nodeType, painter.NodeBehaviorType);
             DrawNodeBackground(batch, nodePosition, painter.NodeTitleBackground, (int)nodeWidth, (int)nodeTypeSize.Y, 0.11f);
-            DrawString(batch, nodePosition - new Vector2(nodeNameSize.X / 2, -rowHeight / 2), nodeName, painter.NodeName);
+            DrawString(batch, nodePosition - new Vector2(nodeNameSize.X / 2, 0), nodeName, painter.NodeName);
         }
 
         public void Update(double timeDelta)

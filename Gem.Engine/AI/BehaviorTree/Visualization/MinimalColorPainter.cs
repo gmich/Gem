@@ -24,10 +24,10 @@ namespace Gem.AI.BehaviorTree.Visualization
         { get; set; } = new Color(52, 73, 94);
 
         public Color NodeName
-        { get; set; } = new Color(153, 153, 103);
+        { get; set; } = new Color(204, 204, 154);
 
         public Color NodeBehaviorType
-        { get; set; } = new Color(204, 204, 154);
+        { get; set; } = new Color(153, 153, 103);
 
         public void Paint<AIContext>(IBehaviorVirtualizationPiece piece, IBehaviorNode<AIContext> node)
         {

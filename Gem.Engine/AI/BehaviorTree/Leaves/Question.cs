@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace Gem.AI.BehaviorTree.Leaves
 {
-    public class PredicateLeaf<AIContext> : ILeaf<AIContext>
+    public class Question<AIContext> : ILeaf<AIContext>
     {
         private readonly Predicate<AIContext> behaviorTest;
         private BehaviorResult behaviorResult;
         public event EventHandler OnBehaved;
 
-        public PredicateLeaf(Predicate<AIContext> behaviorTest)
+        public Question(Predicate<AIContext> behaviorTest)
         {
             behaviorResult = BehaviorResult.Running;
             this.behaviorTest = behaviorTest;

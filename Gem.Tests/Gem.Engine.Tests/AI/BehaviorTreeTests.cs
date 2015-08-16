@@ -22,20 +22,20 @@ namespace Gem.Engine.Tests.AI
             {
                 int step = 0;
 
-                var walk = new ActionLeaf<AIContext>(
+                var walk = new Behavior<AIContext>(
                 context => CheckTarget(step = context.InitialStep, context.Target, sw.WriteLine),
                 context => CheckTarget(++step, context.Target, sw.WriteLine))
                 .TraceAs("Walk Action", sw.WriteLine);
 
-                var unlockDoor = new ActionLeaf<AIContext>(
+                var unlockDoor = new Behavior<AIContext>(
                 context => context.CanUnlock ? BehaviorResult.Success : BehaviorResult.Failure)
                 .TraceAs("Unlock Door Action", sw.WriteLine);
 
-                var breakDoor = new ActionLeaf<AIContext>(
+                var breakDoor = new Behavior<AIContext>(
                context => BehaviorResult.Success)
                .TraceAs("Break Door Action", sw.WriteLine);
 
-                var closeDoor = new ActionLeaf<AIContext>(
+                var closeDoor = new Behavior<AIContext>(
                 context => BehaviorResult.Failure)
                 .TraceAs("Close Door Action", sw.WriteLine);
 

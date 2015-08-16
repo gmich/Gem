@@ -14,28 +14,28 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
         {
             int step = 0;
 
-            var walk = new ActionLeaf<AIContext>(
+            var walk = new Behavior<AIContext>(
             context => CheckTarget(step = context.InitialStep, context.Target),
             context => CheckTarget(++step, context.Target));
             walk.Name = "walk";
 
-            var unlockDoor = new ActionLeaf<AIContext>(
+            var unlockDoor = new Behavior<AIContext>(
             context => context.CanUnlock ? BehaviorResult.Success : BehaviorResult.Failure);
             unlockDoor.Name = "unlock door";
 
-            var breakDoor = new ActionLeaf<AIContext>(
+            var breakDoor = new Behavior<AIContext>(
            context => BehaviorResult.Success);
             breakDoor.Name = "break door";
 
-            var closeDoor = new ActionLeaf<AIContext>(
+            var closeDoor = new Behavior<AIContext>(
             context => BehaviorResult.Failure);
             closeDoor.Name = "close door";
 
-            var checkIfDoorIsCLosed = new PredicateLeaf<AIContext>(
+            var checkIfDoorIsCLosed = new Question<AIContext>(
             context => false);
             checkIfDoorIsCLosed.Name = "is door closed?";
 
-            var lockDoor = new ActionLeaf<AIContext>(
+            var lockDoor = new Behavior<AIContext>(
             context => BehaviorResult.Success);
             lockDoor.Name = "lock door";
 

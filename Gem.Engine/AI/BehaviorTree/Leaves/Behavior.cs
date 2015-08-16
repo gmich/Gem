@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace Gem.AI.BehaviorTree.Leaves
 {
-    public class ActionLeaf<AIContext> : ILeaf<AIContext>
+    public class Behavior<AIContext> : ILeaf<AIContext>
     {
         private Func<AIContext, BehaviorResult> behaveDelegate;
         public event EventHandler OnBehaved;
 
-        public ActionLeaf(Func<AIContext, BehaviorResult> processedBehavior)
+        public Behavior(Func<AIContext, BehaviorResult> processedBehavior)
         {
             behaveDelegate = processedBehavior;
         }
@@ -16,7 +16,7 @@ namespace Gem.AI.BehaviorTree.Leaves
         public IEnumerable<IBehaviorNode<AIContext>> SubNodes
         { get { yield break; } }
 
-        public ActionLeaf(Func<AIContext, BehaviorResult> initialBehavior,
+        public Behavior(Func<AIContext, BehaviorResult> initialBehavior,
                           Func<AIContext, BehaviorResult> processedBehavior)
         {
             behaveDelegate = context =>

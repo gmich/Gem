@@ -28,8 +28,8 @@ namespace Gem.Engine.BehaviorTreeVisualization
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            graphics.PreferredBackBufferHeight = 900;
-            graphics.PreferredBackBufferWidth = 1400;
+            graphics.PreferredBackBufferHeight = 715;
+            graphics.PreferredBackBufferWidth = 1420;
             graphics.ApplyChanges();
         }
 
@@ -92,8 +92,8 @@ namespace Gem.Engine.BehaviorTreeVisualization
 
             spriteBatch.Begin();
             spriteBatch.Draw(background, GraphicsDevice.Viewport.Bounds, new Color(236, 240, 241));
-            spriteBatch.Draw(renderer.Target, new Vector2(-200, -15), Color.White);
-            level.Draw(spriteBatch, new Vector2(50, 825));
+            spriteBatch.Draw(renderer.Target, new Vector2(-220, -15), Color.White);
+            level.Draw(spriteBatch, new Vector2(60, 645));
             spriteBatch.End();
             base.Draw(gameTime);
         }
