@@ -3,11 +3,10 @@ using System.Collections.Generic;
 
 namespace Gem.AI.BehaviorTree.Decorators
 {
-    public class RepeatUntilFailure<AIContext> : IBehaviorNode<AIContext>
+    public class RepeatUntilFailure<AIContext> : IDecorator<AIContext>
     {
         private readonly IBehaviorNode<AIContext> decoratedNode;
         private BehaviorResult behaviorResult;
-
         public event EventHandler OnBehaved;
 
         public RepeatUntilFailure(IBehaviorNode<AIContext> decoratedNode)
@@ -21,14 +20,17 @@ namespace Gem.AI.BehaviorTree.Decorators
 
         public BehaviorResult Behave(AIContext context)
         {
-            OnBehaved?.Invoke(this, new BehaviorInvokationEventArgs());
-            if (behaviorResult == BehaviorResult.Failure)
+            if (behaviorResult != BehaviorResult.Failure)
             {
-                return behaviorResult;
+                behaviorResult = decoratedNode.Behave(context);
             }
+            return InvokeAndReturn();
+        }
 
-            return (behaviorResult = decoratedNode.Behave(context));
-
+        public BehaviorResult InvokeAndReturn()
+        {
+            OnBehaved?.Invoke(this, new BehaviorInvokationEventArgs(behaviorResult));
+            return behaviorResult;
         }
     }
 }

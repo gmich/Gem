@@ -8,7 +8,7 @@ namespace Gem.AI.BehaviorTree.Composites
     /// Iterates BehaviorNodes in sequence and terminates upon failure. Behaves like the logical AND operator
     /// </summary>
     /// <typeparam name="AIContext">The context to act upon</typeparam>
-    public class Selector<AIContext> : IBehaviorNode<AIContext>
+    public class Selector<AIContext> :  IComposite<AIContext>
     {
         private readonly Stack<IBehaviorNode<AIContext>> pendingNodes;
         private readonly IBehaviorNode<AIContext>[] nodes;
@@ -18,7 +18,7 @@ namespace Gem.AI.BehaviorTree.Composites
         public Selector(IBehaviorNode<AIContext>[] nodes)
         {
             this.nodes = nodes;
-            pendingNodes = new Stack<IBehaviorNode<AIContext>>(nodes.Reverse());
+            pendingNodes = new Stack<IBehaviorNode<AIContext>>(Enumerable.Reverse(nodes));
         }
 
         public string Name { get; set; } = string.Empty;
@@ -30,9 +30,9 @@ namespace Gem.AI.BehaviorTree.Composites
 
         public BehaviorResult Behave(AIContext context)
         {
-            OnBehaved?.Invoke(this, new BehaviorInvokationEventArgs());
             if (HasProcessedAllNodes)
             {
+                OnBehaved?.Invoke(this, new BehaviorInvokationEventArgs(behaviorResult));
                 return behaviorResult;
             }
 
@@ -49,6 +49,7 @@ namespace Gem.AI.BehaviorTree.Composites
                     pendingNodes.Clear();
                     break;
             }
+            OnBehaved?.Invoke(this, new BehaviorInvokationEventArgs(BehaviorResult.Running));
             return BehaviorResult.Running;
         }
 

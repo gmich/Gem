@@ -21,10 +21,7 @@ namespace Gem.AI.BehaviorTree.Visualization
                 return position();
             }
         }
-
-
-        public Color Color { get; set; }
-
+        
         public RenderedNode LinkedNode { get; }
 
         public int NodeCount { get; }

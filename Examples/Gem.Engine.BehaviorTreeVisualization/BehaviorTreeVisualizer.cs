@@ -18,6 +18,10 @@ namespace Gem.Engine.BehaviorTreeVisualization
         private SpriteBatch spriteBatch;
         private IBehaviorNode<AIContext> goToRoom;
         private TreeVisualizer visualizer;
+        private Texture2D background;
+        private readonly AIContext context = new AIContext();
+        private readonly double timeToBehave = 1.0d;
+        private double timePassed = 0.0d;
 
         public BehaviorTreeVisualizer()
         {
@@ -26,7 +30,7 @@ namespace Gem.Engine.BehaviorTreeVisualization
             SetupBehavior();
 
             graphics.PreferredBackBufferHeight = 480;
-            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferWidth = 900;
             graphics.ApplyChanges();
         }
 
@@ -53,18 +57,19 @@ namespace Gem.Engine.BehaviorTreeVisualization
             context => BehaviorResult.Failure);
             closeDoor.Name = "close door";
 
+            var checkIfDoorIsCLosed = new PredicateLeaf<AIContext>(
+            context => true);
+            checkIfDoorIsCLosed.Name = "is door closed?";
+
+            var lockDoor = new ActionLeaf<AIContext>(
+            context => BehaviorResult.Success);
+            lockDoor.Name = "lock door";
+
             var openDoor = new Selector<AIContext>(new[] { unlockDoor, breakDoor });
             openDoor.Name = "open door";
 
-            goToRoom = new Sequence<AIContext>(new[] { walk, openDoor, DecorateFor.AlwaysSucceeding(closeDoor) });
+            goToRoom = new Sequence<AIContext>(new[] { walk, openDoor, DecorateFor.AlwaysSucceeding(closeDoor), checkIfDoorIsCLosed, lockDoor });
             goToRoom.Name = "go to room";
-
-            var aiContext = new AIContext();
-
-            for (int tick = 0; tick < 50; tick++)
-            {
-                goToRoom.Behave(aiContext);
-            }
 
         }
 
@@ -109,10 +114,16 @@ namespace Gem.Engine.BehaviorTreeVisualization
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             var nodeTexture = Content.Load<Texture2D>(@"Sprites/node");
-
+            var linkTexture = Content.Load<Texture2D>(@"Sprites/link");
+            var lineTexture = Content.Load<Texture2D>(@"Sprites/line");
+            var success = Content.Load<Texture2D>(@"Sprites/success");
+            var failure = Content.Load<Texture2D>(@"Sprites/failure");
+            var running = Content.Load<Texture2D>(@"Sprites/running");
             var nodeFont = Content.Load<SpriteFont>(@"Fonts/nodeFont");
-            visualizer = new TreeVisualizer(nodeTexture, nodeTexture, nodeTexture,nodeFont);
-            visualizer.Prepare(goToRoom);
+            background = Content.Load<Texture2D>(@"Sprites/treeBackground");
+
+            visualizer = new TreeVisualizer(nodeTexture, lineTexture, linkTexture, running, success, failure ,nodeFont);
+            visualizer.Prepare(new MinimalColorPainter(), goToRoom);
 
         }
 
@@ -136,7 +147,15 @@ namespace Gem.Engine.BehaviorTreeVisualization
                 Exit();
 
             // TODO: Add your update logic here
+            visualizer.Update(gameTime.ElapsedGameTime.TotalSeconds);
 
+            timePassed += gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (timePassed >= timeToBehave)
+            {
+                timePassed = 0.0d;
+                goToRoom.Behave(context);
+            }
             base.Update(gameTime);
         }
 
@@ -146,10 +165,11 @@ namespace Gem.Engine.BehaviorTreeVisualization
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(new Color(44, 62, 80));
+            //GraphicsDevice.Clear(new Color(44, 62, 80));
 
-            spriteBatch.Begin(SpriteSortMode.FrontToBack,BlendState.AlphaBlend);
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
 
+            spriteBatch.Draw(background, GraphicsDevice.Viewport.Bounds, new Color(236, 240, 241));
             visualizer.RenderTree(spriteBatch);
 
             spriteBatch.End();

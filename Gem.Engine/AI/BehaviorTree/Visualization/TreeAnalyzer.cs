@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System;
 
@@ -21,17 +20,23 @@ namespace Gem.AI.BehaviorTree.Visualization
         private Func<float> TreeWidth => () => treeWidth;
         private Func<float> NodeWidth => () => nodeWidth;
 
+        private readonly Action<IBehaviorVirtualizationPiece, IBehaviorNode<AIContext>> onAddAction;
+
         #endregion
 
         #region Ctor
 
-        public TreeAnalyzer(IBehaviorNode<AIContext> root)
+        public TreeAnalyzer(Action<IBehaviorVirtualizationPiece,IBehaviorNode<AIContext>> onAddAction,
+                            IBehaviorNode<AIContext> root)
         {
+            this.onAddAction = onAddAction;
             string nodeType = root.GetType().Name;
             var rootInfo = new RenderedNode(
                         nodeType.Substring(0, nodeType.Count() - 2),
-                   root.Name,
-                   () => AlignRelativeTo(() => TreeWidth() / 2, NodeWidth(), 1, 0));
+                        0,
+                        root.Name,
+                        () => AlignRelativeTo(() => TreeWidth() / 2, NodeWidth(), 1, 0,0));
+            onAddAction(rootInfo, root);
 
             nodeVisualizationInfo.Add(0,
                new List<IBehaviorVirtualizationPiece>(new[] { rootInfo }));
@@ -54,7 +59,7 @@ namespace Gem.AI.BehaviorTree.Visualization
                     () => TreeWidth(),
                     () => NodeWidth(),
                     linkPositionX,
-                    subNodes.Count()+1,
+                    subNodes.Count() + 1,
                     nodeIndex,
                     1);
             }
@@ -87,10 +92,11 @@ namespace Gem.AI.BehaviorTree.Visualization
         {
             string nodeType = node.GetType().Name;
             var nodeInfo = new RenderedNode(
-                        nodeType.Substring(0,nodeType.Count()-2),
+                        nodeType.Substring(0, nodeType.Count() - 2),
+                        depth,
                         node.Name,
-                        () => AlignRelativeTo(() => linkX(), nodeWidth(), nodeCount, column));
-
+                        () => AlignRelativeTo(() => linkX(), nodeWidth(), nodeCount, column,depth));
+            onAddAction(nodeInfo, node);
             nodeVisualizationInfo[depth].Add(nodeInfo);
 
             var subNodes = node.SubNodes.ToArray();
@@ -103,7 +109,7 @@ namespace Gem.AI.BehaviorTree.Visualization
                     var newLink = new LinkBase(nodeInfo, linkPositionX, subNodes.Count());
                     if (nodeVisualizationInfo.ContainsKey(depth + 1))
                     {
-                        nodeVisualizationInfo[depth+1].Add(newLink);
+                        nodeVisualizationInfo[depth + 1].Add(newLink);
                     }
                     else
                     {
@@ -117,16 +123,24 @@ namespace Gem.AI.BehaviorTree.Visualization
                     () => NodeWidth() * (subNodes.Count()),
                     () => NodeWidth(),
                     linkPositionX,
-                    subNodes.Count()+1,
+                    subNodes.Count() + 1,
                     nodeIndex,
                     depth + 1);
             }
         }
 
-
-        private float AlignRelativeTo(Func<float> relativeX, float nodeWidth, int nodeCount, int column)
+        private float AlignRelativeTo(Func<float> relativeX, float nodeWidth, int nodeCount, int column, int row)
         {
-            return relativeX() - (((nodeWidth) * nodeCount) / 2) + ((nodeWidth) * (column+1));
+            var position = relativeX() - (((nodeWidth) * nodeCount) / 2) + ((nodeWidth) * (column + 1));
+
+            if (column > 0)
+            {
+                if (nodeVisualizationInfo[row][column].PositionX + nodeWidth > position)
+                {
+                    position += (nodeVisualizationInfo[row][column].PositionX+nodeWidth - position);
+                }
+            }
+            return position;
         }
 
         #endregion

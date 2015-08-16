@@ -8,7 +8,7 @@ namespace Gem.AI.BehaviorTree.Composites
     /// Iterates BehaviorNodes terminates when a node succeeds. Behaves like the logical OR operator
     /// </summary>
     /// <typeparam name="AIContext">The context to act upon</typeparam>
-    public class Sequence<AIContext> : IBehaviorNode<AIContext>
+    public class Sequence<AIContext> : IComposite<AIContext>
     {
         private readonly Stack<IBehaviorNode<AIContext>> pendingNodes;
         private readonly IBehaviorNode<AIContext>[] nodes;
@@ -18,7 +18,7 @@ namespace Gem.AI.BehaviorTree.Composites
         public Sequence(IBehaviorNode<AIContext>[] nodes)
         {
             this.nodes = nodes;
-            pendingNodes = new Stack<IBehaviorNode<AIContext>>(nodes);
+            pendingNodes = new Stack<IBehaviorNode<AIContext>>(nodes.Reverse());
         }
 
         private bool HasProcessedAllNodes => pendingNodes.Count == 0;
@@ -30,9 +30,9 @@ namespace Gem.AI.BehaviorTree.Composites
 
         public BehaviorResult Behave(AIContext context)
         {
-            OnBehaved?.Invoke(this, new BehaviorInvokationEventArgs());
             if (HasProcessedAllNodes)
             {
+                OnBehaved?.Invoke(this, new BehaviorInvokationEventArgs(behaviorResult));
                 return behaviorResult;
             }
 
@@ -49,6 +49,7 @@ namespace Gem.AI.BehaviorTree.Composites
                     pendingNodes.Clear();
                     break;
             }
+            OnBehaved?.Invoke(this, new BehaviorInvokationEventArgs(BehaviorResult.Running));
             return BehaviorResult.Running;
         }
     }

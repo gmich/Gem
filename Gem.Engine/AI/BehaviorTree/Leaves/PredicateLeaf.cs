@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Gem.AI.BehaviorTree.Leaves
 {
-    public class PredicateLeaf<AIContext> : IBehaviorNode<AIContext>
+    public class PredicateLeaf<AIContext> : ILeaf<AIContext>
     {
         private readonly Predicate<AIContext> behaviorTest;
         private BehaviorResult behaviorResult;
@@ -21,16 +21,21 @@ namespace Gem.AI.BehaviorTree.Leaves
 
         public BehaviorResult Behave(AIContext context)
         {
-            OnBehaved?.Invoke(this, new BehaviorInvokationEventArgs());
             if (behaviorResult != BehaviorResult.Running)
             {
-                return behaviorResult;
+                return InvokeAndReturn();
             }
 
             var behaviorTestResult = behaviorTest(context);
             behaviorResult = behaviorTestResult ?
                 BehaviorResult.Success : BehaviorResult.Failure;
 
+            return InvokeAndReturn();
+        }
+
+        private BehaviorResult InvokeAndReturn()
+        {
+            OnBehaved?.Invoke(this, new BehaviorInvokationEventArgs(behaviorResult));
             return behaviorResult;
         }
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Gem.Infrastructure;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -15,30 +16,54 @@ namespace Gem.AI.BehaviorTree.Visualization
         private readonly Texture2D linkTexture;
         private readonly Texture2D nodeBackgroundTexture;
         private readonly SpriteFont nodeInfoFont;
+        private readonly List<TriggeredNodeCover> triggeredNodes = new List<TriggeredNodeCover>();
+
+        private readonly float nodeSpan = 20.0f;
+        private readonly int rowHeight = 90;
+        private readonly int linkSize = 10;
+        private readonly int lineWidth = 2;
+
+        private INodePainter painter;
         private Dictionary<int, List<IBehaviorVirtualizationPiece>> nodeVisualizationInfo;
+        private readonly Dictionary<BehaviorResult, Texture2D> BehaviorTextures
+            = new Dictionary<BehaviorResult, Texture2D>
+            {
+                [BehaviorResult.Failure] = null,
+                [BehaviorResult.Success] = null,
+                [BehaviorResult.Running] = null,
+            };
         private float nodeWidth;
-        private float nodeSpan = 20.0f;
-        private int nodeHeight = 70;
 
         #endregion
 
         #region Ctor
 
-        public TreeVisualizer(Texture2D nodeBackgroundTexture, Texture2D lineTexture, Texture2D linkTexture, SpriteFont nodeInfoFont)
+        public TreeVisualizer(
+            Texture2D nodeBackgroundTexture,
+            Texture2D lineTexture,
+            Texture2D linkTexture,
+            Texture2D running,
+            Texture2D success,
+            Texture2D failure,
+            SpriteFont nodeInfoFont)
         {
             this.nodeBackgroundTexture = nodeBackgroundTexture;
             this.lineTexture = lineTexture;
             this.linkTexture = linkTexture;
             this.nodeInfoFont = nodeInfoFont;
+            BehaviorTextures[BehaviorResult.Failure] = failure;
+            BehaviorTextures[BehaviorResult.Success] = success;
+            BehaviorTextures[BehaviorResult.Running] = running;
         }
 
         #endregion
 
         #region Prepare Tree 
 
-        public void Prepare<AIContext>(IBehaviorNode<AIContext> root)
+        public void Prepare<AIContext>(INodePainter painter, IBehaviorNode<AIContext> root)
         {
-            var analyzer = new TreeAnalyzer<AIContext>(root);
+            this.painter = painter;
+            var analyzer = new TreeAnalyzer<AIContext>(painter.Paint, root);
             nodeVisualizationInfo = analyzer.AnalyzedTree;
 
             //find the largest name and calculate the node width
@@ -79,6 +104,7 @@ namespace Gem.AI.BehaviorTree.Visualization
                     else
                     {
                         var node = (nodeInfo as RenderedNode);
+                        node.onTriggered += (sender, args) => AddBehaviorCover(sender as RenderedNode, args);
                         if (nodesIterated == 0 && lastPositionX != 0)
                         {
                             if (lastPositionX > node.PositionX)
@@ -91,6 +117,23 @@ namespace Gem.AI.BehaviorTree.Visualization
                     }
                 }
             }
+        }
+
+        private void AddBehaviorCover(RenderedNode node, EventArgs args)
+        {
+            var alreadyRegisteredNode = triggeredNodes.Where(x => x.Node == node).FirstOrDefault();
+            if (alreadyRegisteredNode != null)
+            {
+                alreadyRegisteredNode.Reset();
+                return;
+            }
+
+            var triggeredNode = new TriggeredNodeCover(
+                node,
+                () => new Vector2(node.PositionX, ((node.Row * 1.5f) + 0.5f) * rowHeight),
+                2.0d,
+                painter.Triggered);
+            triggeredNodes.Add(triggeredNode);
         }
 
         private int CountLargestNameCharacters(RenderedNode node, int currentLargest)
@@ -148,7 +191,7 @@ namespace Gem.AI.BehaviorTree.Visualization
         private void DrawLink(SpriteBatch batch, Vector2 center, Color linkColor, int size)
         {
 
-            batch.Draw(lineTexture,
+            batch.Draw(linkTexture,
                 new Rectangle(
                     (int)center.X - size / 2,
                     (int)center.Y - size / 2,
@@ -162,7 +205,43 @@ namespace Gem.AI.BehaviorTree.Visualization
                 0.2f);
         }
 
-        private void DrawNodeBackground(SpriteBatch batch, Vector2 position, Color nodeBackgroundColor, int sizeX)
+        private void DrawTriggeredNode(SpriteBatch batch, Vector2 position, Color nodeBackgroundColor, int sizeX, int sizeY)
+        {
+            batch.Draw(nodeBackgroundTexture,
+                new Rectangle(
+                    (int)position.X - sizeX / 2,
+                    (int)position.Y,
+                    sizeX,
+                    sizeY),
+                null,
+                nodeBackgroundColor,
+                0.0f,
+                Vector2.Zero,
+                SpriteEffects.None,
+                0.25f);
+        }
+
+        private void RenderNodeIcon(SpriteBatch batch, Vector2 position, BehaviorResult? result)
+        {
+            if (result == null) return;
+
+            var texture = BehaviorTextures[result.Value];
+            batch.Draw(texture,
+            new Rectangle(
+                (int)position.X - texture.Width / 2,
+                (int)position.Y - texture.Height,
+                texture.Width,
+                texture.Height),
+            null,
+            Color.White,
+            0.0f,
+            Vector2.Zero,
+            SpriteEffects.None,
+            0.4f);
+
+        }
+
+        private void DrawNodeBackground(SpriteBatch batch, Vector2 position, Color nodeBackgroundColor, int sizeX, int sizeY, float layer = 0.1f)
         {
 
             batch.Draw(nodeBackgroundTexture,
@@ -170,16 +249,16 @@ namespace Gem.AI.BehaviorTree.Visualization
                     (int)position.X - sizeX / 2,
                     (int)position.Y,
                     sizeX,
-                    nodeHeight),
+                    sizeY),
                 null,
                 nodeBackgroundColor,
                 0.0f,
                 Vector2.Zero,
                 SpriteEffects.None,
-                0.1f);
+                layer);
         }
 
-        private void DrawNodeContent(SpriteBatch batch, Vector2 position, string info, Color color)
+        private void DrawString(SpriteBatch batch, Vector2 position, string info, Color color)
         {
             batch.DrawString(nodeInfoFont,
                             info,
@@ -193,11 +272,34 @@ namespace Gem.AI.BehaviorTree.Visualization
 
         }
 
+        private void DrawNodeContent(RenderedNode node, Vector2 nodePosition, SpriteBatch batch)
+        {
+            string nodeName = node.Name;
+            string nodeType = node.BehaviorType;
+
+            var nodeNameSize = StringSize(nodeName);
+            var nodeTypeSize = StringSize(nodeType);
+
+            DrawString(batch, nodePosition - new Vector2(nodeTypeSize.X / 2, 0), nodeType, painter.NodeBehaviorType);
+            DrawNodeBackground(batch, nodePosition, painter.NodeTitleBackground, (int)nodeWidth, (int)nodeTypeSize.Y, 0.11f);
+            DrawString(batch, nodePosition - new Vector2(nodeNameSize.X / 2, -rowHeight / 2), nodeName, painter.NodeName);
+        }
+
+        public void Update(double timeDelta)
+        {
+            for (int i = 0; i < triggeredNodes.Count; i++)
+            {
+                triggeredNodes[i].Update(timeDelta);
+                if (!triggeredNodes[i].IsActive)
+                {
+                    triggeredNodes.RemoveAt(i);
+                    i++;
+                }
+            }
+        }
         public void RenderTree(SpriteBatch batch)
         {
-            int row = 0;
-            int rowHeight = 50;
-            int linkSize = 10;
+            float row = 0.5f;
             foreach (var treeRow in nodeVisualizationInfo.Values)
             {
                 Vector2 linkLocation = Vector2.Zero;
@@ -207,27 +309,29 @@ namespace Gem.AI.BehaviorTree.Visualization
                     if (node != null)
                     {
                         node = nodeInfo as RenderedNode;
-                        var nodePosition = new Vector2(node.PositionX, rowHeight * (row + 1));
+                        var nodePosition = new Vector2(node.PositionX, rowHeight * (row));
 
-                        DrawNodeBackground(batch, nodePosition, new Color(41, 128, 185), (int)nodeWidth);
+                        RenderNodeIcon(batch, nodePosition, node.BehaviorStatus);
+                        DrawNodeBackground(batch, nodePosition, painter.NodeBackground, (int)nodeWidth, rowHeight);
                         if (linkLocation != Vector2.Zero)
-                            DrawLine(batch, linkLocation, nodePosition, new Color(189, 195, 199), 2);
-
-                        string type = "(" + node.BehaviorType + ")";
-                        var stringTypeSize = StringSize(type);
-                        var stringNameSize = StringSize(node.Name);
-                        DrawNodeContent(batch, nodePosition - new Vector2(stringTypeSize.X / 2, 0), type, new Color(236, 240, 241));
-                        DrawNodeContent(batch, nodePosition - new Vector2(stringNameSize.X / 2, -stringNameSize.Y - 2), node.Name, new Color(189, 195, 199));
-                     
+                        {
+                            DrawLine(batch, linkLocation, nodePosition, painter.Line, lineWidth);
+                        }
+                        DrawNodeContent(node, nodePosition, batch);
                     }
                     else
                     {
                         var link = nodeInfo as LinkBase;
-                        linkLocation = new Vector2(link.PositionX, rowHeight * row + rowHeight / 2);
-                        DrawLink(batch, linkLocation, new Color(236, 240, 241), linkSize);
+                        linkLocation = new Vector2(link.PositionX, rowHeight * (row - 0.5f));
+                        DrawLink(batch, linkLocation, painter.Link, linkSize);
                     }
                 }
-                row += 2;
+                row += 1.5f;
+            }
+
+            foreach (var triggeredNode in triggeredNodes)
+            {
+                DrawTriggeredNode(batch, triggeredNode.Position, triggeredNode.Color, (int)nodeWidth, rowHeight);
             }
         }
 
