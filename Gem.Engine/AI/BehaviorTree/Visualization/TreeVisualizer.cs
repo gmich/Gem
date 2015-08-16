@@ -18,7 +18,7 @@ namespace Gem.AI.BehaviorTree.Visualization
         private Dictionary<int, List<IBehaviorVirtualizationPiece>> nodeVisualizationInfo;
         private float nodeWidth;
         private float nodeSpan = 20.0f;
-        private int nodeHeight = 50;
+        private int nodeHeight = 70;
 
         #endregion
 
@@ -142,7 +142,7 @@ namespace Gem.AI.BehaviorTree.Visualization
                 angle,
                 new Vector2(0, 0),
                 SpriteEffects.None,
-                0);
+                0.0f);
         }
 
         private void DrawLink(SpriteBatch batch, Vector2 center, Color linkColor, int size)
@@ -159,7 +159,7 @@ namespace Gem.AI.BehaviorTree.Visualization
                 0.0f,
                 Vector2.Zero,
                 SpriteEffects.None,
-                0);
+                0.2f);
         }
 
         private void DrawNodeBackground(SpriteBatch batch, Vector2 position, Color nodeBackgroundColor, int sizeX)
@@ -176,7 +176,7 @@ namespace Gem.AI.BehaviorTree.Visualization
                 0.0f,
                 Vector2.Zero,
                 SpriteEffects.None,
-                0);
+                0.1f);
         }
 
         private void DrawNodeContent(SpriteBatch batch, Vector2 position, string info, Color color)
@@ -184,7 +184,12 @@ namespace Gem.AI.BehaviorTree.Visualization
             batch.DrawString(nodeInfoFont,
                             info,
                             position,
-                            color);
+                            color,
+                            0.0f,
+                            Vector2.Zero,
+                            1.0f,
+                            SpriteEffects.None,
+                            0.3f);
 
         }
 
@@ -198,26 +203,28 @@ namespace Gem.AI.BehaviorTree.Visualization
                 Vector2 linkLocation = Vector2.Zero;
                 foreach (var nodeInfo in treeRow)
                 {
-                    var link = nodeInfo as LinkBase;
-                    if (link != null)
+                    var node = nodeInfo as RenderedNode;
+                    if (node != null)
                     {
-                        linkLocation = new Vector2(link.PositionX, rowHeight * row);
-                        DrawLink(batch, linkLocation, Color.Black, linkSize);
+                        node = nodeInfo as RenderedNode;
+                        var nodePosition = new Vector2(node.PositionX, rowHeight * (row + 1));
+
+                        DrawNodeBackground(batch, nodePosition, new Color(41, 128, 185), (int)nodeWidth);
+                        if (linkLocation != Vector2.Zero)
+                            DrawLine(batch, linkLocation, nodePosition, new Color(189, 195, 199), 2);
+
+                        string type = "(" + node.BehaviorType + ")";
+                        var stringTypeSize = StringSize(type);
+                        var stringNameSize = StringSize(node.Name);
+                        DrawNodeContent(batch, nodePosition - new Vector2(stringTypeSize.X / 2, 0), type, new Color(236, 240, 241));
+                        DrawNodeContent(batch, nodePosition - new Vector2(stringNameSize.X / 2, -stringNameSize.Y - 2), node.Name, new Color(189, 195, 199));
+                     
                     }
                     else
                     {
-                        var node = nodeInfo as RenderedNode;
-                        var nodePosition = new Vector2(node.PositionX, rowHeight * (row + 1));
-
-                        DrawNodeBackground(batch, nodePosition, Color.White, (int)nodeWidth);
-                        if (linkLocation != Vector2.Zero)
-                            DrawLine(batch, linkLocation, nodePosition, Color.Black, 2);
-
-                        string type = "(" + node.Type + ")";
-                        var stringTypeSize = StringSize(type);
-                        var stringNameSize = StringSize(node.Name);
-                        DrawNodeContent(batch, nodePosition - new Vector2(stringTypeSize.X / 2, 0), type, Color.Black);
-                        DrawNodeContent(batch, nodePosition - new Vector2(stringNameSize.X / 2, -stringNameSize.Y - 2), node.Name, Color.Black);
+                        var link = nodeInfo as LinkBase;
+                        linkLocation = new Vector2(link.PositionX, rowHeight * row + rowHeight / 2);
+                        DrawLink(batch, linkLocation, new Color(236, 240, 241), linkSize);
                     }
                 }
                 row += 2;

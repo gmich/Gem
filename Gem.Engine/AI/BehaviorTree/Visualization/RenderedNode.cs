@@ -9,10 +9,10 @@ namespace Gem.AI.BehaviorTree.Visualization
     {
         private readonly Func<float> getPosition;
 
-        public RenderedNode(string type, string name, Func<float> getPosition)
+        public RenderedNode(string behaviorType, string name, Func<float> getPosition)
         {
             Name = name;
-            Type = type;
+            BehaviorType = behaviorType;
             this.getPosition = getPosition;
         }
 
@@ -20,7 +20,7 @@ namespace Gem.AI.BehaviorTree.Visualization
 
         public string Name { get; }
 
-        public string Type { get; }
+        public string BehaviorType { get; }
 
         public float PositionX { get { return getPosition() + OffsetX; } }
 

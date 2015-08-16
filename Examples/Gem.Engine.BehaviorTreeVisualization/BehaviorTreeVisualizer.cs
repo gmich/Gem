@@ -25,8 +25,8 @@ namespace Gem.Engine.BehaviorTreeVisualization
             Content.RootDirectory = "Content";
             SetupBehavior();
 
-            graphics.PreferredBackBufferHeight = 900;
-            graphics.PreferredBackBufferWidth = 1600;
+            graphics.PreferredBackBufferHeight = 480;
+            graphics.PreferredBackBufferWidth = 800;
             graphics.ApplyChanges();
         }
 
@@ -146,11 +146,12 @@ namespace Gem.Engine.BehaviorTreeVisualization
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(new Color(44, 62, 80));
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.FrontToBack,BlendState.AlphaBlend);
 
             visualizer.RenderTree(spriteBatch);
+
             spriteBatch.End();
 
             base.Draw(gameTime);
