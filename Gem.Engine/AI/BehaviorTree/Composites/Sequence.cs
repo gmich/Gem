@@ -37,8 +37,7 @@ namespace Gem.AI.BehaviorTree.Composites
         {
             if (HasProcessedAllNodes)
             {
-                OnBehaved?.Invoke(this, new BehaviorInvokationEventArgs(behaviorResult));
-                return behaviorResult;
+                return InvokeAndReturn();
             }
 
             var currentNode = pendingNodes.Pop();

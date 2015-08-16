@@ -90,7 +90,7 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
             pickFoundKeyUp.Name = "pick key up";
 
             var findKeySequence = new Sequence<BehaviorContext>(new[] { goBack, isPreviousNodeKey, pickFoundKeyUp });
-            findKeySequence.Name = "find a key";
+            findKeySequence.Name = "search for a key";
 
             var repeatUntiFoundAKey = DecorateFor.RepeatingUntilSuccess(() =>
             {
@@ -98,8 +98,7 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
                 return findKeySequence;
             });
             repeatUntiFoundAKey.Name = "repeat until";
-
-
+            
             var pickupKeySequence = new Sequence<BehaviorContext>(new[] { doIHaveEmptySpace, pickKeyUp });
             pickupKeySequence.Name = "try pick up";
 
@@ -108,10 +107,9 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
 
             var keySequence = new Sequence<BehaviorContext>(new[] { foundKey, whatToDoWithKey });
             keySequence.Name = "key obstacle";
-
-
+            
             var unlockDoorSequence = new Sequence<BehaviorContext>(new[] { doIHaveKey, unlockDoor });
-            unlockDoorSequence.Name = "unlockDoor";
+            unlockDoorSequence.Name = "try unlock";
 
             var goThroughDoorSelector = new Selector<BehaviorContext>(new[] { unlockDoorSequence, repeatUntiFoundAKey });
             goThroughDoorSelector.Name = "go through door";

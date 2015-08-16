@@ -4,37 +4,35 @@ using System;
 
 namespace Gem.AI.BehaviorTree.Visualization
 {
-    internal class TriggeredNodeCover : IVirtualizationItem
+    internal class NodeStatusIcon : IVirtualizationItem
     {
         private readonly double timeUntilDisposal;
-        private readonly Color color;
         private readonly Func<Vector2> position;
         private double elapsedTime;
 
-        public TriggeredNodeCover(Texture2D texture, RenderedNode node, Func<Vector2> position, double timeUntilDisposal, Color color)
+        public NodeStatusIcon(Texture2D texture, RenderedNode node, Func<Vector2> position, double timeUntilDisposal)
         {
-            Texture = texture;
             Node = node;
+            Texture = texture;
             this.position = position;
             this.timeUntilDisposal = timeUntilDisposal;
-            this.color = color;
         }
 
         public bool IsActive => (elapsedTime <= timeUntilDisposal);
 
         public RenderedNode Node { get; }
 
-        public Texture2D Texture { get; }
-
         public Color Color
         {
-            get { return color * (float)(1 - (elapsedTime / timeUntilDisposal)); }
+            get { return Color.White * (float)(1 - (elapsedTime / timeUntilDisposal)); }
         }
 
         public Vector2 Position
         {
             get { return position(); }
         }
+
+        public Texture2D Texture { get; }
 
         public void Reset()
         {
@@ -49,19 +47,17 @@ namespace Gem.AI.BehaviorTree.Visualization
         public void Draw(SpriteBatch batch, Vector2 position, int sizeX, int sizeY)
         {
             batch.Draw(Texture,
-                new Rectangle(
-                    (int)position.X - sizeX / 2,
-                    (int)position.Y,
-                    sizeX,
-                    sizeY),
-                null,
-                Color,
-                0.0f,
-                Vector2.Zero,
-                SpriteEffects.None,
-                0.25f);
-
+                  new Rectangle(
+                      (int)position.X - Texture.Width / 2,
+                      (int)position.Y - Texture.Height,
+                      Texture.Width,
+                      Texture.Height),
+                  null,
+                  Color,
+                  0.0f,
+                  Vector2.Zero,
+                  SpriteEffects.None,
+                  0.4f);
         }
-
     }
 }

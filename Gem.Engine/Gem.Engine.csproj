@@ -61,6 +61,8 @@
     <Compile Include="AI\BehaviorTree\Leaves\ActionLeaf.cs" />
     <Compile Include="AI\BehaviorTree\Leaves\ILeaf.cs" />
     <Compile Include="AI\BehaviorTree\Leaves\PredicateLeaf.cs" />
+    <Compile Include="AI\BehaviorTree\Visualization\IVirtualizationItem.cs" />
+    <Compile Include="AI\BehaviorTree\Visualization\NodeStatusIcon.cs" />
     <Compile Include="AI\BehaviorTree\Visualization\TriggeredNodeCover.cs" />
     <Compile Include="AI\BehaviorTree\Visualization\MinimalColorPainter.cs" />
     <Compile Include="AI\BehaviorTree\Visualization\LinkBase.cs" />

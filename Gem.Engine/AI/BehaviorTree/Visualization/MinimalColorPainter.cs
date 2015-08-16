@@ -36,8 +36,8 @@ namespace Gem.AI.BehaviorTree.Visualization
                 node.OnBehaved += (sender, args) =>
                 {
                     var renderedNode = (piece as RenderedNode);
-                    renderedNode.Trigger();
                     renderedNode.BehaviorStatus = (args as BehaviorInvokationEventArgs).Result;
+                    renderedNode.Trigger();
                 };
             }
         }

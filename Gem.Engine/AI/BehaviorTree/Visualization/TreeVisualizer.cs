@@ -16,7 +16,7 @@ namespace Gem.AI.BehaviorTree.Visualization
         private readonly Texture2D linkTexture;
         private readonly Texture2D nodeBackgroundTexture;
         private readonly SpriteFont nodeInfoFont;
-        private readonly List<TriggeredNodeCover> triggeredNodes = new List<TriggeredNodeCover>();
+        private readonly List<IVirtualizationItem> virtualizationItems = new List<IVirtualizationItem>();
 
         private readonly float nodeSpan = 20.0f;
         private readonly int rowHeight = 90;
@@ -110,7 +110,12 @@ namespace Gem.AI.BehaviorTree.Visualization
                     else
                     {
                         var node = (nodeInfo as RenderedNode);
-                        node.onTriggered += (sender, args) => AddBehaviorCover(sender as RenderedNode, args);
+                        node.onTriggered += (sender, args) =>
+                        {
+                            var senderNode = sender as RenderedNode;
+                            AddBehaviorCover(senderNode, args);
+                            AddIcon(senderNode, senderNode.BehaviorStatus);
+                        };
                         if (nodesIterated == 0 && lastPositionX != 0)
                         {
                             if (lastPositionX > node.PositionX)
@@ -127,7 +132,7 @@ namespace Gem.AI.BehaviorTree.Visualization
 
         private void AddBehaviorCover(RenderedNode node, EventArgs args)
         {
-            var alreadyRegisteredNode = triggeredNodes.Where(x => x.Node == node).FirstOrDefault();
+            var alreadyRegisteredNode = virtualizationItems.Where(x => x.Node == node).FirstOrDefault();
             if (alreadyRegisteredNode != null)
             {
                 alreadyRegisteredNode.Reset();
@@ -135,11 +140,12 @@ namespace Gem.AI.BehaviorTree.Visualization
             }
 
             var triggeredNode = new TriggeredNodeCover(
+                nodeBackgroundTexture,
                 node,
                 () => new Vector2(node.PositionX, ((node.Row * rowStep) + initialRow) * rowHeight),
                 2.0d,
                 painter.Triggered);
-            triggeredNodes.Add(triggeredNode);
+            virtualizationItems.Add(triggeredNode);
         }
 
         private int CountLargestNameCharacters(RenderedNode node, int currentLargest)
@@ -166,6 +172,28 @@ namespace Gem.AI.BehaviorTree.Visualization
             return nodeInfoFont.MeasureString(str);
         }
 
+        private void AddIcon(RenderedNode node, BehaviorResult? result)
+        {
+            if (result == null) return;
+
+            var texture = BehaviorTextures[result.Value];
+
+            var registeredItem = virtualizationItems
+                    .Where(item => item is NodeStatusIcon)
+                    .Where(x => x.Node == node)
+                    .FirstOrDefault();
+
+            if (registeredItem != null)
+            {
+                virtualizationItems.Remove(registeredItem);
+            }
+
+            virtualizationItems.Add(new NodeStatusIcon(texture, 
+                node,
+                () => new Vector2(node.PositionX, ((node.Row * rowStep) + initialRow) * rowHeight),
+                2.0f));
+
+        }
         #endregion
 
         #region Render Tree
@@ -207,42 +235,7 @@ namespace Gem.AI.BehaviorTree.Visualization
                 SpriteEffects.None,
                 0.2f);
         }
-
-        private void DrawTriggeredNode(SpriteBatch batch, Vector2 position, Color nodeBackgroundColor, int sizeX, int sizeY)
-        {
-            batch.Draw(nodeBackgroundTexture,
-                new Rectangle(
-                    (int)position.X - sizeX / 2,
-                    (int)position.Y,
-                    sizeX,
-                    sizeY),
-                null,
-                nodeBackgroundColor,
-                0.0f,
-                Vector2.Zero,
-                SpriteEffects.None,
-                0.25f);
-        }
-        private void DrawNodeIcon(SpriteBatch batch, Vector2 position, BehaviorResult? result)
-        {
-            if (result == null) return;
-
-            var texture = BehaviorTextures[result.Value];
-            batch.Draw(texture,
-            new Rectangle(
-                (int)position.X - texture.Width / 2,
-                (int)position.Y - texture.Height,
-                texture.Width,
-                texture.Height),
-            null,
-            Color.White,
-            0.0f,
-            Vector2.Zero,
-            SpriteEffects.None,
-            0.4f);
-
-        }
-
+        
         private void DrawNodeBackground(SpriteBatch batch, Vector2 position, Color nodeBackgroundColor, int sizeX, int sizeY, float layer = 0.1f)
         {
 
@@ -271,7 +264,6 @@ namespace Gem.AI.BehaviorTree.Visualization
                             1.0f,
                             SpriteEffects.None,
                             0.3f);
-
         }
 
         private void DrawNodeContent(RenderedNode node, Vector2 nodePosition, SpriteBatch batch)
@@ -289,12 +281,12 @@ namespace Gem.AI.BehaviorTree.Visualization
 
         public void Update(double timeDelta)
         {
-            for (int i = 0; i < triggeredNodes.Count; i++)
+            for (int i = 0; i < virtualizationItems.Count; i++)
             {
-                triggeredNodes[i].Update(timeDelta);
-                if (!triggeredNodes[i].IsActive)
+                virtualizationItems[i].Update(timeDelta);
+                if (!virtualizationItems[i].IsActive)
                 {
-                    triggeredNodes.RemoveAt(i);
+                    virtualizationItems.RemoveAt(i);
                     i++;
                 }
             }
@@ -313,7 +305,6 @@ namespace Gem.AI.BehaviorTree.Visualization
                         node = nodeInfo as RenderedNode;
                         var nodePosition = new Vector2(node.PositionX, rowHeight * (row));
 
-                        DrawNodeIcon(batch, nodePosition, node.BehaviorStatus);
                         DrawNodeBackground(batch, nodePosition, painter.NodeBackground, (int)nodeWidth, rowHeight);
                         if (linkLocation != Vector2.Zero)
                         {
@@ -331,9 +322,9 @@ namespace Gem.AI.BehaviorTree.Visualization
                 row += rowStep;
             }
 
-            foreach (var triggeredNode in triggeredNodes)
+            foreach (var item in virtualizationItems)
             {
-                DrawTriggeredNode(batch, triggeredNode.Position, triggeredNode.Color, (int)nodeWidth, rowHeight);
+                item.Draw(batch, item.Position, (int)nodeWidth, rowHeight);
             }
         }
 
