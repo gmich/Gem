@@ -13,6 +13,11 @@ namespace Gem.AI.BehaviorTree.Decorators
         {
             return new RepeatUntilFailure<AIContext>(decoratedNodeFactory);
         }
+
+        public static IBehaviorNode<AIContext> RepeatingUntilSuccess<AIContext>(Func<IBehaviorNode<AIContext>> decoratedNodeFactory)
+        {
+            return new RepeatUntilSuccess<AIContext>(decoratedNodeFactory);
+        }
     }
     
 }

@@ -44,7 +44,6 @@
   <ItemGroup>
     <Compile Include="Behaviors\BehaviorContext.cs" />
     <Compile Include="Behaviors\LargeBehaviorTest.cs" />
-    <Compile Include="Behaviors\BehaviorChooser.cs" />
     <Compile Include="Behaviors\WalkBehavior.cs" />
     <Compile Include="BehaviorTreeVisualizer.cs" />
     <Compile Include="Components\Player.cs" />

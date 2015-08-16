@@ -9,6 +9,7 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
     {
         public IBehaviorNode<BehaviorContext> Behavior { get; }
 
+
         public WalkBehavior()
         {
             IBehaviorNode<BehaviorContext> checkNextTile
@@ -65,9 +66,39 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
                 });
             unlockDoor.Name = "unlock door";
 
-            IBehaviorNode<BehaviorContext> smashDoor
-                = new ActionLeaf<BehaviorContext>(context => BehaviorResult.Success);
-            smashDoor.Name = "smash door";
+            IBehaviorNode<BehaviorContext> goBack
+                = new ActionLeaf<BehaviorContext>(context =>
+                {
+                    context.Level.MovePlayer(-1);
+                    return BehaviorResult.Success;
+                });
+            goBack.Name = "go back";
+
+            IBehaviorNode<BehaviorContext> isPreviousNodeKey
+                = new PredicateLeaf<BehaviorContext>(
+                 context => context.Level.Map[context.Level.PlayerPosition - 1] is Key);
+            isPreviousNodeKey.Name = "found key?";
+
+            IBehaviorNode<BehaviorContext> pickFoundKeyUp
+            = new ActionLeaf<BehaviorContext>(
+             context =>
+             {
+                 context.Level.HaveKey = true;
+                 context.Level.Map[context.Level.PlayerPosition - 1] = new EmptyTile();
+                 return BehaviorResult.Success;
+             });
+            pickFoundKeyUp.Name = "pick key up";
+
+            var findKeySequence = new Sequence<BehaviorContext>(new[] { goBack, isPreviousNodeKey, pickFoundKeyUp });
+            findKeySequence.Name = "find a key";
+
+            var repeatUntiFoundAKey = DecorateFor.RepeatingUntilSuccess(() =>
+            {
+                findKeySequence.Reset();
+                return findKeySequence;
+            });
+            repeatUntiFoundAKey.Name = "repeat until";
+
 
             var pickupKeySequence = new Sequence<BehaviorContext>(new[] { doIHaveEmptySpace, pickKeyUp });
             pickupKeySequence.Name = "try pick up";
@@ -79,10 +110,13 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
             keySequence.Name = "key obstacle";
 
 
-            var unlockDoorSequence = new Sequence<BehaviorContext>(new[] { doIHaveKey, unlockDoor, smashDoor });
-            unlockDoorSequence.Name = "go through door";
+            var unlockDoorSequence = new Sequence<BehaviorContext>(new[] { doIHaveKey, unlockDoor });
+            unlockDoorSequence.Name = "unlockDoor";
 
-            var doorSequence = new Sequence<BehaviorContext>(new[] { foundDoor, unlockDoorSequence });
+            var goThroughDoorSelector = new Selector<BehaviorContext>(new[] { unlockDoorSequence, repeatUntiFoundAKey });
+            goThroughDoorSelector.Name = "go through door";
+
+            var doorSequence = new Sequence<BehaviorContext>(new[] { foundDoor, goThroughDoorSelector });
             doorSequence.Name = "door obstacle";
 
             var move = new Sequence<BehaviorContext>(new[] { checkNextTile, walk });
@@ -96,7 +130,7 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
             repeater.Name = "move forward";
 
             Behavior = new Selector<BehaviorContext>(new[] { repeater, keySequence, doorSequence });
-            Behavior.Name = "behaviors";
+            Behavior.Name = "walk";
         }
     }
 }

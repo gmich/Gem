@@ -32,11 +32,11 @@ namespace Gem.Engine.BehaviorTreeVisualization
             PlayerPosition = 0;
             for (int i = 0; i < Map.Count(); i++)
             {
-                if (i == 5)
+                if (i == 4 || i==8)
                 {
                     Map[i] = new Key(content.Load<Texture2D>(@"Game/key"), width, height);
                 }
-                else if (i == 10)
+                else if (i == 12 || i==16)
                 {
                     Map[i] = new Door(content.Load<Texture2D>(@"Game/door"), width, height);
                 }

@@ -45,17 +45,25 @@ namespace Gem.AI.BehaviorTree.Composites
 
             switch (behaviorResult = currentNode.Behave(context))
             {
+                case BehaviorResult.Success:
+                    Behave(context);
+                    break;
                 case BehaviorResult.Running:
                     //reevaluate the next iteration
                     pendingNodes.Push(currentNode);
-                    break;
+                    return InvokeAndReturn();
                 case BehaviorResult.Failure:
                     //stop iterating nodes
                     pendingNodes.Clear();
                     break;
             }
-            OnBehaved?.Invoke(this, new BehaviorInvokationEventArgs(BehaviorResult.Running));
-            return BehaviorResult.Running;
+            return InvokeAndReturn();
+        }
+
+        private BehaviorResult InvokeAndReturn()
+        {
+            OnBehaved?.Invoke(this, new BehaviorInvokationEventArgs(behaviorResult));
+            return behaviorResult;
         }
     }
 }
