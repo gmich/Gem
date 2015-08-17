@@ -14,8 +14,10 @@ namespace Gem.Engine.BehaviorTreeVisualization
         [STAThread]
         static void Main()
         {
+
             using (var game = new BehaviorTreeVisualizer())
                 game.Run();
+
         }
     }
 #endif

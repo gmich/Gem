@@ -41,6 +41,9 @@
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Behaviors\BehaviorContext.cs" />
     <Compile Include="Behaviors\LargeBehaviorTest.cs" />

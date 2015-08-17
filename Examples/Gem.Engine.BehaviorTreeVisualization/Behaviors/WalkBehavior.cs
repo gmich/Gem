@@ -15,12 +15,12 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
             IBehaviorNode<BehaviorContext> checkNextTile
                 = new Question<BehaviorContext>(
                  context => context.Level.NextTile is EmptyTile);
-            checkNextTile.Name = "is tile free?";
+            checkNextTile.Name = "next tile empty?";
 
             IBehaviorNode<BehaviorContext> foundKey
                 = new Question<BehaviorContext>(
                  context => context.Level.Map[context.Level.PlayerPosition + 1] is Key);
-            foundKey.Name = "found key?";
+            foundKey.Name = "found a key?";
 
             IBehaviorNode<BehaviorContext> foundDoor
                 = new Question<BehaviorContext>(
@@ -29,11 +29,11 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
 
             IBehaviorNode<BehaviorContext> doIHaveKey
             = new Question<BehaviorContext>(context => context.Level.HaveKey);
-            doIHaveKey.Name = "do i if have key?";
+            doIHaveKey.Name = "have a key?";
 
             IBehaviorNode<BehaviorContext> doIHaveEmptySpace
                 = new Question<BehaviorContext>(context => !context.Level.HaveKey);
-            doIHaveEmptySpace.Name = "can i pick it up?";
+            doIHaveEmptySpace.Name = "inventory empty?";
 
             IBehaviorNode<BehaviorContext> pickKeyUp
                 = new Behavior<BehaviorContext>(
@@ -49,13 +49,13 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
                 = new Behavior<BehaviorContext>(context =>
                 context.Level.MovePlayer(1) ?
                 BehaviorResult.Success : BehaviorResult.Failure);
-            walk.Name = "move 1 step";
+            walk.Name = "go 1 step forward";
 
             IBehaviorNode<BehaviorContext> skipKey
                 = new Behavior<BehaviorContext>(context =>
                 context.Level.MovePlayer(1) ?
                 BehaviorResult.Success : BehaviorResult.Failure);
-                        skipKey.Name = "skip key";
+                        skipKey.Name = "walk over key";
 
             IBehaviorNode<BehaviorContext> unlockDoor
                 = new Behavior<BehaviorContext>(context =>
@@ -72,12 +72,12 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
                     context.Level.MovePlayer(-1);
                     return BehaviorResult.Success;
                 });
-            goBack.Name = "go back";
+            goBack.Name = "go 1 step back";
 
             IBehaviorNode<BehaviorContext> isPreviousNodeKey
                 = new Question<BehaviorContext>(
                  context => context.Level.Map[context.Level.PlayerPosition - 1] is Key);
-            isPreviousNodeKey.Name = "found key?";
+            isPreviousNodeKey.Name = "found a key?";
 
             IBehaviorNode<BehaviorContext> pickFoundKeyUp
             = new Behavior<BehaviorContext>(
@@ -90,7 +90,7 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
             pickFoundKeyUp.Name = "pick key up";
 
             var findKeySequence = new Sequence<BehaviorContext>(new[] { goBack, isPreviousNodeKey, pickFoundKeyUp });
-            findKeySequence.Name = "find key";
+            findKeySequence.Name = "look for a key";
 
             var repeatUntiFoundAKey = DecorateFor.RepeatingUntilSuccess(() =>
             {
@@ -102,7 +102,7 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
             pickupKeySequence.Name = "try pick up";
 
             var whatToDoWithKey = new Selector<BehaviorContext>(new[] { pickupKeySequence, skipKey });
-            whatToDoWithKey.Name = "how to handle key";
+            whatToDoWithKey.Name = "handle key";
 
             var keySequence = new Sequence<BehaviorContext>(new[] { foundKey, whatToDoWithKey });
             keySequence.Name = "key obstacle";
@@ -111,7 +111,7 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
             unlockDoorSequence.Name = "try unlock";
 
             var goThroughDoorSelector = new Selector<BehaviorContext>(new[] { unlockDoorSequence, repeatUntiFoundAKey });
-            goThroughDoorSelector.Name = "go through door";
+            goThroughDoorSelector.Name = "go through";
 
             var doorSequence = new Sequence<BehaviorContext>(new[] { foundDoor, goThroughDoorSelector });
             doorSequence.Name = "door obstacle";

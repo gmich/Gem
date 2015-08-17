@@ -89,7 +89,6 @@ namespace Gem.Engine.BehaviorTreeVisualization
             //GraphicsDevice.Clear(new Color(44, 62, 80));
 
             renderer.Render(spriteBatch);
-
             spriteBatch.Begin();
             spriteBatch.Draw(background, GraphicsDevice.Viewport.Bounds, new Color(236, 240, 241));
             spriteBatch.Draw(renderer.Target, new Vector2(-220, -15), Color.White);

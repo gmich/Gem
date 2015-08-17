@@ -71,6 +71,9 @@
     <Compile Include="AI\BehaviorTree\Visualization\TreeAnalyzer.cs" />
     <Compile Include="AI\BehaviorTree\Visualization\IBehaviorVirtualizationPiece.cs" />
     <Compile Include="AI\BehaviorTree\Visualization\TreeVisualizer.cs" />
+    <Compile Include="AI\FiniteStateMachine\StateMachine.cs" />
+    <Compile Include="AI\FiniteStateMachine\State.cs" />
+    <Compile Include="AI\FiniteStateMachine\StateTransition.cs" />
     <Compile Include="CameraSystem\Camera.cs" />
     <Compile Include="CameraSystem\CameraFarseer.cs" />
     <Compile Include="CameraSystem\ICamera.cs" />

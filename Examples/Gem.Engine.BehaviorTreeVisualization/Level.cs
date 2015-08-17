@@ -12,7 +12,7 @@ namespace Gem.Engine.BehaviorTreeVisualization
         private readonly int width;
         private readonly int height;
         private readonly Texture2D floor;
-        private readonly double timeToBehave = 1.0d;
+        private readonly double nextBehaviorTick = 1.0d;
         private readonly Player player;
 
         private Key key;
@@ -65,7 +65,7 @@ namespace Gem.Engine.BehaviorTreeVisualization
         {
             timePassed += timeDelta;
 
-            if (timePassed >= timeToBehave)
+            if (timePassed >= nextBehaviorTick)
             {
                 timePassed = 0.0d;
                 if(Context.Behavior.Behave(Context)!= AI.BehaviorTree.BehaviorResult.Running)

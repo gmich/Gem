@@ -15,6 +15,7 @@ namespace Gem.Engine.Tests.AI
     [TestClass]
     public class BehaviorTreeTests
     {
+
         [TestMethod]
         public void WalkAndUnlockDoorBehaviorTest()
         {
