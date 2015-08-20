@@ -2,6 +2,7 @@
 using Gem.AI.BehaviorTree.Composites;
 using Gem.AI.BehaviorTree.Decorators;
 using Gem.AI.BehaviorTree.Leaves;
+using Gem.Infrastructure.Patterns;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -71,5 +72,6 @@ namespace Gem.Engine.Tests.AI
             debugInfo(currentStep.ToString());
             return BehaviorResult.Running;
         }
+
     }
 }
