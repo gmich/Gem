@@ -1,4 +1,5 @@
 ﻿using Gem.AI.FiniteStateMachine;
+using Gem.AI.FiniteStateMachine.Visualization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gem.Engine.Tests.AI
@@ -52,7 +53,7 @@ namespace Gem.Engine.Tests.AI
                 .Named("Going inactive"));
 
             paused.AddTransition(Transition<SmartPhoneScreenContext>
-                .To(() => exit)
+                .To(() => active)
                 .When(screen => screen.Command == ResumeCommand)
                 .Named("Activating"));
 
@@ -101,5 +102,56 @@ namespace Gem.Engine.Tests.AI
         }
 
         #endregion
+
+        [TestMethod]
+        public void LayeringTest()
+        {
+            #region States
+
+            var active = new State<SmartPhoneScreenContext>(screen => { }).Named("Active");
+            var exit = new State<SmartPhoneScreenContext>(screen => { }).Named("Exit");
+            var paused = new State<SmartPhoneScreenContext>(screen => { }).Named("Paused");
+            var inactive = new State<SmartPhoneScreenContext>(screen => { }).Named("Inactive");
+
+            #endregion
+
+            #region Transitions
+
+            active.AddTransition(Transition<SmartPhoneScreenContext>
+                .To(() => paused)
+                .When(screen => screen.Command == PauseCommand)
+                .Named("Pausing"));
+
+            active.AddTransition(Transition<SmartPhoneScreenContext>
+                .To(() => inactive)
+                .When(screen => screen.Command == EndCommand)
+                .Named("Going inactive"));
+
+            inactive.AddTransition(Transition<SmartPhoneScreenContext>
+                .To(() => active)
+                .When(screen => screen.Command == BeginCommand)
+                .Named("Activating"));
+
+            inactive.AddTransition(Transition<SmartPhoneScreenContext>
+                .To(() => exit)
+                .When(screen => screen.Command == ExitCommand)
+                .Named("Exiting"));
+
+            paused.AddTransition(Transition<SmartPhoneScreenContext>
+                .To(() => inactive)
+                .When(screen => screen.Command == EndCommand)
+                .Named("Going inactive"));
+
+            paused.AddTransition(Transition<SmartPhoneScreenContext>
+                .To(() => active)
+                .When(screen => screen.Command == ResumeCommand)
+                .Named("Activating"));
+
+            #endregion
+
+            var layering = new Layering<SmartPhoneScreenContext>(active);
+
+            Assert.IsTrue(true);
+        }
     }
 }

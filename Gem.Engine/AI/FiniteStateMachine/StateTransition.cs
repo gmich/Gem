@@ -21,6 +21,9 @@ namespace Gem.AI.FiniteStateMachine
             return this;
         }
 
+        internal State<TStateContext> Destination
+        {  get { return stateGetter(); } }
+
         public bool Check(TStateContext context, State<TStateContext> currentState, Action<State<TStateContext>> stateSetter)
         {
             if (rule(context))

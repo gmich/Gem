@@ -17,7 +17,7 @@
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -74,6 +74,13 @@
     <Compile Include="AI\FiniteStateMachine\StateMachine.cs" />
     <Compile Include="AI\FiniteStateMachine\State.cs" />
     <Compile Include="AI\FiniteStateMachine\StateTransition.cs" />
+    <Compile Include="AI\FiniteStateMachine\Visualization\Direction.cs" />
+    <Compile Include="AI\FiniteStateMachine\Visualization\Edge.cs" />
+    <Compile Include="AI\FiniteStateMachine\Visualization\IEdge.cs" />
+    <Compile Include="AI\FiniteStateMachine\Visualization\IVertex.cs" />
+    <Compile Include="AI\FiniteStateMachine\Visualization\Layering.cs" />
+    <Compile Include="AI\FiniteStateMachine\Visualization\StateVisualizationException.cs" />
+    <Compile Include="AI\FiniteStateMachine\Visualization\Vertex.cs" />
     <Compile Include="CameraSystem\Camera.cs" />
     <Compile Include="CameraSystem\CameraFarseer.cs" />
     <Compile Include="CameraSystem\ICamera.cs" />

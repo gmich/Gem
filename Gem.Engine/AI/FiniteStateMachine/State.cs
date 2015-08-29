@@ -7,7 +7,6 @@ namespace Gem.AI.FiniteStateMachine
 {
     public class State<TStateContext>
     {
-
         private readonly List<StateTransition<TStateContext>> transitions
             = new List<StateTransition<TStateContext>>();
 
@@ -38,10 +37,9 @@ namespace Gem.AI.FiniteStateMachine
         {
             return transitions.Remove(transition);
         }
-        internal IEnumerable<State<TStateContext>> GenerateGraph()
+        internal IEnumerable<State<TStateContext>> ConnectedStates()
         {
-            //TODO: return graph items
-            yield return this;
+            return transitions.Select(x => x.Destination);
         }
 
         internal void EnterState()

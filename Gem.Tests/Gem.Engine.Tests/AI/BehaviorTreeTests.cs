@@ -2,14 +2,9 @@
 using Gem.AI.BehaviorTree.Composites;
 using Gem.AI.BehaviorTree.Decorators;
 using Gem.AI.BehaviorTree.Leaves;
-using Gem.Infrastructure.Patterns;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gem.Engine.Tests.AI
 {
