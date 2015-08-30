@@ -13,6 +13,10 @@ namespace Gem.AI.FiniteStateMachine.Visualization
             NodeReference = reference;
         }
 
+        private static Vertex placeHolder = new Vertex(-1);
+        public static Vertex PlaceHolder
+        { get { return placeHolder; } }
+
         public int NodeReference { get; }
 
         public override bool Equals(object right)

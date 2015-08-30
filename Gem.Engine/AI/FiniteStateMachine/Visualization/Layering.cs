@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,13 +10,85 @@ namespace Gem.AI.FiniteStateMachine.Visualization
         private readonly List<IVertex> vertices = new List<IVertex>();
         private readonly List<IEdge> edges = new List<IEdge>();
         private readonly List<State<TStateContext>> states = new List<State<TStateContext>>();
-        private readonly List<List<int>> layer = new List<List<int>>();
-
+        private readonly List<List<int>> gridBuilder = new List<List<int>>();
+        private int[,] grid;
         public Layering(State<TStateContext> parentState)
         {
             BreakIntoEdgesAndVertices(parentState, 0);
+            AssignPlaceHolderVertices();
+            GenerateGrid();
         }
 
+        private void NodeOrdering()
+        {
+
+        }
+
+        /// <summary>
+        /// Makes sure that the Y axis has enough space to connect the edges
+        /// </summary>
+        private void AssignPlaceHolderVertices()
+        {
+            foreach (var edge in edges)
+            {
+                Point sourceLayer = PositionInLayer(edge.Source.NodeReference);
+                Point targetLayer = PositionInLayer(edge.Target.NodeReference);
+                int distance = sourceLayer.Y - targetLayer.Y;
+                if (Math.Abs(distance) > 1)
+                {
+                    int position = sourceLayer.Y;
+                    //assign placeholder vertices between them
+                    while (position != distance)
+                    {
+                        position = Approach(position, distance);
+                        gridBuilder[targetLayer.Y + position].Add(Vertex.PlaceHolder.NodeReference);
+                    }
+                }
+            }
+
+        }
+
+        private void GenerateGrid()
+        {
+            grid = new int[gridBuilder.Count, gridBuilder.Max(x => x.Count)];
+
+            for (int y = 0; y < grid.GetLength(0); y++)
+            {
+                for (int x = 0; x < grid.GetLength(1); x++)
+                {
+                    grid[y, x] = -1;
+                }
+            }
+            for (int y = 0; y < gridBuilder.Count; y++)
+            {
+                for (int x = 0; x < gridBuilder[y].Count; x++)
+                {
+                    grid[y, x] = gridBuilder[y][x];
+                }
+            }
+        }
+
+        private int Approach(int start, int end)
+        {
+            if (start == end) return start;
+            return (start > end) ?
+                 start - 1 : start + 1;
+        }
+
+        private Point PositionInLayer(int nodeReference)
+        {
+            for (int y = 0; y < gridBuilder.Count; y++)
+            {
+                for (int x = 0; x < gridBuilder[y].Count; x++)
+                {
+                    if (gridBuilder[y][x] == nodeReference)
+                    {
+                        return new Point(x, y);
+                    }
+                }
+            }
+            throw new StateVisualizationException("The node reference doesn't match an element in any layer");
+        }
 
         private Tuple<IVertex, bool> CreateVertex(State<TStateContext> state, int depth)
         {
@@ -33,24 +106,31 @@ namespace Gem.AI.FiniteStateMachine.Visualization
                 states.Add(state);
                 vertex = new Vertex(states.Count - 1);
                 vertices.Add(vertex);
-                layer[depth].Add(vertex.NodeReference);
+                gridBuilder[depth].Add(vertex.NodeReference);
                 return new Tuple<IVertex, bool>(vertex, true);
             }
         }
 
         private void BreakIntoEdgesAndVertices(State<TStateContext> parentState, int depth)
         {
-            if (layer.Count <= depth)
+            if (gridBuilder.Count <= depth)
             {
-                layer.Add(new List<int>());
+                gridBuilder.Add(new List<int>());
             }
-            IVertex parentVertex = CreateVertex(parentState, depth).Item1;
+            var parentCreationResult = CreateVertex(parentState, depth);
+            IVertex parentVertex = parentCreationResult.Item1;
+            var connectedStates = parentState.ConnectedStates();
 
-            foreach (var connectedState in parentState.ConnectedStates())
+            if (connectedStates.Count() == 0 && !parentCreationResult.Item2)
+            {
+                gridBuilder.Remove(gridBuilder.Last());
+            }
+
+            foreach (var connectedState in connectedStates)
             {
                 var vertexCreationResult = CreateVertex(connectedState, depth);
                 IVertex targetVertex = vertexCreationResult.Item1;
-                
+
                 //if the node is not visited, call the function recursively
                 bool goDeeper = vertexCreationResult.Item2;
 
