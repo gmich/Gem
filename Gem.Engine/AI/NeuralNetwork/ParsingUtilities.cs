@@ -214,6 +214,30 @@ namespace Gem.AI.NeuralNetwork
             return tokensLookup;
         }
 
+        public static double[] Flatten(double[] data)
+        {
+            double[] flattenData = new double[data.Length];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                flattenData[i] = (data[i] > 0.5) ? 1 : 0;
+            }
+            return flattenData;
+        }
+
+        public static string Decode(string[] lines, int column, char separator, double[] encodedData)
+        {
+            var tokenLookup = GetTokens(lines, column, separator);
+
+            for (int i = 0; i < encodedData.Count(); i++)
+            {
+                if (encodedData[i] == 1)
+                {
+                    return tokenLookup.Where(x => x.Value == i).Select(x => x.Key).First();
+                }
+            }
+            throw new Exception("Unable to decode data");
+        }
 
         public static double[][] ConvertToNumeric(string[] lines, char separator)
         {

@@ -79,7 +79,10 @@
     <Compile Include="AI\FiniteStateMachine\Visualization\Layering.cs" />
     <Compile Include="AI\FiniteStateMachine\Visualization\StateVisualizationException.cs" />
     <Compile Include="AI\FiniteStateMachine\Visualization\Vertex.cs" />
+    <Compile Include="AI\NeuralNetwork\Activation.cs" />
     <Compile Include="AI\NeuralNetwork\Encode.cs" />
+    <Compile Include="AI\NeuralNetwork\NeuralNetwork.cs" />
+    <Compile Include="AI\NeuralNetwork\NeuralNetworkData.cs" />
     <Compile Include="AI\NeuralNetwork\ParsingUtilities.cs" />
     <Compile Include="AI\NeuralNetwork\Normalize.cs" />
     <Compile Include="CameraSystem\Camera.cs" />
