@@ -150,8 +150,6 @@ namespace Gem.Engine.Tests.AI
             #endregion
 
             var layering = new Layering<SmartPhoneScreenContext>(active);
-
-            Assert.IsTrue(true);
         }
     }
 }

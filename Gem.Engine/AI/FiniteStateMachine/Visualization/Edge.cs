@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Gem.AI.FiniteStateMachine.Visualization
 {
-    class Edge : IEdge
-    {
-        public Edge(IVertex source, IVertex target, Direction direction = Direction.SourceToDestination)
+    class Edge
+    { 
+        public Edge(Vertex source, Vertex target, Direction direction = Direction.SourceToDestination)
         {
             Target = target;
             Source = source;
             Direction = direction;
         }
 
-        public IVertex Target
+        public Vertex Target
         {
             get;
         }
@@ -26,7 +26,7 @@ namespace Gem.AI.FiniteStateMachine.Visualization
             set;
         }
 
-        public IVertex Source
+        public Vertex Source
         {
             get;
         }

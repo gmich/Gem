@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Gem.AI.FiniteStateMachine.Visualization
 {
-    class Vertex : IVertex, IEquatable<IVertex>
+    class Vertex : IEquatable<Vertex>
     {
         public Vertex(int reference)
         {
@@ -36,17 +36,17 @@ namespace Gem.AI.FiniteStateMachine.Visualization
             return Equals(right as Vertex);
         }
 
-        public bool Equals(IVertex other)
+        public bool Equals(Vertex other)
         {
             return NodeReference == other.NodeReference;
         }
 
-        public static bool operator ==(Vertex a, IVertex b)
+        public static bool operator ==(Vertex a, Vertex b)
         {
             return (a.NodeReference == b.NodeReference);
         }
 
-        public static bool operator !=(Vertex a, IVertex b)
+        public static bool operator !=(Vertex a, Vertex b)
         {
             return (a.NodeReference != b.NodeReference);
         }

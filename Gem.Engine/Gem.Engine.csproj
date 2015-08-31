@@ -76,11 +76,12 @@
     <Compile Include="AI\FiniteStateMachine\StateTransition.cs" />
     <Compile Include="AI\FiniteStateMachine\Visualization\Direction.cs" />
     <Compile Include="AI\FiniteStateMachine\Visualization\Edge.cs" />
-    <Compile Include="AI\FiniteStateMachine\Visualization\IEdge.cs" />
-    <Compile Include="AI\FiniteStateMachine\Visualization\IVertex.cs" />
     <Compile Include="AI\FiniteStateMachine\Visualization\Layering.cs" />
     <Compile Include="AI\FiniteStateMachine\Visualization\StateVisualizationException.cs" />
     <Compile Include="AI\FiniteStateMachine\Visualization\Vertex.cs" />
+    <Compile Include="AI\NeuralNetwork\Encode.cs" />
+    <Compile Include="AI\NeuralNetwork\ParsingUtilities.cs" />
+    <Compile Include="AI\NeuralNetwork\Normalize.cs" />
     <Compile Include="CameraSystem\Camera.cs" />
     <Compile Include="CameraSystem\CameraFarseer.cs" />
     <Compile Include="CameraSystem\ICamera.cs" />
