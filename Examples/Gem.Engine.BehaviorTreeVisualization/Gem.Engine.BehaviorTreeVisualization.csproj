@@ -46,6 +46,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Behaviors\BehaviorContext.cs" />
+    <Compile Include="Behaviors\FluentBehavior.cs" />
     <Compile Include="Behaviors\LargeBehaviorTest.cs" />
     <Compile Include="Behaviors\WalkBehavior.cs" />
     <Compile Include="BehaviorTreeVisualizer.cs" />

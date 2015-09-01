@@ -68,5 +68,28 @@ namespace Gem.Engine.Tests.AI
             return BehaviorResult.Running;
         }
 
+        [TestMethod]
+        public void FluentTreeBuilderTest()
+        {
+            var behaviorBuilder = new BehaviorTreeBuilder<AIContext>();
+            var tree =
+                    behaviorBuilder
+                    .Selector
+                       .Behavior(context => BehaviorResult.Success)
+                       .Sequence
+                            .Behavior(context => BehaviorResult.Success)
+                       .End
+                       .Sequence
+                            .Decorate(DecorateFor.AlwaysSucceeding)
+                            .Behavior(context => BehaviorResult.Success)
+                            .Sequence
+                               .Behavior(context => BehaviorResult.Success)
+                            .End
+                           .Question(context => 1 == 1)
+                       .End
+                    .End
+                    .Tree;
+        }
+
     }
 }

@@ -8,8 +8,7 @@ namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
     internal class WalkBehavior
     {
         public IBehaviorNode<BehaviorContext> Behavior { get; }
-
-
+        
         public WalkBehavior()
         {
             IBehaviorNode<BehaviorContext> checkNextTile

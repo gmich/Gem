@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Debug\Argument.cs" />
     <Compile Include="Events\AbstractEventHandler.cs" />
     <Compile Include="Aspects\ExceptionInterceptor.cs" />
     <Compile Include="Aspects\LogicalOperationInterceptor.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Exceptions\ExceptionUtilities.cs" />
     <Compile Include="Cache\GCache.cs" />
     <Compile Include="Functional\Behavior.cs" />
+    <Compile Include="Functional\LinqExts.cs" />
     <Compile Include="Functional\Maybe.cs" />
     <Compile Include="Functional\Option.cs" />
     <Compile Include="Functional\PatternMatcher.cs" />

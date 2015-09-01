@@ -47,6 +47,7 @@
     <Compile Include="AI\BehaviorTree\BehaviorExtensions.cs" />
     <Compile Include="AI\BehaviorTree\BehaviorInvokationEventArgs.cs" />
     <Compile Include="AI\BehaviorTree\BehaviorResult.cs" />
+    <Compile Include="AI\BehaviorTree\BehaviorTreeBuilder.cs" />
     <Compile Include="AI\BehaviorTree\Composites\IComposite.cs" />
     <Compile Include="AI\BehaviorTree\Composites\Selector.cs" />
     <Compile Include="AI\BehaviorTree\Composites\Sequence.cs" />
@@ -85,6 +86,12 @@
     <Compile Include="AI\NeuralNetwork\NeuralNetworkData.cs" />
     <Compile Include="AI\NeuralNetwork\ParsingUtilities.cs" />
     <Compile Include="AI\NeuralNetwork\Normalize.cs" />
+    <Compile Include="AI\Promises\ExceptionEventArgs.cs" />
+    <Compile Include="AI\Promises\IPromise.cs" />
+    <Compile Include="AI\Promises\Promise.cs" />
+    <Compile Include="AI\Promises\PromiseState.cs" />
+    <Compile Include="AI\Promises\PromiseTimer.cs" />
+    <Compile Include="AI\Promises\Promise_NonGenericse.cs" />
     <Compile Include="CameraSystem\Camera.cs" />
     <Compile Include="CameraSystem\CameraFarseer.cs" />
     <Compile Include="CameraSystem\ICamera.cs" />

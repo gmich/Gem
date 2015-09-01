@@ -2,6 +2,8 @@
 
 namespace Gem.AI.BehaviorTree.Decorators
 {
+    public delegate IBehaviorNode<AIContext> Decorator<AIContext>(IBehaviorNode<AIContext> decoratedNode);
+
     public sealed class DecorateFor
     {
         public static IBehaviorNode<AIContext> AlwaysSucceeding<AIContext>(IBehaviorNode<AIContext> decoratedNode)
