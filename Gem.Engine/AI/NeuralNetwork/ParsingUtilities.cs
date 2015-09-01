@@ -51,7 +51,7 @@ namespace Gem.AI.NeuralNetwork
                     {
                         stream += tokens[i] + separator;
                     }
-                    stream += Environment.NewLine;
+                    //stream += Environment.NewLine;
                 }
             });
             stream.Remove(stream.Length - 1);
@@ -190,8 +190,9 @@ namespace Gem.AI.NeuralNetwork
                         stream += tokens[i] + separator;
                     }
                 }
-                stream.Remove(stream.Length - 1);
-                resultStream.Add(stream + Environment.NewLine);
+                stream = stream.Remove(stream.Length - 1);
+                //stream += Environment.NewLine;
+                resultStream.Add(stream);
             }
             return resultStream.ToArray();
         }
@@ -224,6 +225,7 @@ namespace Gem.AI.NeuralNetwork
             }
             return flattenData;
         }
+        
 
         public static string Decode(string[] lines, int column, char separator, double[] encodedData)
         {

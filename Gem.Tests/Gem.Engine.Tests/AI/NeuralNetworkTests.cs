@@ -34,6 +34,23 @@ namespace Gem.Engine.Tests.AI
         }
 
         [TestMethod]
+        public void AutomaticallyEncodedNeuralNetworkDataTest()
+        {
+            string[] rawData = new[]
+            {
+                "Sex Age Locale Income Politics",
+                "==============================================",
+                "Male 25 Rural 63,000.00 Conservative",
+                "Female 36 Suburban 55,000.00 Liberal",
+                "Male 40 Urban 74,000.00 Moderate",
+                "Female 23 Rural 28,000.00 Liberal"
+            };
+            var convertedData = NeuralNetworkData.Convert(rawData.Skip(2).ToArray(), ' ');
+
+            Assert.AreEqual("Moderate", ParsingUtilities.Decode(rawData.Skip(2).ToArray(), 4, ' ', new double[] { 0, 0, 1 }));
+        }
+
+        [TestMethod]
         public void IrisClasificationTest()
         {
             #region Data
