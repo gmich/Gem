@@ -45,15 +45,20 @@ namespace Gem.Engine.Tests.AI
                 "Male 40 Urban 74,000.00 Moderate",
                 "Female 23 Rural 28,000.00 Liberal"
             };
-            var convertedData = NeuralNetworkData.Convert(rawData.Skip(2).ToArray(), ' ');
+            char separator = ' ';
+            var networkData = new NeuralNetworkData(rawData.Skip(2).ToArray(), separator);
+            var convertedData = networkData.ConvertedData;
 
-            Assert.AreEqual("Moderate", ParsingUtilities.Decode(rawData.Skip(2).ToArray(), 4, ' ', new double[] { 0, 0, 1 }));
+            Assert.AreEqual("Moderate", networkData.DecodeOutput(0, 0, 1));
+            Assert.AreEqual("Liberal", networkData.DecodeOutput(0, 1, 0));
+            Assert.AreEqual("Conservative", networkData.DecodeOutput(1, 0, 0));
+            Assert.AreEqual("Moderate", ParsingUtilities.Decode(rawData.Skip(2).ToArray(), 4, separator, new double[] { 0, 0, 1 }));
         }
 
         [TestMethod]
         public void IrisClasificationTest()
         {
-            #region Data
+            #region Training Data
 
             //Encoded
             // Iris setosa = 1 0 0 
@@ -222,7 +227,12 @@ namespace Gem.Engine.Tests.AI
 
             #endregion
 
-            var networkData = NeuralNetworkData.PrepareTrainingData(encodedData, 0.80d, 72);
+            var networkData = new NeuralNetworkData(rawData, ' ');
+
+            networkData.PrepareTrainingSet(
+                encodedData: encodedData,
+                trainDataPercentage: 0.80d,
+                seed: 72);
 
             NeuralNetwork nn = new NeuralNetwork(
                 inputNodes: 4,
@@ -240,15 +250,9 @@ namespace Gem.Engine.Tests.AI
 
             Assert.IsTrue(nn.GetAccuracyFor(networkData.TrainingData) > 0.95d);
             Assert.IsTrue(nn.GetAccuracyFor(networkData.TestData) > 0.95d);
-
-            var prediction = nn.Predict(new double[] { 5.1, 3.5, 1.4, 0.2 });
-            Assert.AreEqual("virginica", ParsingUtilities.Decode(rawData, 0, ' ', ParsingUtilities.Flatten(prediction)));
-
-            prediction = nn.Predict(new double[] { 7.0, 3.2, 4.7, 1.4 });
-            Assert.AreEqual("versicolor", ParsingUtilities.Decode(rawData, 0, ' ', ParsingUtilities.Flatten(prediction)));
-
-            prediction = nn.Predict(new double[] { 7.4, 2.8, 6.1, 1.9 });
-            Assert.AreEqual("setosa", ParsingUtilities.Decode(rawData, 0, ' ', ParsingUtilities.Flatten(prediction)));
+            Assert.AreEqual("virginica", networkData.DecodeOutput(nn.Predict(new double[] { 5.1, 3.5, 1.4, 0.2 })));
+            Assert.AreEqual("versicolor", networkData.DecodeOutput(nn.Predict(new double[] { 7.0, 3.2, 4.7, 1.4 })));
+            Assert.AreEqual("setosa", networkData.DecodeOutput(nn.Predict(new double[] { 7.4, 2.8, 6.1, 1.9 })));
         }
 
     }

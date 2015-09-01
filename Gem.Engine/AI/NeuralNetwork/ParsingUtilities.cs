@@ -10,6 +10,7 @@ namespace Gem.AI.NeuralNetwork
     {
 
         #region File Related
+
         public static Dictionary<string, int> GetTokensByDelegate(Action<Action<string>> lineProvider, int column, char separator)
         {
             Dictionary<string, int> tokensLookup = new Dictionary<string, int>();
@@ -143,6 +144,7 @@ namespace Gem.AI.NeuralNetwork
             public int[] EncodingColumns { get; }
             public int[] NormalizationColumns { get; }
         }
+
         public static AnalyzationResult AnalyzeColumns(string[] data, char separator)
         {
             List<int> columnsForEncoding = new List<int>();
