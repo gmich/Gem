@@ -2,7 +2,7 @@
 
 namespace Gem.AI.NeuralNetwork
 {
-    public class NeuralNetwork
+    public class ANeuralNetwork
     {
 
         #region Fields
@@ -33,11 +33,15 @@ namespace Gem.AI.NeuralNetwork
         private readonly Func<double, double> hiddenActivation;
         private readonly Func<double[], double[]> outputActivation;
 
+        public int TotalNeurons =>
+            ihWeights.GetLength(0) //* ihWeights.GetLength(1)
+            + hoWeights.GetLength(0); //* hoWeights.GetLength(1);
+        
         #endregion
 
         #region Ctor
 
-        public NeuralNetwork(int inputNodes,
+        public ANeuralNetwork(int inputNodes,
                              int hiddenNodes,
                              int outputNodes,
                              Func<double, double> hiddenNodeActivation,

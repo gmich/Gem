@@ -1,5 +1,8 @@
-﻿using Gem.AI.NeuralNetwork;
+﻿using Gem.AI.Genetic;
+using Gem.AI.NeuralNetwork;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Gem.Engine.Tests.AI
@@ -234,7 +237,7 @@ namespace Gem.Engine.Tests.AI
                 trainDataPercentage: 0.80d,
                 seed: 72);
 
-            NeuralNetwork nn = new NeuralNetwork(
+            ANeuralNetwork nn = new ANeuralNetwork(
                 inputNodes: 4,
                 hiddenNodes: 7,
                 outputNodes: 3,
@@ -255,5 +258,57 @@ namespace Gem.Engine.Tests.AI
             Assert.AreEqual("setosa", networkData.DecodeOutput(nn.Predict(new double[] { 7.4, 2.8, 6.1, 1.9 })));
         }
 
+        #region Evolvable
+
+        [TestCategory("Evolvable")]
+        [TestMethod]
+        public void EvolvableBrainTest()
+        {
+            GeneticAlgorithm gA = new GeneticAlgorithm(
+                90,
+                5, 
+                EvolvableBrain.Mutation,
+                EvolvableBrain.CrossOver);
+
+            var navigators = new List<Navigator>();
+            for (int i = 0; i < 10; i++)
+            {
+                navigators.Add(new Navigator(
+                () =>
+                  new EvolvableBrain(() =>
+                          new ANeuralNetwork(
+                              inputNodes: 2,
+                              hiddenNodes: 4,
+                              outputNodes: 2,
+                              hiddenNodeActivation: Activation.HyperTan,
+                              outputNodeActivation: Activation.Softmax))));
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                gA.Evolve(navigators.Select(nav => nav.Brain));
+                navigators.ForEach(nav => nav.Move());
+            }
+        }
+
+        public class Navigator
+        {
+            public EvolvableBrain Brain { get; set; }
+
+            public Navigator(Func<EvolvableBrain> brain)
+            {
+                Brain = brain();
+            }
+
+            public void Move()
+            {
+                Brain.Fitness++;
+            }
+        }
+
     }
+
+    #endregion;
+
 }
+
