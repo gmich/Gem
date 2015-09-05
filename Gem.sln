@@ -57,6 +57,7 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2784D0E3-736D-4BCA-8536-EEA8834E6ED9}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{2784D0E3-736D-4BCA-8536-EEA8834E6ED9}.Debug|Any CPU.Build.0 = Debug|x86
 		{2784D0E3-736D-4BCA-8536-EEA8834E6ED9}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{2784D0E3-736D-4BCA-8536-EEA8834E6ED9}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{2784D0E3-736D-4BCA-8536-EEA8834E6ED9}.Debug|x86.ActiveCfg = Debug|x86
@@ -127,6 +128,7 @@ Global
 		{6A70A449-F0B8-4200-88D3-D9206D764E60}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{6A70A449-F0B8-4200-88D3-D9206D764E60}.Release|x86.ActiveCfg = Release|Any CPU
 		{699E4A5F-F006-4EAC-8D6B-283A01E398CD}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{699E4A5F-F006-4EAC-8D6B-283A01E398CD}.Debug|Any CPU.Build.0 = Debug|x86
 		{699E4A5F-F006-4EAC-8D6B-283A01E398CD}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{699E4A5F-F006-4EAC-8D6B-283A01E398CD}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{699E4A5F-F006-4EAC-8D6B-283A01E398CD}.Debug|x86.ActiveCfg = Debug|x86
@@ -177,6 +179,7 @@ Global
 		{A6950CEA-20E9-4949-A49C-8064ED2D1D4A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A6950CEA-20E9-4949-A49C-8064ED2D1D4A}.Release|x86.ActiveCfg = Release|Any CPU
 		{41293C99-6A34-413C-858D-F4E4C919F279}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{41293C99-6A34-413C-858D-F4E4C919F279}.Debug|Any CPU.Build.0 = Debug|x86
 		{41293C99-6A34-413C-858D-F4E4C919F279}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{41293C99-6A34-413C-858D-F4E4C919F279}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{41293C99-6A34-413C-858D-F4E4C919F279}.Debug|x86.ActiveCfg = Debug|x86
@@ -197,6 +200,7 @@ Global
 		{4CDBA490-8CC3-42C8-9CF8-0D736CC8F7E6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4CDBA490-8CC3-42C8-9CF8-0D736CC8F7E6}.Release|x86.ActiveCfg = Release|Any CPU
 		{A86A7479-1250-4105-A206-EFC34833BE8A}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{A86A7479-1250-4105-A206-EFC34833BE8A}.Debug|Any CPU.Build.0 = Debug|x86
 		{A86A7479-1250-4105-A206-EFC34833BE8A}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{A86A7479-1250-4105-A206-EFC34833BE8A}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{A86A7479-1250-4105-A206-EFC34833BE8A}.Debug|x86.ActiveCfg = Debug|x86

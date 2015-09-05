@@ -132,6 +132,17 @@
     <Compile Include="Console\Rendering\SpriteSheet.cs" />
     <Compile Include="Console\Rendering\ITexture.cs" />
     <Compile Include="DrawingSystem\RenderTargetRenderer.cs" />
+    <Compile Include="Primitives\Providers\IShapeProvider.cs" />
+    <Compile Include="Primitives\Providers\JsonShapeProvider.cs" />
+    <Compile Include="Primitives\Rendering\IPainter.cs" />
+    <Compile Include="Primitives\Rendering\MousePainter.cs" />
+    <Compile Include="Primitives\Shapes\Circle.cs" />
+    <Compile Include="Primitives\Shapes\DynamicShape.cs" />
+    <Compile Include="Primitives\Shapes\FixedBoundsShape.cs" />
+    <Compile Include="Primitives\Shapes\IShape.cs" />
+    <Compile Include="Primitives\Shapes\RelativeRenderedShape.cs" />
+    <Compile Include="Primitives\Shapes\ShapeDeclaration.cs" />
+    <Compile Include="Primitives\Shapes\VertexPosition.cs" />
     <Compile Include="Utilities\Range.cs" />
     <Compile Include="Console\Cells\Row.cs" />
     <Compile Include="Console\Commands\Terminal.cs" />
@@ -179,6 +190,10 @@
     <Reference Include="MonoGame.Framework, Version=3.4.0.459, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MonoGame.Framework.WindowsGL.3.4.0.459\lib\net40\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\packages\MonoGame.Framework.WindowsGL.3.4.0.459\lib\net40\OpenTK.dll</HintPath>
