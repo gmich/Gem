@@ -11,15 +11,15 @@ namespace Gem.Engine.Primitives
         private readonly BasicEffect effect;
         private List<VertexPositionColor> vertices = new List<VertexPositionColor>();
 
-        public DynamicShape(Color color, GraphicsDevice device)
+        public DynamicShape(Color color, GraphicsDevice device,int viewportWidth, int viewportHeight)
         {
             Color = color;
             this.device = device;
             effect = new BasicEffect(device);
             effect.VertexColorEnabled = true;
             effect.Projection = Matrix.CreateOrthographicOffCenter
-                (0, device.Viewport.Width,
-                 device.Viewport.Height, 0,
+                (0, viewportWidth,
+                 viewportHeight, 0,
                  0, 1);
         }
 

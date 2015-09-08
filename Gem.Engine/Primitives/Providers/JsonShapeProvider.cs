@@ -58,7 +58,7 @@ namespace Gem.Engine.Primitives.Providers
                         ToFloat(shape["Color"]["R"]),
                         ToFloat(shape["Color"]["A"]));
 
-                    loadedShapes.Add(new FixedBoundsShape(verticesPosition, offSetX, offSetY, color, device));
+                    loadedShapes.Add(new FixedBoundsShape(verticesPosition, offSetX, offSetY, device.Viewport.Width, device.Viewport.Height,color, device));
                 }
                 return loadedShapes;
             }

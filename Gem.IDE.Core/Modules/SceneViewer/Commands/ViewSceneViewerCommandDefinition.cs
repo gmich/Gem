@@ -14,12 +14,12 @@ namespace Gem.IDE.Core.Modules.SceneViewer.Commands
 
         public override string Text
         {
-            get { return "3D Scene"; }
+            get { return "Free Painting"; }
         }
 
         public override string ToolTip
         {
-            get { return "3D Scene"; }
+            get { return "Free Painting"; }
         }
     }
 }

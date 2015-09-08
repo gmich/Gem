@@ -11,7 +11,7 @@ namespace Gem.Engine.Primitives
         private readonly BasicEffect effect;
         private VertexPositionColor[] vertices;
 
-        public FixedBoundsShape(IEnumerable<Vector2> shapeVertices, float x, float y, Color color, GraphicsDevice device)
+        public FixedBoundsShape(IEnumerable<Vector2> shapeVertices, float x, float y, int viewportWidth, int viewportHeight, Color color, GraphicsDevice device)
         {
             this.x = x;
             this.y = y;
@@ -29,8 +29,8 @@ namespace Gem.Engine.Primitives
             effect = new BasicEffect(device);
             effect.VertexColorEnabled = true;
             effect.Projection = Matrix.CreateOrthographicOffCenter
-                (0, device.Viewport.Width,
-                 device.Viewport.Height, 0,
+                (0, viewportWidth,
+                 viewportHeight, 0,
                  0, 1);
 
             InitializeVertices();

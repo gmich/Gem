@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using Gem.IDE.Core.Modules.SceneViewer.Views;
 using Gemini.Framework;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace Gem.IDE.Core.Modules.SceneViewer.ViewModels
 {
@@ -12,19 +13,20 @@ namespace Gem.IDE.Core.Modules.SceneViewer.ViewModels
     {
         private ISceneView sceneView;
 
+       
         public override bool ShouldReopenOnStart
         {
             get { return true; }
         }
 
-	    private Vector3 position;
-	    public Vector3 Position
+        private Color color = Color.White;
+	    public Color Color
 	    {
-            get { return position; }
+            get { return color; }
             set
             {
-                position = value;
-                NotifyOfPropertyChange(() => Position);
+                color = value;
+                NotifyOfPropertyChange(() => Color);
 
                 if (sceneView != null)
                     sceneView.Invalidate();
@@ -33,7 +35,7 @@ namespace Gem.IDE.Core.Modules.SceneViewer.ViewModels
 
         public SceneViewModel()
         {
-            DisplayName = "3D Scene";
+            DisplayName = "Free painting";
         }
 
         protected override void OnViewLoaded(object view)

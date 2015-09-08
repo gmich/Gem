@@ -29,7 +29,7 @@ namespace Gem.IDE.Core.Modules.SceneViewer
             var sceneViewModel = Shell.Documents.OfType<SceneViewModel>().FirstOrDefault();
             if (sceneViewModel != null)
                 inspectorTool.SelectedObject = new InspectableObjectBuilder()
-                    .WithVector3Editor(sceneViewModel, x => x.Position)
+                    .WithXnaColorEditor(sceneViewModel, x => x.Color)
                     .ToInspectableObject();
 	    }
 	}

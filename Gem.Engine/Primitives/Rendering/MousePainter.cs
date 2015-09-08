@@ -12,7 +12,8 @@ namespace Gem.Engine.Primitives
         private Action<MouseState> trackShape;
         private readonly GraphicsDevice device;
         private readonly DynamicShape processedShape;
-
+        private readonly int viewportWidth;
+        private readonly int viewportHeight;
         public EventHandler ShapeAdded;
 
         public List<IShape> Shapes
@@ -20,11 +21,13 @@ namespace Gem.Engine.Primitives
             get;
         } = new List<IShape>();
 
-        public MousePainter(GraphicsDevice graphicsDevice)
+        public MousePainter(GraphicsDevice graphicsDevice, int viewportWidth, int viewportHeight)
         {
             device = graphicsDevice;
             trackShape = InitializeShape;
-            processedShape = new DynamicShape(Color.White, device);
+            this.viewportWidth= viewportWidth;
+            this.viewportHeight = viewportHeight;
+            processedShape = new DynamicShape(Color.White,device, viewportWidth, viewportHeight);
         }
 
         public void Paint(double timeDelta)
@@ -84,6 +87,8 @@ namespace Gem.Engine.Primitives
                      shapeDeclaration.VerticesPosition,
                      shapeDeclaration.ViewportOffset.X,
                      shapeDeclaration.ViewportOffset.Y,
+                     viewportWidth,
+                     viewportHeight,
                      Color.White,
                      device));
                 ShapeAdded?.Invoke(this, EventArgs.Empty);
