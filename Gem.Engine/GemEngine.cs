@@ -29,6 +29,7 @@ namespace Gem.Engine
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
+            Window.AllowUserResizing = true;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
