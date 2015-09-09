@@ -89,6 +89,7 @@
     <Compile Include="AI\NeuralNetwork\NeuralNetworkData.cs" />
     <Compile Include="AI\NeuralNetwork\ParsingUtilities.cs" />
     <Compile Include="AI\NeuralNetwork\Normalize.cs" />
+    <Compile Include="AI\Promises\Argument.cs" />
     <Compile Include="AI\Promises\ExceptionEventArgs.cs" />
     <Compile Include="AI\Promises\IPromise.cs" />
     <Compile Include="AI\Promises\Promise.cs" />

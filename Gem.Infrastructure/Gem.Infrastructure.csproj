@@ -76,7 +76,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Debug\ArgumentDebug.cs" />
     <Compile Include="Events\AbstractEventHandler.cs" />
     <Compile Include="Aspects\ExceptionInterceptor.cs" />
     <Compile Include="Aspects\LogicalOperationInterceptor.cs" />
