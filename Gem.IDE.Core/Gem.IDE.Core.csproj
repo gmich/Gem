@@ -42,8 +42,18 @@
     <Reference Include="Caliburn.Micro.Platform">
       <HintPath>ThirdParty\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
-    <Reference Include="Gemini">
+    <Reference Include="Gemini, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>ThirdParty\Gemini.dll</HintPath>
+    </Reference>
+    <Reference Include="Gemini.Modules.CodeCompiler">
+      <HintPath>ThirdParty\Gemini.Modules.CodeCompiler.dll</HintPath>
+    </Reference>
+    <Reference Include="Gemini.Modules.CodeEditor">
+      <HintPath>ThirdParty\Gemini.Modules.CodeEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="Gemini.Modules.ErrorList">
+      <HintPath>ThirdParty\Gemini.Modules.ErrorList.dll</HintPath>
     </Reference>
     <Reference Include="Gemini.Modules.Inspector">
       <HintPath>ThirdParty\Gemini.Modules.Inspector.dll</HintPath>
@@ -57,6 +67,10 @@
     <Reference Include="Gemini.Modules.Output">
       <HintPath>ThirdParty\Gemini.Modules.Output.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.1.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.5.0.2\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Lidgren.Network, Version=3.4.0.456, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ThirdParty\Lidgren.Network.dll</HintPath>
@@ -67,6 +81,14 @@
     <Reference Include="MonoGame.Framework, Version=3.4.0.456, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ThirdParty\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Roslyn.Compilers, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Roslyn.Compilers.Common.1.2.20906.2\lib\net45\Roslyn.Compilers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Roslyn.Compilers.CSharp, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Roslyn.Compilers.CSharp.1.2.20906.2\lib\net45\Roslyn.Compilers.CSharp.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="SharpDX, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -107,6 +129,9 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ThirdParty\System.Windows.Interactivity.dll</HintPath>
@@ -156,6 +181,24 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Modules\Camera\Commands\CameraCommandDefinition.cs" />
+    <Compile Include="Modules\Camera\Commands\ViewSceneViewerCommandHandler.cs" />
+    <Compile Include="Modules\Camera\MenuDefinitions.cs" />
+    <Compile Include="Modules\Camera\Module.cs" />
+    <Compile Include="Modules\Camera\ViewModels\CameraViewModel.cs" />
+    <Compile Include="Modules\Camera\Views\CameraView.xaml.cs">
+      <DependentUpon>CameraView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Camera\Views\ISceneView.cs" />
+    <Compile Include="Modules\Editor\Commands\EditorCommandHandler.cs" />
+    <Compile Include="Modules\Editor\EditorView.xaml.cs">
+      <DependentUpon>EditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Editor\EditorViewModel.cs" />
+    <Compile Include="Modules\Editor\IEditorView.cs" />
+    <Compile Include="Modules\Editor\IScript.cs" />
+    <Compile Include="Modules\Editor\Commands\ViewEditorCommandDefinition.cs" />
+    <Compile Include="Modules\Editor\Module.cs" />
     <Compile Include="Modules\SceneViewer\Commands\ViewSceneViewerCommandDefinition.cs" />
     <Compile Include="Modules\SceneViewer\Commands\ViewSceneViewerCommandHandler.cs" />
     <Compile Include="Modules\SceneViewer\MenuDefinitions.cs" />
@@ -183,6 +226,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -193,6 +237,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Modules\Camera\Views\CameraView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\Editor\EditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Modules\SceneViewer\Views\SceneView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -203,7 +255,12 @@
       <Project>{2784d0e3-736d-4bca-8536-eea8834e6ed9}</Project>
       <Name>Gem.Engine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Gem.IDE.Monogame.Interop\Gem.IDE.Monogame.Interop.csproj">
+      <Project>{c1f1d72e-23e4-43ee-a2de-baf8cb7fca6e}</Project>
+      <Name>Gem.IDE.Monogame.Interop</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

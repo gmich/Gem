@@ -15,7 +15,8 @@ namespace Gem.IDE.Core.Modules.Startup
         public static MenuItemGroupDefinition DemosMenuGroup = new MenuItemGroupDefinition(
             DemosMenu, 0);
 
-		public override void Initialize()
+
+        public override void Initialize()
 		{
 			MainWindow.Title = "Gem Engine";
 		}
