@@ -1,4 +1,6 @@
-﻿using Gemini.Framework;
+﻿using Caliburn.Micro;
+using Gemini;
+using Gemini.Framework;
 using Gemini.Modules.CodeCompiler;
 using Roslyn.Compilers;
 using Roslyn.Compilers.CSharp;
@@ -50,9 +52,9 @@ namespace Gem.IDE.Core.Modules.Editor
                             MetadataReference.CreateAssemblyReference("System.ObjectModel"),
                             MetadataReference.CreateAssemblyReference("System.Runtime"),
                             MetadataReference.CreateAssemblyReference("PresentationCore"),
-                            //new MetadataFileReference(typeof(IResult).Assembly.Location) ,
-                            //new MetadataFileReference(typeof(AppBootstrapper).Assembly.Location) ,
-                            //new MetadataFileReference(GetType().Assembly.Location) 
+                            new MetadataFileReference(typeof(IResult).Assembly.Location) ,
+                            new MetadataFileReference(typeof(AppBootstrapper).Assembly.Location) ,
+                            new MetadataFileReference(GetType().Assembly.Location) 
                         },
                     "GemDemoScript");
 
