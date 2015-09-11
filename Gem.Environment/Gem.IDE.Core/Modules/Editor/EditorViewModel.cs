@@ -1,20 +1,21 @@
 ﻿using Caliburn.Micro;
 using Gemini;
-using Gemini.Framework;
 using Gemini.Modules.CodeCompiler;
-using Roslyn.Compilers;
-using Roslyn.Compilers.CSharp;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Media;
 
 namespace Gem.IDE.Core.Modules.Editor
 {
     [Export(typeof(EditorViewModel))]
     [PartCreationPolicy(CreationPolicy.NonShared)]
-    public class EditorViewModel : Document
+    public class EditorViewModel : Gemini.Framework.Document
     {
         private readonly ICodeCompiler codeCompiler;
         private IEditorView editorView;
@@ -43,24 +44,27 @@ namespace Gem.IDE.Core.Modules.Editor
             {
                 scripts.Clear();
 
+                var assemblyPath = Path.GetDirectoryName(typeof(object).Assembly.Location);
                 var newAssembly = codeCompiler.Compile(
-                    new[] { SyntaxTree.ParseText(editorView.TextEditor.Text) },
-                    new []
-                        {
-                            MetadataReference.CreateAssemblyReference("mscorlib"),
-                            MetadataReference.CreateAssemblyReference("System"),
-                            MetadataReference.CreateAssemblyReference("System.ObjectModel"),
-                            MetadataReference.CreateAssemblyReference("System.Runtime"),
-                            MetadataReference.CreateAssemblyReference("PresentationCore"),
-                            new MetadataFileReference(typeof(IResult).Assembly.Location) ,
-                            new MetadataFileReference(typeof(AppBootstrapper).Assembly.Location) ,
-                            new MetadataFileReference(GetType().Assembly.Location) 
+                     new[] { CSharpSyntaxTree.ParseText(editorView.TextEditor.Text) },
+                     new[]
+                         {
+                            MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "mscorlib.dll")),
+                            MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.dll")),
+                            MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Core.dll")),
+                            MetadataReference.CreateFromFile(typeof(IResult).Assembly.Location),
+                            MetadataReference.CreateFromFile(typeof(AppBootstrapper).Assembly.Location),
+                            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                            MetadataReference.CreateFromFile(Assembly.GetEntryAssembly().Location)
                         },
                     "GemDemoScript");
 
-                scripts.AddRange(newAssembly.GetTypes()
-                    .Where(x => typeof(IScript).IsAssignableFrom(x))
-                    .Select(x => (IScript)Activator.CreateInstance(x)));
+                if (newAssembly != null)
+                {
+                    scripts.AddRange(newAssembly.GetTypes()
+                        .Where(x => typeof(IScript).IsAssignableFrom(x))
+                        .Select(x => (IScript)Activator.CreateInstance(x)));
+                }
             }
         }
 
