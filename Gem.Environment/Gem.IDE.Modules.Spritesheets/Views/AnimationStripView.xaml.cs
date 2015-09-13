@@ -7,6 +7,11 @@ using Gemini.Modules.Output;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.ComponentModel.Composition;
+using System.Windows;
+using Microsoft.Win32;
+using System.IO;
+using Gem.DrawingSystem.Animations;
+using Gem.Infrastructure;
 
 namespace Gem.IDE.Modules.SpriteSheets.Views
 {
@@ -17,54 +22,72 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
     {
         private readonly IOutput output;
         private GraphicsDevice graphicsDevice;
-        private Action<MouseButtonState, Point> trackShape;
-        public EventHandler ShapeAdded;
+        private AnimationStrip animation;
+        private Texture2D texture;
+        private int textureWidth = 100;
+        private int textureHeight = 20;
+        private SpriteBatch batch;
+        private ParallelTaskStarter updateLoop;
 
         public AnimationStripView()
         {
+            updateLoop = new ParallelTaskStarter(TimeSpan.Zero);
+            updateLoop.Start(() => animation.Update(updateLoop.ElapsedTime));
             InitializeComponent();
             output = IoC.Get<IOutput>();
-            trackShape = InitializeShape;
         }
 
-        public void Invalidate()
+        public void Invalidate(AnimationStripSettings settings)
+        {
+            animation = new AnimationStrip(textureWidth, textureHeight, settings);
+            ReDraw();
+        }
+
+        private void ReDraw()
         {
             GraphicsControl.Invalidate();
         }
 
         public void Dispose()
         {
+            updateLoop.Stop();
             GraphicsControl.Dispose();
         }
-
-        /// <summary>
-        /// Invoked after either control has created its graphics device.
-        /// </summary>
+                
         private void OnGraphicsControlLoadContent(object sender, GraphicsDeviceEventArgs e)
         {
             graphicsDevice = e.GraphicsDevice;
+            batch = new SpriteBatch(graphicsDevice);
+            texture = new Texture2D(graphicsDevice, textureWidth, textureHeight);
+
+            var color = new Color[textureWidth * textureHeight];
+            for(int i=0;i<color.Length;i++)
+            {
+                color[i] = Color.Black;
+            }
+
+            texture.SetData(color);
         }
 
-        /// <summary>
-        /// Invoked when our second control is ready to render.
-        /// </summary>
         private void OnGraphicsControlDraw(object sender, DrawEventArgs e)
         {
             e.GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            if (animation != null)
+            {               
+                batch.Begin();
+                batch.Draw(texture, animation.Frame, Color.White);
+                batch.End();
+            }
         }
 
-        // Invoked when the mouse moves over the second viewport
+        #region Input
+
         private void OnGraphicsControlMouseMove(object sender, MouseEventArgs e)
         {
+            ReDraw();
             var position = e.GetPosition(this);
-
-            Paint(e.LeftButton, new Point((int)position.X, (int)position.Y));
-
         }
 
-        // We use the left mouse button to do exclusive capture of the mouse so we can drag and drag
-        // to rotate the cube without ever leaving the control
         private void OnGraphicsControlHwndLButtonDown(object sender, MouseEventArgs e)
         {
             output.AppendLine("Mouse left button down");
@@ -93,41 +116,6 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             output.AppendLine("Mouse wheel: " + e.Delta);
         }
 
-        public void Paint(MouseButtonState state, Point mousePos)
-        {
-            //if (graphicsDevice.Viewport.Bounds.Contains(mousePos))
-            //{
-            trackShape(state, mousePos);
-            //}
-        }
-
-
-        private void CaptureMousePosition(MouseButtonState state, Point mousePos)
-        {
-            if (state == MouseButtonState.Pressed)
-            {
-                var mousePosition = new Vector2(mousePos.X, mousePos.Y);
-        
-            }
-            else
-            {
-                trackShape = AddShape;
-            }
-        }
-
-        private void InitializeShape(MouseButtonState state, Point mousePos)
-        {
-            if (state == MouseButtonState.Pressed)
-            {
-             
-            }
-        }
-
-        private void AddShape(MouseButtonState state, Point mousePos)
-        {
-        
-            GraphicsControl.Invalidate();
-        }
-
+        #endregion
     }
 }

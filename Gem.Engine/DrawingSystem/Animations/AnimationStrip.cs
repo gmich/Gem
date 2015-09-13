@@ -16,19 +16,17 @@ namespace Gem.DrawingSystem.Animations
 
         public EventHandler onAnimationFinished;
 
-        public AnimationStrip(Func<string, Texture2D> textureLoader, AnimationStripSettings settings)
+        public AnimationStrip(int spriteSheetWidth, int spriteSheetHeight, AnimationStripSettings settings)
         {
-            Texture = textureLoader(settings.RelativePathToTexture);
-
-            tileSheetColumns = (Texture.Width / settings.FrameWidth);
-            tileSheetRows = (Texture.Width / settings.FrameHeight);
+            this.settings = settings;
+            tileSheetColumns = (spriteSheetWidth / settings.FrameWidth);
+            tileSheetRows = (spriteSheetHeight / settings.FrameHeight);
             tileSheetCount = tileSheetColumns * tileSheetRows;
 
             frameUpdateTimer = new GTimer(settings.FrameDelay, settings.FrameDelay, NextFrame);
         }
 
         public Rectangle Frame { get; private set; }
-        public Texture2D Texture { get; }
 
         private void NextFrame(double timeDelta)
         {

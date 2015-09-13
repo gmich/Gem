@@ -70,8 +70,9 @@
     <Reference Include="Gemini.Modules.Output">
       <HintPath>ThirdParty\Gemini.Modules.Output.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.AvalonEdit">
-      <HintPath>ThirdParty\ICSharpCode.AvalonEdit.dll</HintPath>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.1.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AvalonEdit.5.0.2\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Lidgren.Network, Version=3.4.0.456, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -273,7 +274,7 @@
       <Project>{2784d0e3-736d-4bca-8536-eea8834e6ed9}</Project>
       <Name>Gem.Engine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Gem.IDE.Modules.Spritesheets\Gem.IDE.Modules.Spritesheets.csproj">
+    <ProjectReference Include="..\Gem.IDE.Modules.Spritesheets\Gem.IDE.Modules.Spritesheets.csproj">
       <Project>{de32d523-5140-44e1-ad34-f115e350b2cb}</Project>
       <Name>Gem.IDE.Modules.Spritesheets</Name>
     </ProjectReference>

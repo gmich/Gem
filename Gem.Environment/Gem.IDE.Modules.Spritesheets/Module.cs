@@ -30,28 +30,13 @@ namespace Gem.IDE.Modules.SpriteSheets
             this.inspectorTool = inspectorTool;
         }
 
-        public override void Initialize()
-        {
-            Shell.ActiveDocumentChanged += (sender, e) => RefreshInspector();
-            RefreshInspector();
-        }
-
-        private void RefreshInspector()
-        {
-            if (Shell.ActiveItem != null)
-                inspectorTool.SelectedObject = new InspectableObjectBuilder()
-                    .WithObjectProperties(Shell.ActiveItem, pd => pd.ComponentType == Shell.ActiveItem.GetType())
-                    .ToInspectableObject();
-            else
-                inspectorTool.SelectedObject = null;
-        }
 
         public override void PostInitialize()
         {
             var animationStripViewModel = Shell.Documents.OfType<AnimationStripViewModel>().FirstOrDefault();
             if (animationStripViewModel != null)
                 inspectorTool.SelectedObject = new InspectableObjectBuilder()
-                    .WithCheckBoxEditor(animationStripViewModel, x => x.Switch)
+                    .WithObjectProperties(animationStripViewModel, x => true)
                     .ToInspectableObject();
             inspectorTool.DisplayName = "SpriteSheet Inspector";
         }

@@ -16,6 +16,7 @@
 							   MouseLeftButtonUp="OnGraphicsControlHwndLButtonUp"
 							   MouseWheel="OnGraphicsControlHwndMouseWheel"
 							   KeyDown="OnGraphicsControlKeyDown"
-							   KeyUp="OnGraphicsControlKeyUp" />
+							   KeyUp="OnGraphicsControlKeyUp" />      
     </Grid>
+
 </UserControl>
