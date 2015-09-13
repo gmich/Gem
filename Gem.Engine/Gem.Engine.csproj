@@ -132,6 +132,8 @@
     <Compile Include="Console\Rendering\Sprite.cs" />
     <Compile Include="Console\Rendering\SpriteSheet.cs" />
     <Compile Include="Console\Rendering\ITexture.cs" />
+    <Compile Include="DrawingSystem\Animations\AnimationStrip.cs" />
+    <Compile Include="DrawingSystem\Animations\AnimationStripSettings.cs" />
     <Compile Include="DrawingSystem\RenderTargetRenderer.cs" />
     <Compile Include="Primitives\Providers\IShapeProvider.cs" />
     <Compile Include="Primitives\Providers\JsonShapeProvider.cs" />
@@ -170,6 +172,7 @@
     <Compile Include="GemEngine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\GTimer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -232,7 +235,6 @@
     <Folder Include="CameraSystem\Handlers\" />
     <Folder Include="CameraSystem\Scripts\" />
     <Folder Include="Database\" />
-    <Folder Include="DrawingSystem\SpriteSheets\" />
     <Folder Include="Map\" />
     <Folder Include="ScreenSystem\" />
   </ItemGroup>

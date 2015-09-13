@@ -50,6 +50,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gem.Environment", "Gem.Envi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.IDE.Core", "Gem.Environment\Gem.IDE.Core\Gem.IDE.Core.csproj", "{EAEAAF7B-E6D8-4615-92D1-2DD8B75A922C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.IDE.Modules.Spritesheets", "Gem.IDE.Modules.Spritesheets\Gem.IDE.Modules.Spritesheets.csproj", "{DE32D523-5140-44E1-AD34-F115E350B2CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -226,6 +228,18 @@ Global
 		{EAEAAF7B-E6D8-4615-92D1-2DD8B75A922C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{EAEAAF7B-E6D8-4615-92D1-2DD8B75A922C}.Release|x86.ActiveCfg = Release|Any CPU
 		{EAEAAF7B-E6D8-4615-92D1-2DD8B75A922C}.Release|x86.Build.0 = Release|Any CPU
+		{DE32D523-5140-44E1-AD34-F115E350B2CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE32D523-5140-44E1-AD34-F115E350B2CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE32D523-5140-44E1-AD34-F115E350B2CB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{DE32D523-5140-44E1-AD34-F115E350B2CB}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{DE32D523-5140-44E1-AD34-F115E350B2CB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DE32D523-5140-44E1-AD34-F115E350B2CB}.Debug|x86.Build.0 = Debug|Any CPU
+		{DE32D523-5140-44E1-AD34-F115E350B2CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE32D523-5140-44E1-AD34-F115E350B2CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE32D523-5140-44E1-AD34-F115E350B2CB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{DE32D523-5140-44E1-AD34-F115E350B2CB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{DE32D523-5140-44E1-AD34-F115E350B2CB}.Release|x86.ActiveCfg = Release|Any CPU
+		{DE32D523-5140-44E1-AD34-F115E350B2CB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -247,5 +261,6 @@ Global
 		{4CDBA490-8CC3-42C8-9CF8-0D736CC8F7E6} = {7D9867F2-E0A0-4ADE-99F9-43CEF3C4816E}
 		{A86A7479-1250-4105-A206-EFC34833BE8A} = {84AE5719-A57A-4438-A051-43AA5A041CEE}
 		{EAEAAF7B-E6D8-4615-92D1-2DD8B75A922C} = {967E55B6-10BE-4AAA-99E1-4FA738F71096}
+		{DE32D523-5140-44E1-AD34-F115E350B2CB} = {967E55B6-10BE-4AAA-99E1-4FA738F71096}
 	EndGlobalSection
 EndGlobal

@@ -200,7 +200,6 @@
   <ItemGroup>
     <Compile Include="Modules\Camera\Commands\CameraCommandDefinition.cs" />
     <Compile Include="Modules\Camera\Commands\ViewSceneViewerCommandHandler.cs" />
-    <Compile Include="Modules\Camera\MenuDefinitions.cs" />
     <Compile Include="Modules\Camera\Module.cs" />
     <Compile Include="Modules\Camera\ViewModels\CameraViewModel.cs" />
     <Compile Include="Modules\Camera\Views\CameraView.xaml.cs">
@@ -218,7 +217,7 @@
     <Compile Include="Modules\Editor\Module.cs" />
     <Compile Include="Modules\SceneViewer\Commands\ViewSceneViewerCommandDefinition.cs" />
     <Compile Include="Modules\SceneViewer\Commands\ViewSceneViewerCommandHandler.cs" />
-    <Compile Include="Modules\SceneViewer\MenuDefinitions.cs" />
+    <Compile Include="Modules\Startup\MenuDefinitions.cs" />
     <Compile Include="Modules\SceneViewer\Module.cs" />
     <Compile Include="Modules\SceneViewer\ViewModels\SceneViewModel.cs" />
     <Compile Include="Modules\SceneViewer\Views\ISceneView.cs" />
@@ -251,7 +250,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Modules\Camera\Views\CameraView.xaml">
@@ -272,12 +273,16 @@
       <Project>{2784d0e3-736d-4bca-8536-eea8834e6ed9}</Project>
       <Name>Gem.Engine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Gem.IDE.Modules.Spritesheets\Gem.IDE.Modules.Spritesheets.csproj">
+      <Project>{de32d523-5140-44e1-ad34-f115e350b2cb}</Project>
+      <Name>Gem.IDE.Modules.Spritesheets</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
-   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -285,7 +290,6 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
-
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

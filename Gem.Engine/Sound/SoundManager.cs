@@ -46,7 +46,7 @@ namespace Gem.Sound
             {
                 sfx.Add(sfxTag, soundfx);
             }
-            catch (Exception ex)
+            catch 
             {
                 // LogHelper.Error("Failed to load sfx {0} : {1}", soundfx.Name, ex.Message);
             }
@@ -79,7 +79,7 @@ namespace Gem.Sound
                 songs.Add(songTag, song);
 
             }
-            catch (Exception ex)
+            catch
             {
                 //LogHelper.Error("Failed to load song {0} : {1}", song.Name, ex.Message);
             }
@@ -118,7 +118,7 @@ namespace Gem.Sound
                 // if (sfx.ContainsKey(sfxName))
                 sfx[sfxTag].Play(volume, pitch, 0.0f);
             }
-            catch (Exception ex)
+            catch
             {
                 //LogHelper.Error("Failed to play sfx with tag {0} : {1}", sfxTag, ex.Message);
             }
@@ -139,7 +139,7 @@ namespace Gem.Sound
                 MediaPlayer.Volume = volume;
                 MediaPlayer.Play(songs[songTag]);
             }
-            catch (Exception ex)
+            catch 
             {
                 //LogHelper.Error("Failed to play song with tag {0} : {1}", songTag, ex.Message);
             }
