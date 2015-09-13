@@ -12,16 +12,17 @@ namespace Gem.DrawingSystem.Animations
         private readonly int tileSheetColumns;
         private readonly int tileSheetRows;
         private readonly int tileSheetCount;
-        private int currentFrame = -1;
-
+        private int currentFrame;
         public EventHandler onAnimationFinished;
 
         public AnimationStrip(int spriteSheetWidth, int spriteSheetHeight, AnimationStripSettings settings)
         {
             this.settings = settings;
-            tileSheetColumns = (spriteSheetWidth / settings.FrameWidth);
-            tileSheetRows = (spriteSheetHeight / settings.FrameHeight);
-            tileSheetCount = tileSheetColumns * tileSheetRows;
+            currentFrame = settings.StartFrame-1;
+            tileSheetColumns = (spriteSheetWidth / settings.FrameWidth) + 1;
+            tileSheetRows = (spriteSheetHeight / settings.FrameHeight) + 1;
+            tileSheetCount = (settings.LastFrame == -1) ? 
+                tileSheetColumns * tileSheetRows : settings.LastFrame;
 
             frameUpdateTimer = new GTimer(settings.FrameDelay, settings.FrameDelay, NextFrame);
         }
@@ -30,11 +31,11 @@ namespace Gem.DrawingSystem.Animations
 
         private void NextFrame(double timeDelta)
         {
-            currentFrame = (currentFrame == tileSheetColumns - 1) ?
+            currentFrame = (currentFrame == (tileSheetCount) - 1) ?
                 ResetTileSheet() : currentFrame + 1;
 
-            int frameInRow = currentFrame / tileSheetRows;
-            int frameinColumn = currentFrame % tileSheetRows;
+            int frameInRow = currentFrame / tileSheetColumns;
+            int frameinColumn = currentFrame % tileSheetColumns;
 
             Frame = new Rectangle(
                 frameinColumn * settings.FrameWidth,
@@ -46,9 +47,9 @@ namespace Gem.DrawingSystem.Animations
         private int ResetTileSheet()
         {
             onAnimationFinished?.Invoke(this, EventArgs.Empty);
-            return 0;
+            return settings.StartFrame;
         }
-        
+
         public void Update(double timeDelta)
         {
             frameUpdateTimer.Update(timeDelta);

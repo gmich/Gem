@@ -229,6 +229,9 @@
     <Content Include="Content\Misc\aclient_messageflow.png" />
     <Content Include="Content\Misc\gemlogo.png" />
     <Content Include="Content\Misc\logo.svg" />
+    <Content Include="Content\tilesheet.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="gem.ico" />
   </ItemGroup>
   <ItemGroup>

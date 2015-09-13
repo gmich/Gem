@@ -6,12 +6,13 @@ using Gemini.Modules.MonoGame.Controls;
 using Gemini.Modules.Output;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.ComponentModel.Composition;
-using System.Windows;
-using Microsoft.Win32;
-using System.IO;
 using Gem.DrawingSystem.Animations;
 using Gem.Infrastructure;
+using System.Windows.Media.Imaging;
+using System.Drawing;
+using WindowsColor = System.Drawing.Color;
+using MColor = Microsoft.Xna.Framework.Color;
+using System.Threading.Tasks;
 
 namespace Gem.IDE.Modules.SpriteSheets.Views
 {
@@ -24,23 +25,25 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         private GraphicsDevice graphicsDevice;
         private AnimationStrip animation;
         private Texture2D texture;
-        private int textureWidth = 100;
-        private int textureHeight = 20;
         private SpriteBatch batch;
         private ParallelTaskStarter updateLoop;
+        private object locked = new Object();
 
         public AnimationStripView()
         {
-            updateLoop = new ParallelTaskStarter(TimeSpan.Zero);
-            updateLoop.Start(() => animation.Update(updateLoop.ElapsedTime));
+            updateLoop = new ParallelTaskStarter(TimeSpan.FromMilliseconds(10));
+            updateLoop.Start(() =>
+            {
+                animation?.Update(updateLoop.ElapsedTime);
+                ReDraw();
+            });
             InitializeComponent();
             output = IoC.Get<IOutput>();
         }
 
         public void Invalidate(AnimationStripSettings settings)
         {
-            animation = new AnimationStrip(textureWidth, textureHeight, settings);
-            ReDraw();
+            animation = new AnimationStrip(texture.Width, texture.Height, settings);
         }
 
         private void ReDraw()
@@ -53,29 +56,47 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             updateLoop.Stop();
             GraphicsControl.Dispose();
         }
-                
-        private void OnGraphicsControlLoadContent(object sender, GraphicsDeviceEventArgs e)
+
+        private async void OnGraphicsControlLoadContent(object sender, GraphicsDeviceEventArgs e)
         {
             graphicsDevice = e.GraphicsDevice;
             batch = new SpriteBatch(graphicsDevice);
-            texture = new Texture2D(graphicsDevice, textureWidth, textureHeight);
+        
+            texture = await ConvertImage("Content/tilesheet.png");
+            animation = new AnimationStrip(texture.Width, texture.Height, new AnimationStripSettings(130,150," ", "test",300));
+        }
 
-            var color = new Color[textureWidth * textureHeight];
-            for(int i=0;i<color.Length;i++)
+
+        private Task<Texture2D> ConvertImage(string path)
+        {
+            return Task.Run(() =>
             {
-                color[i] = Color.Black;
-            }
+                var bmp = System.Drawing.Image.FromFile(path) as Bitmap;
+                texture = new Texture2D(graphicsDevice, bmp.Width, bmp.Height);
+                var pixels = new MColor[bmp.Width * bmp.Height];
+                for (int y = 0; y < bmp.Height; y++)
+                {
+                    for (int x = 0; x < bmp.Width; x++)
+                    {
+                        WindowsColor c = bmp.GetPixel(x, y);
+                        pixels[(y * bmp.Width) + x] = new MColor(c.R, c.G, c.B, c.A);
+                    }
+                }
+                texture.SetData(pixels);
 
-            texture.SetData(color);
+                return texture;
+            });
         }
 
         private void OnGraphicsControlDraw(object sender, DrawEventArgs e)
         {
-            e.GraphicsDevice.Clear(Color.CornflowerBlue);
+            e.GraphicsDevice.Clear(MColor.CornflowerBlue);
             if (animation != null)
-            {               
+            {
                 batch.Begin();
-                batch.Draw(texture, animation.Frame, Color.White);
+                batch.Draw(texture, new Vector2(0,100),  MColor.White);
+                batch.Draw(texture, new Microsoft.Xna.Framework.Rectangle(animation.Frame.X,animation.Frame.Y+100,animation.Frame.Width,animation.Frame.Height), MColor.White);
+                batch.Draw(texture, new Microsoft.Xna.Framework.Rectangle(0, 0, animation.Frame.Width, animation.Frame.Height), animation.Frame, MColor.White);
                 batch.End();
             }
         }
@@ -84,7 +105,6 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
 
         private void OnGraphicsControlMouseMove(object sender, MouseEventArgs e)
         {
-            ReDraw();
             var position = e.GetPosition(this);
         }
 

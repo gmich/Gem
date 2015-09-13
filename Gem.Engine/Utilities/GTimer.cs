@@ -17,6 +17,7 @@ namespace Gem.Utilities
 
         public void Update(double timeDelta)
         {
+            elapsedTime += timeDelta;
             if(elapsedTime>=endTime)
             {
                 timerEndCallback(timeDelta);

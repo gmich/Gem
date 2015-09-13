@@ -23,9 +23,11 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
                 FrameHeight, 
                 RelateiveToPathTexture, 
                 Name, 
-                FrameDelay);
+                FrameDelay,
+                FirstFrame,
+                LastFrame);
 
-        private int frameWidth;
+        private int frameWidth = 130;
         public int FrameWidth
         {
             get { return frameWidth; }
@@ -37,7 +39,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             }
         }
 
-        private int frameHeight;
+        private int frameHeight = 150;
         public int FrameHeight
         {
             get { return frameHeight; }
@@ -73,7 +75,31 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             }
         }
 
-        private int frameDelay;
+        private int firstFrame = 0;
+        public int FirstFrame
+        {
+            get { return firstFrame; }
+            set
+            {
+                firstFrame = value;
+                NotifyOfPropertyChange(() => FirstFrame);
+                sceneView?.Invalidate(settings);
+            }
+        }
+
+        private int lastFrame = -1;
+        public int LastFrame
+        {
+            get { return lastFrame; }
+            set
+            {
+                lastFrame = value;
+                NotifyOfPropertyChange(() => LastFrame);
+                sceneView?.Invalidate(settings);
+            }
+        }
+
+        private int frameDelay = 300;
         public int FrameDelay
         {
             get { return frameDelay; }
@@ -84,7 +110,6 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
                 sceneView?.Invalidate(settings);
             }
         }
-        
 
         public AnimationStripViewModel()
         {
