@@ -33,12 +33,26 @@ namespace Gem.IDE.Modules.SpriteSheets
 
         public override void PostInitialize()
         {
-            var animationStripViewModel = Shell.Documents.OfType<AnimationStripViewModel>().FirstOrDefault();
+            var animationStripViewModel = Shell
+                                        .Documents
+                                        .OfType<AnimationStripViewModel>()
+                                        .FirstOrDefault();
+
             if (animationStripViewModel != null)
+            {
                 inspectorTool.SelectedObject = new InspectableObjectBuilder()
-                    .WithObjectProperties(animationStripViewModel, x => true)
-                    .ToInspectableObject();
-            inspectorTool.DisplayName = "SpriteSheet Inspector";
+                    .WithCollapsibleGroup("Animation", group => 
+                            group.WithObjectProperties(animationStripViewModel, model => 
+                            model.Attributes.Matches(new AnimationAttribute())))
+                    .WithCollapsibleGroup("Sprite sheet", group => 
+                            group.WithObjectProperties(animationStripViewModel, model =>
+                            model.Attributes.Matches(new SpriteSheetAttribute())))
+                    .WithCollapsibleGroup("Presentation", group =>
+                            group.WithObjectProperties(animationStripViewModel, model =>
+                            model.Attributes.Matches(new PresentationAttribute())))
+                   .ToInspectableObject();
+                inspectorTool.DisplayName = "Sprite-Sheet Animation Inspector";
+            }
         }
     }
 }

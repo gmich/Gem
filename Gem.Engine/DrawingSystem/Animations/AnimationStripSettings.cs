@@ -6,7 +6,7 @@
 
         public int FrameHeight { get; }
 
-        public string RelativePathToTexture { get; }
+        public string Path { get; }
 
         public string Name { get; }
 
@@ -20,7 +20,7 @@
         {
             FrameWidth = frameWidth;
             FrameHeight = frameHeight;
-            RelativePathToTexture = relativePathToTexture;
+            Path = relativePathToTexture;
             Name = name;
             FrameDelay = frameDelay;
             LastFrame = lastFrame;

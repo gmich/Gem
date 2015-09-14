@@ -82,8 +82,7 @@ namespace Gem.Infrastructure
             {
                 await action(now, cancellationToken).
                       ConfigureAwait(false);
-                watch.Reset();
-
+                watch.Restart();
                 await Task.Delay(repostDelay, cancellationToken).
                       ConfigureAwait(false);
 

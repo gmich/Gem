@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using Gemini.Framework;
 using Gem.IDE.Modules.SpriteSheets.Views;
 using Gem.DrawingSystem.Animations;
+using System.ComponentModel;
 
 namespace Gem.IDE.Modules.SpriteSheets.ViewModels
 {
@@ -10,8 +11,25 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public class AnimationStripViewModel : Document
     {
+
+        #region Fields
+
         private ISceneView sceneView;
 
+        #endregion
+
+        #region Ctor
+
+        public AnimationStripViewModel()
+        {
+            DisplayName = "Sprite-Sheet Animations";
+        }
+
+        #endregion
+
+        #region Helpers
+
+        [Browsable(false)]
         public override bool ShouldReopenOnStart
         {
             get { return true; }
@@ -20,105 +38,134 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
         private AnimationStripSettings settings =>
             new AnimationStripSettings(
                 FrameWidth,
-                FrameHeight, 
-                RelateiveToPathTexture, 
-                Name, 
-                FrameDelay,
+                FrameHeight,
+                Path,
+                Name,
+                FrameDelay / 1000,
                 FirstFrame,
                 LastFrame);
 
-        private int frameWidth = 130;
-        public int FrameWidth
-        {
-            get { return frameWidth; }
-            set
-            {
-                frameWidth = value;
-                NotifyOfPropertyChange(() => FrameWidth);
-                sceneView?.Invalidate(settings);
-            }
-        }
+        #endregion
 
-        private int frameHeight = 150;
-        public int FrameHeight
-        {
-            get { return frameHeight; }
-            set
-            {
-                frameHeight = value;
-                NotifyOfPropertyChange(() => FrameHeight);
-                sceneView?.Invalidate(settings);
-            }
-        }
+        #region Frame
 
-        private string relateiveToPathTexture;
-        public string RelateiveToPathTexture
-        {
-            get { return relateiveToPathTexture; }
-            set
-            {
-                relateiveToPathTexture = value;
-                NotifyOfPropertyChange(() => RelateiveToPathTexture);
-                sceneView?.Invalidate(settings);
-            }
-        }
-
-        private string name;
+        private string name = "My_Animation";
+        [Animation]
         public string Name
         {
             get { return name; }
             set
             {
-                name = value;
+                name = value.Trim();
                 NotifyOfPropertyChange(() => Name);
                 sceneView?.Invalidate(settings);
             }
         }
 
+        private int frameWidth = 32;
+        [Animation]
+        [DisplayName("Frame Width")]
+        public int FrameWidth
+        {
+            get { return frameWidth; }
+            set
+            {
+                frameWidth = (value < 1) ? 1 : value;
+                NotifyOfPropertyChange(() => FrameWidth);
+                sceneView?.Invalidate(settings);
+            }
+        }
+
+        private int frameHeight = 32;
+        [Animation]
+        [DisplayName("Frame Height")]
+        public int FrameHeight
+        {
+            get { return frameHeight; }
+            set
+            {
+                frameHeight = (value < 1) ? 1 : value;
+                NotifyOfPropertyChange(() => FrameHeight);
+                sceneView?.Invalidate(settings);
+            }
+        }
+
+
         private int firstFrame = 0;
+        [Animation]
+        [DisplayName("First Frame")]
         public int FirstFrame
         {
             get { return firstFrame; }
             set
             {
-                firstFrame = value;
+                firstFrame = (value < 0 ) ? 0 : value;
+                firstFrame = (firstFrame > lastFrame) ? lastFrame : firstFrame;
                 NotifyOfPropertyChange(() => FirstFrame);
                 sceneView?.Invalidate(settings);
             }
         }
 
-        private int lastFrame = -1;
+        private int lastFrame = 0;
+        [Animation]
+        [DisplayName("Last Frame")]
         public int LastFrame
         {
             get { return lastFrame; }
             set
             {
-                lastFrame = value;
+                lastFrame = (value < firstFrame) ? firstFrame : value;
                 NotifyOfPropertyChange(() => LastFrame);
                 sceneView?.Invalidate(settings);
             }
         }
 
-        private int frameDelay = 300;
-        public int FrameDelay
+        private double frameDelay = 20;
+        [Animation]
+        [DisplayName("Frame Delay (ms)")]
+        public double FrameDelay
         {
             get { return frameDelay; }
             set
             {
-                frameDelay = value;
+                frameDelay = (value < 0) ? 0 : value;
                 NotifyOfPropertyChange(() => FrameDelay);
                 sceneView?.Invalidate(settings);
             }
         }
+        #endregion
 
-        public AnimationStripViewModel()
+        #region Presentation
+
+        private bool animate = false;
+        [Presentation]
+        public bool Animate
         {
-            DisplayName = "SpriteSheets";
+            get { return animate; }
+            set
+            {
+                animate = value;
+                NotifyOfPropertyChange(() => Animate);
+                sceneView?.Invalidate(settings);
+            }
         }
+
+        #endregion
+
+        #region Tilesheet
+
+        [SpriteSheet]
+        public string Path { get; } = "Content/tilesheet.png";
+
+        #endregion
+
+        #region Document Members
 
         protected override void OnViewLoaded(object view)
         {
             sceneView = view as ISceneView;
+            sceneView.Path = Path;
+            sceneView.OnGraphicsDeviceLoaded += (sender, args) => sceneView.Invalidate(settings);
             base.OnViewLoaded(view);
         }
 
@@ -133,5 +180,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
 
             base.OnDeactivate(close);
         }
+
+        #endregion
     }
 }

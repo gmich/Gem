@@ -21,8 +21,7 @@ namespace Gem.DrawingSystem.Animations
             currentFrame = settings.StartFrame-1;
             tileSheetColumns = (spriteSheetWidth / settings.FrameWidth) + 1;
             tileSheetRows = (spriteSheetHeight / settings.FrameHeight) + 1;
-            tileSheetCount = (settings.LastFrame == -1) ? 
-                tileSheetColumns * tileSheetRows : settings.LastFrame;
+            tileSheetCount =  settings.LastFrame;
 
             frameUpdateTimer = new GTimer(settings.FrameDelay, settings.FrameDelay, NextFrame);
         }
@@ -31,7 +30,7 @@ namespace Gem.DrawingSystem.Animations
 
         private void NextFrame(double timeDelta)
         {
-            currentFrame = (currentFrame == (tileSheetCount) - 1) ?
+            currentFrame = (currentFrame >= tileSheetCount) ?
                 ResetTileSheet() : currentFrame + 1;
 
             int frameInRow = currentFrame / tileSheetColumns;

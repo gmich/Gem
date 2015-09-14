@@ -196,6 +196,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="ViewModels\AnimationStripAttributes.cs" />
     <Compile Include="ViewModels\AnimationStripViewModel.cs" />
     <Compile Include="Views\AnimationStripView.xaml.cs">
       <DependentUpon>AnimationStripView.xaml</DependentUpon>
@@ -229,6 +230,10 @@
     <ProjectReference Include="..\..\Gem.Engine\Gem.Engine.csproj">
       <Project>{2784d0e3-736d-4bca-8536-eea8834e6ed9}</Project>
       <Name>Gem.Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Gem.IDE.Infrastructure\Gem.IDE.Infrastructure.csproj">
+      <Project>{4d933708-61c1-47b9-bdf0-3b6d27e90078}</Project>
+      <Name>Gem.IDE.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Gem.Infrastructure\Gem.Infrastructure.csproj">
       <Project>{dab38678-499f-4565-9db8-434a5c66a093}</Project>

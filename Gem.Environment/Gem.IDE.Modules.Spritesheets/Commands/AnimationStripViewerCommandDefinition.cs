@@ -5,7 +5,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Commands
     [CommandDefinition]
     public class AnimationStripViewerCommandDefinition : CommandDefinition
     {
-        public const string CommandName = "Demos.SpriteSheets";
+        public const string CommandName = "Demos.SpriteSheetAnimations";
 
         public override string Name
         {
@@ -14,12 +14,12 @@ namespace Gem.IDE.Modules.SpriteSheets.Commands
 
         public override string Text
         {
-            get { return "Sprite Sheets"; }
+            get { return "Sprite-Sheet Animations"; }
         }
 
         public override string ToolTip
         {
-            get { return "Sprite Painting"; }
+            get { return "Sprite-Sheet Animations"; }
         }
     }
 }

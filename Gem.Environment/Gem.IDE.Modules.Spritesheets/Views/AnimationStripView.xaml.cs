@@ -13,6 +13,10 @@ using System.Drawing;
 using WindowsColor = System.Drawing.Color;
 using MColor = Microsoft.Xna.Framework.Color;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Content;
+using Gem.IDE.Modules.Spritesheets;
+using Gem.IDE.Infrastructure;
+
 
 namespace Gem.IDE.Modules.SpriteSheets.Views
 {
@@ -27,11 +31,12 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         private Texture2D texture;
         private SpriteBatch batch;
         private ParallelTaskStarter updateLoop;
-        private object locked = new Object();
+        private ContentManager contentManager;
+        public event EventHandler<EventArgs> OnGraphicsDeviceLoaded;
 
         public AnimationStripView()
         {
-            updateLoop = new ParallelTaskStarter(TimeSpan.FromMilliseconds(10));
+            updateLoop = new ParallelTaskStarter(TimeSpan.FromMilliseconds(5));
             updateLoop.Start(() =>
             {
                 animation?.Update(updateLoop.ElapsedTime);
@@ -46,6 +51,8 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             animation = new AnimationStrip(texture.Width, texture.Height, settings);
         }
 
+        public string Path { get; set; } = string.Empty;            
+        
         private void ReDraw()
         {
             GraphicsControl.Invalidate();
@@ -57,49 +64,29 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             GraphicsControl.Dispose();
         }
 
-        private async void OnGraphicsControlLoadContent(object sender, GraphicsDeviceEventArgs e)
+        private void OnGraphicsControlLoadContent(object sender, GraphicsDeviceEventArgs e)
         {
             graphicsDevice = e.GraphicsDevice;
             batch = new SpriteBatch(graphicsDevice);
+
+            //texture = await ConvertImage("Content/tilesheet.png");
+            contentManager = new ContentManager(new ServiceProvider(new DeviceManager(graphicsDevice)));
+            texture = contentManager.Load<Texture2D>(Path);
+            OnGraphicsDeviceLoaded?.Invoke(this, EventArgs.Empty);
+        }
         
-            texture = await ConvertImage("Content/tilesheet.png");
-            animation = new AnimationStrip(texture.Width, texture.Height, new AnimationStripSettings(130,150," ", "test",300));
-        }
-
-
-        private Task<Texture2D> ConvertImage(string path)
-        {
-            return Task.Run(() =>
-            {
-                var bmp = System.Drawing.Image.FromFile(path) as Bitmap;
-                texture = new Texture2D(graphicsDevice, bmp.Width, bmp.Height);
-                var pixels = new MColor[bmp.Width * bmp.Height];
-                for (int y = 0; y < bmp.Height; y++)
-                {
-                    for (int x = 0; x < bmp.Width; x++)
-                    {
-                        WindowsColor c = bmp.GetPixel(x, y);
-                        pixels[(y * bmp.Width) + x] = new MColor(c.R, c.G, c.B, c.A);
-                    }
-                }
-                texture.SetData(pixels);
-
-                return texture;
-            });
-        }
-
         private void OnGraphicsControlDraw(object sender, DrawEventArgs e)
         {
             e.GraphicsDevice.Clear(MColor.CornflowerBlue);
             if (animation != null)
             {
                 batch.Begin();
-                batch.Draw(texture, new Vector2(0,100),  MColor.White);
-                batch.Draw(texture, new Microsoft.Xna.Framework.Rectangle(animation.Frame.X,animation.Frame.Y+100,animation.Frame.Width,animation.Frame.Height), MColor.White);
+                batch.Draw(texture, new Vector2(0, 200), MColor.White);
+                batch.Draw(texture, new Microsoft.Xna.Framework.Rectangle(animation.Frame.X, animation.Frame.Y + 200, animation.Frame.Width, animation.Frame.Height), MColor.White);
                 batch.Draw(texture, new Microsoft.Xna.Framework.Rectangle(0, 0, animation.Frame.Width, animation.Frame.Height), animation.Frame, MColor.White);
                 batch.End();
             }
-        }
+        }        
 
         #region Input
 
