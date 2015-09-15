@@ -22,7 +22,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
 
         public AnimationStripViewModel()
         {
-            DisplayName = "Sprite-Sheet Animations";
+            DisplayName = name + ".animation";
         }
 
         #endregion
@@ -57,6 +57,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             set
             {
                 name = value.Trim();
+                DisplayName = name + ".animation";
                 NotifyOfPropertyChange(() => Name);
                 sceneView?.Invalidate(settings);
             }
@@ -156,6 +157,34 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
 
         [SpriteSheet]
         public string Path { get; } = "Content/tilesheet.png";
+
+        private bool showNumbers = false;
+        [SpriteSheet]
+        [DisplayName("Show Numbers")]
+        public bool ShowNumbers
+        {
+            get { return showNumbers; }
+            set
+            {
+                showNumbers = value;
+                NotifyOfPropertyChange(() => ShowNumbers);
+                sceneView?.Invalidate(settings);
+            }
+        }
+
+        private bool showGrid = false;
+        [SpriteSheet]
+        [DisplayName("Show Grid")]
+        public bool ShowGrid
+        {
+            get { return showGrid; }
+            set
+            {
+                showGrid = value;
+                NotifyOfPropertyChange(() => ShowGrid);
+                sceneView?.Invalidate(settings);
+            }
+        }
 
         #endregion
 

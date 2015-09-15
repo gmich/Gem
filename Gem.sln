@@ -52,7 +52,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.IDE.Core", "Gem.Environ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.IDE.Modules.Spritesheets", "Gem.Environment\Gem.IDE.Modules.Spritesheets\Gem.IDE.Modules.Spritesheets.csproj", "{DE32D523-5140-44E1-AD34-F115E350B2CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.IDE.Infrastructure", "Gem.IDE.Infrastructure\Gem.IDE.Infrastructure.csproj", "{4D933708-61C1-47B9-BDF0-3B6D27E90078}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.IDE.Infrastructure", "Gem.Environment\Gem.IDE.Infrastructure\Gem.IDE.Infrastructure.csproj", "{4D933708-61C1-47B9-BDF0-3B6D27E90078}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

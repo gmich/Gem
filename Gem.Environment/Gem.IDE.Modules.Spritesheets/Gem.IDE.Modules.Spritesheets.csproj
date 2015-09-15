@@ -231,7 +231,11 @@
       <Project>{2784d0e3-736d-4bca-8536-eea8834e6ed9}</Project>
       <Name>Gem.Engine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Gem.IDE.Infrastructure\Gem.IDE.Infrastructure.csproj">
+    <ProjectReference Include="..\..\Gem.Gui\Gem.Gui.csproj">
+      <Project>{a6950cea-20e9-4949-a49c-8064ed2d1d4a}</Project>
+      <Name>Gem.Gui</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gem.IDE.Infrastructure\Gem.IDE.Infrastructure.csproj">
       <Project>{4d933708-61c1-47b9-bdf0-3b6d27e90078}</Project>
       <Name>Gem.IDE.Infrastructure</Name>
     </ProjectReference>
