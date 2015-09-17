@@ -53,6 +53,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             });
             InitializeComponent();
             output = IoC.Get<IOutput>();
+
         }
 
         public void Invalidate(AnimationStripSettings settings)
@@ -86,12 +87,19 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         private void OnGraphicsControlLoadContent(object sender, GraphicsDeviceEventArgs e)
         {
             graphicsDevice = e.GraphicsDevice;
-            batch = new SpriteBatch(graphicsDevice);
 
-            //texture = await ConvertImage("Content/tilesheet.png");
-            var contentManager = new ContentManager(new ServiceProvider(new DeviceManager(graphicsDevice)));
-            texture = contentManager.Load<Texture2D>(Path);
-            font = contentManager.Load<SpriteFont>("Content/Fonts/detailsFont");
+            if (texture == null)
+            {
+                batch = new SpriteBatch(graphicsDevice);
+                //texture = await ConvertImage("Content/tilesheet.png");
+                var contentManager = new ContentManager(new ServiceProvider(new DeviceManager(graphicsDevice)));
+
+                // texture = contentManager.Load<Texture2D>(Path);
+                texture = ImageHelper.LoadAsTexture2D(graphicsDevice, Path).Result;
+                font = contentManager.Load<SpriteFont>("Content/Fonts/detailsFont");
+            }
+            this.Width = texture.Width;
+            this.Height = texture.Height;
             OnGraphicsDeviceLoaded?.Invoke(this, EventArgs.Empty);
         }
 
@@ -128,10 +136,10 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
 
         private void DrawSelectedFrame(SpriteBatch batch)
         {
-            if(selectedFrame==-1) return;
+            if (selectedFrame == -1) return;
             foreach (var frame in frames)
             {
-               if(frame.Item1==selectedFrame)
+                if (frame.Item1 == selectedFrame)
                 {
                     batch.Draw(frameTexture, new MRectangle(frame.Item2.X, frame.Item2.Y, animation.Frame.Width, animation.Frame.Height), MColor.White);
                     var offset = font.MeasureString(frame.Item1.ToString());
@@ -145,7 +153,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         public void SetOptions(AnimationViewOptions options)
         {
             additionalDraw = (batch) => { };
-            if(options.ShowGrid)
+            if (options.ShowGrid)
             {
                 additionalDraw += DrawGrid;
             }
@@ -158,7 +166,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
                 additionalDraw += DrawSelectedFrame;
             }
         }
-        
+
         private MColor GetColorByFrame(int frameIndex)
         {
             if (frameIndex >= animation.Settings.StartFrame
@@ -168,7 +176,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             }
             return MColor.Black;
         }
-        
+
         #region Input
 
         private void OnGraphicsControlMouseMove(object sender, MouseEventArgs e)

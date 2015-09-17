@@ -4,12 +4,14 @@ using Gemini.Framework;
 using Gem.IDE.Modules.SpriteSheets.Views;
 using Gem.DrawingSystem.Animations;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using Gemini.Framework.Threading;
 
 namespace Gem.IDE.Modules.SpriteSheets.ViewModels
 {
     [Export(typeof(AnimationStripViewModel))]
     [PartCreationPolicy(CreationPolicy.NonShared)]
-    public class AnimationStripViewModel : Document
+    public class AnimationStripViewModel : PersistedDocument
     {
 
         #region Fields
@@ -18,7 +20,27 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
 
         #endregion
 
+        protected override Task DoNew()
+        {
+            return TaskUtility.Completed;
+        }
+
+        protected override Task DoLoad(string filePath)
+        {
+            return TaskUtility.Completed;
+        }
+
+        protected override Task DoSave(string filePath)
+        {
+            return TaskUtility.Completed;
+        }
+
         #region Ctor
+
+        public AnimationStripViewModel(string path) : this()
+        {
+            Path = path;           
+        }
 
         public AnimationStripViewModel()
         {

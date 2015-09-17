@@ -19,5 +19,9 @@ namespace Gem.IDE.Core.Modules
         [Export]
         public static MenuItemDefinition ViewSpriteSheetMenuItem = new CommandMenuItemDefinition<AnimationStripViewerCommandDefinition>(
             Startup.Module.DemosMenuGroup, 3);
+
+        [Export]
+        public static MenuItemDefinition CreateAnimationMenuItem = new CommandMenuItemDefinition<CreateAnimationCommandDefinition>(
+             Startup.Module.DemosMenuGroup, 4);
     }
 }

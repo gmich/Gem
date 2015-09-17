@@ -132,9 +132,13 @@
     <Compile Include="Console\Rendering\Sprite.cs" />
     <Compile Include="Console\Rendering\SpriteSheet.cs" />
     <Compile Include="Console\Rendering\ITexture.cs" />
+    <Compile Include="Repositories\AsyncRepositoryWrapper.cs" />
+    <Compile Include="Repositories\Extensions.cs" />
     <Compile Include="DrawingSystem\Animations\AnimationStrip.cs" />
     <Compile Include="DrawingSystem\Animations\AnimationStripAnalyzer.cs" />
     <Compile Include="DrawingSystem\Animations\AnimationStripSettings.cs" />
+    <Compile Include="DrawingSystem\Animations\Repository\IAnimationRepository.cs" />
+    <Compile Include="DrawingSystem\Animations\Repository\JsonAnimationRepository.cs" />
     <Compile Include="DrawingSystem\RenderTargetRenderer.cs" />
     <Compile Include="Primitives\Providers\IShapeProvider.cs" />
     <Compile Include="Primitives\Providers\JsonShapeProvider.cs" />
@@ -147,6 +151,7 @@
     <Compile Include="Primitives\Shapes\RelativeRenderedShape.cs" />
     <Compile Include="Primitives\Shapes\ShapeDeclaration.cs" />
     <Compile Include="Primitives\Shapes\VertexPosition.cs" />
+    <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Utilities\Range.cs" />
     <Compile Include="Console\Cells\Row.cs" />
     <Compile Include="Console\Commands\Terminal.cs" />

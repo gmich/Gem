@@ -1,6 +1,6 @@
 ﻿namespace Gem.DrawingSystem.Animations
 {
-    public struct AnimationStripSettings
+    public class AnimationStripSettings
     {
         public int FrameWidth { get; }
 
@@ -17,11 +17,12 @@
         public int StartFrame { get; }
 
         public bool Loop { get; }
-        public AnimationStripSettings(int frameWidth, int frameHeight, string relativePathToTexture, string name, double frameDelay,bool loop, int startFrame = 0, int lastFrame = -1)
+
+        public AnimationStripSettings(int frameWidth, int frameHeight, string path, string name, double frameDelay,bool loop, int startFrame = 0, int lastFrame = -1)
         {
             FrameWidth = frameWidth;
             FrameHeight = frameHeight;
-            Path = relativePathToTexture;
+            Path = path;
             Name = name;
             FrameDelay = frameDelay;
             LastFrame = lastFrame;
