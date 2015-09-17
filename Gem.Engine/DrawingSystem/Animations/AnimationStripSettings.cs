@@ -16,7 +16,8 @@
 
         public int StartFrame { get; }
 
-        public AnimationStripSettings(int frameWidth, int frameHeight, string relativePathToTexture, string name, double frameDelay, int startFrame = 0, int lastFrame = -1)
+        public bool Loop { get; }
+        public AnimationStripSettings(int frameWidth, int frameHeight, string relativePathToTexture, string name, double frameDelay,bool loop, int startFrame = 0, int lastFrame = -1)
         {
             FrameWidth = frameWidth;
             FrameHeight = frameHeight;
@@ -25,6 +26,7 @@
             FrameDelay = frameDelay;
             LastFrame = lastFrame;
             StartFrame = startFrame;
+            Loop = loop;
         }
 
     }

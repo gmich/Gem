@@ -10,5 +10,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         void Invalidate(AnimationStripSettings settings);
 
         string Path { get; set; }
+
+        void SetOptions(AnimationViewOptions options);
     }
 }

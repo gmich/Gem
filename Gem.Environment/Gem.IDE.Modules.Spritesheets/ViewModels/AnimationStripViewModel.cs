@@ -42,8 +42,12 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
                 Path,
                 Name,
                 FrameDelay / 1000,
+                true,
                 FirstFrame,
                 LastFrame);
+
+        private AnimationViewOptions options =>
+            new AnimationViewOptions(ShowNumbers, ShowGrid);
 
         #endregion
 
@@ -168,7 +172,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             {
                 showNumbers = value;
                 NotifyOfPropertyChange(() => ShowNumbers);
-                sceneView?.Invalidate(settings);
+                sceneView?.SetOptions(options);
             }
         }
 
@@ -182,7 +186,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             {
                 showGrid = value;
                 NotifyOfPropertyChange(() => ShowGrid);
-                sceneView?.Invalidate(settings);
+                sceneView?.SetOptions(options);
             }
         }
 

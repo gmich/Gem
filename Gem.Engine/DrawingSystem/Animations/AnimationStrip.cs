@@ -9,17 +9,17 @@ namespace Gem.DrawingSystem.Animations
     public class AnimationStrip
     {
         private readonly GTimer frameUpdateTimer;
-        private readonly AnimationStripSettings settings;
         private readonly int tileSheetColumns;
         private readonly int tileSheetRows;
         private readonly int tileSheetCount;
         private int currentFrame;
+
         public EventHandler onAnimationFinished;
-        private readonly List<Tuple<int, Rectangle>> frames = new List<Tuple<int, Rectangle>>();
+        public AnimationStripSettings Settings { get; }
 
         public AnimationStrip(int spriteSheetWidth, int spriteSheetHeight, AnimationStripSettings settings)
         {
-            this.settings = settings;
+            this.Settings = settings;
             currentFrame = settings.StartFrame - 1;
             tileSheetColumns = (spriteSheetWidth / settings.FrameWidth) + 1;
             tileSheetRows = (spriteSheetHeight / settings.FrameHeight) + 1;
@@ -27,39 +27,7 @@ namespace Gem.DrawingSystem.Animations
 
             frameUpdateTimer = new GTimer(settings.FrameDelay, settings.FrameDelay, NextFrame);
         }
-
-        public IEnumerable<Tuple<int, Rectangle>> ParseToEnd()
-        {
-            if (frames.Count == 0)
-            {
-                ParseSpriteSheet(settings.StartFrame);
-            }
-            return frames;
-        }
-
-        private void ParseSpriteSheet(int currentFrame)
-        {
-
-            int frameInRow = currentFrame / tileSheetColumns;
-            int frameinColumn = currentFrame % tileSheetColumns;
-
-            frames.Add(new Tuple<int, Rectangle>(
-                currentFrame,
-                    new Rectangle(
-                    frameinColumn * settings.FrameWidth,
-                    frameInRow * settings.FrameHeight,
-                    settings.FrameWidth,
-                    settings.FrameHeight)));
-
-            int nextFrame = currentFrame + 1;
-            if (nextFrame > tileSheetCount)
-            {
-                return;
-            }
-            ParseSpriteSheet(nextFrame);
-        }
-
-
+        
         public Rectangle Frame { get; private set; }
 
         private void NextFrame(double timeDelta)
@@ -71,16 +39,16 @@ namespace Gem.DrawingSystem.Animations
             int frameinColumn = currentFrame % tileSheetColumns;
 
             Frame = new Rectangle(
-                frameinColumn * settings.FrameWidth,
-                frameInRow * settings.FrameHeight,
-                settings.FrameWidth,
-                settings.FrameHeight);
+                frameinColumn * Settings.FrameWidth,
+                frameInRow * Settings.FrameHeight,
+                Settings.FrameWidth,
+                Settings.FrameHeight);
         }
 
         private int ResetTileSheet()
         {
             onAnimationFinished?.Invoke(this, EventArgs.Empty);
-            return settings.StartFrame;
+            return Settings.StartFrame;
         }
 
         public void Update(double timeDelta)
