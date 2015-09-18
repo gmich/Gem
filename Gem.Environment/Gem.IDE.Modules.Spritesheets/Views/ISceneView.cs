@@ -12,5 +12,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         string Path { get; set; }
 
         void SetOptions(AnimationViewOptions options);
+
+        byte[] SpriteSheetData { get; set; }
     }
 }

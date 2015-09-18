@@ -6,6 +6,8 @@ using Gem.DrawingSystem.Animations;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Gemini.Framework.Threading;
+using System.Linq;
+using Gem.DrawingSystem.Animations.Repository;
 
 namespace Gem.IDE.Modules.SpriteSheets.ViewModels
 {
@@ -17,6 +19,8 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
         #region Fields
 
         private ISceneView sceneView;
+        private readonly IAnimationRepository repository;
+        private AnimationStripSettings settings;
 
         #endregion
 
@@ -37,19 +41,43 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
 
         #region Ctor
 
-        public AnimationStripViewModel(string path) : this()
+        public AnimationStripViewModel(string path)
         {
-            Path = path;           
+            repository = new JsonAnimationRepository(Environment.CurrentDirectory + "//Content");
+            Path = path;
+            DisplayName = name + ".animation";
+        }
+
+        public AnimationStripViewModel(string path, IAnimationRepository repository)
+        {
+            this.repository = repository;
+            repository.LoadAll()
+                      .Done(setting => settings = setting.First());
+
+            this.FrameWidth = settings.FrameWidth;
+            Path = path;
+            FrameHeight = settings.FrameHeight;
+            FrameDelay = settings.FrameDelay;
+            LastFrame = settings.LastFrame;
+            firstFrame = settings.StartFrame;
+            sceneView?.Invalidate(settings);
+            DisplayName = name + ".animation";
         }
 
         public AnimationStripViewModel()
         {
             DisplayName = name + ".animation";
+            repository = new JsonAnimationRepository(Environment.CurrentDirectory + "//Content");
         }
 
         #endregion
 
         #region Helpers
+
+        private void Save()
+        {
+            repository.Save(settings);
+        }
 
         [Browsable(false)]
         public override bool ShouldReopenOnStart
@@ -57,14 +85,14 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             get { return true; }
         }
 
-        private AnimationStripSettings settings =>
-            new AnimationStripSettings(
+        private AnimationStripSettings Settings =>
+           settings = new AnimationStripSettings(
                 FrameWidth,
                 FrameHeight,
-                Path,
                 Name,
                 FrameDelay / 1000,
                 true,
+                null,
                 FirstFrame,
                 LastFrame);
 
@@ -86,6 +114,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
                 DisplayName = name + ".animation";
                 NotifyOfPropertyChange(() => Name);
                 sceneView?.Invalidate(settings);
+                Save();
             }
         }
 
@@ -99,7 +128,8 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             {
                 frameWidth = (value < 1) ? 1 : value;
                 NotifyOfPropertyChange(() => FrameWidth);
-                sceneView?.Invalidate(settings);
+                sceneView?.Invalidate(Settings);
+                Save();
             }
         }
 
@@ -113,7 +143,8 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             {
                 frameHeight = (value < 1) ? 1 : value;
                 NotifyOfPropertyChange(() => FrameHeight);
-                sceneView?.Invalidate(settings);
+                sceneView?.Invalidate(Settings);
+                Save();
             }
         }
 
@@ -126,10 +157,11 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             get { return firstFrame; }
             set
             {
-                firstFrame = (value < 0 ) ? 0 : value;
+                firstFrame = (value < 0) ? 0 : value;
                 firstFrame = (firstFrame > lastFrame) ? lastFrame : firstFrame;
                 NotifyOfPropertyChange(() => FirstFrame);
-                sceneView?.Invalidate(settings);
+                sceneView?.Invalidate(Settings);
+                Save();
             }
         }
 
@@ -143,7 +175,8 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             {
                 lastFrame = (value < firstFrame) ? firstFrame : value;
                 NotifyOfPropertyChange(() => LastFrame);
-                sceneView?.Invalidate(settings);
+                sceneView?.Invalidate(Settings);
+                Save();
             }
         }
 
@@ -157,7 +190,8 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             {
                 frameDelay = (value < 0) ? 0 : value;
                 NotifyOfPropertyChange(() => FrameDelay);
-                sceneView?.Invalidate(settings);
+                sceneView?.Invalidate(Settings);
+                Save();
             }
         }
         #endregion
@@ -173,7 +207,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             {
                 animate = value;
                 NotifyOfPropertyChange(() => Animate);
-                sceneView?.Invalidate(settings);
+                sceneView?.Invalidate(Settings);
             }
         }
 
@@ -220,7 +254,11 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
         {
             sceneView = view as ISceneView;
             sceneView.Path = Path;
-            sceneView.OnGraphicsDeviceLoaded += (sender, args) => sceneView.Invalidate(settings);
+            if (sceneView.SpriteSheetData == null)
+            {
+                sceneView.SpriteSheetData = settings?.Image;
+            }
+            sceneView.OnGraphicsDeviceLoaded += (sender, args) => sceneView.Invalidate(Settings);
             base.OnViewLoaded(view);
         }
 

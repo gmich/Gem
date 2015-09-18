@@ -6,9 +6,9 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
+using static Gem.DrawingSystem.Animations.Extensions;
 using System.Threading.Tasks;
+using Gem.DrawingSystem.Animations.Repository;
 
 namespace Gem.IDE.Modules.SpriteSheets.Commands
 {
@@ -26,14 +26,21 @@ namespace Gem.IDE.Modules.SpriteSheets.Commands
         public override Task Run(Command command)
         {
             var dialog = new OpenFileDialog();
-            dialog.Filter = "Image Files(*.bmp, *.jpg, *.png) | *.bmp; *.jpg; *.png;";
-
+            dialog.InitialDirectory = $"{Environment.CurrentDirectory}\\Content";
+            dialog.Filter = $"Animation Files(*.bmp, *.jpg, *.png *{Animation}) | *.bmp; *.jpg; *.png; *{Animation};";
             if (dialog.ShowDialog() == true)
             {
-                shell.OpenDocument(new AnimationStripViewModel(dialog.FileName));
+                if (dialog.FileName.EndsWith(Animation))
+                {
+                    shell.OpenDocument(new AnimationStripViewModel(dialog.FileName,
+                        new JsonAnimationRepository($"{Environment.CurrentDirectory}\\Content")));
+                }
+                else
+                {
+                    shell.OpenDocument(new AnimationStripViewModel(dialog.FileName));
+                }
             }
             return TaskUtility.Completed;
-
         }
     }
 }

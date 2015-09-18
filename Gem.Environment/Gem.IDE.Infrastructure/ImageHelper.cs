@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 
 namespace Gem.IDE.Infrastructure
@@ -57,6 +60,35 @@ namespace Gem.IDE.Infrastructure
 
                 return texture;
             });
+        }
+
+        public static string ImageToString(string path)
+        {
+            if (path == null)
+            {
+                throw new ArgumentNullException("path");
+            }
+            Image im = Image.FromFile(path);
+            var ms = new MemoryStream();
+
+            im.Save(ms, im.RawFormat);
+
+            var array = ms.ToArray();
+
+            return System.Convert.ToBase64String(array);
+        }
+
+        public static Image StringToImage(string imageString)
+        {
+            if (imageString == null)
+            {
+                throw new ArgumentNullException("imageString");
+            }
+            var array = System.Convert.FromBase64String(imageString);
+
+            var image = Image.FromStream(new MemoryStream(array));
+
+            return image;
         }
 
     }

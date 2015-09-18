@@ -16,9 +16,9 @@ namespace Gem.DrawingSystem.Animations.Repository
         public JsonAnimationRepository(string localPath)
         {
             this.localPath = localPath;
-            fileWriter = (json, fileName) => File.WriteAllText($"path/{fileName}.animation", json);
+            fileWriter = (json, fileName) => File.WriteAllText($"{localPath}/{fileName}{Extensions.Animation}", json);
             fileReader = fileName => File.ReadAllText(fileName);
-            animationFiles =()=> Directory.GetFiles(localPath, $"*.{Extensions.Animation}");
+            animationFiles =()=> Directory.GetFiles(localPath, $"*{Extensions.Animation}");
         }
 
         public JsonAnimationRepository(string localPath,

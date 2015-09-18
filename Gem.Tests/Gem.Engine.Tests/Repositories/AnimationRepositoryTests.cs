@@ -22,7 +22,7 @@ namespace Gem.Engine.Tests.Repositories
                 fileName => json,
                 () => new[] { "path" });
 
-            AnimationStripSettings settings = new AnimationStripSettings(10, 10, "path.json", "test", 20d, true, 1, 10);
+            AnimationStripSettings settings = new AnimationStripSettings(10, 10, "path.json", "test", 20d, true, null, 1, 10);
             AnimationStripSettings loadedSettings = default(AnimationStripSettings);
 
             animationRepository.ExecuteAsync(rep=> rep.Save(settings))

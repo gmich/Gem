@@ -246,6 +246,7 @@
   <ItemGroup>
     <Folder Include="CameraSystem\Handlers\" />
     <Folder Include="CameraSystem\Scripts\" />
+    <Folder Include="Content\Animations\" />
     <Folder Include="Database\" />
     <Folder Include="Map\" />
     <Folder Include="ScreenSystem\" />

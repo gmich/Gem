@@ -21,6 +21,7 @@ using Gem.Gui.Styles;
 using System.Collections.Generic;
 using System.Linq;
 using Gem.IDE.Modules.SpriteSheets.ViewModels;
+using System.IO;
 
 namespace Gem.IDE.Modules.SpriteSheets.Views
 {
@@ -53,7 +54,6 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             });
             InitializeComponent();
             output = IoC.Get<IOutput>();
-
         }
 
         public void Invalidate(AnimationStripSettings settings)
@@ -69,9 +69,22 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             solidTexture.SetData(Pattern
                         .SolidColor(MColor.White)
                         .Get(settings.FrameWidth, settings.FrameHeight));
+
+            settings.Image = SpriteSheetData;
+        }
+
+        public byte[] ConvertToByteArray(Texture2D converter)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                converter.SaveAsPng(ms, converter.Width, converter.Height);
+                return ms.ToArray();
+            }
         }
 
         public string Path { get; set; } = string.Empty;
+
+        public byte[] SpriteSheetData { get; set; } = null;
 
         private void ReDraw()
         {
@@ -94,8 +107,30 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
                 //texture = await ConvertImage("Content/tilesheet.png");
                 var contentManager = new ContentManager(new ServiceProvider(new DeviceManager(graphicsDevice)));
 
-                // texture = contentManager.Load<Texture2D>(Path);
-                texture = ImageHelper.LoadAsTexture2D(graphicsDevice, Path).Result;
+                if (SpriteSheetData == null)
+                {
+                    // texture = contentManager.Load<Texture2D>(Path);
+                    texture = ImageHelper.LoadAsTexture2D(graphicsDevice, Path).Result;
+                    int bytesPerPixel = 1;
+                    switch (texture.Format)
+                    {
+                        case SurfaceFormat.Color:
+                            bytesPerPixel = 4;
+                            break;
+                        case SurfaceFormat.Vector4:
+                            bytesPerPixel = 16;
+                            break;
+                    }
+                    SpriteSheetData = new byte[texture.Width * texture.Height * bytesPerPixel];
+                    texture.GetData(SpriteSheetData);
+                }
+                else
+                {
+                    //TODO: recalculate texture size
+                    texture = new Texture2D(graphicsDevice, 907, 597);
+                    texture.SetData(SpriteSheetData);
+                }
+
                 font = contentManager.Load<SpriteFont>("Content/Fonts/detailsFont");
             }
             this.Width = texture.Width;
