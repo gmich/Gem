@@ -7,12 +7,14 @@ using System.ComponentModel;
 using Gemini.Modules.Inspector;
 using Caliburn.Micro;
 using Gemini.Framework.Services;
+using Gemini.Framework.Threading;
+using System.Threading.Tasks;
 
 namespace Gem.IDE.Modules.SpriteSheets.ViewModels
 {
     [Export(typeof(AnimationStripViewModel))]
     [PartCreationPolicy(CreationPolicy.NonShared)]
-    public class AnimationStripViewModel : Document
+    public class AnimationStripViewModel : PersistedDocument
     {
 
         #region Fields
@@ -20,6 +22,25 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
         private ISceneView sceneView;
         private readonly IAnimationRepository repository;
         private AnimationStripSettings settings;
+
+        #endregion
+
+        #region Persistence
+
+        protected override Task DoNew()
+        {
+            return TaskUtility.Completed;
+        }
+
+        protected override Task DoLoad(string filePath)
+        {
+            return TaskUtility.Completed;
+        }
+
+        protected override Task DoSave(string filePath)
+        {
+            return TaskUtility.Completed;
+        }
 
         #endregion
 
@@ -87,7 +108,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
                 LastFrame);
 
         private AnimationViewOptions options =>
-            new AnimationViewOptions(ShowNumbers, ShowGrid, Animate);
+            new AnimationViewOptions(ShowNumbers, ShowGrid, Animate, ShowTilesheet);
 
         #endregion
 
@@ -187,23 +208,6 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
         }
         #endregion
 
-        #region Presentation
-
-        private bool animate;
-        [Presentation]
-        public bool Animate
-        {
-            get { return animate; }
-            set
-            {
-                animate = value;
-                NotifyOfPropertyChange(() => Animate);
-                sceneView?.SetOptions(options);
-            }
-        }
-
-        #endregion
-
         #region SpriteSheet
 
         [SpriteSheet]
@@ -241,8 +245,25 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             }
         }
 
+        #endregion
+
+        #region Presentation
+
+        private bool animate;
+        [Presentation]
+        public bool Animate
+        {
+            get { return animate; }
+            set
+            {
+                animate = value;
+                NotifyOfPropertyChange(() => Animate);
+                sceneView?.SetOptions(options);
+            }
+        }
+
         private bool showNumbers;
-        [SpriteSheet]
+        [Presentation]
         [DisplayName("Show Numbers")]
         public bool ShowNumbers
         {
@@ -256,7 +277,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
         }
 
         private bool showGrid;
-        [SpriteSheet]
+        [Presentation]
         [DisplayName("Show Grid")]
         public bool ShowGrid
         {
@@ -265,6 +286,20 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             {
                 showGrid = value;
                 NotifyOfPropertyChange(() => ShowGrid);
+                sceneView?.SetOptions(options);
+            }
+        }
+
+        private bool showTilesheet = true;
+        [Presentation]
+        [DisplayName("Show Tilesheet")]
+        public bool ShowTilesheet
+        {
+            get { return showTilesheet; }
+            set
+            {
+                showTilesheet = value;
+                NotifyOfPropertyChange(() => ShowTilesheet);
                 sceneView?.SetOptions(options);
             }
         }

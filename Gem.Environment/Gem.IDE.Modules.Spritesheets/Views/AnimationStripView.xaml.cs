@@ -18,6 +18,9 @@ using System.Linq;
 using Gem.Engine.Containers;
 using MRectangle = Microsoft.Xna.Framework.Rectangle;
 using MColor = Microsoft.Xna.Framework.Color;
+using Gemini.Modules.StatusBar;
+using System.Windows;
+using Gemini.Framework.Services;
 
 #endregion
 
@@ -32,6 +35,8 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         #region Fields
 
         private readonly IOutput output;
+        private readonly IStatusBar statusBar;
+
         private ParallelTaskStarter updateLoop;
         private GraphicsDevice graphicsDevice;
         private AnimationStrip animation;
@@ -42,7 +47,8 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         private bool drawingSelectedFrame;
         private Action<SpriteBatch> additionalDraw = batch => { };
         private List<Tuple<int, MRectangle>> frames = new List<Tuple<int, MRectangle>>();
-
+        private Vector2 animationPosition;
+        private CoordinateViewer coordinates;
         #endregion
 
         #region Events
@@ -57,6 +63,8 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         {
             InitializeComponent();
             output = IoC.Get<IOutput>();
+            IoC.Get<IShell>().ToolBars.Visible = true;
+            statusBar = IoC.Get<IStatusBar>();
         }
 
         #endregion
@@ -83,6 +91,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
 
             Width = analyzer.Width;
             Height = analyzer.Height;
+            coordinates = new CoordinateViewer(graphicsDevice, MColor.Black, (int)Width, (int)Height);
             ReDraw();
         }
 
@@ -106,21 +115,29 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         }
         public void SetOptions(AnimationViewOptions options)
         {
-            additionalDraw = (batch) => { };
-            if (options.ShowGrid)
+            additionalDraw = batch => { };
+            if (options.ShowTileSheet)
             {
-                additionalDraw += DrawGrid;
-            }
-            if (options.ShowNumbers)
-            {
-                additionalDraw += DrawNumbers;
-            }
-            else
-            {
-                additionalDraw += DrawSelectedFrame;
+                additionalDraw += batch => batch.Draw(container.Textures["SpriteSheet"], Vector2.Zero, MColor.White);
+                if (options.ShowGrid)
+                {
+                    additionalDraw += DrawGrid;
+                }
+                if (options.ShowNumbers)
+                {
+                    additionalDraw += DrawNumbers;
+                }
+                else
+                {
+                    additionalDraw += DrawSelectedFrame;
+                }
             }
             if (options.Animate)
             {
+                if (options.ShowTileSheet)
+                {
+                    additionalDraw += batch => batch.Draw(container.Textures["Solid"], animation.Frame, MColor.Gray * 0.5f);
+                }
                 additionalDraw += DrawAnimation;
             }
             drawingSelectedFrame = !options.ShowNumbers;
@@ -133,6 +150,8 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             if (updateLoop == null && animate)
             {
                 updateLoop = new ParallelTaskStarter(TimeSpan.FromMilliseconds(5));
+                animationPosition = new Vector2(animation.Settings.TileSheetWidth / 2 - animation.Settings.FrameWidth / 2,
+                                                animation.Settings.TileSheetHeight / 2 - animation.Settings.FrameHeight / 2);
                 updateLoop.Start(() =>
                 {
                     animation.Update(updateLoop.ElapsedTime);
@@ -181,11 +200,10 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             if (frameIndex >= animation.Settings.StartFrame
             && frameIndex <= animation.Settings.LastFrame)
             {
-                return MColor.Red;
+                return new MColor(22, 160, 133);
             }
-            return MColor.Black;
+            return new MColor(44, 62, 80);
         }
-
 
         #endregion
 
@@ -196,8 +214,8 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             foreach (var frame in frames)
             {
                 var offset = container.Fonts["FrameNumberFont"].MeasureString(frame.Item1.ToString());
-                batch.Draw(container.Textures["Solid"], new MRectangle((int)(frame.Item2.Center.X - offset.X / 2), (int)(frame.Item2.Center.Y - offset.Y / 2), (int)offset.X, (int)offset.Y), MColor.White);
-                batch.DrawString(container.Fonts["FrameNumberFont"], frame.Item1.ToString(), new Vector2(frame.Item2.Center.X - offset.X / 2, frame.Item2.Center.Y - offset.Y / 2), GetColorByFrame(frame.Item1));
+                batch.Draw(container.Textures["Solid"], new MRectangle((int)(frame.Item2.Center.X - offset.X / 2), (int)(frame.Item2.Center.Y - offset.Y / 2), (int)offset.X, (int)offset.Y), GetColorByFrame(frame.Item1));
+                batch.DrawString(container.Fonts["FrameNumberFont"], frame.Item1.ToString(), new Vector2(frame.Item2.Center.X - offset.X / 2, frame.Item2.Center.Y - offset.Y / 2), MColor.White);
             }
         }
 
@@ -219,8 +237,8 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
                     batch.Draw(container.Textures["Frame"], new MRectangle(frame.Item2.X, frame.Item2.Y, animation.Frame.Width, animation.Frame.Height), MColor.White);
                     var offset = container.Fonts["FrameNumberFont"].MeasureString(frame.Item1.ToString());
                     batch.Draw(container.Textures["Solid"], frame.Item2, MColor.Gray * 0.2f);
-                    batch.Draw(container.Textures["Solid"], new MRectangle((int)(frame.Item2.Center.X - offset.X / 2), (int)(frame.Item2.Center.Y - offset.Y / 2), (int)offset.X, (int)offset.Y), MColor.White);
-                    batch.DrawString(container.Fonts["FrameNumberFont"], frame.Item1.ToString(), new Vector2(frame.Item2.Center.X - offset.X / 2, frame.Item2.Center.Y - offset.Y / 2), GetColorByFrame(frame.Item1));
+                    batch.Draw(container.Textures["Solid"], new MRectangle((int)(frame.Item2.Center.X - offset.X / 2), (int)(frame.Item2.Center.Y - offset.Y / 2), (int)offset.X, (int)offset.Y), GetColorByFrame(frame.Item1));
+                    batch.DrawString(container.Fonts["FrameNumberFont"], frame.Item1.ToString(), new Vector2(frame.Item2.Center.X - offset.X / 2, frame.Item2.Center.Y - offset.Y / 2), MColor.White);
                     break;
                 }
             }
@@ -228,12 +246,20 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
 
         private void DrawAnimation(SpriteBatch batch)
         {
-            batch.Draw(container.Textures["Solid"], new MRectangle(animation.Frame.X, animation.Frame.Y, animation.Frame.Width, animation.Frame.Height), MColor.Gray * 0.5f);
+            int frameOffset = 5;
+
+            batch.Draw(container.Textures["Solid"],
+                new MRectangle((int)animationPosition.X - frameOffset,
+                               (int)animationPosition.Y - frameOffset,
+                                animation.Frame.Width + frameOffset * 2,
+                                animation.Frame.Height + frameOffset * 2),
+                                MColor.DarkGreen * 0.8f);
+
+            batch.Draw(container.Textures["SpriteSheet"],
+                       new MRectangle((int)animationPosition.X, (int)animationPosition.Y, animation.Frame.Width, animation.Frame.Height),
+                       animation.Frame,
+                       MColor.White);
         }
-
-        #endregion
-
-        #region Control Events
 
         private void OnGraphicsControlDraw(object sender, DrawEventArgs e)
         {
@@ -241,11 +267,16 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             if (animation != null)
             {
                 batch.Begin();
-                batch.Draw(container.Textures["SpriteSheet"], Vector2.Zero, MColor.White);
+
                 additionalDraw(batch);
                 batch.End();
+                coordinates.Draw();
             }
         }
+
+        #endregion
+
+        #region Control Events
 
         private void OnGraphicsControlLoadContent(object sender, GraphicsDeviceEventArgs e)
         {
@@ -255,10 +286,10 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             batch = new SpriteBatch(graphicsDevice);
             container = new ContentContainer(
                 new ContentManager(
-                    new ServiceProvider(
+                    new Gem.IDE.Infrastructure.ServiceProvider(
                         new DeviceManager(graphicsDevice))));
 
-            container.Fonts.Add("FrameNumberFont", content => content.Load<SpriteFont>("Content/Fonts/detailsFont"));
+            container.Fonts.Add("FrameNumberFont", content => content.Load<SpriteFont>("Content/Fonts/consoleFont"));
             OnGraphicsDeviceLoaded?.Invoke(this, EventArgs.Empty);
             output.AppendLine("Loaded animation editor");
         }
@@ -269,8 +300,10 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
 
         private void OnGraphicsControlMouseMove(object sender, MouseEventArgs e)
         {
-            if (!drawingSelectedFrame) return;
             var position = e.GetPosition(this);
+            coordinates.Set((int)position.X, (int)position.Y);
+            statusBar.Items.Clear();
+            statusBar.AddItem($"X: {position.X}  /  Y: {position.Y}", new GridLength(1, GridUnitType.Star));
 
             var newSelectedFrame =
                 frames.FirstOrDefault(frame => frame.Item2.Contains(position.ToMonogamePoint()))
@@ -280,13 +313,14 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             {
                 selectedFrame = newSelectedFrame;
                 output.AppendLine($"Frame: {selectedFrame}");
-                ReDraw();
             }
+            ReDraw();
         }
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {
             selectedFrame = -1;
+            coordinates.Disable();
             ReDraw();
         }
 
@@ -294,9 +328,6 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         {
             //GraphicsControl.CaptureMouse();
             GraphicsControl.Focus();
-
-            var position = e.GetPosition(this);
-            output.AppendLine($"X: {position.X} / Y: {position.Y}");
         }
 
         private void OnGraphicsControlHwndLButtonUp(object sender, MouseEventArgs e)

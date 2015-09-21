@@ -199,9 +199,6 @@
     <Compile Include="ViewModels\AnimationStripAttributes.cs" />
     <Compile Include="ViewModels\AnimationStripViewModel.cs" />
     <Compile Include="Views\AnimationViewOptions.cs" />
-    <Compile Include="Views\AnimationPreviewView.xaml.cs">
-      <DependentUpon>AnimationPreviewView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\AnimationStripView.xaml.cs">
       <DependentUpon>AnimationStripView.xaml</DependentUpon>
     </Compile>
@@ -225,10 +222,6 @@
     <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\AnimationPreviewView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\AnimationStripView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
