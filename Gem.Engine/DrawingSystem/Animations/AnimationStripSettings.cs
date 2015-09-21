@@ -16,12 +16,18 @@
 
         public int StartFrame { get; }
 
+        public int TileSheetWidth { get; }
+
+        public int TileSheetHeight { get; }
+
         public bool Loop { get; }
 
-        public AnimationStripSettings(int frameWidth, int frameHeight, string name, double frameDelay,bool loop, byte[] image, int startFrame = 0, int lastFrame = -1)
+        public AnimationStripSettings(int frameWidth, int frameHeight,int tilesheetWidth, int tileSheetHeight, string name, double frameDelay,bool loop, byte[] image, int startFrame = 0, int lastFrame = 0)
         {
             FrameWidth = frameWidth;
             FrameHeight = frameHeight;
+            TileSheetWidth = tilesheetWidth;
+            TileSheetHeight = tileSheetHeight;
             Image = image;
             Name = name;
             FrameDelay = frameDelay;

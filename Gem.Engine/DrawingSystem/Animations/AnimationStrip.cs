@@ -17,12 +17,12 @@ namespace Gem.DrawingSystem.Animations
         public EventHandler onAnimationFinished;
         public AnimationStripSettings Settings { get; }
 
-        public AnimationStrip(int spriteSheetWidth, int spriteSheetHeight, AnimationStripSettings settings)
+        public AnimationStrip(AnimationStripSettings settings)
         {
             this.Settings = settings;
             currentFrame = settings.StartFrame - 1;
-            tileSheetColumns = (spriteSheetWidth / settings.FrameWidth) + 1;
-            tileSheetRows = (spriteSheetHeight / settings.FrameHeight) + 1;
+            tileSheetColumns = (settings.TileSheetWidth / settings.FrameWidth) + 1;
+            tileSheetRows = (settings.TileSheetHeight / settings.FrameHeight) + 1;
             tileSheetCount = settings.LastFrame;
 
             frameUpdateTimer = new GTimer(settings.FrameDelay, settings.FrameDelay, NextFrame);

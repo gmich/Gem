@@ -180,8 +180,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\AnimationStripViewerCommandDefinition.cs" />
-    <Compile Include="Commands\AnimationStripViewerCommandHandler.cs" />
     <Compile Include="Commands\CreateAnimationCommandDefinition.cs" />
     <Compile Include="Commands\CreateAnimationCommandHandler.cs" />
     <Compile Include="Module.cs" />

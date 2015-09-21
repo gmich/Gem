@@ -33,7 +33,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
 
         public void Invalidate(AnimationStripSettings settings)
         {
-            animation = new AnimationStrip(animationStripTexture.Width, animationStripTexture.Height, settings);        
+          //  animation = new AnimationStrip(animationStripTexture.Width, animationStripTexture.Height, settings);        
         }
 
         public void Dispose()

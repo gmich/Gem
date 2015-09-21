@@ -4,11 +4,13 @@ using Gemini.Framework.Services;
 using Gemini.Framework.Threading;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using static Gem.DrawingSystem.Animations.Extensions;
 using System.Threading.Tasks;
 using Gem.DrawingSystem.Animations.Repository;
+using static Gem.DrawingSystem.Animations.Extensions;
+using Gem.DrawingSystem.Animations;
+using Xceed.Wpf.Toolkit;
+using System.Windows;
 
 namespace Gem.IDE.Modules.SpriteSheets.Commands
 {
@@ -28,19 +30,35 @@ namespace Gem.IDE.Modules.SpriteSheets.Commands
             var dialog = new OpenFileDialog();
             dialog.InitialDirectory = $"{Environment.CurrentDirectory}\\Content";
             dialog.Filter = $"Animation Files(*.bmp, *.jpg, *.png *{Animation}) | *.bmp; *.jpg; *.png; *{Animation};";
+
             if (dialog.ShowDialog() == true)
             {
+                var repository = new JsonAnimationRepository($"{Environment.CurrentDirectory}\\Content");
                 if (dialog.FileName.EndsWith(Animation))
                 {
-                    shell.OpenDocument(new AnimationStripViewModel(dialog.FileName,
-                        new JsonAnimationRepository($"{Environment.CurrentDirectory}\\Content")));
+                    repository.LoadByPath(dialog.FileName)
+                        .Done(settings =>
+                                shell.OpenDocument(new AnimationStripViewModel(dialog.FileName, settings, repository)),
+                               ex =>
+                               {
+                                    var res = Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message);
+                               });
                 }
                 else
                 {
-                    shell.OpenDocument(new AnimationStripViewModel(dialog.FileName));
+                    var defaultSettings = new AnimationStripSettings(32, 32, 0, 0, GetRandomName(repository.Exists, 1), 0.02d, false, null);
+                    shell.OpenDocument(new AnimationStripViewModel(dialog.FileName, defaultSettings, repository));
                 }
             }
             return TaskUtility.Completed;
         }
+
+        private string GetRandomName(Predicate<string> exists, int suffix)
+        {
+            string newName = "animation_" + suffix.ToString();
+            return exists(newName) ?
+                GetRandomName(exists, suffix + 1) : newName;
+        }
+
     }
 }

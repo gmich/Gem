@@ -4,11 +4,13 @@
     {
         public bool ShowNumbers { get; }
         public bool ShowGrid { get; }
+        public bool Animate { get; }
 
-        public AnimationViewOptions(bool showNumbers, bool showGrid)
+        public AnimationViewOptions(bool showNumbers, bool showGrid,bool animate)
         {
-            this.ShowNumbers = showNumbers;
-            this.ShowGrid = showGrid;
+            ShowNumbers = showNumbers;
+            ShowGrid = showGrid;
+            Animate = animate;
         }
     }
 }

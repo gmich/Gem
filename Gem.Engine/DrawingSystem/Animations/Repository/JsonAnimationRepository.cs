@@ -18,7 +18,7 @@ namespace Gem.DrawingSystem.Animations.Repository
             this.localPath = localPath;
             fileWriter = (json, fileName) => File.WriteAllText($"{localPath}/{fileName}{Extensions.Animation}", json);
             fileReader = fileName => File.ReadAllText(fileName);
-            animationFiles =()=> Directory.GetFiles(localPath, $"*{Extensions.Animation}");
+            animationFiles = () => Directory.GetFiles(localPath, $"*{Extensions.Animation}");
         }
 
         public JsonAnimationRepository(string localPath,
@@ -32,6 +32,10 @@ namespace Gem.DrawingSystem.Animations.Repository
             this.animationFiles = animationFiles;
         }
 
+        public bool Exists(string fileName)
+        {
+            return File.Exists($"{localPath}/{fileName}{Extensions.Animation}");
+        }
 
         public IPromise<IEnumerable<AnimationStripSettings>> LoadAll()
         {
@@ -49,6 +53,34 @@ namespace Gem.DrawingSystem.Animations.Repository
                 return Promise<IEnumerable<AnimationStripSettings>>.Rejected(ex);
             }
             return Promise<IEnumerable<AnimationStripSettings>>.Resolved(animationSettings);
+        }
+
+        public IPromise<AnimationStripSettings> Load<TId>(TId id)
+        {
+            try
+            {
+                var settings = JsonConvert.
+                    DeserializeObject<AnimationStripSettings>(fileReader($"{localPath}{id}{Extensions.Animation}"));
+                return Promise<AnimationStripSettings>.Resolved(settings);
+            }
+            catch (Exception ex)
+            {
+                return Promise<AnimationStripSettings>.Rejected(ex);
+            }
+        }
+
+        public IPromise<AnimationStripSettings> LoadByPath(string fullpath)
+        {
+            try
+            {
+                var settings = JsonConvert.
+                    DeserializeObject<AnimationStripSettings>(fileReader(fullpath));
+                return Promise<AnimationStripSettings>.Resolved(settings);
+            }
+            catch (Exception ex)
+            {
+                return Promise<AnimationStripSettings>.Rejected(ex);
+            }
         }
 
         public IPromise Save(AnimationStripSettings settings)
@@ -84,6 +116,20 @@ namespace Gem.DrawingSystem.Animations.Repository
                 return Promise.Rejected(ex);
             }
             return Promise.Resolved();
+        }
+
+        public IPromise Delete<TId>(TId id)
+        {
+            try
+            {
+                File.Delete($"{localPath}/{id}{Extensions.Animation}");
+                return Promise.Resolved();
+
+            }
+            catch (Exception ex)
+            {
+                return Promise.Rejected(ex);
+            }
         }
     }
 }

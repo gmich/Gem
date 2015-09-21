@@ -4,16 +4,15 @@ using Gemini.Framework;
 using Gem.IDE.Modules.SpriteSheets.Views;
 using Gem.DrawingSystem.Animations;
 using System.ComponentModel;
-using System.Threading.Tasks;
-using Gemini.Framework.Threading;
-using System.Linq;
-using Gem.DrawingSystem.Animations.Repository;
+using Gemini.Modules.Inspector;
+using Caliburn.Micro;
+using Gemini.Framework.Services;
 
 namespace Gem.IDE.Modules.SpriteSheets.ViewModels
 {
     [Export(typeof(AnimationStripViewModel))]
     [PartCreationPolicy(CreationPolicy.NonShared)]
-    public class AnimationStripViewModel : PersistedDocument
+    public class AnimationStripViewModel : Document
     {
 
         #region Fields
@@ -24,55 +23,44 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
 
         #endregion
 
-        protected override Task DoNew()
-        {
-            return TaskUtility.Completed;
-        }
-
-        protected override Task DoLoad(string filePath)
-        {
-            return TaskUtility.Completed;
-        }
-
-        protected override Task DoSave(string filePath)
-        {
-            return TaskUtility.Completed;
-        }
-
         #region Ctor
 
-        public AnimationStripViewModel(string path)
-        {
-            repository = new JsonAnimationRepository(Environment.CurrentDirectory + "//Content");
-            Path = path;
-            DisplayName = name + ".animation";
-        }
-
-        public AnimationStripViewModel(string path, IAnimationRepository repository)
+        public AnimationStripViewModel(string path, AnimationStripSettings settings, IAnimationRepository repository)
         {
             this.repository = repository;
-            repository.LoadAll()
-                      .Done(setting => settings = setting.First());
-
-            this.FrameWidth = settings.FrameWidth;
+            this.settings = settings;
             Path = path;
-            FrameHeight = settings.FrameHeight;
-            FrameDelay = settings.FrameDelay;
-            LastFrame = settings.LastFrame;
+            frameWidth = settings.FrameWidth;
+            frameHeight = settings.FrameHeight;
+            frameDelay = settings.FrameDelay * 1000;
+            lastFrame = settings.LastFrame;
             firstFrame = settings.StartFrame;
-            sceneView?.Invalidate(settings);
-            DisplayName = name + ".animation";
-        }
-
-        public AnimationStripViewModel()
-        {
-            DisplayName = name + ".animation";
-            repository = new JsonAnimationRepository(Environment.CurrentDirectory + "//Content");
+            name = settings.Name;
+            DisplayName = $"{name}{Extensions.Animation}";
+            SetupInspector();
         }
 
         #endregion
 
         #region Helpers
+
+        private void SetupInspector()
+        {
+            var inspectorTool = IoC.Get<IInspectorTool>();
+            inspectorTool.SelectedObject = new InspectableObjectBuilder()
+                    .WithCollapsibleGroup("Animation", group =>
+                            group.WithObjectProperties(this, model =>
+                            model.Attributes.Matches(new AnimationAttribute())))
+                    .WithCollapsibleGroup("Sprite sheet", group =>
+                            group.WithObjectProperties(this, model =>
+                            model.Attributes.Matches(new SpriteSheetAttribute())))
+                    .WithCollapsibleGroup("Presentation", group =>
+                            group.WithObjectProperties(this, model =>
+                            model.Attributes.Matches(new PresentationAttribute())))
+                   .ToInspectableObject();
+            inspectorTool.DisplayName = "Sprite-Sheet Animation Inspector";
+            IoC.Get<IShell>().ShowTool<IInspectorTool>();
+        }
 
         private void Save()
         {
@@ -89,36 +77,39 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
            settings = new AnimationStripSettings(
                 FrameWidth,
                 FrameHeight,
+                TileSheetWidth,
+                TileSheetHeight,
                 Name,
                 FrameDelay / 1000,
                 true,
-                null,
+                settings.Image,
                 FirstFrame,
                 LastFrame);
 
         private AnimationViewOptions options =>
-            new AnimationViewOptions(ShowNumbers, ShowGrid);
+            new AnimationViewOptions(ShowNumbers, ShowGrid, Animate);
 
         #endregion
 
         #region Frame
 
-        private string name = "My_Animation";
+        private string name;
         [Animation]
         public string Name
         {
             get { return name; }
             set
             {
+                repository.Delete(name);
                 name = value.Trim();
                 DisplayName = name + ".animation";
                 NotifyOfPropertyChange(() => Name);
-                sceneView?.Invalidate(settings);
+                sceneView?.Invalidate(Settings);
                 Save();
             }
         }
 
-        private int frameWidth = 32;
+        private int frameWidth;
         [Animation]
         [DisplayName("Frame Width")]
         public int FrameWidth
@@ -133,7 +124,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             }
         }
 
-        private int frameHeight = 32;
+        private int frameHeight;
         [Animation]
         [DisplayName("Frame Height")]
         public int FrameHeight
@@ -149,7 +140,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
         }
 
 
-        private int firstFrame = 0;
+        private int firstFrame;
         [Animation]
         [DisplayName("First Frame")]
         public int FirstFrame
@@ -165,7 +156,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             }
         }
 
-        private int lastFrame = 0;
+        private int lastFrame;
         [Animation]
         [DisplayName("Last Frame")]
         public int LastFrame
@@ -180,7 +171,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             }
         }
 
-        private double frameDelay = 20;
+        private double frameDelay;
         [Animation]
         [DisplayName("Frame Delay (ms)")]
         public double FrameDelay
@@ -198,7 +189,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
 
         #region Presentation
 
-        private bool animate = false;
+        private bool animate;
         [Presentation]
         public bool Animate
         {
@@ -207,18 +198,50 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             {
                 animate = value;
                 NotifyOfPropertyChange(() => Animate);
-                sceneView?.Invalidate(Settings);
+                sceneView?.SetOptions(options);
             }
         }
 
         #endregion
 
-        #region Tilesheet
+        #region SpriteSheet
 
         [SpriteSheet]
-        public string Path { get; } = "Content/tilesheet.png";
+        public string Path { get; }
 
-        private bool showNumbers = false;
+        private int tilesheetWidth;
+        [SpriteSheet]
+        [DisplayName("TileSheet Width")]
+        public int TileSheetWidth
+        {
+            get
+            {
+                return tilesheetWidth;
+            }
+            private set
+            {
+                tilesheetWidth = value;
+                NotifyOfPropertyChange(() => TileSheetWidth);
+            }
+        }
+
+        private int tileSheetHeight;
+        [SpriteSheet]
+        [DisplayName("TileSheet Height")]
+        public int TileSheetHeight
+        {
+            get
+            {
+                return tileSheetHeight;
+            }
+            private set
+            {
+                tileSheetHeight = value;
+                NotifyOfPropertyChange(() => TileSheetHeight);
+            }
+        }
+
+        private bool showNumbers;
         [SpriteSheet]
         [DisplayName("Show Numbers")]
         public bool ShowNumbers
@@ -232,7 +255,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             }
         }
 
-        private bool showGrid = false;
+        private bool showGrid;
         [SpriteSheet]
         [DisplayName("Show Grid")]
         public bool ShowGrid
@@ -253,12 +276,24 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
         protected override void OnViewLoaded(object view)
         {
             sceneView = view as ISceneView;
-            sceneView.Path = Path;
-            if (sceneView.SpriteSheetData == null)
+            sceneView.OnGraphicsDeviceLoaded += (sender, args) =>
             {
-                sceneView.SpriteSheetData = settings?.Image;
-            }
-            sceneView.OnGraphicsDeviceLoaded += (sender, args) => sceneView.Invalidate(Settings);
+                if (settings.Image == null)
+                {
+                    var result = sceneView.LoadTexture(Path);
+                    TileSheetWidth = result.Item1;
+                    TileSheetHeight = result.Item2;
+                    settings.Image = result.Item3;
+                }
+                else
+                {
+                    TileSheetWidth = settings.TileSheetWidth;
+                    TileSheetHeight = settings.TileSheetHeight;
+                    sceneView.SetColorData(settings.Image, settings.TileSheetWidth, settings.TileSheetHeight);
+                }
+                sceneView.Invalidate(Settings);
+                sceneView.SetOptions(options);
+            };
             base.OnViewLoaded(view);
         }
 
@@ -267,8 +302,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             if (close)
             {
                 var view = GetView() as IDisposable;
-                if (view != null)
-                    view.Dispose();
+                view?.Dispose();
             }
 
             base.OnDeactivate(close);

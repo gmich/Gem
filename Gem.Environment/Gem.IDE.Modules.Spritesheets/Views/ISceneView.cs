@@ -3,16 +3,16 @@ using System;
 
 namespace Gem.IDE.Modules.SpriteSheets.Views
 {
-    public interface ISceneView
+    public interface ISceneView : IDisposable
     {
         event EventHandler<EventArgs> OnGraphicsDeviceLoaded;
 
         void Invalidate(AnimationStripSettings settings);
 
-        string Path { get; set; }
-
         void SetOptions(AnimationViewOptions options);
 
-        byte[] SpriteSheetData { get; set; }
+        Tuple<int,int,byte[]> LoadTexture(string path);
+
+        void SetColorData(byte[] data, int width, int height);
     }
 }

@@ -15,15 +15,19 @@ namespace Gem.DrawingSystem.Animations
         private readonly int tileSheetCount;
         private readonly List<Tuple<int, Rectangle>> frames = new List<Tuple<int, Rectangle>>();
 
-        public AnimationStripAnalyzer(int spriteSheetWidth, int spriteSheetHeight, AnimationStripSettings settings)
+        public AnimationStripAnalyzer(AnimationStripSettings settings)
         {
             this.settings = settings;
-            tileSheetColumns = (spriteSheetWidth / settings.FrameWidth) + 1;
-            tileSheetRows = (spriteSheetHeight / settings.FrameHeight) + 1;
+            tileSheetColumns = (settings.TileSheetWidth / settings.FrameWidth) + 1;
+            tileSheetRows = (settings.TileSheetHeight / settings.FrameHeight) + 1;
             tileSheetCount = tileSheetColumns * tileSheetRows;
             ParseSpriteSheet(0);
 
         }
+
+        public int Width => tileSheetColumns * settings.FrameWidth;
+
+        public int Height => tileSheetRows * settings.FrameHeight;
 
         public IEnumerable<Tuple<int, Rectangle>> Frames
         { get { return frames; } }
