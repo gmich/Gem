@@ -12,7 +12,7 @@ namespace Gem.CameraSystem
 
         private readonly Vector2 viewportSize;
         private Vector2 position;
-        private Vector3 zoom;
+        private Vector3 zoom = Vector3.One;
         private float rotation;
 
         #endregion
@@ -159,10 +159,12 @@ namespace Gem.CameraSystem
 
         private void CalculateTransformationMatrix()
         {
-            TransformationMatrix = Matrix.CreateTranslation(new Vector3(ViewPortWidth / 2, -ViewPortHeight / 2, 0)) *
+            TransformationMatrix = Matrix.CreateTranslation(new Vector3(-ViewPortWidth/2 + Position.X, -ViewPortHeight/2 + Position.Y, 0)) *
                                                  Matrix.CreateRotationZ(Rotation) *
                                                  Matrix.CreateScale(new Vector3(Zoom.X, Zoom.Y, Zoom.Z)) *
                                                  Matrix.CreateTranslation(new Vector3(ViewPortWidth / 2, ViewPortHeight / 2, 0));
+
+            //TransformationMatrix = Matrix.CreateScale(new Vector3(Zoom.X, Zoom.Y, Zoom.Z));
         }
 
         public Vector2 TranslateScreenToWorld(Vector2 location)

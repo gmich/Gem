@@ -37,9 +37,10 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
 
         private readonly IOutput output;
         private readonly IStatusBar statusBar;
-        private readonly CameraHandler cameraHandler;
         private readonly int margin = 100;
+        private readonly WPoint noLocation = new WPoint(-9999, -9999);
 
+        private CameraHandler cameraHandler;
         private ParallelTaskStarter updateLoop;
         private GraphicsDevice graphicsDevice;
         private AnimationStrip animation;
@@ -50,8 +51,9 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         private bool drawingSelectedFrame;
         private Action<SpriteBatch> additionalDraw = batch => { };
         private List<Tuple<int, MRectangle>> frames = new List<Tuple<int, MRectangle>>();
-        private Vector2 animationPosition;
+        private Func<Vector2> animationPosition;
         private CoordinateViewer coordinates;
+        private WPoint previousPosition;
 
         #endregion
 
@@ -65,6 +67,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
 
         public AnimationStripView()
         {
+            previousPosition = noLocation;
             InitializeComponent();
             output = IoC.Get<IOutput>();
             IoC.Get<IShell>().ToolBars.Visible = true;
@@ -137,7 +140,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             additionalDraw = batch => { };
             if (options.ShowTileSheet)
             {
-                additionalDraw += batch => batch.Draw(container.Textures["SpriteSheet"], cameraHandler.Camera.Position - Vector2.Zero, MColor.White);
+                additionalDraw += batch => batch.Draw(container.Textures["SpriteSheet"], AsCameraRelative(Vector2.Zero), MColor.White);
                 if (options.ShowGrid)
                 {
                     additionalDraw += DrawGrid;
@@ -155,7 +158,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             {
                 if (options.ShowTileSheet)
                 {
-                    additionalDraw += batch => batch.Draw(container.Textures["Solid"], animation.Frame, MColor.Gray * 0.5f);
+                    additionalDraw += batch => batch.Draw(container.Textures["Solid"], AsCameraRelative(animation.Frame), MColor.Gray * 0.5f);
                 }
                 additionalDraw += DrawAnimation;
             }
@@ -169,7 +172,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             if (updateLoop == null && animate)
             {
                 updateLoop = new ParallelTaskStarter(TimeSpan.FromMilliseconds(5));
-                animationPosition = new Vector2(animation.Settings.TileSheetWidth / 2 - animation.Settings.FrameWidth / 2,
+                animationPosition = () => new Vector2(animation.Settings.TileSheetWidth / 2 - animation.Settings.FrameWidth / 2,
                                                 animation.Settings.TileSheetHeight / 2 - animation.Settings.FrameHeight / 2);
                 updateLoop.Start(() =>
                 {
@@ -228,13 +231,41 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
 
         #region Draw
 
+        private MRectangle AsCameraRelative(MRectangle other) =>
+            new MRectangle(
+                other.X,
+                other.Y,
+                other.Width,
+                other.Height);
+
+        private Vector2 AsCameraRelative(Vector2 other) =>
+            new Vector2(
+                other.X,
+                other.Y);
+
         private void DrawNumbers(SpriteBatch batch)
         {
             foreach (var frame in frames)
             {
                 var offset = container.Fonts["FrameNumberFont"].MeasureString(frame.Item1.ToString());
-                batch.Draw(container.Textures["Solid"], new MRectangle((int)(frame.Item2.Center.X - offset.X / 2), (int)(frame.Item2.Center.Y - offset.Y / 2), (int)offset.X, (int)offset.Y), GetColorByFrame(frame.Item1));
-                batch.DrawString(container.Fonts["FrameNumberFont"], frame.Item1.ToString(), new Vector2(frame.Item2.Center.X - offset.X / 2, frame.Item2.Center.Y - offset.Y / 2), MColor.White);
+                var borderOffset = new Vector2(
+                    (offset.X > offset.Y) 
+                        ? offset.X : offset.Y,
+                    offset.Y);
+
+                batch.Draw(container.Textures["Solid"],
+                    AsCameraRelative(
+                        new MRectangle((int)(frame.Item2.Center.X - borderOffset.X / 2),
+                        (int)(frame.Item2.Center.Y - borderOffset.Y / 2), (
+                        int)borderOffset.X, (int)borderOffset.Y)),
+                    GetColorByFrame(frame.Item1));
+
+                batch.DrawString(container.Fonts["FrameNumberFont"],
+                    frame.Item1.ToString(),
+                    AsCameraRelative(
+                        new Vector2(frame.Item2.Center.X - offset.X / 2,
+                        frame.Item2.Center.Y - offset.Y / 2)),
+                    MColor.White);
             }
         }
 
@@ -242,7 +273,14 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         {
             foreach (var frame in frames)
             {
-                batch.Draw(container.Textures["Frame"], new MRectangle(frame.Item2.X, frame.Item2.Y, animation.Settings.FrameWidth, animation.Settings.FrameHeight), MColor.White);
+                batch.Draw(container.Textures["Frame"],
+                    AsCameraRelative(
+                        new MRectangle(
+                            frame.Item2.X,
+                            frame.Item2.Y,
+                            animation.Settings.FrameWidth,
+                            animation.Settings.FrameHeight)),
+                    MColor.White);
             }
         }
 
@@ -253,11 +291,44 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             {
                 if (frame.Item1 == selectedFrame)
                 {
-                    batch.Draw(container.Textures["Frame"], new MRectangle(frame.Item2.X, frame.Item2.Y, animation.Frame.Width, animation.Frame.Height), MColor.White);
-                    var offset = container.Fonts["FrameNumberFont"].MeasureString(frame.Item1.ToString());
-                    batch.Draw(container.Textures["Solid"], frame.Item2, MColor.Gray * 0.2f);
-                    batch.Draw(container.Textures["Solid"], new MRectangle((int)(frame.Item2.Center.X - offset.X / 2), (int)(frame.Item2.Center.Y - offset.Y / 2), (int)offset.X, (int)offset.Y), GetColorByFrame(frame.Item1));
-                    batch.DrawString(container.Fonts["FrameNumberFont"], frame.Item1.ToString(), new Vector2(frame.Item2.Center.X - offset.X / 2, frame.Item2.Center.Y - offset.Y / 2), MColor.White);
+                    batch.Draw(
+                        container.Textures["Frame"],
+                        AsCameraRelative(
+                            new MRectangle(
+                                frame.Item2.X,
+                                frame.Item2.Y,
+                                animation.Frame.Width,
+                                animation.Frame.Height)),
+                            MColor.White);
+                    var offset = container.Fonts["FrameNumberFont"]
+                        .MeasureString(frame.Item1.ToString());
+
+                    var borderOffset = new Vector2(
+                        (offset.X > offset.Y)
+                            ? offset.X : offset.Y,
+                        offset.Y);
+
+                    batch.Draw(container.Textures["Solid"],
+                        AsCameraRelative(
+                            frame.Item2),
+                            MColor.Gray * 0.2f);
+
+                    batch.Draw(container.Textures["Solid"],
+                        AsCameraRelative(
+                            new MRectangle(
+                                (int)(frame.Item2.Center.X - borderOffset.X / 2),
+                                (int)(frame.Item2.Center.Y - borderOffset.Y / 2),
+                                (int)borderOffset.X,
+                                (int)borderOffset.Y)),
+                        GetColorByFrame(frame.Item1));
+
+                    batch.DrawString(container.Fonts["FrameNumberFont"],
+                        frame.Item1.ToString(),
+                        AsCameraRelative(
+                            new Vector2(
+                                frame.Item2.Center.X - offset.X / 2,
+                                frame.Item2.Center.Y - offset.Y / 2)),
+                        MColor.White);
                     break;
                 }
             }
@@ -273,8 +344,14 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             //                    animation.Frame.Height + frameOffset * 2),
             //                    MColor.DarkGreen * 0.8f);
 
+            var position = animationPosition();
             batch.Draw(container.Textures["SpriteSheet"],
-                       new MRectangle((int)animationPosition.X, (int)animationPosition.Y, animation.Frame.Width, animation.Frame.Height),
+                       AsCameraRelative(
+                           new MRectangle(
+                               (int)position.X,
+                               (int)position.Y,
+                               animation.Frame.Width,
+                               animation.Frame.Height)),
                        animation.Frame,
                        MColor.White);
         }
@@ -284,7 +361,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             e.GraphicsDevice.Clear(BackgroundColor);
             if (animation != null)
             {
-                batch.Begin();
+                batch.Begin(transformMatrix: cameraHandler.Matrix);
 
                 additionalDraw(batch);
                 batch.End();
@@ -310,6 +387,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             container.Fonts.Add("FrameNumberFont", content => content.Load<SpriteFont>("Content/Fonts/consoleFont"));
             OnGraphicsDeviceLoaded?.Invoke(this, EventArgs.Empty);
             output.AppendLine("Loaded animation editor");
+            //cameraHandler = new CameraHandler((int)Width -margin / 2,(int)Height -margin / 2, (int)Width, (int)Height);
         }
 
         #endregion
@@ -319,12 +397,13 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         private void OnGraphicsControlMouseMove(object sender, MouseEventArgs e)
         {
             var position = e.GetPosition(this);
+            var worldPosition = cameraHandler.Camera.TranslateScreenToWorld(position.ToMonogameVector2());
             coordinates.Set((int)position.X, (int)position.Y);
             statusBar.Items.Clear();
-            statusBar.AddItem($"X: {position.X}  /  Y: {position.Y}", new GridLength(1, GridUnitType.Star));
+            statusBar.AddItem($"X: {(int)worldPosition.X}  /  Y: {(int)worldPosition.Y}", new GridLength(1, GridUnitType.Star));
 
             var newSelectedFrame =
-                frames.FirstOrDefault(frame => frame.Item2.Contains(position.ToMonogamePoint()))
+                frames.FirstOrDefault(frame => (frame.Item2).Contains(worldPosition))
                 ?.Item1 ?? -1;
 
             if (newSelectedFrame != selectedFrame)
@@ -340,24 +419,24 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             selectedFrame = -1;
             coordinates.Disable();
             ReDraw();
-
         }
 
-        private WPoint previousPosition = new WPoint(-1, -1);
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if (e.RightButton == MouseButtonState.Pressed)
             {
                 var position = e.GetPosition(this);
-                if (previousPosition != new WPoint(-1, -1))
+                if (previousPosition != noLocation)
                 {
-                    cameraHandler.Camera.Position -= (previousPosition - position).ToMonogameVector2();
+                    var worldPosition = cameraHandler.Camera.TranslateScreenToWorld(position.ToMonogameVector2());
+                    var worldPreviousPosition = cameraHandler.Camera.TranslateScreenToWorld(previousPosition.ToMonogameVector2());
+                    cameraHandler.Camera.Position += (worldPosition - worldPreviousPosition);
                 }
                 previousPosition = position;
             }
             else
             {
-                previousPosition = new WPoint(-1, -1);
+                previousPosition = noLocation;
             }
         }
 
@@ -381,6 +460,8 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
 
         private void OnGraphicsControlHwndMouseWheel(object sender, MouseWheelEventArgs e)
         {
+            cameraHandler.Zoom += (e.Delta > 0) ? 0.05f : -0.05f;
+            ReDraw();
         }
 
         #endregion

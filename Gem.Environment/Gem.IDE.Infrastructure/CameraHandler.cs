@@ -14,7 +14,7 @@ namespace Gem.IDE.Infrastructure
 
         public Camera Camera { get { return camera; } }
 
-        public CameraHandler(int positionX, int positionY, int viewportX, int viewportY, float minZoom = 0.2f, float maxZoom = 2.0f)
+        public CameraHandler(int positionX, int positionY, int viewportX, int viewportY, float minZoom = 0.2f, float maxZoom = 2.5f)
         {
             camera = new Camera(new Vector2(positionX, positionY), new Vector2(viewportX, viewportY));
             zoomRange = Range.ForFloat(minZoom, maxZoom);
@@ -41,8 +41,9 @@ namespace Gem.IDE.Infrastructure
 
         public void UpdateViewport(int viewportWidth, int viewportHeight)
         {
+            var viewportSize = new Vector2(viewportWidth, viewportHeight);
             camera = new Camera(camera.Position,
-                     new Vector2(viewportWidth, viewportHeight));
+                                viewportSize);
         }
 
         public Matrix Matrix

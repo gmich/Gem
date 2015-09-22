@@ -18,8 +18,8 @@ namespace Gem.DrawingSystem.Animations
         public AnimationStripAnalyzer(AnimationStripSettings settings)
         {
             this.settings = settings;
-            tileSheetColumns = (settings.TileSheetWidth / settings.FrameWidth) + 1;
-            tileSheetRows = (settings.TileSheetHeight / settings.FrameHeight) + 1;
+            tileSheetColumns = ((settings.TileSheetWidth-1) / settings.FrameWidth)+ 1;
+            tileSheetRows = ((settings.TileSheetHeight-1) / settings.FrameHeight) + 1;
             tileSheetCount = tileSheetColumns * tileSheetRows;
             ParseSpriteSheet(0);
 

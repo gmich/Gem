@@ -21,8 +21,8 @@ namespace Gem.DrawingSystem.Animations
         {
             this.Settings = settings;
             currentFrame = settings.StartFrame - 1;
-            tileSheetColumns = (settings.TileSheetWidth / settings.FrameWidth) + 1;
-            tileSheetRows = (settings.TileSheetHeight / settings.FrameHeight) + 1;
+            tileSheetColumns = ((settings.TileSheetWidth - 1) / settings.FrameWidth) + 1;
+            tileSheetRows = ((settings.TileSheetHeight - 1) / settings.FrameHeight) + 1;
             tileSheetCount = settings.LastFrame;
 
             frameUpdateTimer = new GTimer(settings.FrameDelay, settings.FrameDelay, NextFrame);
