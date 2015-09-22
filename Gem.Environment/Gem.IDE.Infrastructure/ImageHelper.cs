@@ -3,8 +3,8 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace Gem.IDE.Infrastructure
 {
@@ -45,21 +45,34 @@ namespace Gem.IDE.Infrastructure
         {
             return Task.Run(() =>
             {
-                var bmp = System.Drawing.Image.FromFile(path) as Bitmap;
-                var texture = new Texture2D(graphicsDevice, bmp.Width, bmp.Height);
-                var pixels = new Microsoft.Xna.Framework.Color[bmp.Width * bmp.Height];
-                for (int y = 0; y < bmp.Height; y++)
-                {
-                    for (int x = 0; x < bmp.Width; x++)
-                    {
-                        var c = bmp.GetPixel(x, y);
-                        pixels[(y * bmp.Width) + x] = new Microsoft.Xna.Framework.Color(c.R, c.G, c.B, c.A);
-                    }
-                }
-                texture.SetData(pixels);
-
-                return texture;
+                return LoadTexture2DFromFile(graphicsDevice, path);              
             });
+        }
+        
+        public static Texture2D LoadTexture2DFromBitmap(GraphicsDevice graphicsDevice, string path)
+        {
+            var bmp = Image.FromFile(path) as Bitmap;
+            var texture = new Texture2D(graphicsDevice, bmp.Width, bmp.Height);
+            var pixels = new Microsoft.Xna.Framework.Color[bmp.Width * bmp.Height];
+            for (int y = 0; y < bmp.Height; y++)
+            {
+                for (int x = 0; x < bmp.Width; x++)
+                {
+                    var c = bmp.GetPixel(x, y);
+                    pixels[(y * bmp.Width) + x] = new Microsoft.Xna.Framework.Color(c.R, c.G, c.B, c.A);
+                }
+            }
+            texture.SetData(pixels);
+
+            return texture;
+        }
+
+        private static Texture2D LoadTexture2DFromFile(GraphicsDevice device,string path)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                return Texture2D.FromStream(device, fileStream);
+            }
         }
 
         public static string ImageToString(string path)
@@ -92,4 +105,5 @@ namespace Gem.IDE.Infrastructure
         }
 
     }
+
 }

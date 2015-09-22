@@ -65,7 +65,7 @@ namespace Gem.Engine.Console.Rendering
             var cameraViewportSize = new Vector2(viewArea.Width, viewArea.Height);
 
             camera = new Camera(Vector2.Zero,
-                               cameraViewportSize, cameraViewportSize);
+                               cameraViewportSize);
         }
 
         public void Clear()

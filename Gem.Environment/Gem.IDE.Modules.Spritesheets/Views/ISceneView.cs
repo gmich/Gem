@@ -14,5 +14,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         Tuple<int,int,byte[]> LoadTexture(string path);
 
         void SetColorData(byte[] data, int width, int height);
+
+        Microsoft.Xna.Framework.Color BackgroundColor { get; set; }
     }
 }

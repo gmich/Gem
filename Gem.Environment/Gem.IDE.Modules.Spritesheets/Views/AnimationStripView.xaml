@@ -17,7 +17,5 @@
 							   MouseWheel="OnGraphicsControlHwndMouseWheel"
 							   KeyDown="OnGraphicsControlKeyDown"
 							   KeyUp="OnGraphicsControlKeyUp"/>
-
     </Grid>
-
 </UserControl>

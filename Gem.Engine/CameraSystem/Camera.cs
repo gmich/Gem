@@ -11,9 +11,6 @@ namespace Gem.CameraSystem
         #region Fields
 
         private readonly Vector2 viewportSize;
-        private readonly Vector2 virtualSize;
-        private readonly Range<float> zoomRange;
-
         private Vector2 position;
         private Vector3 zoom;
         private float rotation;
@@ -22,12 +19,10 @@ namespace Gem.CameraSystem
 
         #region Constructor
 
-        public Camera(Vector2 initialPos, Vector2 viewportSize, Vector2 virtualSize, float minZoom = 0.2f, float maxZoom = 2.0f)
+        public Camera(Vector2 initialPos, Vector2 viewportSize)
         {
             this.Position = initialPos;
-            this.virtualSize = virtualSize;
             this.viewportSize = viewportSize;
-            this.zoomRange = Range.ForFloat(minZoom, maxZoom);
             Update();
         }
 
@@ -50,9 +45,7 @@ namespace Gem.CameraSystem
             get { return position; }
             set
             {
-                float x = MathHelper.Clamp(value.X, 0, virtualSize.X - viewportSize.X);
-                float y = MathHelper.Clamp(value.Y, 0, virtualSize.Y - viewportSize.Y);
-                position = new Vector2(x, y);
+                position = value;
                 Update();
             }
         }
@@ -78,8 +71,7 @@ namespace Gem.CameraSystem
             get { return zoom; }
             set
             {
-                zoom.X = zoomRange.GetNearest(value.X);
-                zoom.Y = zoomRange.GetNearest(value.Y);
+                zoom = value;
                 Update();
             }
         }

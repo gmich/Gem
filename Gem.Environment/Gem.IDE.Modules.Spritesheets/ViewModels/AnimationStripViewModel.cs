@@ -9,6 +9,7 @@ using Caliburn.Micro;
 using Gemini.Framework.Services;
 using Gemini.Framework.Threading;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace Gem.IDE.Modules.SpriteSheets.ViewModels
 {
@@ -304,6 +305,19 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             }
         }
 
+        private Color backgroundColor;
+        [Presentation]
+        [DisplayName("Background color")]
+        public Color BackgroundColor
+        {
+            get { return backgroundColor; }
+            set
+            {
+                backgroundColor = value;
+                NotifyOfPropertyChange(() => BackgroundColor);
+                sceneView.BackgroundColor = value;
+            }
+        }
         #endregion
 
         #region Document Members

@@ -18,6 +18,7 @@ using System.Linq;
 using Gem.Engine.Containers;
 using MRectangle = Microsoft.Xna.Framework.Rectangle;
 using MColor = Microsoft.Xna.Framework.Color;
+using WPoint = System.Windows.Point;
 using Gemini.Modules.StatusBar;
 using System.Windows;
 using Gemini.Framework.Services;
@@ -36,6 +37,8 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
 
         private readonly IOutput output;
         private readonly IStatusBar statusBar;
+        private readonly CameraHandler cameraHandler;
+        private readonly int margin = 100;
 
         private ParallelTaskStarter updateLoop;
         private GraphicsDevice graphicsDevice;
@@ -49,6 +52,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         private List<Tuple<int, MRectangle>> frames = new List<Tuple<int, MRectangle>>();
         private Vector2 animationPosition;
         private CoordinateViewer coordinates;
+
         #endregion
 
         #region Events
@@ -65,6 +69,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             output = IoC.Get<IOutput>();
             IoC.Get<IShell>().ToolBars.Visible = true;
             statusBar = IoC.Get<IStatusBar>();
+            cameraHandler = new CameraHandler(margin / 2, margin / 2, (int)Width, (int)Height);
         }
 
         #endregion
@@ -81,6 +86,17 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
 
         #region ISceneView Members
 
+        private MColor backgroundColor = MColor.Transparent;
+        public MColor BackgroundColor
+        {
+            get { return backgroundColor; }
+            set
+            {
+                backgroundColor = value;
+                ReDraw();
+            }
+        }
+
         public void Invalidate(AnimationStripSettings settings)
         {
             animation = new AnimationStrip(settings);
@@ -89,9 +105,10 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             LoadFrameTexture(settings.FrameWidth, settings.FrameHeight);
             LoadSolidTexture(settings.FrameWidth, settings.FrameHeight);
 
-            Width = analyzer.Width;
-            Height = analyzer.Height;
+            Width = analyzer.Width + margin;
+            Height = analyzer.Height + margin;
             coordinates = new CoordinateViewer(graphicsDevice, MColor.Black, (int)Width, (int)Height);
+            cameraHandler.UpdateViewport((int)Width, (int)Height);
             ReDraw();
         }
 
@@ -99,6 +116,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         {
             var texture = ImageHelper.LoadAsTexture2D(graphicsDevice, path).Result;
             container.Textures.Add("SpriteSheet", x => texture);
+
             int bytesPerPixel = 4;  //RGBA
             var spritesheetData = new byte[texture.Width
                                      * texture.Height
@@ -113,12 +131,13 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             container.Textures.Add("SpriteSheet", x => new Texture2D(graphicsDevice, width, height));
             container.Textures["SpriteSheet"].SetData(data);
         }
+
         public void SetOptions(AnimationViewOptions options)
         {
             additionalDraw = batch => { };
             if (options.ShowTileSheet)
             {
-                additionalDraw += batch => batch.Draw(container.Textures["SpriteSheet"], Vector2.Zero, MColor.White);
+                additionalDraw += batch => batch.Draw(container.Textures["SpriteSheet"], cameraHandler.Camera.Position - Vector2.Zero, MColor.White);
                 if (options.ShowGrid)
                 {
                     additionalDraw += DrawGrid;
@@ -246,14 +265,13 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
 
         private void DrawAnimation(SpriteBatch batch)
         {
-            int frameOffset = 5;
-
-            batch.Draw(container.Textures["Solid"],
-                new MRectangle((int)animationPosition.X - frameOffset,
-                               (int)animationPosition.Y - frameOffset,
-                                animation.Frame.Width + frameOffset * 2,
-                                animation.Frame.Height + frameOffset * 2),
-                                MColor.DarkGreen * 0.8f);
+            //int frameOffset = 5;
+            //batch.Draw(container.Textures["Solid"],
+            //    new MRectangle((int)animationPosition.X - frameOffset,
+            //                   (int)animationPosition.Y - frameOffset,
+            //                    animation.Frame.Width + frameOffset * 2,
+            //                    animation.Frame.Height + frameOffset * 2),
+            //                    MColor.DarkGreen * 0.8f);
 
             batch.Draw(container.Textures["SpriteSheet"],
                        new MRectangle((int)animationPosition.X, (int)animationPosition.Y, animation.Frame.Width, animation.Frame.Height),
@@ -263,7 +281,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
 
         private void OnGraphicsControlDraw(object sender, DrawEventArgs e)
         {
-            e.GraphicsDevice.Clear(MColor.Transparent);
+            e.GraphicsDevice.Clear(BackgroundColor);
             if (animation != null)
             {
                 batch.Begin();
@@ -285,9 +303,9 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             graphicsDevice = e.GraphicsDevice;
             batch = new SpriteBatch(graphicsDevice);
             container = new ContentContainer(
-                new ContentManager(
-                    new Gem.IDE.Infrastructure.ServiceProvider(
-                        new DeviceManager(graphicsDevice))));
+                            new ContentManager(
+                                new Gem.IDE.Infrastructure.ServiceProvider(
+                                    new DeviceManager(graphicsDevice))));
 
             container.Fonts.Add("FrameNumberFont", content => content.Load<SpriteFont>("Content/Fonts/consoleFont"));
             OnGraphicsDeviceLoaded?.Invoke(this, EventArgs.Empty);
@@ -322,6 +340,25 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             selectedFrame = -1;
             coordinates.Disable();
             ReDraw();
+
+        }
+
+        private WPoint previousPosition = new WPoint(-1, -1);
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (e.RightButton == MouseButtonState.Pressed)
+            {
+                var position = e.GetPosition(this);
+                if (previousPosition != new WPoint(-1, -1))
+                {
+                    cameraHandler.Camera.Position -= (previousPosition - position).ToMonogameVector2();
+                }
+                previousPosition = position;
+            }
+            else
+            {
+                previousPosition = new WPoint(-1, -1);
+            }
         }
 
         private void OnGraphicsControlHwndLButtonDown(object sender, MouseEventArgs e)
