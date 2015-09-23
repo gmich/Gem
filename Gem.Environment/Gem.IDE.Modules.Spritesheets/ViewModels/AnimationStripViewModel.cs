@@ -10,6 +10,7 @@ using Gemini.Framework.Services;
 using Gemini.Framework.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gem.IDE.Modules.SpriteSheets.ViewModels
 {
@@ -69,25 +70,26 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
         private void SetupInspector()
         {
             var inspectorTool = IoC.Get<IInspectorTool>();
-            inspectorTool.SelectedObject = new InspectableObjectBuilder()
-                    .WithCollapsibleGroup("Animation", group =>
-                            group.WithObjectProperties(this, model =>
-                            model.Attributes.Matches(new AnimationAttribute())))
-                    .WithCollapsibleGroup("Sprite sheet", group =>
-                            group.WithObjectProperties(this, model =>
-                            model.Attributes.Matches(new SpriteSheetAttribute())))
-                    .WithCollapsibleGroup("Presentation", group =>
-                            group.WithObjectProperties(this, model =>
-                            model.Attributes.Matches(new PresentationAttribute())))
-                   .ToInspectableObject();
+            //inspectorTool.SelectedObject = new InspectableObjectBuilder()
+            //        .WithCollapsibleGroup("Animation", group =>
+            //                group.WithObjectProperties(this, model =>
+            //                model.Attributes.Matches(new AnimationAttribute())))
+            //        .WithCollapsibleGroup("Sprite sheet", group =>
+            //                group.WithObjectProperties(this, model =>
+            //                model.Attributes.Matches(new SpriteSheetAttribute())))
+            //        .WithCollapsibleGroup("Presentation", group =>
+            //                group.WithObjectProperties(this, model =>
+            //                model.Attributes.Matches(new PresentationAttribute())))
+            //       .ToInspectableObject();
             inspectorTool.DisplayName = "Sprite-Sheet Animation Inspector";
             IoC.Get<IShell>().ShowTool<IInspectorTool>();
         }
 
-        private void Save()
+        private void Save(AnimationStripSettings asettings)
         {
-            repository.Save(settings);
+            repository.Save(asettings);
         }
+
 
         [Browsable(false)]
         public override bool ShouldReopenOnStart
@@ -116,7 +118,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
         #region Frame
 
         private string name;
-        [Animation]
+        [Category("Animation")]
         public string Name
         {
             get { return name; }
@@ -126,45 +128,39 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
                 name = value.Trim();
                 DisplayName = name + ".animation";
                 NotifyOfPropertyChange(() => Name);
-                sceneView?.Invalidate(Settings);
-                Save();
+                sceneView?.Invalidate(Settings,Save);
             }
         }
 
         private int frameWidth;
-        [Animation]
-        [DisplayName("Frame Width")]
+        [DisplayName("Frame Width"),Category("Animation")]
         public int FrameWidth
         {
             get { return frameWidth; }
             set
             {
-                frameWidth = (value < 1) ? 1 : value;
+                frameWidth = MathHelper.Clamp(value, 1, TileSheetWidth);
                 NotifyOfPropertyChange(() => FrameWidth);
-                sceneView?.Invalidate(Settings);
-                Save();
+                sceneView?.Invalidate(Settings,Save);
             }
         }
 
         private int frameHeight;
-        [Animation]
-        [DisplayName("Frame Height")]
+        [DisplayName("Frame Height"), Category("Animation")]
         public int FrameHeight
         {
             get { return frameHeight; }
             set
             {
-                frameHeight = (value < 1) ? 1 : value;
+                frameHeight = MathHelper.Clamp(value, 1, TileSheetHeight);
                 NotifyOfPropertyChange(() => FrameHeight);
-                sceneView?.Invalidate(Settings);
-                Save();
+                sceneView?.Invalidate(Settings, Save);
             }
         }
 
 
         private int firstFrame;
-        [Animation]
-        [DisplayName("First Frame")]
+        [DisplayName("First Frame"), Category("Animation")]
         public int FirstFrame
         {
             get { return firstFrame; }
@@ -173,14 +169,12 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
                 firstFrame = (value < 0) ? 0 : value;
                 firstFrame = (firstFrame > lastFrame) ? lastFrame : firstFrame;
                 NotifyOfPropertyChange(() => FirstFrame);
-                sceneView?.Invalidate(Settings);
-                Save();
+                sceneView?.Invalidate(Settings, Save);
             }
         }
 
         private int lastFrame;
-        [Animation]
-        [DisplayName("Last Frame")]
+        [DisplayName("Last Frame"), Category("Animation")]
         public int LastFrame
         {
             get { return lastFrame; }
@@ -188,14 +182,12 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             {
                 lastFrame = (value < firstFrame) ? firstFrame : value;
                 NotifyOfPropertyChange(() => LastFrame);
-                sceneView?.Invalidate(Settings);
-                Save();
+                sceneView?.Invalidate(Settings, Save);
             }
         }
 
         private double frameDelay;
-        [Animation]
-        [DisplayName("Frame Delay (ms)")]
+        [DisplayName("Frame Delay (ms)"), Category("Animation")]
         public double FrameDelay
         {
             get { return frameDelay; }
@@ -203,20 +195,18 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             {
                 frameDelay = (value < 0) ? 0 : value;
                 NotifyOfPropertyChange(() => FrameDelay);
-                sceneView?.Invalidate(Settings);
-                Save();
+                sceneView?.Invalidate(Settings, Save);
             }
         }
         #endregion
 
         #region SpriteSheet
 
-        [SpriteSheet]
+        [Category("SpriteSheet")]
         public string Path { get; }
 
         private int tilesheetWidth;
-        [SpriteSheet]
-        [DisplayName("TileSheet Width")]
+        [DisplayName("Width"),Category("SpriteSheet")]
         public int TileSheetWidth
         {
             get
@@ -231,8 +221,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
         }
 
         private int tileSheetHeight;
-        [SpriteSheet]
-        [DisplayName("TileSheet Height")]
+        [DisplayName("Height"), Category("SpriteSheet")]
         public int TileSheetHeight
         {
             get
@@ -251,21 +240,21 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
         #region Presentation
 
         private bool animate;
-        [Presentation]
+        [Category("Presentation")]
         public bool Animate
         {
             get { return animate; }
             set
             {
                 animate = value;
+                ShowTilesheet = !animate;
                 NotifyOfPropertyChange(() => Animate);
                 sceneView?.SetOptions(options);
             }
         }
 
         private bool showNumbers;
-        [Presentation]
-        [DisplayName("Show Numbers")]
+        [DisplayName("Show Numbers"), Category("Presentation")]
         public bool ShowNumbers
         {
             get { return showNumbers; }
@@ -277,9 +266,8 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             }
         }
 
-        private bool showGrid;
-        [Presentation]
-        [DisplayName("Show Grid")]
+        private bool showGrid = true;
+        [DisplayName("Show Grid"), Category("Presentation")]
         public bool ShowGrid
         {
             get { return showGrid; }
@@ -292,8 +280,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
         }
 
         private bool showTilesheet = true;
-        [Presentation]
-        [DisplayName("Show Tilesheet")]
+        [DisplayName("Show Tilesheet"), Category("Presentation")]
         public bool ShowTilesheet
         {
             get { return showTilesheet; }
@@ -305,9 +292,21 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             }
         }
 
+        private double zoom = 1.0d;
+        [DisplayName("Scale"), Range(0.2, 2.5), Category("Presentation")]
+        public double Zoom
+        {
+            get { return zoom; }
+            set
+            {
+                zoom = value;
+                NotifyOfPropertyChange(() => Zoom);
+                sceneView.Scale = zoom;
+            }
+        }
+
         private Color backgroundColor;
-        [Presentation]
-        [DisplayName("Background color")]
+        [DisplayName("Background color"), Category("Presentation")]
         public Color BackgroundColor
         {
             get { return backgroundColor; }
@@ -340,9 +339,10 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
                     TileSheetHeight = settings.TileSheetHeight;
                     sceneView.SetColorData(settings.Image, settings.TileSheetWidth, settings.TileSheetHeight);
                 }
-                sceneView.Invalidate(Settings);
+                sceneView?.Invalidate(Settings, Save);
                 sceneView.SetOptions(options);
             };
+            sceneView.onScaleChange += (sender, newScale) => Zoom = newScale;
             base.OnViewLoaded(view);
         }
 

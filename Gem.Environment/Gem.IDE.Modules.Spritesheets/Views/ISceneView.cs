@@ -7,13 +7,17 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
     {
         event EventHandler<EventArgs> OnGraphicsDeviceLoaded;
 
-        void Invalidate(AnimationStripSettings settings);
+        event EventHandler<double> onScaleChange;
+
+        void Invalidate(AnimationStripSettings settings, Action<AnimationStripSettings> saveSettingsCallback);
 
         void SetOptions(AnimationViewOptions options);
 
         Tuple<int,int,byte[]> LoadTexture(string path);
 
         void SetColorData(byte[] data, int width, int height);
+
+        double Scale { get; set; }
 
         Microsoft.Xna.Framework.Color BackgroundColor { get; set; }
     }

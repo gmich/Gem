@@ -22,6 +22,8 @@ using WPoint = System.Windows.Point;
 using Gemini.Modules.StatusBar;
 using System.Windows;
 using Gemini.Framework.Services;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
 #endregion
 
@@ -54,12 +56,14 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         private Func<Vector2> animationPosition;
         private CoordinateViewer coordinates;
         private WPoint previousPosition;
+        private Action<AnimationStripSettings, Action<AnimationStripSettings>> saveSettings;
 
         #endregion
 
         #region Events
 
         public event EventHandler<EventArgs> OnGraphicsDeviceLoaded;
+        public event EventHandler<double> onScaleChange;
 
         #endregion
 
@@ -100,7 +104,17 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             }
         }
 
-        public void Invalidate(AnimationStripSettings settings)
+        public double Scale
+        {
+            get { return cameraHandler.Zoom; }
+            set
+            {
+                cameraHandler.Zoom = (float)value;
+                ReDraw();
+            }
+        }
+
+        public void Invalidate(AnimationStripSettings settings, Action<AnimationStripSettings> saveCallback)
         {
             animation = new AnimationStrip(settings);
             var analyzer = new AnimationStripAnalyzer(settings);
@@ -113,6 +127,8 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             coordinates = new CoordinateViewer(graphicsDevice, MColor.Black, (int)Width, (int)Height);
             cameraHandler.UpdateViewport((int)Width, (int)Height);
             ReDraw();
+
+            Save(settings, saveCallback);
         }
 
         public Tuple<int, int, byte[]> LoadTexture(string path)
@@ -125,12 +141,13 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
                                      * texture.Height
                                      * bytesPerPixel];
             texture.GetData(spritesheetData);
-
+            saveSettings = CropAndSave;
             return new Tuple<int, int, byte[]>(texture.Width, texture.Height, spritesheetData);
         }
 
         public void SetColorData(byte[] data, int width, int height)
         {
+            saveSettings = SaveUnedited;
             container.Textures.Add("SpriteSheet", x => new Texture2D(graphicsDevice, width, height));
             container.Textures["SpriteSheet"].SetData(data);
         }
@@ -187,6 +204,93 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
                 updateLoop.Stop();
                 updateLoop = null;
             }
+        }
+
+        #endregion
+
+        #region Save
+        
+        private async void Save(AnimationStripSettings settings, Action<AnimationStripSettings> saveCallback)
+        {
+            var saveBuffer = new BufferBlock<System.Action>();
+            AddToSaveQueue(saveBuffer, () => saveSettings?.Invoke(settings, saveCallback));
+            await SaveAsync(saveBuffer);
+        }
+
+        private void AddToSaveQueue(ITargetBlock<System.Action> target, System.Action saveAction)
+        {
+            target.Post(saveAction);
+            target.Complete();
+        }
+
+        private async Task<bool> SaveAsync(ISourceBlock<System.Action> source)
+        {
+            while (await source.OutputAvailableAsync())
+            {
+                var data = source.Receive();
+                data.Invoke();
+            }
+            return true;
+        }
+
+        private void CropAndSave(AnimationStripSettings settings, Action<AnimationStripSettings> saveCallback)
+        {
+            int noOfFrames = (settings.LastFrame - settings.StartFrame) + 1;
+            var newData = GetAnimationSubtexture(settings.Image, noOfFrames);
+
+            saveCallback(new AnimationStripSettings(
+                settings.FrameWidth,
+                settings.FrameHeight,
+                settings.FrameWidth * (noOfFrames),
+                settings.FrameHeight,
+                settings.Name,
+                settings.FrameDelay,
+                settings.Loop,
+                newData,
+                0,
+                noOfFrames - 1));
+        }
+
+        private void SaveUnedited(AnimationStripSettings settings, Action<AnimationStripSettings> saveCallback)
+        {
+            saveCallback(settings);
+        }
+
+        private byte[] GetAnimationSubtexture(byte[] imageData, int noOfFrames)
+        {       
+            var croppedTexture = new Texture2D(graphicsDevice, animation.Settings.FrameWidth, animation.Settings.FrameHeight);
+            return
+                 frames
+                    .Skip(animation.Settings.StartFrame)
+                    .Take(noOfFrames)
+                    .Select(frame =>
+                        GetImageData(imageData, frame.Item2, croppedTexture))
+                    .Aggregate((first, second) =>
+                    {
+                        var next = new byte[first.Length + second.Length];
+                        first.CopyTo(next, 0);
+                        second.CopyTo(next, first.Length);
+                        return next;
+                    });
+
+            //return ConcatArrays(byteArrays);
+        }
+        
+        private byte[] GetImageData(byte[] textureData, MRectangle subTextureBounds, Texture2D cropTexture)
+        {
+            int depth = 4;
+            var data = new MColor[subTextureBounds.Width * subTextureBounds.Height];
+            container.Textures["SpriteSheet"].GetData(
+                0,
+                subTextureBounds, data,
+                0,
+                data.Length);
+            cropTexture.SetData(data);
+            var cropedData = new byte[cropTexture.Width
+                         * cropTexture.Height
+                         * depth];
+            cropTexture.GetData(cropedData);
+            return cropedData;
         }
 
         #endregion
@@ -249,7 +353,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             {
                 var offset = container.Fonts["FrameNumberFont"].MeasureString(frame.Item1.ToString());
                 var borderOffset = new Vector2(
-                    (offset.X > offset.Y) 
+                    (offset.X > offset.Y)
                         ? offset.X : offset.Y,
                     offset.Y);
 
@@ -460,8 +564,8 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
 
         private void OnGraphicsControlHwndMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            cameraHandler.Zoom += (e.Delta > 0) ? 0.05f : -0.05f;
-            ReDraw();
+            Scale += (e.Delta > 0) ? 0.05f : -0.05f;
+            onScaleChange?.Invoke(this, cameraHandler.Zoom);
         }
 
         #endregion
