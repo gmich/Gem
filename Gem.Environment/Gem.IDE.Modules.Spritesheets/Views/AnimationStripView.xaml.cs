@@ -24,6 +24,7 @@ using System.Windows;
 using Gemini.Framework.Services;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using Gemini.Modules.PropertyGrid;
 
 #endregion
 
@@ -68,6 +69,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         #endregion
 
         #region Ctor
+
 
         public AnimationStripView()
         {
@@ -209,7 +211,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         #endregion
 
         #region Save
-        
+
         private async void Save(AnimationStripSettings settings, Action<AnimationStripSettings> saveCallback)
         {
             var saveBuffer = new BufferBlock<System.Action>();
@@ -257,25 +259,43 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
         }
 
         private byte[] GetAnimationSubtexture(byte[] imageData, int noOfFrames)
-        {       
+        {
             var croppedTexture = new Texture2D(graphicsDevice, animation.Settings.FrameWidth, animation.Settings.FrameHeight);
-            return
+            var frameData =
                  frames
                     .Skip(animation.Settings.StartFrame)
                     .Take(noOfFrames)
                     .Select(frame =>
-                        GetImageData(imageData, frame.Item2, croppedTexture))
-                    .Aggregate((first, second) =>
-                    {
-                        var next = new byte[first.Length + second.Length];
-                        first.CopyTo(next, 0);
-                        second.CopyTo(next, first.Length);
-                        return next;
-                    });
+                        GetImageData(imageData, frame.Item2, croppedTexture)).ToList();
 
-            //return ConcatArrays(byteArrays);
+            return ParseImages(
+                frameData,
+                new byte[frameData.Sum(x => x.Length)],
+                0,
+                0,
+                animation.Settings.FrameWidth,
+                animation.Settings.FrameHeight);
         }
-        
+
+        private byte[] ParseImages(IEnumerable<byte[]> byteArrays, byte[] parsedImage, int parsedByte, int initialPosition, int frameWidth, int frameHeight)
+        {
+            int bytesPerPixel = 4;
+            foreach (var byteArray in byteArrays)
+            {
+                for (int i = initialPosition; i < initialPosition + (frameWidth * bytesPerPixel); i++)
+                {
+                    parsedImage[parsedByte++] = byteArray[i];
+                }
+            }
+            initialPosition += (frameWidth * bytesPerPixel);
+
+            if (initialPosition < (frameWidth * bytesPerPixel) * frameHeight)
+            {
+                ParseImages(byteArrays, parsedImage, parsedByte, initialPosition, frameWidth, frameHeight);
+            }
+            return parsedImage;
+        }
+
         private byte[] GetImageData(byte[] textureData, MRectangle subTextureBounds, Texture2D cropTexture)
         {
             int depth = 4;

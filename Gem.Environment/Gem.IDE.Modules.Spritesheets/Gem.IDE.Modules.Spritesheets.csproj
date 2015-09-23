@@ -74,6 +74,9 @@
     <Reference Include="Gemini.Modules.Output">
       <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\Gemini.Modules.Output.dll</HintPath>
     </Reference>
+    <Reference Include="Gemini.Modules.PropertyGrid">
+      <HintPath>..\Gem.IDE.Core\ThirdParty\Gemini.Modules.PropertyGrid.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.1.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
       <HintPath>..\..\packages\AvalonEdit.5.0.2\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
       <Private>True</Private>
