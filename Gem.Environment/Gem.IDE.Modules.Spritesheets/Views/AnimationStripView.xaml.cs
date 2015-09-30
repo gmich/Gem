@@ -24,7 +24,6 @@ using System.Windows;
 using Gemini.Framework.Services;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-using Gemini.Modules.PropertyGrid;
 
 #endregion
 
@@ -130,7 +129,10 @@ namespace Gem.IDE.Modules.SpriteSheets.Views
             cameraHandler.UpdateViewport((int)Width, (int)Height);
             ReDraw();
 
-            Save(settings, saveCallback);
+            if (saveCallback != null)
+            {
+                Save(settings, saveCallback);
+            }
         }
 
         public Tuple<int, int, byte[]> LoadTexture(string path)

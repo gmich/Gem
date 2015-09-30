@@ -54,6 +54,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.IDE.Modules.Spritesheet
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.IDE.Infrastructure", "Gem.Environment\Gem.IDE.Infrastructure\Gem.IDE.Infrastructure.csproj", "{4D933708-61C1-47B9-BDF0-3B6D27E90078}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.IDE.Modules.ProjectExplorer", "Gem.IDE.Modules.ProjectExplorer\Gem.IDE.Modules.ProjectExplorer.csproj", "{A85CC323-89E0-4509-9FB8-8A2F5EE9FB43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -254,6 +256,18 @@ Global
 		{4D933708-61C1-47B9-BDF0-3B6D27E90078}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4D933708-61C1-47B9-BDF0-3B6D27E90078}.Release|x86.ActiveCfg = Release|Any CPU
 		{4D933708-61C1-47B9-BDF0-3B6D27E90078}.Release|x86.Build.0 = Release|Any CPU
+		{A85CC323-89E0-4509-9FB8-8A2F5EE9FB43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A85CC323-89E0-4509-9FB8-8A2F5EE9FB43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A85CC323-89E0-4509-9FB8-8A2F5EE9FB43}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A85CC323-89E0-4509-9FB8-8A2F5EE9FB43}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A85CC323-89E0-4509-9FB8-8A2F5EE9FB43}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A85CC323-89E0-4509-9FB8-8A2F5EE9FB43}.Debug|x86.Build.0 = Debug|Any CPU
+		{A85CC323-89E0-4509-9FB8-8A2F5EE9FB43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A85CC323-89E0-4509-9FB8-8A2F5EE9FB43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A85CC323-89E0-4509-9FB8-8A2F5EE9FB43}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A85CC323-89E0-4509-9FB8-8A2F5EE9FB43}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A85CC323-89E0-4509-9FB8-8A2F5EE9FB43}.Release|x86.ActiveCfg = Release|Any CPU
+		{A85CC323-89E0-4509-9FB8-8A2F5EE9FB43}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -277,5 +291,6 @@ Global
 		{EAEAAF7B-E6D8-4615-92D1-2DD8B75A922C} = {967E55B6-10BE-4AAA-99E1-4FA738F71096}
 		{DE32D523-5140-44E1-AD34-F115E350B2CB} = {967E55B6-10BE-4AAA-99E1-4FA738F71096}
 		{4D933708-61C1-47B9-BDF0-3B6D27E90078} = {967E55B6-10BE-4AAA-99E1-4FA738F71096}
+		{A85CC323-89E0-4509-9FB8-8A2F5EE9FB43} = {967E55B6-10BE-4AAA-99E1-4FA738F71096}
 	EndGlobalSection
 EndGlobal

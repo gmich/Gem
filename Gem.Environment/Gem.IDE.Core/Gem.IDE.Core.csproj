@@ -210,15 +210,6 @@
       <DependentUpon>CameraView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\Camera\Views\ISceneView.cs" />
-    <Compile Include="Modules\Editor\Commands\EditorCommandHandler.cs" />
-    <Compile Include="Modules\Editor\EditorView.xaml.cs">
-      <DependentUpon>EditorView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\Editor\EditorViewModel.cs" />
-    <Compile Include="Modules\Editor\IEditorView.cs" />
-    <Compile Include="Modules\Editor\IScript.cs" />
-    <Compile Include="Modules\Editor\Commands\ViewEditorCommandDefinition.cs" />
-    <Compile Include="Modules\Editor\Module.cs" />
     <Compile Include="Modules\SceneViewer\Commands\ViewSceneViewerCommandDefinition.cs" />
     <Compile Include="Modules\SceneViewer\Commands\ViewSceneViewerCommandHandler.cs" />
     <Compile Include="Modules\Startup\MenuDefinitions.cs" />
@@ -263,10 +254,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Modules\Editor\EditorView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Modules\SceneViewer\Views\SceneView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -276,6 +263,10 @@
     <ProjectReference Include="..\..\Gem.Engine\Gem.Engine.csproj">
       <Project>{2784d0e3-736d-4bca-8536-eea8834e6ed9}</Project>
       <Name>Gem.Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Gem.IDE.Modules.ProjectExplorer\Gem.IDE.Modules.ProjectExplorer.csproj">
+      <Project>{a85cc323-89e0-4509-9fb8-8a2f5ee9fb43}</Project>
+      <Name>Gem.IDE.Modules.ProjectExplorer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Gem.IDE.Modules.Spritesheets\Gem.IDE.Modules.Spritesheets.csproj">
       <Project>{de32d523-5140-44e1-ad34-f115e350b2cb}</Project>

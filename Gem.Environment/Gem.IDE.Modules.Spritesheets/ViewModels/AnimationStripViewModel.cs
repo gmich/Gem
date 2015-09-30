@@ -11,48 +11,69 @@ using Gemini.Framework.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using System.ComponentModel.DataAnnotations;
+using System.Windows;
+using Gem.IDE.Infrastructure;
 
 namespace Gem.IDE.Modules.SpriteSheets.ViewModels
 {
     [Export(typeof(AnimationStripViewModel))]
     [PartCreationPolicy(CreationPolicy.NonShared)]
-    public class AnimationStripViewModel : PersistedDocument
+    public class AnimationStripViewModel : PersistedEditor
     {
 
         #region Fields
 
         private ISceneView sceneView;
-        private readonly IAnimationRepository repository;
+        private readonly Func<string, IAnimationRepository> repository;
         private AnimationStripSettings settings;
 
         #endregion
 
         #region Persistence
 
-        protected override Task DoNew()
-        {
-            return TaskUtility.Completed;
-        }
-
-        protected override Task DoLoad(string filePath)
-        {
-            return TaskUtility.Completed;
-        }
 
         protected override Task DoSave(string filePath)
         {
+            DisplayName = System.IO.Path.GetFileNameWithoutExtension(filePath);
+            RedrawAndSave(filePath);
             return TaskUtility.Completed;
         }
 
+        public override void CanClose(System.Action<bool> callback)
+        {
+            if (IsDirty)
+            {
+                ShowSavePrompt(FilePath);
+            }
+            callback(true);
+        }
+
+        private void ShowSavePrompt(string filePath)
+        {
+            string sMessageBoxText = "Save changes to the following item?";
+            string sCaption = Name;
+            var rsltMessageBox = MessageBox.Show(sMessageBoxText, sCaption, MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (rsltMessageBox == MessageBoxResult.Yes)
+            {
+                RedrawAndSave(filePath);
+            }
+        }
+
+
+        private void RedrawAndSave(string filePath)
+        {
+            sceneView?.Invalidate(Settings, settings => Save(settings, filePath));
+        }
         #endregion
 
         #region Ctor
 
-        public AnimationStripViewModel(string path, AnimationStripSettings settings, IAnimationRepository repository)
+        public AnimationStripViewModel(string path, AnimationStripSettings settings, Func<string, IAnimationRepository> repository)
         {
             this.repository = repository;
             this.settings = settings;
             Path = path;
+
             frameWidth = settings.FrameWidth;
             frameHeight = settings.FrameHeight;
             frameDelay = settings.FrameDelay * 1000;
@@ -60,6 +81,8 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             firstFrame = settings.StartFrame;
             name = settings.Name;
             DisplayName = $"{name}{Extensions.Animation}";
+            FilePath = Path;
+            FileName = DisplayName;
             SetupInspector();
         }
 
@@ -70,24 +93,13 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
         private void SetupInspector()
         {
             var inspectorTool = IoC.Get<IInspectorTool>();
-            //inspectorTool.SelectedObject = new InspectableObjectBuilder()
-            //        .WithCollapsibleGroup("Animation", group =>
-            //                group.WithObjectProperties(this, model =>
-            //                model.Attributes.Matches(new AnimationAttribute())))
-            //        .WithCollapsibleGroup("Sprite sheet", group =>
-            //                group.WithObjectProperties(this, model =>
-            //                model.Attributes.Matches(new SpriteSheetAttribute())))
-            //        .WithCollapsibleGroup("Presentation", group =>
-            //                group.WithObjectProperties(this, model =>
-            //                model.Attributes.Matches(new PresentationAttribute())))
-            //       .ToInspectableObject();
             inspectorTool.DisplayName = "Sprite-Sheet Animation Inspector";
             IoC.Get<IShell>().ShowTool<IInspectorTool>();
         }
 
-        private void Save(AnimationStripSettings asettings)
+        private void Save(AnimationStripSettings asettings, string path)
         {
-            repository.Save(asettings);
+            repository(path).Save(asettings);
         }
 
 
@@ -124,16 +136,18 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             get { return name; }
             set
             {
-                repository.Delete(name);
+                //repository.Delete(name);
                 name = value.Trim();
-                DisplayName = name + ".animation";
+                //DisplayName = name + ".animation";
+                //DisplayName = (IsDirty) ? DisplayName + "*" : DisplayName;
                 NotifyOfPropertyChange(() => Name);
-                sceneView?.Invalidate(Settings,Save);
+                IsDirty = true;
+                sceneView?.Invalidate(Settings, null);
             }
         }
 
         private int frameWidth;
-        [DisplayName("Frame Width"),Category("Animation")]
+        [DisplayName("Frame Width"), Category("Animation")]
         public int FrameWidth
         {
             get { return frameWidth; }
@@ -141,7 +155,8 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             {
                 frameWidth = MathHelper.Clamp(value, 1, TileSheetWidth);
                 NotifyOfPropertyChange(() => FrameWidth);
-                sceneView?.Invalidate(Settings,Save);
+                IsDirty = true;
+                sceneView?.Invalidate(Settings, null);
             }
         }
 
@@ -154,7 +169,8 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             {
                 frameHeight = MathHelper.Clamp(value, 1, TileSheetHeight);
                 NotifyOfPropertyChange(() => FrameHeight);
-                sceneView?.Invalidate(Settings, Save);
+                IsDirty = true;
+                sceneView?.Invalidate(Settings, null);
             }
         }
 
@@ -169,7 +185,8 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
                 firstFrame = (value < 0) ? 0 : value;
                 firstFrame = (firstFrame > lastFrame) ? lastFrame : firstFrame;
                 NotifyOfPropertyChange(() => FirstFrame);
-                sceneView?.Invalidate(Settings, Save);
+                IsDirty = true;
+                sceneView?.Invalidate(Settings, null);
             }
         }
 
@@ -182,7 +199,8 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             {
                 lastFrame = (value < firstFrame) ? firstFrame : value;
                 NotifyOfPropertyChange(() => LastFrame);
-                sceneView?.Invalidate(Settings, Save);
+                IsDirty = true;
+                sceneView?.Invalidate(Settings, null);
             }
         }
 
@@ -195,7 +213,8 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
             {
                 frameDelay = (value < 0) ? 0 : value;
                 NotifyOfPropertyChange(() => FrameDelay);
-                sceneView?.Invalidate(Settings, Save);
+                IsDirty = true;
+                sceneView?.Invalidate(Settings, null);
             }
         }
         #endregion
@@ -206,7 +225,7 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
         public string Path { get; }
 
         private int tilesheetWidth;
-        [DisplayName("Width"),Category("SpriteSheet")]
+        [DisplayName("Width"), Category("SpriteSheet")]
         public int TileSheetWidth
         {
             get
@@ -339,7 +358,8 @@ namespace Gem.IDE.Modules.SpriteSheets.ViewModels
                     TileSheetHeight = settings.TileSheetHeight;
                     sceneView.SetColorData(settings.Image, settings.TileSheetWidth, settings.TileSheetHeight);
                 }
-                sceneView?.Invalidate(Settings, Save);
+                IsDirty = true;
+                sceneView?.Invalidate(Settings, null);
                 sceneView.SetOptions(options);
             };
             sceneView.onScaleChange += (sender, newScale) => Zoom = newScale;

@@ -13,6 +13,12 @@ namespace Gem.IDE.Core.Modules
             Startup.Module.DemosMenuGroup, 1);
 
         [Export]
+        public static ExcludeMenuItemDefinition ExcludeOpenMenuItem = new ExcludeMenuItemDefinition(Gemini.Modules.Shell.MenuDefinitions.FileOpenMenuItem);
+
+        [Export]
+        public static ExcludeMenuItemDefinition ExcludNewMenuItem = new ExcludeMenuItemDefinition(Gemini.Modules.Shell.MenuDefinitions.FileNewMenuItem);
+
+        [Export]
         public static MenuItemDefinition ViewCameraMenuItem = new CommandMenuItemDefinition<CameraCommandDefinition>(
             Startup.Module.DemosMenuGroup, 2);
 

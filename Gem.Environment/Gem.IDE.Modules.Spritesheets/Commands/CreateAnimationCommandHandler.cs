@@ -38,7 +38,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Commands
                 {
                     repository.LoadByPath(dialog.FileName)
                         .Done(settings =>
-                                shell.OpenDocument(new AnimationStripViewModel(dialog.FileName, settings, repository)),
+                                shell.OpenDocument(new AnimationStripViewModel(dialog.FileName, settings,path=> new JsonAnimationRepository(path))),
                                ex =>
                                {
                                     var res = Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message);
@@ -47,7 +47,7 @@ namespace Gem.IDE.Modules.SpriteSheets.Commands
                 else
                 {
                     var defaultSettings = new AnimationStripSettings(32, 32, 0, 0, GetRandomName(repository.Exists, 1), 0.02d, false, null);
-                    shell.OpenDocument(new AnimationStripViewModel(dialog.FileName, defaultSettings, repository));
+                    shell.OpenDocument(new AnimationStripViewModel(dialog.FileName, defaultSettings, path => new JsonAnimationRepository(path)));
                 }
             }
             return TaskUtility.Completed;

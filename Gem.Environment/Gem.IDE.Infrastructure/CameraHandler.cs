@@ -42,8 +42,10 @@ namespace Gem.IDE.Infrastructure
         public void UpdateViewport(int viewportWidth, int viewportHeight)
         {
             var viewportSize = new Vector2(viewportWidth, viewportHeight);
+            float zoom = camera.Zoom.X;
             camera = new Camera(camera.Position,
                                 viewportSize);
+            camera.Zoom = new Vector3(zoom, zoom, 1);
         }
 
         public Matrix Matrix
