@@ -2,7 +2,7 @@
 using Gemini.Framework.Menus;
 using System.ComponentModel.Composition;
 
-namespace Gem.IDE.Modules.ProjectExplorer.ViewModels
+namespace Gem.IDE.Modules.ProjectExplorer
 {
     public static class MenuDefinitions
     {
