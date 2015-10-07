@@ -9,16 +9,16 @@ using Gem.Engine.ScreenSystem;
 using Gem.Engine.Containers;
 using FarseerPhysics;
 using Gem.Engine.Input;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Gem.Engine.Physics
 {
-    public abstract class PhysicsHost : Host
+    public class PhysicsHost : Host
     {
 
         #region Fields and Properties
 
+        public IPhysicsGame game;
         private DebugViewXNA DebugView;
         private Body HiddenBody;
         private float agentForce;
@@ -32,11 +32,14 @@ namespace Gem.Engine.Physics
 
         #endregion
 
-        public PhysicsHost(ITransition transition, 
+        public PhysicsHost(IPhysicsGame physicsGame,
+                           ITransition transition, 
                            GraphicsDevice device,
                            ContentContainer container)
             : base(transition,device, container)
         {
+            game = physicsGame;
+            game.Host = this;
             Initialize();
         }
 
@@ -227,6 +230,7 @@ namespace Gem.Engine.Physics
             DebugView.LoadContent(Device, Container.Textures.Content);
             Camera = new CameraFarseer(Device);
             HiddenBody = BodyFactory.CreateBody(World, Vector2.Zero);
+            game.Initialize();
         }
 
         public override void FixedUpdate(GameTime gameTime)
@@ -234,10 +238,13 @@ namespace Gem.Engine.Physics
             World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, (1f / 30f)));
 
             Camera.Update(gameTime);
+            game.FixedUpdate(gameTime);
         }
 
         public override void HandleInput(InputManager inputManager, GameTime gameTime)
         {
+            HandleDebugView(inputManager);
+
             if (ScreenManager.Settings.IsMouseVisible)
             {
                 HandleCursor(inputManager);
@@ -250,10 +257,12 @@ namespace Gem.Engine.Physics
             {
                 HandleCamera(inputManager, (float)gameTime.ElapsedGameTime.TotalSeconds);
             }
+            game.HandleInput(inputManager, gameTime);
         }
 
         public override void Draw(SpriteBatch batch)
         {
+            game.Draw(batch);
             DebugView.RenderDebugData(ref Camera.SimProjection, ref Camera.SimView);
         }
     }

@@ -162,6 +162,13 @@
     <Compile Include="Database\BTree\TreeStringSerialzier.cs" />
     <Compile Include="Database\BTree\TreeTraverseDirection.cs" />
     <Compile Include="Database\BTree\TreeTraverser.cs" />
+    <Compile Include="Input\GamePadInput.cs" />
+    <Compile Include="Input\IInput.cs" />
+    <Compile Include="Input\InputConfiguration.cs" />
+    <Compile Include="Input\KeyboardInput.cs" />
+    <Compile Include="Input\KeyboardUtils.cs" />
+    <Compile Include="Input\MouseInput.cs" />
+    <Compile Include="Input\TouchInput.cs" />
     <Compile Include="Map\Chunk\IChunk.cs" />
     <Compile Include="Map\Chunk\IMap.cs" />
     <Compile Include="Map\Persistence\MapModel.cs" />
@@ -172,8 +179,8 @@
     <Compile Include="Map\Persistence\StringIntSerializer.cs" />
     <Compile Include="Physics\CameraFarseer.cs" />
     <Compile Include="GameBase.cs" />
+    <Compile Include="Physics\IPhysicsGame.cs" />
     <Compile Include="Physics\PhysicsHost.cs" />
-    <Compile Include="Physics\PhysicsTestGame.cs" />
     <Compile Include="Repositories\AsyncRepositoryWrapper.cs" />
     <Compile Include="Repositories\Extensions.cs" />
     <Compile Include="DrawingSystem\Animations\AnimationStrip.cs" />
@@ -194,12 +201,14 @@
     <Compile Include="Primitives\Shapes\ShapeDeclaration.cs" />
     <Compile Include="Primitives\Shapes\VertexPosition.cs" />
     <Compile Include="Repositories\IRepository.cs" />
+    <Compile Include="ScreenSystem\EmptyHost.cs" />
     <Compile Include="ScreenSystem\Host.cs" />
+    <Compile Include="ScreenSystem\IGame.cs" />
     <Compile Include="ScreenSystem\IScreenHost.cs" />
     <Compile Include="ScreenSystem\ITransition.cs" />
     <Compile Include="ScreenSystem\ScreenManager.cs" />
     <Compile Include="ScreenSystem\ScreenState.cs" />
-    <Compile Include="ScreenSystem\Settings.cs" />
+    <Compile Include="Configuration\Settings.cs" />
     <Compile Include="ScreenSystem\TimedTransition.cs" />
     <Compile Include="ScreenSystem\TransitionDirection.cs" />
     <Compile Include="Shaders\CastedItem.cs" />
@@ -226,7 +235,6 @@
     <Compile Include="DrawingSystem\SpriteFonts.cs" />
     <Compile Include="Components\Layout.cs" />
     <Compile Include="Input\InputManager.cs" />
-    <Compile Include="Resolution\Configuration.cs" />
     <Compile Include="Sound\SoundManager.cs" />
     <Compile Include="Utilities\StringBuilderExtensions.cs" />
     <Compile Include="Diagnostics\Console\TimeRuler.cs" />
@@ -329,6 +337,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Effects\resolveShadowsEffect.mgfxo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Font.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="log4net.config">

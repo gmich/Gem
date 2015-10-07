@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using Gem.Engine.Containers;
 using Gem.Engine.Input;
+using Gem.Engine.Configuration;
 
 namespace Gem.Engine.ScreenSystem
 {
@@ -10,8 +11,9 @@ namespace Gem.Engine.ScreenSystem
     {
 
         public ContentContainer Container {  get; }
-        public GraphicsDevice Device { get; }
-        
+        public GraphicsDevice Device { get; }        
+        public Settings Settings {  get { return ScreenManager.Settings; } }
+
         public Host(ITransition transition,GraphicsDevice device, ContentContainer container)
         {
             Device = device;

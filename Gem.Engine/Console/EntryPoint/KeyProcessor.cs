@@ -1,5 +1,4 @@
 ﻿using Gem.Engine.Input;
-using Gem.Infrastructure.Input;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics.Contracts;

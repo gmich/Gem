@@ -19,7 +19,7 @@ namespace Gem.Engine.ScreenSystem
 
         private List<IScreenHost> hosts = new List<IScreenHost>();
         private SpriteBatch spriteBatch;
-        private RenderTarget2D guiScreen;
+        private RenderTarget2D screen;
         public static Settings Settings { get; private set; }
 
         #endregion
@@ -29,13 +29,7 @@ namespace Gem.Engine.ScreenSystem
         public ScreenManager(Game game,InputManager inputManager, Settings settings, Action<SpriteBatch> drawWith)
             : base(game)
         {
-            settings.OnResolutionChange((sender, args) =>
-            {
-                 this.cachedTargets.Clear();
-                 this.guiScreen = GetWindowRenderTarget();
-            });
             Settings = settings;
-            this.guiScreen = GetWindowRenderTarget();
             this.DrawWith = drawWith;
             this.inputManager = inputManager;
         }
@@ -51,8 +45,13 @@ namespace Gem.Engine.ScreenSystem
             get { return hosts.Count; }
         }
 
+        public bool ShowsScreen
+        {
+            get { return this.ActiveHosts > 0; }
+        }
+
         #endregion
-        
+
         #region Private Helpers
 
         private RenderTarget2D GetWindowRenderTarget()
@@ -75,7 +74,7 @@ namespace Gem.Engine.ScreenSystem
             GraphicsDevice.Clear(Color.Transparent);
         }
 
-        private void DrawGui(RenderTarget2D guiScreen)
+        private void DrawScreen(RenderTarget2D guiScreen)
         {
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             spriteBatch.Draw(guiScreen, Vector2.Zero, Color.White);
@@ -109,6 +108,13 @@ namespace Gem.Engine.ScreenSystem
         public override void Initialize()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            screen = GetWindowRenderTarget();
+            Settings.OnResolutionChange((sender, args) =>
+            {
+                cachedTargets.Clear();
+                screen = GetWindowRenderTarget();
+            });
+            base.Initialize();
         }
 
         public override void Update(GameTime gameTime)
@@ -131,11 +137,10 @@ namespace Gem.Engine.ScreenSystem
 
             base.Update(gameTime);
         }
-
         
         public override void Draw(GameTime gameTime)
         {
-            AssignRenderTargetToDevice(guiScreen);
+            AssignRenderTargetToDevice(screen);
 
             DrawWith(spriteBatch);
 
@@ -167,7 +172,7 @@ namespace Gem.Engine.ScreenSystem
 
             GraphicsDevice.SetRenderTarget(null);
 
-            DrawGui(guiScreen);
+            DrawScreen(screen);
             DrawTransitions();
 
             base.Draw(gameTime);
@@ -193,6 +198,11 @@ namespace Gem.Engine.ScreenSystem
             hosts.Add(screen);
 
             return true;
+        }
+
+        public void HideAll()
+        {
+            hosts.ForEach(host => host.ExitScreen());
         }
 
         public bool RemoveScreen(IScreenHost screen)

@@ -7,20 +7,12 @@ using System.Diagnostics;
 
 namespace Gem.Engine.Input
 {
-    public class InputManager : GameComponent
+    public class InputManager 
     {
 
         #region Fields
 
         private InputCapabilities inputCaps;
-
-        #endregion
-
-        #region Ctor
-
-        public InputManager(Game game)
-            : base(game)
-        { }
 
         #endregion
 
@@ -110,7 +102,7 @@ namespace Gem.Engine.Input
 
         #region Update
 
-        public override void Update(GameTime gameTime)
+        public void Flush()
         {
             FlushDesktop();
         }

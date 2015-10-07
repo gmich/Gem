@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Storage;
 using Gem.Diagnostics.Console;
 using Gem.Engine.Containers;
 using Gem.Engine.Console;
+using Gem.Engine.Input;
 
 #endregion
 
@@ -24,6 +25,7 @@ namespace Gem.Engine
         private GemConsole gemConsole;
         private AssetContainer<SpriteFont> fontContainer;
         private AssetContainer<Texture2D> textureContainer;
+        private readonly InputManager input = new InputManager();
 
         public GemEngine()
             : base()
@@ -54,7 +56,6 @@ namespace Gem.Engine
             //Register an echo log4net listener
             //DebugSystem.Instance.DebugCommandUI.RegisterEchoListner(new Diagnostics.Logger.LogEchoListener());
             gemConsole = new GemConsole(this, fontContainer["ConsoleFont"]);
-            Components.Add(new Input.InputManager(this));
             Components.Add(gemConsole);
 
             base.Initialize();
@@ -75,11 +76,12 @@ namespace Gem.Engine
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            input.Flush();
             //DebugSystem.Instance.TimeRuler.StartFrame();
             //DebugSystem.Instance.TimeRuler.BeginMark("Update", Color.Blue);
             // End measuring the Update method
             //DebugSystem.Instance.TimeRuler.EndMark("Update");
-            
+
             base.Update(gameTime);
         }
 
