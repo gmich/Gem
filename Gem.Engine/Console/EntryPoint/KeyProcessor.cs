@@ -41,7 +41,8 @@ namespace Gem.Engine.Console.EntryPoint
         {
             get
             {
-                return new TextAppenderHelper(InputManager.Keyboard);
+                //FIXME
+                return new TextAppenderHelper(null);
             }
         }
     }

@@ -74,6 +74,8 @@
   <ItemGroup>
     <Compile Include="Commands\ViewProjectExplorerCommandDefinition.cs" />
     <Compile Include="Commands\ViewProjectExplorerCommandHandler.cs" />
+    <Compile Include="ProjectTree\TreeItem.cs" />
+    <Compile Include="ProjectTree\TreeItemParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

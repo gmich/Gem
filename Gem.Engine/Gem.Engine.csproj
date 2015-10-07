@@ -15,6 +15,8 @@
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -97,7 +99,6 @@
     <Compile Include="AI\Promises\PromiseTimer.cs" />
     <Compile Include="AI\Promises\Promise_NonGenericse.cs" />
     <Compile Include="CameraSystem\Camera.cs" />
-    <Compile Include="CameraSystem\CameraFarseer.cs" />
     <Compile Include="CameraSystem\ICamera.cs" />
     <Compile Include="Console\Cells\CellRowAligner.cs" />
     <Compile Include="Console\Cells\CellAppender.cs" />
@@ -169,6 +170,10 @@
     <Compile Include="Map\Persistence\MapDatabase.cs" />
     <Compile Include="Map\Persistence\MapSerializer.cs" />
     <Compile Include="Map\Persistence\StringIntSerializer.cs" />
+    <Compile Include="Physics\CameraFarseer.cs" />
+    <Compile Include="GameBase.cs" />
+    <Compile Include="Physics\PhysicsHost.cs" />
+    <Compile Include="Physics\PhysicsTestGame.cs" />
     <Compile Include="Repositories\AsyncRepositoryWrapper.cs" />
     <Compile Include="Repositories\Extensions.cs" />
     <Compile Include="DrawingSystem\Animations\AnimationStrip.cs" />
@@ -189,6 +194,19 @@
     <Compile Include="Primitives\Shapes\ShapeDeclaration.cs" />
     <Compile Include="Primitives\Shapes\VertexPosition.cs" />
     <Compile Include="Repositories\IRepository.cs" />
+    <Compile Include="ScreenSystem\Host.cs" />
+    <Compile Include="ScreenSystem\IScreenHost.cs" />
+    <Compile Include="ScreenSystem\ITransition.cs" />
+    <Compile Include="ScreenSystem\ScreenManager.cs" />
+    <Compile Include="ScreenSystem\ScreenState.cs" />
+    <Compile Include="ScreenSystem\Settings.cs" />
+    <Compile Include="ScreenSystem\TimedTransition.cs" />
+    <Compile Include="ScreenSystem\TransitionDirection.cs" />
+    <Compile Include="Shaders\CastedItem.cs" />
+    <Compile Include="Shaders\LightArea.cs" />
+    <Compile Include="Shaders\LightManager.cs" />
+    <Compile Include="Shaders\QuadRender.cs" />
+    <Compile Include="Shaders\ShadowmapResolver.cs" />
     <Compile Include="Utilities\Range.cs" />
     <Compile Include="Console\Cells\Row.cs" />
     <Compile Include="Console\Commands\Terminal.cs" />
@@ -222,8 +240,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="FarseerPhysics MonoGame, Version=3.5.0.42884, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="DebugView MonoGame">
+      <HintPath>Third Party\DebugView MonoGame.dll</HintPath>
+    </Reference>
+    <Reference Include="FarseerPhysics MonoGame">
       <HintPath>Third Party\FarseerPhysics MonoGame.dll</HintPath>
     </Reference>
     <Reference Include="Lidgren.Network, Version=2011.3.12.0, Culture=neutral, processorArchitecture=MSIL">
@@ -237,6 +257,10 @@
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="NullGuard, Version=1.4.4.0, Culture=neutral, PublicKeyToken=1958ac8092168428, processorArchitecture=MSIL">
+      <HintPath>..\packages\NullGuard.Fody.1.4.4\lib\dotnet\NullGuard.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\packages\MonoGame.Framework.WindowsGL.3.4.0.459\lib\net40\OpenTK.dll</HintPath>
@@ -266,6 +290,8 @@
     <Content Include="Content\Common\gradient.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Effects\reductionEffect.fx" />
+    <Content Include="Content\Effects\resolveShadowsEffect.fx" />
     <Content Include="Content\gem.png" />
     <Content Include="Content\Materials\blank.png" />
     <Content Include="Content\Materials\dots.png" />
@@ -278,13 +304,13 @@
     <Content Include="Content\tilesheet.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="FodyWeavers.xml" />
     <Content Include="gem.ico" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CameraSystem\Handlers\" />
     <Folder Include="CameraSystem\Scripts\" />
     <Folder Include="Content\Animations\" />
-    <Folder Include="ScreenSystem\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Fonts\consoleFont.xnb">
@@ -299,6 +325,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="app.config" />
+    <Content Include="Content\Effects\reductionEffect.mgfxo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Effects\resolveShadowsEffect.mgfxo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -317,7 +349,11 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    <Error Condition="!Exists('..\packages\Fody.1.29.2\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.29.2\build\dotnet\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\NullGuard.Fody.1.4.4\build\dotnet\NullGuard.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NullGuard.Fody.1.4.4\build\dotnet\NullGuard.Fody.targets'))" />
   </Target>
+  <Import Project="..\packages\Fody.1.29.2\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.1.29.2\build\dotnet\Fody.targets')" />
+  <Import Project="..\packages\NullGuard.Fody.1.4.4\build\dotnet\NullGuard.Fody.targets" Condition="Exists('..\packages\NullGuard.Fody.1.4.4\build\dotnet\NullGuard.Fody.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

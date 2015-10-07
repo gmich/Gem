@@ -12,7 +12,7 @@ namespace Gem.Engine.Input
 
         #region Fields
 
-        private static InputCapabilities inputCaps;
+        private InputCapabilities inputCaps;
 
         #endregion
 
@@ -20,10 +20,10 @@ namespace Gem.Engine.Input
 
         public InputManager(Game game)
             : base(game)
-        {   }
+        { }
 
         #endregion
-        
+
         #region Input Capabilities
 
         public struct InputCapabilities
@@ -34,44 +34,20 @@ namespace Gem.Engine.Input
             public bool IsTouchEnabled { get; internal set; }
         }
 
-        public static InputCapabilities GetInputCapabilities(bool forceRefresh = false)
+        public InputCapabilities GetInputCapabilities(bool forceRefresh = false)
         {
             if (forceRefresh)
             {
                 RunningOnPhone();
                 RunningOnDesktop();
                 inputCaps.IsTouchEnabled = TouchPanel.GetCapabilities().IsConnected;
-                EvaluateInputDevices();
             }
 
             return inputCaps;
         }
 
-        private static void EvaluateInputDevices()
-        {
-            //keyboard =
-            //    inputCaps.IsKeyboardEnabled ?
-            //    keyboard ?? new KeyboardInput()
-            //    : null;
-
-            //mouse =
-            //    inputCaps.IsMouseEnabled ?
-            //    mouse ?? new MouseInput()
-            //    : null;
-
-            //touch =
-            //    inputCaps.IsTouchEnabled ?
-            //    touch ?? new TouchInput()
-            //    : null;
-
-            //gamePad =
-            //    inputCaps.IsGamePadEnabled ?
-            //    gamePad ?? new GamePadInput()
-            //    : null;
-        }
-
         [Conditional("ANDROID"), Conditional("WINDOWS_PHONE")]
-        private static void RunningOnPhone()
+        private void RunningOnPhone()
         {
             inputCaps.IsGamePadEnabled = false;
             inputCaps.IsMouseEnabled = false;
@@ -79,7 +55,7 @@ namespace Gem.Engine.Input
         }
 
         [Conditional("WINDOWS"), Conditional("LINUX")]
-        private static void RunningOnDesktop()
+        private void RunningOnDesktop()
         {
             inputCaps.IsGamePadEnabled = Microsoft.Xna.Framework.Input.GamePad.GetCapabilities(PlayerIndex.One).IsConnected;
             inputCaps.IsMouseEnabled = true;
@@ -90,8 +66,8 @@ namespace Gem.Engine.Input
 
         #region Public Properties
 
-        private static Lazy<KeyboardInput> keyboard = new Lazy<KeyboardInput>();
-        public static KeyboardInput Keyboard
+        private Lazy<KeyboardInput> keyboard = new Lazy<KeyboardInput>();
+        public KeyboardInput Keyboard
         {
             get
             {
@@ -99,8 +75,8 @@ namespace Gem.Engine.Input
             }
         }
 
-        private static Lazy<MouseInput> mouse = new Lazy<MouseInput>();
-        public static MouseInput Mouse
+        private Lazy<MouseInput> mouse = new Lazy<MouseInput>();
+        public MouseInput Mouse
         {
             get
             {
@@ -108,8 +84,8 @@ namespace Gem.Engine.Input
             }
         }
 
-        private static Lazy<TouchInput> touch = new Lazy<TouchInput>();
-        public static TouchInput Touch
+        private Lazy<TouchInput> touch = new Lazy<TouchInput>();
+        public TouchInput Touch
         {
             get
             {
@@ -117,8 +93,8 @@ namespace Gem.Engine.Input
             }
         }
 
-        private static Lazy<GamePadInput> gamePad = new Lazy<GamePadInput>();
-        public static GamePadInput GamePad
+        private Lazy<GamePadInput> gamePad = new Lazy<GamePadInput>();
+        public GamePadInput GamePad
         {
             get
             {
@@ -137,18 +113,16 @@ namespace Gem.Engine.Input
         public override void Update(GameTime gameTime)
         {
             FlushDesktop();
-            //Flush(Touch);
         }
 
-        //[Conditional("WINDOWS"), Conditional("LINUX")]
-        private static void FlushDesktop()
+        private void FlushDesktop()
         {
             Flush(Keyboard);
             Flush(Mouse);
             Flush(GamePad);
         }
 
-        private static void Flush(IInput input)
+        private void Flush(IInput input)
         {
             if (input != null)
             {
@@ -162,3 +136,4 @@ namespace Gem.Engine.Input
 
     }
 }
+

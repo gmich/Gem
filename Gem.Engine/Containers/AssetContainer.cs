@@ -9,11 +9,11 @@ namespace Gem.Engine.Containers
     {
 
         private readonly Dictionary<string, TAsset> assets = new Dictionary<string, TAsset>();
-        private readonly ContentManager content;
+        public ContentManager Content { get; }
 
         public AssetContainer(ContentManager content)
         {
-            this.content = content;
+            Content = content;
         }
 
         public bool Add(string id, Func<ContentManager, TAsset> assetRetriever)
@@ -22,7 +22,7 @@ namespace Gem.Engine.Containers
             {
                 return false;
             }
-            assets.Add(id, assetRetriever(content));
+            assets.Add(id, assetRetriever(Content));
             return true;
         }
 
@@ -32,7 +32,7 @@ namespace Gem.Engine.Containers
             {
                 return false;
             }
-            assets.Add(id, content.Load<TAsset>(path));
+            assets.Add(id, Content.Load<TAsset>(path));
             return true;
         }
 

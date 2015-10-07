@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics;
 
-namespace Gem.CameraSystem
+namespace Gem.Engine.Physics
 {
     /// <summary>
     /// A camera for tracking Farseer physics objects
@@ -36,7 +36,7 @@ namespace Gem.CameraSystem
         public Matrix SimProjection;
         public Matrix SimView;
         public Matrix View;
-        
+
         #endregion
 
 
@@ -51,7 +51,7 @@ namespace Gem.CameraSystem
 
             translateCenter = new Vector2(ConvertUnits.ToSimUnits(graphics.Viewport.Width / 2f), ConvertUnits.ToSimUnits(graphics.Viewport.Height / 2f));
 
-            ResetCamera();
+            Reset();
         }
 
         #endregion
@@ -237,7 +237,7 @@ namespace Gem.CameraSystem
         /// <summary>
         /// Resets the camera to default values.
         /// </summary>
-        public void ResetCamera()
+        public void Reset()
         {
             currentPosition = Vector2.Zero;
             targetPosition = Vector2.Zero;
