@@ -54,9 +54,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.IDE.Modules.Spritesheet
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.IDE.Infrastructure", "Gem.Environment\Gem.IDE.Infrastructure\Gem.IDE.Infrastructure.csproj", "{4D933708-61C1-47B9-BDF0-3B6D27E90078}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.IDE.Modules.ProjectExplorer", "Gem.IDE.Modules.ProjectExplorer\Gem.IDE.Modules.ProjectExplorer.csproj", "{A85CC323-89E0-4509-9FB8-8A2F5EE9FB43}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.IDE.Modules.ProjectExplorer", "Gem.Environment\Gem.IDE.Modules.ProjectExplorer\Gem.IDE.Modules.ProjectExplorer.csproj", "{A85CC323-89E0-4509-9FB8-8A2F5EE9FB43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Engine.GameBaseTest", "Gem.Engine.GameBaseTest\Gem.Engine.GameBaseTest.csproj", "{F5008B33-7BFF-49C8-8C9D-9BC6208E4643}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gem.Engine.GameBaseTest", "Examples\Gem.Engine.GameBaseTest\Gem.Engine.GameBaseTest.csproj", "{F5008B33-7BFF-49C8-8C9D-9BC6208E4643}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

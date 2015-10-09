@@ -4,6 +4,7 @@ using Gem.Engine.Console.Rendering.Animations;
 using Gem.Infrastructure.Functional;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NullGuard;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -88,7 +89,7 @@ namespace Gem.Engine.Console.Rendering
             }
         }
 
-        public void UpdateCursor(Behavior<IEffect> behavior, Row currentRow, int row, int position)
+        public void UpdateCursor(Behavior<IEffect> behavior, [AllowNull]Row currentRow, int row, int position)
         {
             int rowIndex = row;
             appendLocation = new Vector2(0, (rowIndex) * (rowSize+ AreaSettings.RowSpacing) - 1);

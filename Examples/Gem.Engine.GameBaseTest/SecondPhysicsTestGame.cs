@@ -10,14 +10,15 @@ namespace Gem.Engine.GameBaseTest
 {
     public class SecondPhysicsTestGame : IPhysicsGame
     {
+        public const string HostName = "second";
         public PhysicsHost Host
         {
-            get; set;
+            get;
         }
-
-        public void Initialize()
+        
+        public SecondPhysicsTestGame(PhysicsHost host)
         {
-
+            Host = host;
         }
 
         public void Draw(SpriteBatch batch)

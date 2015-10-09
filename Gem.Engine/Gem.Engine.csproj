@@ -169,6 +169,17 @@
     <Compile Include="Input\KeyboardUtils.cs" />
     <Compile Include="Input\MouseInput.cs" />
     <Compile Include="Input\TouchInput.cs" />
+    <Compile Include="Logging\ActionAppender.cs" />
+    <Compile Include="Logging\AppenderOptions.cs" />
+    <Compile Include="Logging\Auditor.cs" />
+    <Compile Include="Logging\ConfigurableAppender.cs" />
+    <Compile Include="Logging\DebugHost.cs" />
+    <Compile Include="Logging\IAppender.cs" />
+    <Compile Include="Logging\IConfigurableAppender.cs" />
+    <Compile Include="Logging\IDebugHost.cs" />
+    <Compile Include="Logging\IDebugListener.cs" />
+    <Compile Include="Logging\Log4NetWrapper.cs" />
+    <Compile Include="Logging\NLogWrapper.cs" />
     <Compile Include="Map\Chunk\IChunk.cs" />
     <Compile Include="Map\Chunk\IMap.cs" />
     <Compile Include="Map\Persistence\MapModel.cs" />
@@ -258,12 +269,20 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Third Party\Lidgren.Network.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MonoGame.Framework, Version=3.4.0.459, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MonoGame.Framework.WindowsGL.3.4.0.459\lib\net40\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.1.2\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NullGuard, Version=1.4.4.0, Culture=neutral, PublicKeyToken=1958ac8092168428, processorArchitecture=MSIL">

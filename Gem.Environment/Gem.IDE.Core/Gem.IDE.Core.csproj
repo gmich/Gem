@@ -264,7 +264,7 @@
       <Project>{2784d0e3-736d-4bca-8536-eea8834e6ed9}</Project>
       <Name>Gem.Engine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Gem.IDE.Modules.ProjectExplorer\Gem.IDE.Modules.ProjectExplorer.csproj">
+    <ProjectReference Include="..\Gem.IDE.Modules.ProjectExplorer\Gem.IDE.Modules.ProjectExplorer.csproj">
       <Project>{a85cc323-89e0-4509-9fb8-8a2f5ee9fb43}</Project>
       <Name>Gem.IDE.Modules.ProjectExplorer</Name>
     </ProjectReference>

@@ -6,7 +6,7 @@ using System.Linq;
 using Gem.Infrastructure.Attributes;
 using System.Reflection;
 using Gem.Infrastructure.Functional;
-using Gem.Infrastructure.Logging;
+using Gem.Engine.Logging;
 using System.Threading.Tasks;
 
 #endregion

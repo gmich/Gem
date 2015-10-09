@@ -1,4 +1,4 @@
-﻿using Gem.Infrastructure.Logging;
+﻿using Gem.Engine.Logging;
 
 namespace Gem.Engine.Console.Commands
 {

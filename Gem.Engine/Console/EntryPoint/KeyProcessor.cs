@@ -36,14 +36,6 @@ namespace Gem.Engine.Console.EntryPoint
 
         public char Cursor { get { return cursor; } }
 
-        public static TextAppenderHelper Default
-        {
-            get
-            {
-                //FIXME
-                return new TextAppenderHelper(null);
-            }
-        }
     }
 
     public class KeyProcessor

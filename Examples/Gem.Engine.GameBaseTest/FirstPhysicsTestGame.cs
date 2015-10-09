@@ -11,10 +11,13 @@ namespace Gem.Engine.GameBaseTest
     {
         private Body rectangle;
 
-        public PhysicsHost Host { get; set; }
+        public const string HostName = "first";
 
-        public void Initialize()
+        public PhysicsHost Host { get;  }
+
+        public FirstPhysicsTestGame(PhysicsHost host)
         {
+            Host = host;
             Host.World.Gravity = Vector2.Zero;
 
             rectangle = BodyFactory.CreateRectangle(Host.World, 5f, 5f, 1f);

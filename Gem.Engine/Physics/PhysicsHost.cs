@@ -10,37 +10,47 @@ using Gem.Engine.Containers;
 using FarseerPhysics;
 using Gem.Engine.Input;
 using Microsoft.Xna.Framework.Graphics;
+using NullGuard;
 
 namespace Gem.Engine.Physics
 {
+    [NullGuard(ValidationFlags.AllPublicArguments)]
     public class PhysicsHost : Host
     {
 
         #region Fields and Properties
 
-        public IPhysicsGame game;
-        private DebugViewXNA DebugView;
-        private Body HiddenBody;
+        public IPhysicsGame Game
+        {
+            get; set;
+        }
+        private readonly DebugViewXNA DebugView;
+        private readonly Body HiddenBody;
         private float agentForce;
         private float agentTorque;
         private FixedMouseJoint fixedMouseJoint;
         private Body userAgent;
 
-        public CameraFarseer Camera { get; private set; }
+        public CameraFarseer Camera { get; }
         public bool IsCameraControlled { get; set; }
-        public World World { get; private set; }
+        public World World { get;}
 
         #endregion
 
-        public PhysicsHost(IPhysicsGame physicsGame,
-                           ITransition transition, 
+        public PhysicsHost(ITransition transition,
                            GraphicsDevice device,
                            ContentContainer container)
-            : base(transition,device, container)
+            : base(transition, device, container)
         {
-            game = physicsGame;
-            game.Host = this;
-            Initialize();
+            World = new World(Vector2.Zero);
+            DebugView = new DebugViewXNA(World);
+            DebugView.RemoveFlags(DebugViewFlags.Shape);
+            DebugView.RemoveFlags(DebugViewFlags.Joint);
+            DebugView.DefaultShapeColor = Color.White;
+            DebugView.SleepingShapeColor = Color.LightGray;
+            DebugView.LoadContent(Device, Container.Textures.Content);
+            Camera = new CameraFarseer(Device);
+            HiddenBody = BodyFactory.CreateBody(World, Vector2.Zero);
         }
 
         #region Private Input Helpers
@@ -199,7 +209,7 @@ namespace Gem.Engine.Physics
         }
 
         #endregion
-        
+
         private void EnableOrDisableFlag(DebugViewFlags flag)
         {
             if ((DebugView.Flags & flag) == flag)
@@ -218,27 +228,13 @@ namespace Gem.Engine.Physics
             agentForce = force;
             agentTorque = torque;
         }
-
-        public override void Initialize()
-        {
-            World = new World(Vector2.Zero);
-            DebugView = new DebugViewXNA(World);
-            DebugView.RemoveFlags(DebugViewFlags.Shape);
-            DebugView.RemoveFlags(DebugViewFlags.Joint);
-            DebugView.DefaultShapeColor = Color.White;
-            DebugView.SleepingShapeColor = Color.LightGray;
-            DebugView.LoadContent(Device, Container.Textures.Content);
-            Camera = new CameraFarseer(Device);
-            HiddenBody = BodyFactory.CreateBody(World, Vector2.Zero);
-            game.Initialize();
-        }
-
+        
         public override void FixedUpdate(GameTime gameTime)
         {
             World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, (1f / 30f)));
 
             Camera.Update(gameTime);
-            game.FixedUpdate(gameTime);
+            Game.FixedUpdate(gameTime);
         }
 
         public override void HandleInput(InputManager inputManager, GameTime gameTime)
@@ -257,12 +253,14 @@ namespace Gem.Engine.Physics
             {
                 HandleCamera(inputManager, (float)gameTime.ElapsedGameTime.TotalSeconds);
             }
-            game.HandleInput(inputManager, gameTime);
+            Game.HandleInput(inputManager, gameTime);
         }
+
+        public override void Initialize() { }
 
         public override void Draw(SpriteBatch batch)
         {
-            game.Draw(batch);
+            Game.Draw(batch);
             DebugView.RenderDebugData(ref Camera.SimProjection, ref Camera.SimView);
         }
     }

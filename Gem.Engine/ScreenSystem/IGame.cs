@@ -6,9 +6,7 @@ namespace Gem.Engine.ScreenSystem
 {
     public interface IGame
     {
-        Host Host { get; set; }
-
-        void Initialize();
+        Host Host { get; }
 
         void HandleInput(InputManager inputManager, GameTime gameTime);
 

@@ -7,10 +7,16 @@ namespace Gem.Engine.GameBaseTest
 {
     public class TestGameScreen : IGame
     {
+        public const string HostName = "third";
+
         public Host Host
         {
             get;
-            set;
+        }
+
+        public TestGameScreen(Host host)
+        {
+            Host = host;
         }
 
         public void Draw(SpriteBatch batch)

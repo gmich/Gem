@@ -1,15 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NullGuard;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gem.Engine.ScreenSystem
 {
     public delegate void TransitionRenderAction(ScreenState state, float progress, RenderTarget2D renderTarget, SpriteBatch batch);
 
+    [NullGuard(ValidationFlags.AllPublicArguments)]
     public class TimedTransition : ITransition
     {
 
@@ -51,7 +49,7 @@ namespace Gem.Engine.ScreenSystem
             }
         }
 
-        public static TimedTransition Default
+        public static TimedTransition Zero
         {
             get
             {

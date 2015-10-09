@@ -5,10 +5,12 @@ using System;
 using System.Linq;
 using Gem.Engine.Configuration;
 using Gem.Engine.Input;
+using NullGuard;
+using Gem.Engine.Console.Commands;
 
 namespace Gem.Engine.ScreenSystem
 {
-
+    [NullGuard(ValidationFlags.AllPublicArguments)]
     public class ScreenManager : DrawableGameComponent
     {
         #region Fields
@@ -22,16 +24,18 @@ namespace Gem.Engine.ScreenSystem
         private RenderTarget2D screen;
         public static Settings Settings { get; private set; }
 
+        public static Terminal CommandTerminal { get; private set; }
         #endregion
 
         #region Ctor
 
-        public ScreenManager(Game game,InputManager inputManager, Settings settings, Action<SpriteBatch> drawWith)
+        public ScreenManager(Game game,Terminal terminal, InputManager inputManager, Settings settings, [AllowNull]Action<SpriteBatch> drawWith)
             : base(game)
         {
             Settings = settings;
             this.DrawWith = drawWith;
             this.inputManager = inputManager;
+            CommandTerminal = terminal;
         }
 
         #endregion
@@ -95,10 +99,9 @@ namespace Gem.Engine.ScreenSystem
 
         private void DrawHost(IScreenHost host)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             host.Draw(spriteBatch);
-            spriteBatch.End();
-
+            //spriteBatch.End();
         }
 
         #endregion

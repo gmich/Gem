@@ -5,29 +5,43 @@ using Gem.Engine.Console.Rendering;
 using Gem.Engine.Console.EntryPoint;
 using Gem.Engine.Console.Cells;
 using Gem.Engine.Console.Commands;
+using Gem.Engine.ScreenSystem;
+using Gem.Engine.Input;
+using System;
+using NullGuard;
+using Gem.Engine.Logging;
 
 namespace Gem.Engine.Console
 {
-    public class GemConsole : DrawableGameComponent
+    public class GemConsole : IGame
     {
 
         #region Fields
 
-        private readonly CellRowAligner aligner;
-        private readonly CellAppender appender;
-        private readonly TerminalEntryRenderArea cellEntryRenderArea;
-        private readonly TerminalEntry entryPoint;
-        private readonly Terminal terminal;
-        private readonly KeyProcessor keyProcessor;
-        private readonly CellRenderingOptions renderingOptions;
+        public const string HostTag = "Gem_Console";
 
-        private SpriteBatch batch;
+        private CellRowAligner aligner;
+        private CellAppender appender;
+        private TerminalEntryRenderArea cellEntryRenderArea;
+        public TerminalEntry EntryPoint { get; private set; }
+        private KeyProcessor keyProcessor;
+        private CellRenderingOptions renderingOptions;
+        private readonly Terminal terminal;
+        private readonly KeyboardInput input;
 
         #endregion
-
-        public GemConsole(Game game, SpriteFont font)
-            : base(game)
+        public Host Host
         {
+            get;
+        }
+
+        public GemConsole(KeyboardInput input,Host host)
+        {
+            Host = host;
+            terminal = new Terminal(TerminalSettings.Default);
+            this.input = input;
+            var font = Host.Container.Fonts.Content.Load<SpriteFont>("Fonts/consoleFont");
+
             renderingOptions = new CellRenderingOptions
             {
                 CellSpacing = 2,
@@ -35,7 +49,7 @@ namespace Gem.Engine.Console
                 RowSpacing = 2
             };
 
-            keyProcessor = new KeyProcessor(TextAppenderHelper.Default);
+            keyProcessor = new KeyProcessor(new TextAppenderHelper(input));
             appender = new CellAppender((ch) =>
             {
                 string content = ch.ToString();
@@ -44,14 +58,16 @@ namespace Gem.Engine.Console
             }, new CellBehavior(Color.Black, 0.0f, 1.0f));
 
             aligner = new CellRowAligner();
-            entryPoint = new TerminalEntry(appender, aligner, ()=>renderingOptions.CellSpacing,()=> 100.0f);
+            EntryPoint = new TerminalEntry(appender, aligner, () => renderingOptions.CellSpacing, () =>Host.Device.Viewport.Width);
             aligner.RowAdded += (sender, args) => cellEntryRenderArea.AddCellRange(args.Row, args.RowIndex);
             aligner.Cleared += (sender, args) => cellEntryRenderArea.Clear();
 
-            cellEntryRenderArea = new TerminalEntryRenderArea(renderingOptions,new Rectangle(10,10,100,100), font);
+            cellEntryRenderArea = new TerminalEntryRenderArea(renderingOptions, new Rectangle(10, 10, 100, 100), font);
 
-            terminal = new Terminal(TerminalSettings.Default);
-            entryPoint.OnFlushedEntry += (sender, command) => terminal.ExecuteCommand(command);
+
+            EntryPoint.OnFlushedEntry += (sender, command) => terminal.ExecuteCommand(command);
+            terminal.RegisterAppender(new ActionAppender(EntryPoint.AddString));
+
             SubscribeEntryToKeyprocessor();
         }
 
@@ -72,45 +88,42 @@ namespace Gem.Engine.Console
 
         private void SubscribeEntryToKeyprocessor()
         {
-            keyProcessor.KeyPressed += (sender, ch) => entryPoint.AddEntry(ch);
-            keyProcessor.BackSpace += (sender, args) => entryPoint.DeleteEntry();
-            keyProcessor.Delete += (sender, args) => entryPoint.DeleteEntryAfterCursor();
-            keyProcessor.Left += (sender, args) => entryPoint.Cursor.Left();
-            keyProcessor.Right += (sender, args) => entryPoint.Cursor.Right();
-            keyProcessor.Up += (sender, args) => entryPoint.PeekNext();
-            keyProcessor.Down += (sender, args) => entryPoint.PeekPrevious();
+            keyProcessor.KeyPressed += (sender, ch) => EntryPoint.AddEntry(ch);
+            keyProcessor.BackSpace += (sender, args) => EntryPoint.DeleteEntry();
+            keyProcessor.Delete += (sender, args) => EntryPoint.DeleteEntryAfterCursor();
+            keyProcessor.Left += (sender, args) => EntryPoint.Cursor.Left();
+            keyProcessor.Right += (sender, args) => EntryPoint.Cursor.Right();
+            keyProcessor.Up += (sender, args) => EntryPoint.PeekNext();
+            keyProcessor.Down += (sender, args) => EntryPoint.PeekPrevious();
         }
 
         public CellRenderingOptions RenderingOptions { get { return renderingOptions; } }
         public CellAppender Appender { get { return appender; } }
-        public Terminal Terminal { get { return terminal; } }
+        public Terminal Terminal {get { return terminal; } }
+        
 
         #region DrawableGameComponent Members
 
-        public override void Initialize()
-        {
-            batch = new SpriteBatch(GraphicsDevice);
-            base.Initialize();
-        }
 
-        public override void Update(GameTime gameTime)
+        public void FixedUpdate(GameTime gameTime)
         {
-            keyProcessor.ProcessKeyInput(gameTime.ElapsedGameTime.TotalSeconds);
-            cellEntryRenderArea.UpdateCursor(entryPoint.Cursor.Effect,
-                                          aligner.Rows().Skip(entryPoint.Cursor.Row).FirstOrDefault(),
-                                          entryPoint.Cursor.Row,
-                                          entryPoint.Cursor.HeadInRow);
+            cellEntryRenderArea.UpdateCursor(EntryPoint.Cursor.Effect,
+                                          aligner.Rows().Skip(EntryPoint.Cursor.Row).FirstOrDefault(),
+                                          EntryPoint.Cursor.Row,
+                                          EntryPoint.Cursor.HeadInRow);
 
             cellEntryRenderArea.Update(gameTime);
-
-            base.Update(gameTime);
         }
 
 
-        public override void Draw(GameTime gameTime)
+        public void Draw(SpriteBatch batch)
         {
             cellEntryRenderArea.Draw(batch);
-            base.Draw(gameTime);
+        }
+
+        public void HandleInput(InputManager inputManager, GameTime gameTime)
+        {
+            keyProcessor.ProcessKeyInput(gameTime.ElapsedGameTime.TotalSeconds);
         }
 
         #endregion

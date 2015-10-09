@@ -2,41 +2,43 @@
 using Gem.Engine.Containers;
 using Gem.Engine.Input;
 using Microsoft.Xna.Framework;
+using NullGuard;
 
 namespace Gem.Engine.ScreenSystem
 {
+    [NullGuard(ValidationFlags.AllPublicArguments)]
     public class EmptyHost : Host
     {
-        private readonly IGame game;
+        public IGame Game
+        {
+            get; set;
+        }
 
-        public EmptyHost(IGame game,
-                          ITransition transition,
+        public EmptyHost(ITransition transition,
                           GraphicsDevice device,
                           ContentContainer container)
             : base(transition, device, container)
-        {
-            this.game = game;
-            game.Host = this;
+        {    
+
         }
 
         public override void Draw(SpriteBatch batch)
         {
-            game.Draw(batch);
+            Game.Draw(batch);
         }
 
         public override void FixedUpdate(GameTime gameTime)
         {
-            game.FixedUpdate(gameTime);
+            Game.FixedUpdate(gameTime);
         }
 
         public override void HandleInput(InputManager inputManager, GameTime gameTime)
         {
-            game.HandleInput(inputManager, gameTime);
+            Game.HandleInput(inputManager, gameTime);
         }
 
         public override void Initialize()
-        {
-            game.Initialize();
+        {            
         }
     }
 }

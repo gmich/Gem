@@ -19,7 +19,7 @@ namespace Gem.Engine.Shaders
         private readonly List<CastedItem> castedItems = new List<CastedItem>();
         private readonly RenderTarget2D screenShadows;
         private readonly GraphicsDevice device;
-        public Action<SpriteBatch> DrawBackground;
+        public Action<SpriteBatch> DrawBackground = batch => { };
 
         #endregion
 
@@ -73,7 +73,7 @@ namespace Gem.Engine.Shaders
             batch.End();
             device.SetRenderTarget(null);
 
-            DrawBackground?.Invoke(batch);
+            DrawBackground.Invoke(batch);
         }
 
         #endregion

@@ -55,8 +55,7 @@ namespace Gem.Engine
             //DebugSystem.Instance.TimeRuler.ShowLog = true;
             //Register an echo log4net listener
             //DebugSystem.Instance.DebugCommandUI.RegisterEchoListner(new Diagnostics.Logger.LogEchoListener());
-            gemConsole = new GemConsole(this, fontContainer["ConsoleFont"]);
-            Components.Add(gemConsole);
+            //gemConsole = new GemConsole(this, fontContainer["ConsoleFont"]);
 
             base.Initialize();
         }

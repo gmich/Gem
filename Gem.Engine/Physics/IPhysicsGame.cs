@@ -7,9 +7,7 @@ namespace Gem.Engine.Physics
 {
     public interface IPhysicsGame
     {
-        PhysicsHost Host { get; set; }
-
-        void Initialize();
+        PhysicsHost Host { get; }
 
         void HandleInput(InputManager inputManager, GameTime gameTime);
 

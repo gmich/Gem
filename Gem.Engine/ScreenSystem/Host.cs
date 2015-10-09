@@ -4,17 +4,22 @@ using System;
 using Gem.Engine.Containers;
 using Gem.Engine.Input;
 using Gem.Engine.Configuration;
+using NullGuard;
+using Gem.Engine.Console.Commands;
 
 namespace Gem.Engine.ScreenSystem
 {
+    [NullGuard(ValidationFlags.AllPublicArguments)]
     public abstract class Host : IScreenHost
     {
 
-        public ContentContainer Container {  get; }
-        public GraphicsDevice Device { get; }        
-        public Settings Settings {  get { return ScreenManager.Settings; } }
+        public ContentContainer Container { get; }
+        public GraphicsDevice Device { get; }
+        public Settings Settings { get { return ScreenManager.Settings; } }
+        public Terminal CommandTerminal { get { return ScreenManager.CommandTerminal; } }
 
-        public Host(ITransition transition,GraphicsDevice device, ContentContainer container)
+        
+        public Host(ITransition transition, GraphicsDevice device, ContentContainer container)
         {
             Device = device;
             Container = container;
@@ -36,7 +41,7 @@ namespace Gem.Engine.ScreenSystem
                 transition = value;
                 transition.TransitionStarted += (sender, direction) => AssignState(direction, ScreenState.TransitionOn, ScreenState.TransitionOff);
                 transition.TransitionFinished += (sender, direction) => AssignState(direction, ScreenState.Active, ScreenState.Exit);
-                transition.TransitionFinished += (sender, direction) => RaiseEndEvent( direction);
+                transition.TransitionFinished += (sender, direction) => RaiseEndEvent(direction);
             }
         }
 
@@ -61,7 +66,7 @@ namespace Gem.Engine.ScreenSystem
                 handler(this, EventArgs.Empty);
             }
         }
-        
+
         private void OnExitingScreen()
         {
             var handler = OnExiting;
@@ -143,7 +148,7 @@ namespace Gem.Engine.ScreenSystem
             if (ScreenState == ScreenState.TransitionOff
                 || ScreenState == ScreenState.TransitionOn)
             {
-                Transition.Update(gameTime.ElapsedGameTime.TotalSeconds);
+                Transition.Update(gameTime.ElapsedGameTime.TotalMilliseconds);
             }
             FixedUpdate(gameTime);
         }

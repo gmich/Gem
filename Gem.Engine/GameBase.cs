@@ -9,6 +9,10 @@ using Gem.Engine.ScreenSystem;
 using System.Collections.Generic;
 using Gem.Engine.Input;
 using Gem.Engine.Physics;
+using Gem.Engine.Console;
+using Microsoft.Xna.Framework.Input;
+using Gem.Engine.Console.Commands;
+using Gem.Engine.Logging;
 
 namespace Gem.Engine
 {
@@ -17,16 +21,22 @@ namespace Gem.Engine
         private readonly Dictionary<string, Func<IScreenHost>> hosts = new Dictionary<string, Func<IScreenHost>>();
 
         public event EventHandler<EventArgs> onInitialize;
-        public event EventHandler<ContentManager> OnReady;
+        public event EventHandler<ContentManager> WhenReady;
         public event EventHandler<EventArgs> onContentUnload;
         public event EventHandler<SpriteBatch> onDraw;
         public event EventHandler<GameTime> OnUpdate;
 
         public GraphicsDeviceManager GraphicsManager { get; }
-        public ScreenManager ScreenManager { get; }
+        public ScreenManager ScreenManager { get; private set; }
         public ContentContainer Container { get; private set; }
         public Settings Settings { get; }
         public InputManager Input { get; } = new InputManager();
+
+        public static IDebugHost Reporter { get; } = new DebugHost();
+
+        public bool IsConsoleEnabled { get; set; } = true;
+
+        private GemConsole console;
 
         public IScreenHost this[string guiHostId]
         {
@@ -46,22 +56,29 @@ namespace Gem.Engine
         public GameBase(int windowWidth, int windowHeight)
         {
             Settings = new Settings(this, new Vector2(windowWidth, windowHeight));
-            GraphicsManager = new GraphicsDeviceManager(this);
-            ScreenManager = new ScreenManager(this, Input, Settings, (batch) => onDraw?.Invoke(this, batch));
-            Components.Add(ScreenManager);
+            GraphicsManager = new GraphicsDeviceManager(this);       
             Content.RootDirectory = "Content";
         }
 
         protected override void Initialize()
         {
+            Container = new ContentContainer(Content);
+            console = AddHost(GemConsole.HostTag, host => new GemConsole(Input.Keyboard, host), new TimedTransition(TimeSpan.FromSeconds(0.5),
+                                (state, progress, target, batch) =>
+                                 batch.Draw(target,
+                                Vector2.Zero,
+                                 Color.White * progress))) as GemConsole;
+            ScreenManager = new ScreenManager(this, console.Terminal, Input, Settings, (batch) => onDraw?.Invoke(this, batch));
+            Reporter.RegisterAppender(new ActionAppender(console.EntryPoint.AddString));
+            Components.Add(ScreenManager);
             onInitialize?.Invoke(this, EventArgs.Empty);
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            Container = new ContentContainer(Content);
-            OnReady?.Invoke(this, Content);
+            WhenReady?.Invoke(this, Content);
+
             base.LoadContent();
         }
 
@@ -74,47 +91,43 @@ namespace Gem.Engine
         protected override void Update(GameTime gameTime)
         {
             Input.Flush();
+
+            if (IsConsoleEnabled)
+            {
+                if (Input.Keyboard.IsKeyClicked(Keys.Tab))
+                {
+                    if (IsShowing(GemConsole.HostTag))
+                    {
+                        Hide(GemConsole.HostTag);
+                    }
+                    else
+                    {
+                        Show(GemConsole.HostTag);
+                    }
+                }
+            }
             OnUpdate?.Invoke(this, gameTime);
             base.Update(gameTime);
         }
 
         #region Public Methods
 
-        public void AddHost<THost>(string hostTag, THost game, ITransition transition)
+        public IPhysicsGame AddHost(string hostTag, Func<PhysicsHost, IPhysicsGame> gameGenerator, ITransition transition)
         {
-            var hostedGame = game as IPhysicsGame;
-            if (hostedGame != null)
-            {
-                AddPhysicsHost(hostTag, hostedGame, transition);
-            }
-            else
-            {
-                AddGameHost(hostTag, game as IGame, transition);
-            }
-        }
-        private void AddPhysicsHost<THost>(string hostTag, THost game, ITransition transition)
-            where THost : IPhysicsGame
-        {
-
-            Func<ITransition, THost, IScreenHost> hostGenerator = GenerateHost<PhysicsHost, THost>;
-            AddHost(hostTag, () =>
-            {
-                var screenHost = hostGenerator(transition, game);
-                hostGenerator = (tr, g) => screenHost;
-                return screenHost;
-            });
+            var host = new PhysicsHost(transition, GraphicsDevice, Container);
+            host.Game = gameGenerator(host);
+            host.Initialize();
+            AddHost(hostTag, host);
+            return host.Game;
         }
 
-        private void AddGameHost<THost>(string hostTag, THost game, ITransition transition)
-             where THost : IGame
+        public IGame AddHost(string hostTag, Func<Host, IGame> gameGenerator, ITransition transition)
         {
-            Func<ITransition, THost, IScreenHost> hostGenerator = GenerateHost<EmptyHost, THost>;
-            AddHost(hostTag, () =>
-            {
-                var screenHost = hostGenerator(transition, game);
-                hostGenerator = (tr, g) => screenHost;
-                return screenHost;
-            });
+            var host = new EmptyHost(transition, GraphicsDevice, Container);
+            host.Game = gameGenerator(host) as IGame;
+            host.Initialize();
+            AddHost(hostTag, host);
+            return host.Game;
         }
 
         private IScreenHost GenerateHost<THost, TGame>(ITransition transition, TGame game)
@@ -122,7 +135,6 @@ namespace Gem.Engine
         {
             return Activator.CreateInstance(
                 typeof(THost),
-                game,
                 transition,
                 GraphicsDevice,
                 Container)
