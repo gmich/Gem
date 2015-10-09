@@ -38,6 +38,7 @@ namespace Gem.Engine.Console.Commands
             commandSeparator = settings.CommandSeparator;
             subCommandSeparator = settings.SubCommandSeparator;
             argumentSeparator = settings.ArgumentSeparator;
+            ScanAssemblyForCommands();
         }
 
         #endregion
@@ -50,8 +51,28 @@ namespace Gem.Engine.Console.Commands
 
         #region Commands
 
-        public void RegisterCommand<TObject>(TObject objectWithCommand)
-            where TObject : class
+        private void ScanAssemblyForCommands()
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            foreach (var assembly in assemblies)
+            {
+                if (assembly == null) continue;
+                try
+                {
+                    foreach (var type in assembly.GetTypes())
+                    {
+                        RegisterCommand(type);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Error("Failed to resolve type while scanning for commands: ", ex.Message);
+                }
+            }
+        }
+
+        public void RegisterCommand(Type objectWithCommand)
         {
             ResolveAttributeToCommand<CommandAttribute>(objectWithCommand, (callback, attribute) =>
                                                                          RegisterCommand(callback,
@@ -73,10 +94,10 @@ namespace Gem.Engine.Console.Commands
 
         }
 
-        private void ResolveAttributeToCommand<TAttribute>(object objectWithCommand, Action<CommandCallback, TAttribute> action)
+        private void ResolveAttributeToCommand<TAttribute>(Type objectWithCommand, Action<CommandCallback, TAttribute> action)
             where TAttribute : Attribute
         {
-            var methods = objectWithCommand.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
+            var methods = objectWithCommand.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
                       .Where(m => m.GetCustomAttributes(typeof(TAttribute), false).Length > 0);
             foreach (var methodInfo in methods)
             {
@@ -357,7 +378,7 @@ namespace Gem.Engine.Console.Commands
                     }
                 }
             }
-            
+
             //execute the graph
             return Task<Result<object>>.Factory.StartNew(() =>
                 {

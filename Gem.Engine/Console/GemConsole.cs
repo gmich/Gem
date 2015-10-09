@@ -28,6 +28,9 @@ namespace Gem.Engine.Console
         private CellRenderingOptions renderingOptions;
         private readonly Terminal terminal;
         private readonly KeyboardInput input;
+        private readonly TerminalWindowRenderArea window;
+
+        public Action<SpriteBatch, SpriteFont, Vector2, char> CellRenderAction;
 
         #endregion
         public Host Host
@@ -35,8 +38,11 @@ namespace Gem.Engine.Console
             get;
         }
 
-        public GemConsole(KeyboardInput input,Host host)
+        public GemConsole(KeyboardInput input, Host host)
         {
+            CellRenderAction = (batch, rfont, position, ch) =>
+                batch.DrawString(rfont, ch.ToString(), position, Color.Black);
+
             Host = host;
             terminal = new Terminal(TerminalSettings.Default);
             this.input = input;
@@ -46,7 +52,9 @@ namespace Gem.Engine.Console
             {
                 CellSpacing = 2,
                 MaxRows = 5,
-                RowSpacing = 2
+                RowHeight = (int)font.MeasureString("|").Y,
+                RowSpacing = 2,
+                RowWidth = 300
             };
 
             keyProcessor = new KeyProcessor(new TextAppenderHelper(input));
@@ -54,20 +62,20 @@ namespace Gem.Engine.Console
             {
                 string content = ch.ToString();
                 var size = font.MeasureString(content);
-                return new Cell(content, (int)size.X, (int)size.Y, cell => appender.CellBehavior.CreateEffect(cell));
-            }, new CellBehavior(Color.Black, 0.0f, 1.0f));
+                return new Cell(ch, (batch, location) => CellRenderAction(batch,font, location, ch));
+            });
 
-            aligner = new CellRowAligner();
-            EntryPoint = new TerminalEntry(appender, aligner, () => renderingOptions.CellSpacing, () =>Host.Device.Viewport.Width);
+            aligner = new CellRowAligner(ch=> font.MeasureString(ch.ToString()));
+            EntryPoint = new TerminalEntry(appender, aligner, () => renderingOptions.CellSpacing, () => Host.Device.Viewport.Width);
             aligner.RowAdded += (sender, args) => cellEntryRenderArea.AddCellRange(args.Row, args.RowIndex);
             aligner.Cleared += (sender, args) => cellEntryRenderArea.Clear();
 
             cellEntryRenderArea = new TerminalEntryRenderArea(renderingOptions, new Rectangle(10, 10, 100, 100), font);
 
 
-            EntryPoint.OnFlushedEntry += (sender, command) => terminal.ExecuteCommand(command);
-            terminal.RegisterAppender(new ActionAppender(EntryPoint.AddString));
-
+            terminal.RegisterAppender(new ActionAppender(EntryPoint.AppendString));
+            window = new TerminalWindowRenderArea(renderingOptions, new Rectangle(5, 5, 300, 300), font);
+     
             SubscribeEntryToKeyprocessor();
         }
 
@@ -95,14 +103,19 @@ namespace Gem.Engine.Console
             keyProcessor.Right += (sender, args) => EntryPoint.Cursor.Right();
             keyProcessor.Up += (sender, args) => EntryPoint.PeekNext();
             keyProcessor.Down += (sender, args) => EntryPoint.PeekPrevious();
+            keyProcessor.Insert += (sender, args) =>
+            {             
+                var entry = EntryPoint.Flush();
+            };
+            EntryPoint.OnFlushedEntry += (sender, command) =>
+            {
+                window.AddCellRange(appender.Cells());
+                terminal.ExecuteCommand(command);
+            };
         }
-
         public CellRenderingOptions RenderingOptions { get { return renderingOptions; } }
         public CellAppender Appender { get { return appender; } }
-        public Terminal Terminal {get { return terminal; } }
-        
-
-        #region DrawableGameComponent Members
+        public Terminal Terminal { get { return terminal; } }
 
 
         public void FixedUpdate(GameTime gameTime)
@@ -119,14 +132,13 @@ namespace Gem.Engine.Console
         public void Draw(SpriteBatch batch)
         {
             cellEntryRenderArea.Draw(batch);
+            window.Draw(batch);
         }
 
         public void HandleInput(InputManager inputManager, GameTime gameTime)
         {
             keyProcessor.ProcessKeyInput(gameTime.ElapsedGameTime.TotalSeconds);
         }
-
-        #endregion
 
     }
 }

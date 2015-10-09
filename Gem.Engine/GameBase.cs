@@ -69,7 +69,7 @@ namespace Gem.Engine
                                 Vector2.Zero,
                                  Color.White * progress))) as GemConsole;
             ScreenManager = new ScreenManager(this, console.Terminal, Input, Settings, (batch) => onDraw?.Invoke(this, batch));
-            Reporter.RegisterAppender(new ActionAppender(console.EntryPoint.AddString));
+            Reporter.RegisterAppender(new ActionAppender(console.EntryPoint.AppendString));
             Components.Add(ScreenManager);
             onInitialize?.Invoke(this, EventArgs.Empty);
             base.Initialize();

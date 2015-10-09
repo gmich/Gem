@@ -1,16 +1,12 @@
-﻿using Gem.Engine.Console.Rendering.Animations;
-using Gem.Infrastructure.Functional;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Gem.Engine.Console.Cells
 {
     public interface ICell
     {
-        string Content { get; }
+        char Content { get; }
 
-        int SizeX { get; }
-
-        int SizeY { get; }
-
-        Behavior<IEffect> Behavior { get; set; }
+        void Render(SpriteBatch batch, Vector2 position);
     }
 }

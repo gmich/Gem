@@ -15,26 +15,18 @@ namespace Gem.Engine.Console.Cells
 
         private readonly Func<char, ICell> cellGenerator;
         private readonly ObservableCollection<ICell> cells = new ObservableCollection<ICell>();
-        private readonly ICellBehavior cellBehavior;
 
         #endregion
 
         #region Ctor
 
-        public CellAppender(Func<char, ICell> cellGenerator, ICellBehavior cellBehavior)
+        public CellAppender(Func<char, ICell> cellGenerator)
         {
             this.cellGenerator = cellGenerator;
-            this.cellBehavior = cellBehavior;
         }
 
         #endregion
-
-        #region Properties
-
-        public ICellBehavior CellBehavior { get { return cellBehavior; } }
-
-        #endregion
-
+        
         #region Add / Remove
 
         public void AddCellRange(IEnumerable<ICell> cellRange)
@@ -76,7 +68,7 @@ namespace Gem.Engine.Console.Cells
 
         #region Collection
 
-        public IEnumerable<ICell> GetCells()
+        public IEnumerable<ICell> Cells()
         {
             return cells;
         }

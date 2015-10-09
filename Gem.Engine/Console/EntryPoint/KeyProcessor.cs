@@ -52,6 +52,7 @@ namespace Gem.Engine.Console.EntryPoint
         public event EventHandler<EventArgs> Right;
         public event EventHandler<EventArgs> Up;
         public event EventHandler<EventArgs> Down;
+        public event EventHandler<EventArgs> Insert;
 
         #endregion
 
@@ -108,6 +109,9 @@ namespace Gem.Engine.Console.EntryPoint
                         case Keys.Down:
                             Down.RaiseEvent(this, EventArgs.Empty);
                             break;
+                        case Keys.Enter:
+                            Insert.RaiseEvent(this, EventArgs.Empty);
+                            break;
                     }
                 }
             }
@@ -121,7 +125,6 @@ namespace Gem.Engine.Console.EntryPoint
                 pressedKey = key;
                 return true;
             }
-
             if (key == pressedKey)
             {
                 appender.KeyRepeatTimer -= timeDelta;

@@ -1,29 +1,24 @@
-﻿using Gem.Engine.Console.Rendering.Animations;
-using Gem.Infrastructure.Functional;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace Gem.Engine.Console.Cells
 {
     public class Cell : ICell
     {
-        private readonly string content;
-        private readonly int sizeX;
-        private readonly int sizeY;
+        public char Content { get; }
+        private Action<SpriteBatch, Vector2> renderAction;
 
-        public Cell(string content, int sizeX, int sizeY, Func<ICell,Behavior<IEffect>> behavior)
+        public Cell(char content, Action<SpriteBatch, Vector2> renderAction)
         {
-            this.content = content;
-            this.sizeX = sizeX;
-            this.sizeY = sizeY;
-            this.Behavior = behavior(this);
+            this.Content = content;
+            this.renderAction = renderAction;
         }
 
-        public string Content { get { return content; } }
 
-        public int SizeX { get { return sizeX; } }
-
-        public int SizeY { get { return sizeY; } }
-
-        public Behavior<IEffect> Behavior { get; set; }
+        public void Render(SpriteBatch batch, Vector2 position)
+        {
+            renderAction(batch, position);
+        }
     }
 }

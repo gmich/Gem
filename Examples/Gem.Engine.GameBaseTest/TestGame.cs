@@ -33,7 +33,7 @@ namespace Gem.Engine.GameBaseTest
                 {
                     GameBase.ShowOnly(TestGameScreen.HostName);
                 }
-                if (GameBase.Input.Keyboard.IsKeyClicked(Keys.P))
+                if (GameBase.Input.Keyboard.IsKeyClicked(Keys.F12))
                 {
                     GameBase.Reporter.Message("test entry");
                 }

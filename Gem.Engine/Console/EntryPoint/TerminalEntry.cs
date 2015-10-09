@@ -46,7 +46,7 @@ namespace Gem.Engine.Console.EntryPoint
 
             appender.OnCellAppend((sender, args) =>
             {
-                aligner.AlignToRows(appender.GetCells(), spacing(), rowSize());
+                aligner.AlignToRows(appender.Cells(), spacing(), rowSize());
                 cursor.Update(aligner.Rows());
             });
         }
@@ -112,7 +112,13 @@ namespace Gem.Engine.Console.EntryPoint
             }
         }
 
-        public void AddString(string entryString)
+        public void AppendString(string entryString)
+        {
+            InsertString(entryString);
+            Flush();
+        }
+
+        public void InsertString(string entryString)
         {
             foreach (var character in entryString)
             {
@@ -124,11 +130,11 @@ namespace Gem.Engine.Console.EntryPoint
         {
             if (appender.Count > 0)
             {
-                var entry = new FlushedEntry(appender.GetCells(), appender.ToString());
+                var entry = new FlushedEntry(appender.Cells(), appender.ToString());
                 var result = Result.Ok(entry);
+                OnFlushedEntry.RaiseEvent(this, entry.StringRepresentation);
                 appender.Clear();
                 history.Add(entry);
-                OnFlushedEntry.RaiseEvent(this, entry.StringRepresentation);
                 return result;
             }
             return Result.Fail<FlushedEntry>("No entries");

@@ -9,8 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gem.Engine.Console.Rendering
 {
@@ -19,6 +17,8 @@ namespace Gem.Engine.Console.Rendering
     {
         public int CellSpacing { get; set; }
         public int RowSpacing { get; set; }
+        public int RowHeight { get; set; }
+        public int RowWidth { get; set; }
         public int MaxRows { get; set; }
     }
 
@@ -28,11 +28,12 @@ namespace Gem.Engine.Console.Rendering
         #region Fields
 
         private readonly SpriteFont font;
-        private readonly Dictionary<int, List<Behavior<IEffect>>> effects = new Dictionary<int, List<Behavior<IEffect>>>();
-        private readonly List<IEffect> drawingEffects = new List<IEffect>();
+        private readonly Dictionary<int, List<Tuple<Vector2, ICell>>> cellEffects = new Dictionary<int, List<Tuple<Vector2, ICell>>>();
         private readonly CellRenderingOptions areaSettings;
 
         private Behavior<IEffect> cursorEffect;
+        private IEffect cursorRenderEffect;
+
         private Vector2 appendLocation;
         private Camera camera;
 
@@ -55,6 +56,7 @@ namespace Gem.Engine.Console.Rendering
             this.areaSettings = settings;
             this.font = font;
             this.rowSize = font.MeasureString("|").Y;
+
             SetViewingArea(viewArea);
         }
 
@@ -71,76 +73,72 @@ namespace Gem.Engine.Console.Rendering
 
         public void Clear()
         {
-            effects.Clear();
+            cellEffects.Clear();
         }
 
         public void AddCellRange(Row row, int rowIndex)
         {
             appendLocation = new Vector2(0, (rowIndex) * (rowSize + AreaSettings.RowSpacing));
-            effects.Add(rowIndex, new List<Behavior<IEffect>>());
+            cellEffects.Add(rowIndex, new List<Tuple<Vector2, ICell>>());
 
             foreach (var entry in row.Entries)
             {
-                float x = screenPosition.X + appendLocation.X - camera.Position.X + (entry.SizeX / 2 + 1);
+                var entryWidth = font.MeasureString(entry.Content.ToString()).X;
+                float x = screenPosition.X + appendLocation.X - camera.Position.X + (entryWidth / 2 + 1);
                 float y = screenPosition.Y + appendLocation.Y - camera.Position.Y;
-                effects[rowIndex].Add(entry.Behavior.At(Behavior.Create(ctx => x),
-                            Behavior.Create(ctx => y)));
-                appendLocation.X += (entry.SizeX + AreaSettings.CellSpacing);
+                cellEffects[rowIndex].Add(new Tuple<Vector2, ICell>(new Vector2(x, y), entry));
+                appendLocation.X += (entryWidth + AreaSettings.CellSpacing);
             }
         }
 
         public void UpdateCursor(Behavior<IEffect> behavior, [AllowNull]Row currentRow, int row, int position)
         {
             int rowIndex = row;
-            appendLocation = new Vector2(0, (rowIndex) * (rowSize+ AreaSettings.RowSpacing) - 1);
+            appendLocation = new Vector2(0, (rowIndex) * (rowSize + AreaSettings.RowSpacing) - 1);
             int pos = position - 1;
-            if (effects.ContainsKey(rowIndex) && pos > -1)
+            if (cellEffects.ContainsKey(rowIndex) && pos > -1)
             {
                 foreach (var entry in currentRow.Entries.Take(pos))
                 {
-                    appendLocation.X += (entry.SizeX + AreaSettings.CellSpacing);
+                    var entryWidth = font.MeasureString(entry.Content.ToString()).X;
+                    appendLocation.X += (entryWidth + AreaSettings.CellSpacing);
                 }
                 if (pos != -1)
                 {
                     var lastEntry = currentRow.Entries.Skip(pos).FirstOrDefault();
                     if (lastEntry != null)
                     {
-                        appendLocation.X += lastEntry.SizeX + 1;
+                        var entryWidth = font.MeasureString(lastEntry.Content.ToString()).X;
+                        appendLocation.X += entryWidth + 1;
                     }
                 }
             }
             float x = screenPosition.X + appendLocation.X - camera.Position.X;
             float y = screenPosition.Y + appendLocation.Y - camera.Position.Y;
             cursorEffect = (behavior.At(Behavior.Create(ctx => x),
-                                  Behavior.Create(ctx => y)));
-
-            System.Console.WriteLine(row + " " + position + " " + x + " " + y);
+                                Behavior.Create(ctx => y)));
         }
 
         public void Update(GameTime gameTime)
         {
-
-            drawingEffects.Clear();
-            var context = new BehaviorContext((float)gameTime.ElapsedGameTime.TotalSeconds);
-
-            foreach (var behaviors in effects.Values)
-            {
-                foreach (var effect in behaviors)
-                    drawingEffects.Add(effect.BehaviorFunc(context));
-            }
             if (cursorEffect != null)
-                drawingEffects.Add(cursorEffect.BehaviorFunc(context));
+            {
+                cursorRenderEffect = cursorEffect.BehaviorFunc(new BehaviorContext((float)gameTime.ElapsedGameTime.TotalSeconds));
+            }
         }
 
         public void Draw(SpriteBatch batch)
         {
             batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+            cursorRenderEffect?.Draw(font, batch, Vector2.Zero);
 
-            foreach (var cellDrawing in drawingEffects)
+            foreach (var row in cellEffects)
             {
-                cellDrawing.Draw(font, batch, Vector2.Zero);
+                foreach (var cell in row.Value)
+                {
+                    cell.Item2.Render(batch, cell.Item1);
+                }
             }
-
             batch.End();
         }
     }

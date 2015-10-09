@@ -47,7 +47,7 @@ namespace Gem.Engine.Console.Cells
     }
 
     /// <summary>
-    /// Alligns ICell instances into rows according to the specified buffer axis x-size
+    /// Aligns ICell instances into rows according to the specified buffer axis x-size
     /// </summary>
     public class CellRowAligner
     {
@@ -55,14 +55,15 @@ namespace Gem.Engine.Console.Cells
         #region Fields
 
         private readonly List<Row> rows;
-
+        private readonly Func<char, Vector2> characterMeasurer;
         #endregion
 
         #region Ctor
 
-        public CellRowAligner()
+        public CellRowAligner(Func<char,Vector2> characterMeasurer)
         {
             this.rows = new List<Row>();
+            this.characterMeasurer = characterMeasurer;
         }
 
         #endregion
@@ -91,7 +92,7 @@ namespace Gem.Engine.Console.Cells
 
             foreach (var cell in cells)
             {
-                currentRowSize += (cell.SizeX + spacing);
+                currentRowSize += ((int)characterMeasurer(cell.Content).X + spacing);
                 if (currentRowSize > rowSize)
                 {
                     cellsCounter++;
@@ -123,6 +124,13 @@ namespace Gem.Engine.Console.Cells
         public IEnumerable<Row> Rows()
         {
             return rows;
+        }
+
+        public IEnumerable<ICell> Cells()
+        {
+            List<ICell> cells = new List<ICell>();
+            rows.ForEach(row=>cells.AddRange(row.Entries));
+            return cells;
         }
 
         #endregion

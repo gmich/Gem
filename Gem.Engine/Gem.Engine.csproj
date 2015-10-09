@@ -102,8 +102,7 @@
     <Compile Include="CameraSystem\ICamera.cs" />
     <Compile Include="Console\Cells\CellRowAligner.cs" />
     <Compile Include="Console\Cells\CellAppender.cs" />
-    <Compile Include="Console\Cells\CellBehavior.cs" />
-    <Compile Include="Console\Cells\ICellBehavior.cs" />
+    <Compile Include="Console\Commands\CommonCommands.cs" />
     <Compile Include="Console\Commands\RollbackCommandAttribute.cs" />
     <Compile Include="Console\Commands\SubcommandAttribute.cs" />
     <Compile Include="Console\Commands\CommandAttribute.cs" />
@@ -130,9 +129,7 @@
     <Compile Include="Console\EntryPoint\IEntryRule.cs" />
     <Compile Include="Console\Cells\Cell.cs" />
     <Compile Include="Console\Cells\ICell.cs" />
-    <Compile Include="Console\Rendering\Sprite.cs" />
-    <Compile Include="Console\Rendering\SpriteSheet.cs" />
-    <Compile Include="Console\Rendering\ITexture.cs" />
+    <Compile Include="Console\Rendering\TerminalWindowRenderArea.cs" />
     <Compile Include="Containers\ContentContainer.cs" />
     <Compile Include="Database\IDatabase.cs" />
     <Compile Include="Database\Storage\Block.cs" />
