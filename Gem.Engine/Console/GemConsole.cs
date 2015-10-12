@@ -107,10 +107,10 @@ namespace Gem.Engine.Console
             {             
                 var entry = EntryPoint.Flush();
             };
-            EntryPoint.OnFlushedEntry += (sender, command) =>
+            EntryPoint.OnFlushedEntry += async (sender, command) =>
             {
                 window.AddCellRange(appender.Cells());
-                terminal.ExecuteCommand(command);
+                await terminal.ExecuteCommand(command);
             };
         }
         public CellRenderingOptions RenderingOptions { get { return renderingOptions; } }

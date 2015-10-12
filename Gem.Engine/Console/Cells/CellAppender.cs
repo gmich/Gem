@@ -85,7 +85,7 @@ namespace Gem.Engine.Console.Cells
 
         public override string ToString()
         {
-            return String.Concat(cells);
+            return String.Concat(cells.Select(cell=>cell.Content));
         }
 
         #endregion

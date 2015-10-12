@@ -3,6 +3,7 @@ using Gem.Infrastructure.Functional;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Gem.Engine.Tests
 {
@@ -19,6 +20,7 @@ namespace Gem.Engine.Tests
                                                     IList<string> arguments,
                                                     object executionResult)
         {
+
             if (arguments.Count == 1)
             {
                 Number = Double.Parse(arguments[0]);

@@ -38,7 +38,8 @@ namespace Gem.Engine.Console.Commands
             commandSeparator = settings.CommandSeparator;
             subCommandSeparator = settings.SubCommandSeparator;
             argumentSeparator = settings.ArgumentSeparator;
-            ScanAssemblyForCommands();
+            //ScanAssemblyForCommands();
+            RegisterCommand(typeof(CommonCommands));
         }
 
         #endregion
@@ -104,7 +105,7 @@ namespace Gem.Engine.Console.Commands
                 CommandCallback callback;
                 try
                 {
-                    callback = (CommandCallback)Delegate.CreateDelegate(typeof(CommandCallback), objectWithCommand, methodInfo, true);
+                    callback = (CommandCallback)Delegate.CreateDelegate(typeof(CommandCallback), null, methodInfo, true);
                     AttributeResolver.Find<TAttribute>(methodInfo, attribute => action(callback, attribute));
                 }
                 catch (Exception ex)
@@ -380,7 +381,7 @@ namespace Gem.Engine.Console.Commands
             }
 
             //execute the graph
-            return Task<Result<object>>.Factory.StartNew(() =>
+            return Task<Result<object>>.Run(() =>
                 {
                     Stack<ExecutionGraphEntry> callstack = new Stack<ExecutionGraphEntry>();
                     Result<object> executionResult = Result.Ok<object>(null);
