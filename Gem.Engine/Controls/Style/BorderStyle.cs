@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gem.Engine.Controls.Rendering;
+using System;
 
 namespace Gem.Engine.GTerminal.View
 {

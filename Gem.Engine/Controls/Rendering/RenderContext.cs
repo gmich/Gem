@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using NullGuard;
 
-namespace Gem.Engine.GTerminal.View
+namespace Gem.Engine.Controls.Rendering
 {
     [NullGuard(ValidationFlags.AllPublicArguments)]
     public class RenderContext
@@ -15,4 +15,5 @@ namespace Gem.Engine.GTerminal.View
         public ContentContainer Content { get; }
         public SpriteBatch Batch { get; }
     }
+
 }
