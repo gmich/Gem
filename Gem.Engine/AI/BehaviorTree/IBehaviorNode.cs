@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Gem.AI.BehaviorTree
+namespace Gem.Engine.AI.BehaviorTree
 {
     public interface IBehaviorNode<AIContext>
     {

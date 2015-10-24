@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Gem.AI.BehaviorTree.Visualization
+namespace Gem.Engine.AI.BehaviorTree.Visualization
 {
     public class TreeVisualizer
     {

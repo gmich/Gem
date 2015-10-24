@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Gem.AI.FiniteStateMachine.Visualization
+namespace Gem.Engine.AI.FiniteStateMachine.Visualization
 {
     public class Layering<TStateContext>
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 
-namespace Gem.AI.BehaviorTree.Visualization
+namespace Gem.Engine.AI.BehaviorTree.Visualization
 {
     public class LinkBase : IBehaviorVirtualizationPiece
     {

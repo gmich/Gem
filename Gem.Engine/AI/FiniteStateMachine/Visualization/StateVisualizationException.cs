@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gem.AI.FiniteStateMachine.Visualization
+namespace Gem.Engine.AI.FiniteStateMachine.Visualization
 {
 
     public class StateVisualizationException : Exception

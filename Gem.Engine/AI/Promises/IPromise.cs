@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Gem.AI.Promises
+namespace Gem.Engine.AI.Promises
 {
     /// <summary>
     /// Implements a non-generic C# promise, this is a promise that simply resolves without delivering a value.

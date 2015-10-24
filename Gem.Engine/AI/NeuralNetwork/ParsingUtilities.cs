@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace Gem.AI.NeuralNetwork
+namespace Gem.Engine.AI.NeuralNetwork
 {
     public sealed class ParsingUtilities
     {

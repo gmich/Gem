@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Gem.AI.NeuralNetwork
+namespace Gem.Engine.AI.NeuralNetwork
 {
 
     public sealed class Encode

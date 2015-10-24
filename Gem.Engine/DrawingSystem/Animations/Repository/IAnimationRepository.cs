@@ -1,4 +1,4 @@
-﻿using Gem.AI.Promises;
+﻿using Gem.Engine.AI.Promises;
 using System.Collections.Generic;
 using Gem.Repositories;
 

@@ -1,5 +1,5 @@
-﻿using Gem.AI.Genetic;
-using Gem.AI.NeuralNetwork;
+﻿using Gem.Engine.AI.Genetic;
+using Gem.Engine.AI.NeuralNetwork;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;

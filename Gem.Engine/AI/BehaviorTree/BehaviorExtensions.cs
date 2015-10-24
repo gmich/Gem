@@ -1,7 +1,7 @@
 ﻿using System;
-using Gem.AI.BehaviorTree.Decorators;
+using Gem.Engine.AI.BehaviorTree.Decorators;
 
-namespace Gem.AI.BehaviorTree
+namespace Gem.Engine.AI.BehaviorTree
 {
     public static class BehaviorExtensions
     {
@@ -10,7 +10,7 @@ namespace Gem.AI.BehaviorTree
         /// </summary>
         public static IBehaviorNode<AIContext> TraceAs<AIContext>(this IBehaviorNode<AIContext> node,string debugInfo, Action<string> debugTarget = null)
         {
-            return new DebugDecorator<AIContext>(node, debugTarget ?? Console.WriteLine, debugInfo);
+            return new DebugDecorator<AIContext>(node, debugTarget ?? System.Console.WriteLine, debugInfo);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gem.AI.FiniteStateMachine
+namespace Gem.Engine.AI.FiniteStateMachine
 {
     public class StateMachine<TStateContext>
     {

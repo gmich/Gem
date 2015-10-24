@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gem.AI.BehaviorTree
+namespace Gem.Engine.AI.BehaviorTree
 {
     public class BehaviorInvokationEventArgs : EventArgs
     {

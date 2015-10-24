@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace Gem.AI.BehaviorTree.Visualization
+namespace Gem.Engine.AI.BehaviorTree.Visualization
 {
     internal class TriggeredNodeCover : IVirtualizationItem
     {

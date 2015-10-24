@@ -2,7 +2,7 @@
 using System;
 
 
-namespace Gem.AI.BehaviorTree.Visualization
+namespace Gem.Engine.AI.BehaviorTree.Visualization
 {
 
     public class RenderedNode : IBehaviorVirtualizationPiece

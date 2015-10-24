@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gem.AI.NeuralNetwork
+namespace Gem.Engine.AI.NeuralNetwork
 {
     public class Activation
     {

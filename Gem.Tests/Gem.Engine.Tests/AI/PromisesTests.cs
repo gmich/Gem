@@ -1,4 +1,4 @@
-﻿using Gem.AI.Promises;
+﻿using Gem.Engine.AI.Promises;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gem.Engine.Tests.AI

@@ -1,4 +1,4 @@
-﻿namespace Gem.AI.BehaviorTree.Leaves
+﻿namespace Gem.Engine.AI.BehaviorTree.Leaves
 {
     public interface ILeaf<AIContext> : IBehaviorNode<AIContext>
     {

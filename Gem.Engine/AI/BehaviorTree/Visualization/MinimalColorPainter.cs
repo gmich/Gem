@@ -1,10 +1,10 @@
-﻿using Gem.AI.BehaviorTree.Composites;
-using Gem.AI.BehaviorTree.Decorators;
-using Gem.AI.BehaviorTree.Leaves;
+﻿using Gem.Engine.AI.BehaviorTree.Composites;
+using Gem.Engine.AI.BehaviorTree.Decorators;
+using Gem.Engine.AI.BehaviorTree.Leaves;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace Gem.AI.BehaviorTree.Visualization
+namespace Gem.Engine.AI.BehaviorTree.Visualization
 {
     public class MinimalColorPainter: INodePainter
     {

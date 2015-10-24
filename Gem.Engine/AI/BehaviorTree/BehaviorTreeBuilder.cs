@@ -1,13 +1,13 @@
-﻿using Gem.AI.BehaviorTree.Composites;
-using Gem.AI.BehaviorTree.Decorators;
-using Gem.AI.BehaviorTree.Leaves;
+﻿using Gem.Engine.AI.BehaviorTree.Composites;
+using Gem.Engine.AI.BehaviorTree.Decorators;
+using Gem.Engine.AI.BehaviorTree.Leaves;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gem.AI.BehaviorTree
+namespace Gem.Engine.AI.BehaviorTree
 {
     public class BehaviorTreeBuilder<AIContext>
     {

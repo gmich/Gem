@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Linq.Expressions;
 
-namespace Gem.AI.Promises
+namespace Gem.Engine.AI.Promises
 {
     public sealed class Argument
     {

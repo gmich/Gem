@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gem.AI.BehaviorTree.Decorators
+namespace Gem.Engine.AI.BehaviorTree.Decorators
 {
     public delegate IBehaviorNode<AIContext> Decorator<AIContext>(IBehaviorNode<AIContext> decoratedNode);
 

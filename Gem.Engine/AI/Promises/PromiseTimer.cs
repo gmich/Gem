@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Gem.AI.Promises
+namespace Gem.Engine.AI.Promises
 {
     /// <summary>
     /// A class that wraps a pending promise with it's predicate and time data

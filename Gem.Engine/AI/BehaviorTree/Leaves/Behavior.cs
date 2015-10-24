@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Gem.AI.BehaviorTree.Leaves
+namespace Gem.Engine.AI.BehaviorTree.Leaves
 {
     public class Behavior<AIContext> : ILeaf<AIContext>
     {

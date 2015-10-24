@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace Gem.AI.NeuralNetwork
+namespace Gem.Engine.AI.NeuralNetwork
 {
     public class NeuralNetworkData
     {

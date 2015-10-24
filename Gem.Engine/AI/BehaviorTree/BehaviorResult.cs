@@ -1,4 +1,4 @@
-﻿namespace Gem.AI.BehaviorTree
+﻿namespace Gem.Engine.AI.BehaviorTree
 {
     public enum BehaviorResult
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gem.AI.FiniteStateMachine.Visualization
+namespace Gem.Engine.AI.FiniteStateMachine.Visualization
 {
     class Vertex : IEquatable<Vertex>
     {

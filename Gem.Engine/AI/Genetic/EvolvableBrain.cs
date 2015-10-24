@@ -1,8 +1,8 @@
-﻿using Gem.AI.NeuralNetwork;
+﻿using Gem.Engine.AI.NeuralNetwork;
 using System;
 
 
-namespace Gem.AI.Genetic
+namespace Gem.Engine.AI.Genetic
 {
     public class EvolvableBrain : Genome
     {

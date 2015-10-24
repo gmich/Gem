@@ -1,4 +1,4 @@
-﻿namespace Gem.AI.Genetic
+﻿namespace Gem.Engine.AI.Genetic
 {
     public abstract class Genome
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Gem.AI.BehaviorTree.Composites
+namespace Gem.Engine.AI.BehaviorTree.Composites
 {
     /// <summary>
     /// Sequence. Iterates BehaviorNodes terminates when a node succeeds. Behaves like the logical OR operator

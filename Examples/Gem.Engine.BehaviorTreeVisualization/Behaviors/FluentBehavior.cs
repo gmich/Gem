@@ -1,5 +1,5 @@
-﻿using Gem.AI.BehaviorTree;
-using Gem.AI.BehaviorTree.Decorators;
+﻿using Gem.Engine.AI.BehaviorTree;
+using Gem.Engine.AI.BehaviorTree.Decorators;
 
 namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
 {

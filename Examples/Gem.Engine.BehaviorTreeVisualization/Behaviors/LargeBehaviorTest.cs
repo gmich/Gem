@@ -1,8 +1,8 @@
 ﻿using System;
-using Gem.AI.BehaviorTree;
-using Gem.AI.BehaviorTree.Composites;
-using Gem.AI.BehaviorTree.Decorators;
-using Gem.AI.BehaviorTree.Leaves;
+using Gem.Engine.AI.BehaviorTree;
+using Gem.Engine.AI.BehaviorTree.Composites;
+using Gem.Engine.AI.BehaviorTree.Decorators;
+using Gem.Engine.AI.BehaviorTree.Leaves;
 
 namespace Gem.Engine.BehaviorTreeVisualization.Behaviors
 {

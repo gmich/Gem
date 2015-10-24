@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Gem.AI.FiniteStateMachine
+namespace Gem.Engine.AI.FiniteStateMachine
 {
     public class State<TStateContext>
     {

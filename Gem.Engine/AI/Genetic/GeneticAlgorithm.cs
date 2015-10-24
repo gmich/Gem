@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Gem.AI.Genetic
+namespace Gem.Engine.AI.Genetic
 {
     public class GeneticAlgorithm
     {

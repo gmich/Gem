@@ -2,7 +2,7 @@
 using System.Linq;
 using System;
 
-namespace Gem.AI.BehaviorTree.Visualization
+namespace Gem.Engine.AI.BehaviorTree.Visualization
 {
 
     internal class TreeAnalyzer<AIContext>

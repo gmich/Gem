@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gem.AI.Promises
+namespace Gem.Engine.AI.Promises
 {
 
     /// <summary>

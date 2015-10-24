@@ -1,5 +1,5 @@
-﻿using Gem.AI.FiniteStateMachine;
-using Gem.AI.FiniteStateMachine.Visualization;
+﻿using Gem.Engine.AI.FiniteStateMachine;
+using Gem.Engine.AI.FiniteStateMachine.Visualization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gem.Engine.Tests.AI
