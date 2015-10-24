@@ -46,6 +46,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AI\Steering\Agent.cs" />
     <Compile Include="AI\BehaviorTree\BehaviorExtensions.cs" />
     <Compile Include="AI\BehaviorTree\BehaviorInvokationEventArgs.cs" />
     <Compile Include="AI\BehaviorTree\BehaviorResult.cs" />
@@ -82,6 +83,8 @@
     <Compile Include="AI\FiniteStateMachine\Visualization\Layering.cs" />
     <Compile Include="AI\FiniteStateMachine\Visualization\StateVisualizationException.cs" />
     <Compile Include="AI\FiniteStateMachine\Visualization\Vertex.cs" />
+    <Compile Include="AI\Steering\EnumerableExtensions.cs" />
+    <Compile Include="AI\Steering\Flocking.cs" />
     <Compile Include="AI\Genetic\EvolvableBrain.cs" />
     <Compile Include="AI\Genetic\GeneticAlgorithm.cs" />
     <Compile Include="AI\Genetic\Genome.cs" />
@@ -98,6 +101,7 @@
     <Compile Include="AI\Promises\PromiseState.cs" />
     <Compile Include="AI\Promises\PromiseTimer.cs" />
     <Compile Include="AI\Promises\Promise_NonGenericse.cs" />
+    <Compile Include="AI\Steering\ISteering.cs" />
     <Compile Include="CameraSystem\Camera.cs" />
     <Compile Include="CameraSystem\ICamera.cs" />
     <Compile Include="Console\Cells\CellRowAligner.cs" />
@@ -131,8 +135,6 @@
     <Compile Include="Console\Cells\ICell.cs" />
     <Compile Include="Console\Rendering\TerminalWindowRenderArea.cs" />
     <Compile Include="Containers\ContentContainer.cs" />
-    <Compile Include="Controls\Rendering\IRenderer.cs" />
-    <Compile Include="Controls\Structure\GuiModel.cs" />
     <Compile Include="Database\IDatabase.cs" />
     <Compile Include="Database\Storage\Block.cs" />
     <Compile Include="Database\Storage\BlockStorage.cs" />
@@ -226,15 +228,6 @@
     <Compile Include="Shaders\LightManager.cs" />
     <Compile Include="Shaders\QuadRender.cs" />
     <Compile Include="Shaders\ShadowmapResolver.cs" />
-    <Compile Include="Controls\Style\Alignment.cs" />
-    <Compile Include="Controls\Style\BorderStyle.cs" />
-    <Compile Include="Controls\Style\Box.cs" />
-    <Compile Include="Controls\Style\BorderBox.cs" />
-    <Compile Include="Controls\Structure\IGuiElement.cs" />
-    <Compile Include="Controls\Style\StyleFactory.cs" />
-    <Compile Include="Controls\Style\IStylingRule.cs" />
-    <Compile Include="Controls\Rendering\RenderContext.cs" />
-    <Compile Include="Controls\Style\StylingRule.cs" />
     <Compile Include="Utilities\Range.cs" />
     <Compile Include="Console\Cells\Row.cs" />
     <Compile Include="Console\Commands\Terminal.cs" />
@@ -262,7 +255,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\GTimer.cs" />
-    <Compile Include="Utilities\TreeStructure.cs" />
+    <Compile Include="Utilities\Tree.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -348,7 +341,6 @@
     <Folder Include="CameraSystem\Handlers\" />
     <Folder Include="CameraSystem\Scripts\" />
     <Folder Include="Content\Animations\" />
-    <Folder Include="Controls\Behavior\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Fonts\consoleFont.xnb">
