@@ -163,6 +163,10 @@
     <Compile Include="Database\BTree\TreeStringSerialzier.cs" />
     <Compile Include="Database\BTree\TreeTraverseDirection.cs" />
     <Compile Include="Database\BTree\TreeTraverser.cs" />
+    <Compile Include="GameLoop\GameTimeline.cs" />
+    <Compile Include="GameLoop\ITimeline.cs" />
+    <Compile Include="GameLoop\TimeLine.cs" />
+    <Compile Include="GameLoop\TimelineService.cs" />
     <Compile Include="Input\GamePadInput.cs" />
     <Compile Include="Input\IInput.cs" />
     <Compile Include="Input\InputConfiguration.cs" />
@@ -223,11 +227,11 @@
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="ScreenSystem\TimedTransition.cs" />
     <Compile Include="ScreenSystem\TransitionDirection.cs" />
-    <Compile Include="Shaders\CastedItem.cs" />
-    <Compile Include="Shaders\LightArea.cs" />
-    <Compile Include="Shaders\LightManager.cs" />
-    <Compile Include="Shaders\QuadRender.cs" />
-    <Compile Include="Shaders\ShadowmapResolver.cs" />
+    <Compile Include="Shaders\DynamicLight\CastedItem.cs" />
+    <Compile Include="Shaders\DynamicLight\LightArea.cs" />
+    <Compile Include="Shaders\DynamicLight\LightManager.cs" />
+    <Compile Include="Shaders\DynamicLight\QuadRender.cs" />
+    <Compile Include="Shaders\DynamicLight\ShadowmapResolver.cs" />
     <Compile Include="Utilities\Range.cs" />
     <Compile Include="Console\Cells\Row.cs" />
     <Compile Include="Console\Commands\Terminal.cs" />
