@@ -83,6 +83,7 @@
     <Compile Include="AI\FiniteStateMachine\Visualization\Layering.cs" />
     <Compile Include="AI\FiniteStateMachine\Visualization\StateVisualizationException.cs" />
     <Compile Include="AI\FiniteStateMachine\Visualization\Vertex.cs" />
+    <Compile Include="AI\Steering\AStar.cs" />
     <Compile Include="AI\Steering\EnumerableExtensions.cs" />
     <Compile Include="AI\Steering\Flocking.cs" />
     <Compile Include="AI\Genetic\EvolvableBrain.cs" />
@@ -274,7 +275,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="DebugView MonoGame">
+    <Reference Include="DebugView MonoGame, Version=3.5.0.35185, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>Third Party\DebugView MonoGame.dll</HintPath>
     </Reference>
     <Reference Include="FarseerPhysics MonoGame">
