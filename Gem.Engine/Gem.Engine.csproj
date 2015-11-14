@@ -102,6 +102,12 @@
     <Compile Include="AI\Promises\PromiseTimer.cs" />
     <Compile Include="AI\Promises\Promise_NonGenericse.cs" />
     <Compile Include="AI\Steering\ISteering.cs" />
+    <Compile Include="Utilities\IHasRect.cs" />
+    <Compile Include="Utilities\PriorityQueue.cs" />
+    <Compile Include="AI\Voronoi\VoronoiEdge.cs" />
+    <Compile Include="AI\Voronoi\VoronoiDiagram.cs" />
+    <Compile Include="AI\Voronoi\VoronoiEvent.cs" />
+    <Compile Include="AI\Voronoi\VoronoiParabola.cs" />
     <Compile Include="CameraSystem\Camera.cs" />
     <Compile Include="CameraSystem\ICamera.cs" />
     <Compile Include="Console\Cells\CellRowAligner.cs" />
@@ -232,6 +238,8 @@
     <Compile Include="Shaders\DynamicLight\LightManager.cs" />
     <Compile Include="Shaders\DynamicLight\QuadRender.cs" />
     <Compile Include="Shaders\DynamicLight\ShadowmapResolver.cs" />
+    <Compile Include="Utilities\QuadTree.cs" />
+    <Compile Include="Utilities\QuadTreeNode.cs" />
     <Compile Include="Utilities\Range.cs" />
     <Compile Include="Console\Cells\Row.cs" />
     <Compile Include="Console\Commands\Terminal.cs" />
