@@ -277,7 +277,7 @@
     </Reference>
     <Reference Include="DebugView MonoGame, Version=3.5.0.35185, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Third Party\DebugView MonoGame.dll</HintPath>
+      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\DebugView MonoGame.dll</HintPath>
     </Reference>
     <Reference Include="FarseerPhysics MonoGame">
       <HintPath>Third Party\FarseerPhysics MonoGame.dll</HintPath>
