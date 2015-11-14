@@ -1,5 +1,4 @@
 ﻿using System;
-using FarseerPhysics.DebugView;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
@@ -11,6 +10,7 @@ using FarseerPhysics;
 using Gem.Engine.Input;
 using Microsoft.Xna.Framework.Graphics;
 using NullGuard;
+using Gem.Diagnostics.DebugViewFarseer;
 
 namespace Gem.Engine.Physics
 {
@@ -24,7 +24,7 @@ namespace Gem.Engine.Physics
         {
             get; set;
         }
-        private readonly DebugViewXNA DebugView;
+        private readonly DebugViewFarseer DebugView;
         private readonly Body HiddenBody;
         private float agentForce;
         private float agentTorque;
@@ -43,7 +43,7 @@ namespace Gem.Engine.Physics
             : base(transition, device, container)
         {
             World = new World(Vector2.Zero);
-            DebugView = new DebugViewXNA(World);
+            DebugView = new DebugViewFarseer(World);
             DebugView.RemoveFlags(DebugViewFlags.Shape);
             DebugView.RemoveFlags(DebugViewFlags.Joint);
             DebugView.DefaultShapeColor = Color.White;
