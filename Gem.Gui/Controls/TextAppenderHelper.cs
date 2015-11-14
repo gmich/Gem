@@ -1,6 +1,5 @@
 ﻿using Gem.Gui.Input;
 using Gem.Infrastructure.Input;
-using Microsoft.Xna.Framework.Input;
 using System;
 
 namespace Gem.Gui.Controls
@@ -29,7 +28,7 @@ namespace Gem.Gui.Controls
         public double KeyRepeatTimer { get; set; }
         public double CursorFlickInterval { get; set; }
 
-        public Func<Keys,char,bool> ShouldHandleKey { get; set; }
+        public Func<Microsoft.Xna.Framework.Input.Keys, char,bool> ShouldHandleKey { get; set; }
 
         public KeyboardInput Input { get { return input; } }
 
