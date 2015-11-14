@@ -47,42 +47,53 @@
       <HintPath>..\..\packages\Caliburn.Micro.2.0.2\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Gemini">
-      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\Gemini.dll</HintPath>
+    <Reference Include="Gemini, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gem.IDE.Core\ThirdParty\Gemini.dll</HintPath>
     </Reference>
-    <Reference Include="Gemini.Modules.CodeCompiler">
-      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\Gemini.Modules.CodeCompiler.dll</HintPath>
+    <Reference Include="Gemini.Modules.CodeCompiler, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gem.IDE.Core\ThirdParty\Gemini.Modules.CodeCompiler.dll</HintPath>
     </Reference>
-    <Reference Include="Gemini.Modules.CodeEditor">
-      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\Gemini.Modules.CodeEditor.dll</HintPath>
+    <Reference Include="Gemini.Modules.CodeEditor, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gem.IDE.Core\ThirdParty\Gemini.Modules.CodeEditor.dll</HintPath>
     </Reference>
-    <Reference Include="Gemini.Modules.ErrorList">
-      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\Gemini.Modules.ErrorList.dll</HintPath>
+    <Reference Include="Gemini.Modules.ErrorList, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gem.IDE.Core\ThirdParty\Gemini.Modules.ErrorList.dll</HintPath>
     </Reference>
-    <Reference Include="Gemini.Modules.GraphEditor">
-      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\Gemini.Modules.GraphEditor.dll</HintPath>
+    <Reference Include="Gemini.Modules.GraphEditor, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gem.IDE.Core\ThirdParty\Gemini.Modules.GraphEditor.dll</HintPath>
     </Reference>
-    <Reference Include="Gemini.Modules.Inspector">
-      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\Gemini.Modules.Inspector.dll</HintPath>
+    <Reference Include="Gemini.Modules.Inspector, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gem.IDE.Core\ThirdParty\Gemini.Modules.Inspector.dll</HintPath>
     </Reference>
-    <Reference Include="Gemini.Modules.Inspector.MonoGame">
-      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\Gemini.Modules.Inspector.MonoGame.dll</HintPath>
+    <Reference Include="Gemini.Modules.Inspector.MonoGame, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gem.IDE.Core\ThirdParty\Gemini.Modules.Inspector.MonoGame.dll</HintPath>
     </Reference>
-    <Reference Include="Gemini.Modules.MonoGame">
-      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\Gemini.Modules.MonoGame.dll</HintPath>
+    <Reference Include="Gemini.Modules.MonoGame, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gem.IDE.Core\ThirdParty\Gemini.Modules.MonoGame.dll</HintPath>
     </Reference>
-    <Reference Include="Gemini.Modules.Output">
-      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\Gemini.Modules.Output.dll</HintPath>
+    <Reference Include="Gemini.Modules.Output, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gem.IDE.Core\ThirdParty\Gemini.Modules.Output.dll</HintPath>
     </Reference>
-    <Reference Include="Gemini.Modules.PropertyGrid">
+    <Reference Include="Gemini.Modules.PropertyGrid, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Gem.IDE.Core\ThirdParty\Gemini.Modules.PropertyGrid.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.1.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
       <HintPath>..\..\packages\AvalonEdit.5.0.2\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MahApps.Metro">
-      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\MahApps.Metro.dll</HintPath>
+    <Reference Include="MahApps.Metro, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gem.IDE.Core\ThirdParty\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.CodeAnalysis.Common.1.0.0\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
@@ -165,26 +176,33 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Xceed.Wpf.AvalonDock">
-      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\Xceed.Wpf.AvalonDock.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=2.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gem.IDE.Core\ThirdParty\Xceed.Wpf.AvalonDock.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero">
-      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=2.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gem.IDE.Core\ThirdParty\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro">
-      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=2.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gem.IDE.Core\ThirdParty\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010">
-      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=2.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gem.IDE.Core\ThirdParty\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2013">
-      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\Xceed.Wpf.AvalonDock.Themes.VS2013.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2013, Version=2.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gem.IDE.Core\ThirdParty\Xceed.Wpf.AvalonDock.Themes.VS2013.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.DataGrid">
-      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\Xceed.Wpf.DataGrid.dll</HintPath>
+    <Reference Include="Xceed.Wpf.DataGrid, Version=2.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gem.IDE.Core\ThirdParty\Xceed.Wpf.DataGrid.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.Toolkit">
-      <HintPath>..\Gem.Environment\Gem.IDE.Core\ThirdParty\Xceed.Wpf.Toolkit.dll</HintPath>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=2.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gem.IDE.Core\ThirdParty\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
