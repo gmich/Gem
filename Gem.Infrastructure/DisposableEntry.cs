@@ -57,16 +57,7 @@ namespace Gem.Infrastructure
     {
         public void Dispose()
         {
-
-            List<string> mylist = null;
-
-            string someEntry;
-            mylist.Add(someEntry);
-
-           var dis= Disposable.Create(mylist, someEntry);
             return;
-
-
         }
     }
 }
