@@ -112,6 +112,8 @@
     <Compile Include="Functional\Maybe.cs" />
     <Compile Include="Functional\Option.cs" />
     <Compile Include="Functional\PatternMatcher.cs" />
+    <Compile Include="Functional\Pipeline.cs" />
+    <Compile Include="Functional\PipelineExtensions.cs" />
     <Compile Include="Functional\Result.cs" />
     <Compile Include="Functional\ResultExtensions.cs" />
     <Compile Include="Functional\Time.cs" />

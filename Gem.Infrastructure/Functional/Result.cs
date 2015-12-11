@@ -33,6 +33,11 @@ namespace Gem.Infrastructure.Functional
             return new Result<T>(default(T), false, message);
         }
 
+        public static Result<T> Fail<T>(T value, string message)
+        {
+            return new Result<T>(value, false, message);
+        }
+
         public static Result Ok()
         {
             return new Result(true, String.Empty);
