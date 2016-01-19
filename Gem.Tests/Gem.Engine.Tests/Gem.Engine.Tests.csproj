@@ -66,6 +66,7 @@
     <Compile Include="AI\StateMachineTests.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="ConsoleTests.cs" />
+    <Compile Include="MessageBusTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AnimationRepositoryTests.cs" />
   </ItemGroup>

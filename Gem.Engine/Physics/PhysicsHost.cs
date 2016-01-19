@@ -9,12 +9,12 @@ using Gem.Engine.Containers;
 using FarseerPhysics;
 using Gem.Engine.Input;
 using Microsoft.Xna.Framework.Graphics;
-using NullGuard;
+
 using Gem.Diagnostics.DebugViewFarseer;
 
 namespace Gem.Engine.Physics
 {
-    [NullGuard(ValidationFlags.AllPublicArguments)]
+    
     public class PhysicsHost : Host
     {
 

@@ -4,12 +4,10 @@ using System;
 using Gem.Engine.Containers;
 using Gem.Engine.Input;
 using Gem.Engine.Configuration;
-using NullGuard;
 using Gem.Engine.Console.Commands;
 
 namespace Gem.Engine.ScreenSystem
 {
-    [NullGuard(ValidationFlags.AllPublicArguments)]
     public abstract class Host : IScreenHost
     {
 

@@ -1,10 +1,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NullGuard;
+
 
 namespace Gem.Engine.Shaders
 {
-    [NullGuard(ValidationFlags.AllPublicArguments)]
+    
     public partial class QuadRender
     {
         private readonly VertexPositionTexture[] verts;

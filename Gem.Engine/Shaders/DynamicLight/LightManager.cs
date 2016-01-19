@@ -1,13 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using NullGuard;
+
 using System;
 using System.Collections.Generic;
 
 namespace Gem.Engine.Shaders
 {
-    [NullGuard(ValidationFlags.AllPublicArguments)]
+    
     internal class LightManager
     {
 

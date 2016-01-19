@@ -2,11 +2,11 @@
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System;
-using NullGuard;
+
 
 namespace Gem.Engine.Shaders
 {
-    [NullGuard(ValidationFlags.AllPublicArguments)]
+    
     internal class LightArea
     {
         #region Fields and Properties

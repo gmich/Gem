@@ -8,7 +8,6 @@ using Gem.Engine.Console.Commands;
 using Gem.Engine.ScreenSystem;
 using Gem.Engine.Input;
 using System;
-using NullGuard;
 using Gem.Engine.Logging;
 
 namespace Gem.Engine.Console

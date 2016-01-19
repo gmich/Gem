@@ -2,11 +2,11 @@
 using Gem.Engine.Containers;
 using Gem.Engine.Input;
 using Microsoft.Xna.Framework;
-using NullGuard;
+
 
 namespace Gem.Engine.ScreenSystem
 {
-    [NullGuard(ValidationFlags.AllPublicArguments)]
+    
     public class EmptyHost : Host
     {
         public IGame Game

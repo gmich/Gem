@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
-using NullGuard;
+
 
 namespace Gem.Engine.Shaders
 {
@@ -13,7 +13,7 @@ namespace Gem.Engine.Shaders
         Size1024 = 9
     }
 
-    [NullGuard(ValidationFlags.AllPublicArguments)]
+    
     internal class ShadowmapResolver
     {
         private GraphicsDevice graphicsDevice;

@@ -1,4 +1,4 @@
-﻿using NullGuard;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +36,7 @@ namespace Gem.Engine.Console.Commands
 
         public IEnumerable<CommandTable> SubCommand { get { return subCommands; } }
         public CommandCallback Callback { get { return callback; } }
-        public CommandCallback Rollback {[return: AllowNull] get;[param: AllowNull] set; }
+        public CommandCallback Rollback { get; set; }
         public string Command { get { return command; } }
         public string Description { get { return description; } }
         public bool RequiresAuthorization { get { return requiresAuthorization; } }

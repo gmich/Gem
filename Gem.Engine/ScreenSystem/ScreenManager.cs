@@ -5,12 +5,12 @@ using System;
 using System.Linq;
 using Gem.Engine.Configuration;
 using Gem.Engine.Input;
-using NullGuard;
+
 using Gem.Engine.Console.Commands;
 
 namespace Gem.Engine.ScreenSystem
 {
-    [NullGuard(ValidationFlags.AllPublicArguments)]
+    
     public class ScreenManager : DrawableGameComponent
     {
         #region Fields
@@ -29,7 +29,7 @@ namespace Gem.Engine.ScreenSystem
 
         #region Ctor
 
-        public ScreenManager(Game game,Terminal terminal, InputManager inputManager, Settings settings, [AllowNull]Action<SpriteBatch> drawWith)
+        public ScreenManager(Game game,Terminal terminal, InputManager inputManager, Settings settings, Action<SpriteBatch> drawWith)
             : base(game)
         {
             Settings = settings;

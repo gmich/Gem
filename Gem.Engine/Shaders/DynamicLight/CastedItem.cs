@@ -1,11 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NullGuard;
+
 using System;
 
 namespace Gem.Engine.Shaders
 {
-    [NullGuard(ValidationFlags.AllPublicArguments)]
+    
     internal class CastedItem
     {
         private readonly Func<Vector2> positionGetter;
