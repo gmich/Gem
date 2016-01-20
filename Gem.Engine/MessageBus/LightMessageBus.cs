@@ -1,6 +1,7 @@
 ﻿using Gem.Infrastructure.Assertions;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Gem.Engine.MessageBus
 {
@@ -33,7 +34,7 @@ namespace Gem.Engine.MessageBus
         }
 
         ///<inheritdoc />
-        public bool Publish<TMessage>(TMessage message)
+        public Task Publish<TMessage>(TMessage message)
             where TMessage : class
         {
             DebugArgument.Require.NotNull(() => message);
@@ -41,10 +42,9 @@ namespace Gem.Engine.MessageBus
             var messageType = typeof(TMessage);
             if (consumers.ContainsKey(messageType))
             {
-                consumers[messageType].Invoke(message);
-                return true;
+                return new Task(() => consumers[messageType].Invoke(message));               
             }
-            return false;
+            return Task.FromResult(0);
         }
 
         /// <summary>

@@ -21,7 +21,7 @@ namespace Gem.Engine.Tests
             int handlerInvokations = 0;
 
             Bus.Consume<ConsumeFirstTestMessage>(msg => handlerInvokations++);
-            Bus.Publish(new ConsumeFirstTestMessage());
+            Bus.Publish(new ConsumeFirstTestMessage()).RunSynchronously();
 
             Assert.AreEqual(1, handlerInvokations);
         }
@@ -37,7 +37,7 @@ namespace Gem.Engine.Tests
             Bus.Consume<ConsumeFirstTestMessage>(msg => secondHandler++);
             Bus.Consume<ConsumeFirstTestMessage>(msg => thirdHandler++);
 
-            Bus.Publish(new ConsumeFirstTestMessage());
+            Bus.Publish(new ConsumeFirstTestMessage()).RunSynchronously();
 
             Assert.AreEqual(1, firstHandler);
             Assert.AreEqual(1, secondHandler);
@@ -54,7 +54,7 @@ namespace Gem.Engine.Tests
             Bus.Consume<ConsumeFirstTestMessage>(msg => secondHandler++).Dispose();
             Bus.Consume<ConsumeFirstTestMessage>(msg => thirdHandler++);
 
-            Bus.Publish(new ConsumeFirstTestMessage());
+            Bus.Publish(new ConsumeFirstTestMessage()).RunSynchronously();
 
             Assert.AreEqual(1, firstHandler);
             Assert.AreEqual(0, secondHandler);
@@ -69,9 +69,9 @@ namespace Gem.Engine.Tests
             Bus.Consume<ConsumeFirstTestMessage>(msg => firstHandler++);
             Bus.Consume<ConsumeSecondTestMessage>(msg => secondHandler++);
 
-            Bus.Publish(new ConsumeFirstTestMessage());
-            Bus.Publish(new ConsumeSecondTestMessage());
-            Bus.Publish(new ConsumeSecondTestMessage());
+            Bus.Publish(new ConsumeFirstTestMessage()).RunSynchronously();
+            Bus.Publish(new ConsumeSecondTestMessage()).RunSynchronously();
+            Bus.Publish(new ConsumeSecondTestMessage()).RunSynchronously();
 
             Assert.AreEqual(1, firstHandler);
             Assert.AreEqual(2, secondHandler);

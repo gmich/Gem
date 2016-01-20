@@ -32,8 +32,6 @@ namespace Gem.Engine.Tests.Repositories
                                     loadedSettings = jsonSettings.First());
 
             Assert.AreEqual(settings.Name, loadedSettings.Name);
-
-
         }
 
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Gem.Engine.MessageBus
 {
@@ -22,7 +23,7 @@ namespace Gem.Engine.MessageBus
         /// <typeparam name="TMessage">The type of the message to publish</typeparam>
         /// <param name="message">The message object</param>
         /// <returns>True if the message was consumed</returns>
-        bool Publish<TMessage>(TMessage message)
+        Task Publish<TMessage>(TMessage message)
             where TMessage : class;
   
     }
