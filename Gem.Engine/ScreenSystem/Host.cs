@@ -5,6 +5,7 @@ using Gem.Engine.Containers;
 using Gem.Engine.Input;
 using Gem.Engine.Configuration;
 using Gem.Engine.Console.Commands;
+using Gem.Engine.GameLoop;
 
 namespace Gem.Engine.ScreenSystem
 {
@@ -137,21 +138,21 @@ namespace Gem.Engine.ScreenSystem
             Transition.Start(TransitionDirection.Leave);
         }
 
-        public abstract void HandleInput(InputManager inputManager, GameTime gameTime);
+        public abstract void HandleInput(InputManager inputManager, ITimeline time);
 
         public abstract void Initialize();
 
-        public void Update(GameTime gameTime)
+        public void Update(ITimeline time)
         {
             if (ScreenState == ScreenState.TransitionOff
                 || ScreenState == ScreenState.TransitionOn)
             {
-                Transition.Update(gameTime.ElapsedGameTime.TotalMilliseconds);
+                Transition.Update(time.DeltaTime.TotalSeconds);
             }
-            FixedUpdate(gameTime);
+            FixedUpdate(time);
         }
 
-        public abstract void FixedUpdate(GameTime gameTime);
+        public abstract void FixedUpdate(ITimeline time);
 
         public abstract void Draw(SpriteBatch batch);
 

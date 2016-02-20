@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Gem.Engine.Input;
+using Gem.Engine.GameLoop;
 
 namespace Gem.Engine.ScreenSystem
 {
@@ -23,9 +24,9 @@ namespace Gem.Engine.ScreenSystem
 
         void Initialize();
 
-        void HandleInput(InputManager inputManager, GameTime gameTime);
+        void HandleInput(InputManager inputManager, ITimeline time);
 
-        void Update(GameTime gameTime);
+        void Update(ITimeline time);
 
         void Draw(SpriteBatch batch);
 

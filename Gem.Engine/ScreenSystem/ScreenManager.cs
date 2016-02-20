@@ -7,6 +7,7 @@ using Gem.Engine.Configuration;
 using Gem.Engine.Input;
 
 using Gem.Engine.Console.Commands;
+using Gem.Engine.GameLoop;
 
 namespace Gem.Engine.ScreenSystem
 {
@@ -25,6 +26,12 @@ namespace Gem.Engine.ScreenSystem
         public static Settings Settings { get; private set; }
 
         public static Terminal CommandTerminal { get; private set; }
+
+        public ITimeline Time
+        {
+            get; set;
+        } = Timeline.Default;
+
         #endregion
 
         #region Ctor
@@ -122,6 +129,8 @@ namespace Gem.Engine.ScreenSystem
 
         public override void Update(GameTime gameTime)
         {
+            (Timeline.Default as GameTimeline).GameTime = gameTime;
+
             for (int screenIndex = 0; screenIndex < hosts.Count; screenIndex++)
             {
                 if (hosts[screenIndex].ScreenState == ScreenState.Exit)
@@ -130,10 +139,10 @@ namespace Gem.Engine.ScreenSystem
                 }
                 else
                 {
-                    hosts[screenIndex].Update(gameTime);
+                    hosts[screenIndex].Update(Time);
                     if (hosts[screenIndex].ScreenState == ScreenState.Active)
                     {
-                        hosts[screenIndex].HandleInput(inputManager, gameTime);
+                        hosts[screenIndex].HandleInput(inputManager, Time);
                     }
                 }
             }

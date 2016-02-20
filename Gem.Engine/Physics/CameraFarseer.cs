@@ -3,6 +3,7 @@ using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics;
+using Gem.Engine.GameLoop;
 
 namespace Gem.Engine.Physics
 {
@@ -289,7 +290,7 @@ namespace Gem.Engine.Physics
         /// <summary>
         /// Moves the camera forward one timestep.
         /// </summary>
-        public void Update(GameTime gameTime)
+        public void Update(ITimeline time)
         {
             if (trackingBody != null)
             {
@@ -342,8 +343,8 @@ namespace Gem.Engine.Physics
                 rotDelta /= Math.Abs(rotDelta);
             }
 
-            currentPosition += 100f * delta * inertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            currentRotation += 80f * rotDelta * rotInertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            currentPosition += 100f * delta * inertia * (float)time.DeltaTime.TotalSeconds;
+            currentRotation += 80f * rotDelta * rotInertia * (float)time.DeltaTime.TotalSeconds;
 
             SetView();
         }

@@ -1,21 +1,27 @@
 ﻿using System;
-
+using Microsoft.Xna.Framework;
 
 namespace Gem.Engine.GameLoop
 {
-    public class TimeLine : ITimeline
+    public class Timeline : ITimeline
     {
         private readonly Func<double> timeProvider;
 
-        public TimeLine(Func<double> timeProvider)
+        public static ITimeline Default { get; } = new GameTimeline();
+
+        public static ITimeline FromFactory(Func<double> timeProvider) => new Timeline(timeProvider);
+
+        internal Timeline(Func<double> timeProvider)
         {
             this.timeProvider = timeProvider;
         }
 
-        public double DeltaTime
+        public TimeSpan DeltaTime
         {
-            get { return timeProvider(); }
+            get { return TimeSpan.FromSeconds(timeProvider()); }
         }
+
+
     }
 }
 

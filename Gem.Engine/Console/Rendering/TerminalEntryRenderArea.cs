@@ -119,11 +119,11 @@ namespace Gem.Engine.Console.Rendering
                                 Behavior.Create(ctx => y)));
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(double timeDelta)
         {
             if (cursorEffect != null)
             {
-                cursorRenderEffect = cursorEffect.BehaviorFunc(new BehaviorContext((float)gameTime.ElapsedGameTime.TotalSeconds));
+                cursorRenderEffect = cursorEffect.BehaviorFunc(new BehaviorContext((float)timeDelta));
             }
         }
 

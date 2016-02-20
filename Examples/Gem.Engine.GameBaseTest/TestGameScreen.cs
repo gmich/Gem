@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Gem.Engine.Input;
 using Microsoft.Xna.Framework;
+using Gem.Engine.GameLoop;
 
 namespace Gem.Engine.GameBaseTest
 {
@@ -24,11 +25,11 @@ namespace Gem.Engine.GameBaseTest
             Host.Device.Clear(Color.Red);
         }
 
-        public void FixedUpdate(GameTime gameTime)
+        public void FixedUpdate(ITimeline time)
         {
         }
 
-        public void HandleInput(InputManager inputManager, GameTime gameTime)
+        public void HandleInput(InputManager inputManager, ITimeline time)
         {
         }
 

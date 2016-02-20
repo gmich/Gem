@@ -42,7 +42,8 @@ namespace Gem.Engine.MessageBus
             var messageType = typeof(TMessage);
             if (consumers.ContainsKey(messageType))
             {
-                return new Task(() => consumers[messageType].Invoke(message));               
+                var handler = consumers[messageType];
+                return new Task(() => handler(message));               
             }
             return Task.FromResult(0);
         }

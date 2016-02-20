@@ -1,4 +1,5 @@
-﻿using Gem.Engine.Input;
+﻿using Gem.Engine.GameLoop;
+using Gem.Engine.Input;
 using Gem.Engine.Physics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,9 +10,9 @@ namespace Gem.Engine.Physics
     {
         PhysicsHost Host { get; }
 
-        void HandleInput(InputManager inputManager, GameTime gameTime);
+        void HandleInput(InputManager inputManager, ITimeline time);
 
-        void FixedUpdate(GameTime gameTime);
+        void FixedUpdate(ITimeline time);
 
         void Draw(SpriteBatch batch);
     }

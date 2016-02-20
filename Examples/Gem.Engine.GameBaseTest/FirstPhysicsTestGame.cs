@@ -4,6 +4,7 @@ using Gem.Engine.Physics;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Gem.Engine.Input;
+using Gem.Engine.GameLoop;
 
 namespace Gem.Engine.GameBaseTest
 {
@@ -31,11 +32,11 @@ namespace Gem.Engine.GameBaseTest
             Host.Device.Clear(Color.Beige);
         }
 
-        public void HandleInput(InputManager inputManager, GameTime gameTime)
+        public void HandleInput(InputManager inputManager, ITimeline time)
         {
         }
 
-        public void FixedUpdate(GameTime gameTime)
+        public void FixedUpdate(ITimeline time)
         {
         }
     }

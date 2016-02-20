@@ -103,6 +103,7 @@
     <Compile Include="AI\Promises\PromiseTimer.cs" />
     <Compile Include="AI\Promises\Promise_NonGenericse.cs" />
     <Compile Include="AI\Steering\ISteering.cs" />
+    <Compile Include="GameLoop\GameTimeline.cs" />
     <Compile Include="MessageBus\IMessageBus.cs" />
     <Compile Include="MessageBus\LightMessageBus.cs" />
     <Compile Include="Utilities\IHasRect.cs" />
@@ -172,10 +173,8 @@
     <Compile Include="Database\BTree\TreeStringSerialzier.cs" />
     <Compile Include="Database\BTree\TreeTraverseDirection.cs" />
     <Compile Include="Database\BTree\TreeTraverser.cs" />
-    <Compile Include="GameLoop\GameTimeline.cs" />
     <Compile Include="GameLoop\ITimeline.cs" />
-    <Compile Include="GameLoop\TimeLine.cs" />
-    <Compile Include="GameLoop\TimelineService.cs" />
+    <Compile Include="GameLoop\Timeline.cs" />
     <Compile Include="Input\GamePadInput.cs" />
     <Compile Include="Input\IInput.cs" />
     <Compile Include="Input\InputConfiguration.cs" />
@@ -390,7 +389,6 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
- 
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

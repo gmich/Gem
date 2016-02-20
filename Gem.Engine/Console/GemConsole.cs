@@ -9,6 +9,7 @@ using Gem.Engine.ScreenSystem;
 using Gem.Engine.Input;
 using System;
 using Gem.Engine.Logging;
+using Gem.Engine.GameLoop;
 
 namespace Gem.Engine.Console
 {
@@ -117,14 +118,14 @@ namespace Gem.Engine.Console
         public Terminal Terminal { get { return terminal; } }
 
 
-        public void FixedUpdate(GameTime gameTime)
+        public void FixedUpdate(ITimeline time)
         {
             cellEntryRenderArea.UpdateCursor(EntryPoint.Cursor.Effect,
                                           aligner.Rows().Skip(EntryPoint.Cursor.Row).FirstOrDefault(),
                                           EntryPoint.Cursor.Row,
                                           EntryPoint.Cursor.HeadInRow);
 
-            cellEntryRenderArea.Update(gameTime);
+            cellEntryRenderArea.Update(time.DeltaTime.TotalSeconds);
         }
 
 
@@ -134,9 +135,9 @@ namespace Gem.Engine.Console
             window.Draw(batch);
         }
 
-        public void HandleInput(InputManager inputManager, GameTime gameTime)
+        public void HandleInput(InputManager inputManager, ITimeline time)
         {
-            keyProcessor.ProcessKeyInput(gameTime.ElapsedGameTime.TotalSeconds);
+            keyProcessor.ProcessKeyInput(time.DeltaTime.TotalSeconds);
         }
 
     }

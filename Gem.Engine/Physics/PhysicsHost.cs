@@ -11,6 +11,7 @@ using Gem.Engine.Input;
 using Microsoft.Xna.Framework.Graphics;
 
 using Gem.Diagnostics.DebugViewFarseer;
+using Gem.Engine.GameLoop;
 
 namespace Gem.Engine.Physics
 {
@@ -229,15 +230,15 @@ namespace Gem.Engine.Physics
             agentTorque = torque;
         }
         
-        public override void FixedUpdate(GameTime gameTime)
+        public override void FixedUpdate(ITimeline time)
         {
-            World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, (1f / 30f)));
+            World.Step(Math.Min((float)time.DeltaTime.TotalSeconds, (1f / 30f)));
 
-            Camera.Update(gameTime);
-            Game.FixedUpdate(gameTime);
+            Camera.Update(time);
+            Game.FixedUpdate(time);
         }
 
-        public override void HandleInput(InputManager inputManager, GameTime gameTime)
+        public override void HandleInput(InputManager inputManager, ITimeline time)
         {
             HandleDebugView(inputManager);
 
@@ -251,9 +252,9 @@ namespace Gem.Engine.Physics
             }
             if (IsCameraControlled)
             {
-                HandleCamera(inputManager, (float)gameTime.ElapsedGameTime.TotalSeconds);
+                HandleCamera(inputManager, (float)time.DeltaTime.TotalSeconds);
             }
-            Game.HandleInput(inputManager, gameTime);
+            Game.HandleInput(inputManager, time);
         }
 
         public override void Initialize() { }

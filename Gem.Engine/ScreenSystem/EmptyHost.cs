@@ -2,7 +2,7 @@
 using Gem.Engine.Containers;
 using Gem.Engine.Input;
 using Microsoft.Xna.Framework;
-
+using Gem.Engine.GameLoop;
 
 namespace Gem.Engine.ScreenSystem
 {
@@ -27,14 +27,14 @@ namespace Gem.Engine.ScreenSystem
             Game.Draw(batch);
         }
 
-        public override void FixedUpdate(GameTime gameTime)
+        public override void FixedUpdate(ITimeline time)
         {
-            Game.FixedUpdate(gameTime);
+            Game.FixedUpdate(time);
         }
 
-        public override void HandleInput(InputManager inputManager, GameTime gameTime)
+        public override void HandleInput(InputManager inputManager, ITimeline time)
         {
-            Game.HandleInput(inputManager, gameTime);
+            Game.HandleInput(inputManager, time);
         }
 
         public override void Initialize()
