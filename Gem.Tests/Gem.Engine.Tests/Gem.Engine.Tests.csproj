@@ -61,6 +61,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AI\BehaviorTreeTests.cs" />
+    <Compile Include="AI\FSMTests.cs" />
     <Compile Include="AI\NeuralNetworkTests.cs" />
     <Compile Include="AI\PromisesTests.cs" />
     <Compile Include="AI\StateMachineTests.cs" />

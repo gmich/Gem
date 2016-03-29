@@ -26,6 +26,8 @@ namespace Gem.Network.Chat.Client
         private static YoutubeSearch search;
         private static Dictionary<string, Func<string,bool>> CommandTable;
 
+        private static string ipOrHost = "127.0.0.1";
+
         #endregion
 
         #region Private Helpers
@@ -59,7 +61,7 @@ namespace Gem.Network.Chat.Client
             client = new GemClient("GemChat", new ConnectionConfig
             {
                 ServerName = "GemChat",
-                IPorHost = "127.0.0.1",
+                IPorHost = ipOrHost,
                 Port = 14242,
                 DisconnectMessage = name
             },  PackageConfig.TCP);
@@ -283,6 +285,14 @@ namespace Gem.Network.Chat.Client
 
         static void Main(string[] args)
         {
+            if (args != null)
+            {
+                if (args.Length == 1)
+                {
+                    ipOrHost = args[0];
+                }
+            }
+
             CommandTable = new Dictionary<string, Func<string, bool>>();
             RegisterCommands();
               

@@ -46,6 +46,14 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AI\FSM\AState.cs" />
+    <Compile Include="AI\FSM\FSMException.cs" />
+    <Compile Include="AI\FSM\IEvent.cs" />
+    <Compile Include="AI\FSM\State.cs" />
+    <Compile Include="AI\FSM\FSMEvent.cs" />
+    <Compile Include="AI\FSM\StateMachine.cs" />
+    <Compile Include="AI\FSM\FSMBuilder.cs" />
+    <Compile Include="AI\FSM\Transition.cs" />
     <Compile Include="AI\Steering\Agent.cs" />
     <Compile Include="AI\BehaviorTree\BehaviorExtensions.cs" />
     <Compile Include="AI\BehaviorTree\BehaviorInvokationEventArgs.cs" />

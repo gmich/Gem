@@ -91,7 +91,6 @@ namespace Gem.Network.Client
   
             client = new NetClient(config);
             client.Start();
-
             //encrypt passwords ? 
             //INetEncryption algo = new NetTripleDESEncryption(encryptionKey);
             //handshake.Encrypt(algo);
