@@ -10,22 +10,22 @@
  
 Gem is a cross-platform game framework with GUI and multiplayer support using Monogame, Farseer and Lidgren
 
-##Developement Progress
+## Developement Progress
 
-* Gem Network is not fully tested and not ready to use. 
+* Gem Network is not fully tested and not ready to use. See [Ginet](https://github.com/gmich/ginet) instead. 
 * Gem Gui API is likely to change.
 * Gem Engine is still in early development.
 
-##Description
+## Description
 
-###Gem Network
+### Gem Network
 A library for client server applications using network sockets. Gem Network extends Lidgren Network, offering an easy to use API for creating network events and a configurable and expendable server console for executing remote commands
 
 [A Gist with a NetworkPackage simple example](https://gist.github.com/gmich/cc0d256b0db04a8d24f5)
 
 Documentation for Gem Network can be found [here](https://github.com/gmich/Gem/wiki/Gem.Network)
 
-###Gem GUI
+### Gem GUI
 A library to render [GUI controls](https://github.com/gmich/Gem/wiki/GemGui-Controls) in Monogame applications. 
 Gem Gui supports the basic control events for mouse / keyboard / controller / touch. 
 The control's style is easily customisable. 
